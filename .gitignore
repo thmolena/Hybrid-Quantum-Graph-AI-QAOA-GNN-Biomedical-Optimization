@@ -1,0 +1,7 @@
+env/
+__pycache__/
+*.pt
+*.pth
+*.zip
+.DS_Store
+website/*.log
