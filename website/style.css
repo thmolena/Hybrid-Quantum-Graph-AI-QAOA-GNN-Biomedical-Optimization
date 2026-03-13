@@ -231,6 +231,24 @@ input[type=range]::-webkit-slider-thumb {
 .result-row.highlight .result-label { color: #94a3b8; font-weight: 500; }
 .result-row.highlight .result-value { color: #34d399; font-size: 0.9rem; }
 
+.source-badge {
+  font-size: 0.72rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.4rem;
+  text-align: center;
+  font-weight: 500;
+}
+.source-badge.browser {
+  color: #fbbf24;
+  background: rgba(251,191,36,.1);
+  border: 1px solid rgba(251,191,36,.25);
+}
+.source-badge.api {
+  color: #34d399;
+  background: rgba(52,211,153,.1);
+  border: 1px solid rgba(52,211,153,.25);
+}
+
 .error-panel {
   display: flex;
   align-items: flex-start;
