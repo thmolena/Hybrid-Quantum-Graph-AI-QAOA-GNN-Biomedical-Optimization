@@ -1,5 +1,6 @@
 const graphDiv = document.getElementById('graph');
 const nInput = document.getElementById('n');
+const API_BASE_URL = (window.API_BASE_URL || 'http://localhost:5000').replace(/\/$/, '');
 let currentEdges = [];
 
 function renderGraph(n){
@@ -26,13 +27,21 @@ document.getElementById('random').addEventListener('click', ()=>{
 
 document.getElementById('predict').addEventListener('click', async ()=>{
   const n = parseInt(nInput.value);
-  const res = await fetch('/predict', {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({n: n, edges: currentEdges})
-  });
-  const data = await res.json();
-  document.getElementById('result').textContent = 'Gammas: '+JSON.stringify(data.gammas)+" Betas: "+JSON.stringify(data.betas)+" Expected Cut: "+data.expected_cut;
+  const resultEl = document.getElementById('result');
+  try {
+    const res = await fetch(`${API_BASE_URL}/predict`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({n: n, edges: currentEdges})
+    });
+    if (!res.ok) {
+      throw new Error(`Request failed (${res.status})`);
+    }
+    const data = await res.json();
+    resultEl.textContent = 'Gammas: '+JSON.stringify(data.gammas)+" Betas: "+JSON.stringify(data.betas)+" Expected Cut: "+data.expected_cut;
+  } catch (err) {
+    resultEl.textContent = `Prediction failed. Ensure the API is running at ${API_BASE_URL}. ${err.message}`;
+  }
 });
 
 renderGraph(parseInt(nInput.value));

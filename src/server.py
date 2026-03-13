@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import torch
 import numpy as np
 from src.gnn import SimpleGCN
@@ -6,6 +7,7 @@ from src.data import graph_to_adj_feat
 from src.qaoa_sim import qaoa_state, expected_cut
 
 app = Flask(__name__)
+CORS(app)
 
 model = SimpleGCN(in_feats=1, hidden=32, out_feats=2, p=1)
 try:
@@ -16,7 +18,7 @@ except Exception:
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    body = request.get_json()
+    body = request.get_json() or {}
     edges = body.get('edges', [])
     n = body.get('n', None)
     if n is None:
@@ -35,7 +37,6 @@ def predict():
     X = deg.reshape(n,1)
 
     with torch.no_grad():
-        import torch
         At = torch.tensor(A, dtype=torch.float32)
         Xt = torch.tensor(X, dtype=torch.float32)
         out = model(Xt, At)  # [2, p]

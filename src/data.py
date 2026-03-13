@@ -4,8 +4,10 @@ import numpy as np
 
 def sample_erdos_renyi(n, p_edge=0.5, seed=None):
     G = nx.erdos_renyi_graph(n, p_edge, seed=seed)
+    retry_seed = seed
     while not nx.is_connected(G):
-        G = nx.erdos_renyi_graph(n, p_edge, seed=seed)
+        retry_seed = (retry_seed + 1) if retry_seed is not None else None
+        G = nx.erdos_renyi_graph(n, p_edge, seed=retry_seed)
     return G
 
 

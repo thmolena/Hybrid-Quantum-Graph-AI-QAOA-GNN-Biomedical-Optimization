@@ -8,4 +8,4 @@ To use the demo locally:
    - python -m http.server 8000 --directory website
 3. Open http://localhost:8000/index.html
 
-Note: demo.js posts to /predict relative to the page origin. If you host the website separately, change the fetch URL to point to the Flask server's address.
+Note: `demo.js` sends predictions to `http://localhost:5000/predict` by default. If needed, set `window.API_BASE_URL` before loading `demo.js` (for example, `https://your-host:5000`) to target a different API endpoint.
