@@ -135,6 +135,7 @@ Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/
 ├── README.md
 ├── LICENSE
 ├── requirements.txt
+├── index.html                  ← GitHub Pages entry point (root)
 ├── data/
 │   └── breast_cancer.csv
 ├── notebooks/
@@ -153,14 +154,14 @@ Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/
 │   ├── server.py
 │   └── train.py
 └── website/
-	├── README_SITE.md
-	├── demo.js
-	├── index.html
-	├── style.css
-	└── notebooks_html/
-		├── bio_demo.html
-		├── qaoa_demo.html
-		└── quantum_ai_bio_combined.html
+    ├── README_SITE.md
+    ├── demo.js
+    ├── index.html              ← local dev copy (served from website/)
+    ├── style.css
+    └── notebooks_html/
+        ├── bio_demo.html
+        ├── qaoa_demo.html
+        └── quantum_ai_bio_combined.html
 ```
 
 ---
@@ -219,13 +220,17 @@ python -m src.train --dataset-size 20 --n 6 --p 1 --epochs 10 --model-path model
 python -m src.server
 ```
 
-4. Optionally serve the website demo in another terminal.
+4. Optionally serve the website demo locally in another terminal.
 
 ```bash
-python -m http.server 8000 --directory website
+python -m http.server 8000
 ```
 
-Then open `http://localhost:8000/index.html` and use the demo to interact with the `/predict` endpoint.
+Then open `http://localhost:8000` and use the demo to interact with the `/predict` endpoint.
+
+> **GitHub Pages**: the live demo is published at  
+> `https://thmolena.github.io/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/`  
+> The root `index.html` is the GitHub Pages entry point; it loads assets from `website/`.
 
 ---
 

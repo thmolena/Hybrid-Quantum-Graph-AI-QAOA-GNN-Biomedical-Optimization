@@ -1,31 +1,175 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>GNN-for-QAOA Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hybrid Quantum-Graph AI — QAOA + GNN Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="website/style.css">
 </head>
 <body>
-  <h1>GNN-for-QAOA Demo</h1>
-  <div id="controls">
-    <label for="n">Nodes:</label>
-    <input id="n" type="number" value="6" min="2" max="10">
-    <button id="random">Random Graph</button>
-    <button id="predict">Predict Angles</button>
-  </div>
-  <div id="graph"></div>
-  <div id="result"></div>
 
-  <h2>Notebooks (HTML exports)</h2>
-  <p>The following exported notebook HTML files provide reproducible experiment artifacts, visual diagnostics, and summary results for the hybrid QAOA-GNN and biomedical workflows.</p>
-  <ul>
-    <li><a href="website/notebooks_html/qaoa_demo.html" target="_blank">QAOA + GNN demo (MaxCut)</a> — shows classical optimization vs GNN prediction, timing, and expectation landscapes.</li>
-    <li><a href="website/notebooks_html/bio_demo.html" target="_blank">Biomedical GNN demo (breast cancer)</a> — shows GNN classification on real biomedical data, saved CSV, and evaluation metrics.</li>
-    <li><a href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank">Combined demo</a> - consolidated outputs and narrative connecting the optimization and biomedical components in a unified research pipeline.</li>
-  </ul>
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">Research Demo</div>
+      <h1>Hybrid Quantum-Graph AI</h1>
+      <p class="hero-sub">Combining <strong>QAOA</strong> variational quantum circuits with <strong>Graph Neural Networks</strong> for combinatorial optimization and biomedical inference.</p>
+      <div class="hero-pills">
+        <span class="pill">QAOA</span>
+        <span class="pill">GNN</span>
+        <span class="pill">MaxCut</span>
+        <span class="pill">Biomedical</span>
+        <span class="pill">PyTorch</span>
+      </div>
+    </div>
+  </header>
 
-  <h2>Research Summary</h2>
-  <p>This project demonstrates an integrated pipeline combining quantum algorithms (QAOA), graph neural networks (GNNs), and biomedical data analysis. Each notebook includes inputs, model design, outputs, performance indicators, visualizations, and reproducible code to support transparent evaluation of the proposed hybrid methodology.</p>
+  <main class="container">
+
+    <!-- Interactive demo -->
+    <section class="card" id="demo-section">
+      <div class="card-header">
+        <div class="card-icon">⚛</div>
+        <div>
+          <h2>Interactive Graph Demo</h2>
+          <p class="card-desc">Generate a random graph, then call the GNN to predict optimal QAOA angles (γ, β) and the expected MaxCut value.</p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <!-- Controls -->
+        <div class="controls-panel">
+          <div class="field">
+            <label for="n">Number of nodes</label>
+            <div class="slider-row">
+              <input id="n-range" type="range" min="3" max="10" value="6">
+              <span id="n-val" class="n-badge">6</span>
+            </div>
+            <input id="n" type="hidden" value="6">
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-secondary" id="random">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+              Random Graph
+            </button>
+            <button class="btn btn-primary" id="predict">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Predict Angles
+            </button>
+          </div>
+
+          <div id="result-panel" class="result-panel hidden">
+            <div class="result-row">
+              <span class="result-label">γ (gammas)</span>
+              <span id="res-gammas" class="result-value mono">—</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">β (betas)</span>
+              <span id="res-betas"  class="result-value mono">—</span>
+            </div>
+            <div class="result-row highlight">
+              <span class="result-label">Expected Cut</span>
+              <span id="res-cut"    class="result-value mono">—</span>
+            </div>
+          </div>
+
+          <div id="error-panel" class="error-panel hidden">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="error-msg">API unavailable. Run <code>python -m src.server</code> locally.</span>
+          </div>
+        </div>
+
+        <!-- Graph canvas -->
+        <div class="graph-panel">
+          <svg id="graph-svg" width="100%" height="300"></svg>
+          <p class="graph-hint" id="graph-hint">Click <em>Random Graph</em> to generate a graph.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Notebooks -->
+    <section class="card" id="notebooks-section">
+      <div class="card-header">
+        <div class="card-icon">📓</div>
+        <div>
+          <h2>Notebook Reports</h2>
+          <p class="card-desc">Fully executed HTML exports with live outputs, plots, and evaluation metrics.</p>
+        </div>
+      </div>
+
+      <div class="notebook-grid">
+        <a class="nb-card" href="website/notebooks_html/qaoa_demo.html" target="_blank">
+          <div class="nb-icon">⚛</div>
+          <div class="nb-body">
+            <h3>QAOA + GNN (MaxCut)</h3>
+            <p>Classical optimization vs learned parameter prediction, timing comparisons, and expectation-value landscapes across graph families.</p>
+          </div>
+          <div class="nb-arrow">→</div>
+        </a>
+
+        <a class="nb-card" href="website/notebooks_html/bio_demo.html" target="_blank">
+          <div class="nb-icon">🧬</div>
+          <div class="nb-body">
+            <h3>Biomedical GNN (Breast Cancer)</h3>
+            <p>GNN node classification on a k-NN graph built from the UCI breast cancer dataset. Outputs confusion matrix, accuracy, and PCA projection.</p>
+          </div>
+          <div class="nb-arrow">→</div>
+        </a>
+
+        <a class="nb-card" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank">
+          <div class="nb-icon">🔬</div>
+          <div class="nb-body">
+            <h3>Combined Pipeline</h3>
+            <p>Unified narrative connecting the QAOA-GNN optimization workflow with the biomedical application in a single reproducible artifact.</p>
+          </div>
+          <div class="nb-arrow">→</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Research summary -->
+    <section class="card" id="summary-section">
+      <div class="card-header">
+        <div class="card-icon">📄</div>
+        <div>
+          <h2>Research Summary</h2>
+        </div>
+      </div>
+      <div class="summary-cols">
+        <div>
+          <h4>Approach</h4>
+          <p>Graph-structured problems are solved by first learning structural representations with a <strong>Graph Convolutional Network (GCN)</strong>, then using those learned embeddings to initialize QAOA circuit parameters, replacing expensive variational search with fast GNN inference.</p>
+        </div>
+        <div>
+          <h4>Applications</h4>
+          <ul class="summary-list">
+            <li>MaxCut combinatorial optimization</li>
+            <li>Healthcare resource allocation</li>
+            <li>Biomedical experimental design</li>
+            <li>Network resilience analysis</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Quick Start</h4>
+          <pre class="code-block">pip install -r requirements.txt
+python -m src.train \
+  --dataset-size 20 --n 6 \
+  --p 1 --epochs 10 \
+  --model-path model.pt
+python -m src.server</pre>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Hybrid Quantum-Graph AI · QAOA + GNN · <a href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank">GitHub</a></p>
+  </footer>
 
   <script src="website/demo.js"></script>
 </body>
