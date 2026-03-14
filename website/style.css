@@ -301,26 +301,80 @@ input[type=range]::-webkit-slider-thumb {
 
 .nb-card {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 1rem;
   background: #151824;
   border: 1px solid #2d3148;
   border-radius: 0.75rem;
-  padding: 1.1rem 1.25rem;
+  padding: 1.25rem 1.4rem;
   color: inherit;
   text-decoration: none;
-  transition: border-color .2s, background .2s;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: border-color .2s, background .2s, transform .15s;
 }
 .nb-card:hover {
   border-color: #6366f1;
   background: #1a1e2e;
   text-decoration: none;
+  transform: translateY(-2px);
 }
-.nb-icon { font-size: 1.6rem; flex-shrink: 0; line-height: 1; }
+.nb-card.active {
+  border-color: #6366f1;
+  background: #1e2240;
+  box-shadow: 0 0 0 2px #6366f155;
+}
+.nb-icon { font-size: 1.8rem; flex-shrink: 0; line-height: 1; margin-top: 0.1rem; }
 .nb-body { flex: 1; }
-.nb-body h3 { font-size: 0.92rem; font-weight: 600; color: #c7d2fe; margin-bottom: 0.25rem; }
-.nb-body p  { font-size: 0.78rem; color: #64748b; line-height: 1.5; }
-.nb-arrow { color: #6366f1; font-size: 1.1rem; flex-shrink: 0; }
+.nb-body h3 { font-size: 0.95rem; font-weight: 600; color: #c7d2fe; margin-bottom: 0.3rem; }
+.nb-body p  { font-size: 0.80rem; color: #64748b; line-height: 1.55; margin-bottom: 0.5rem; }
+.nb-arrow { color: #6366f1; font-size: 1rem; flex-shrink: 0; margin-top: 0.25rem; }
+
+/* notebook tags */
+.nb-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
+.nb-tag  {
+  font-size: 0.68rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: #1e2d4a;
+  color: #93c5fd;
+  border: 1px solid #3b5a8a;
+  white-space: nowrap;
+}
+
+/* Embedded notebook iframe viewer */
+.nb-viewer-container {
+  margin-top: 1.25rem;
+  border: 1px solid #2d3148;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+.nb-viewer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1rem;
+  background: #0f1117;
+  border-bottom: 1px solid #2d3148;
+}
+.nb-viewer-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #c7d2fe;
+}
+.nb-viewer-actions { display: flex; gap: 0.5rem; }
+.btn-sm {
+  font-size: 0.78rem;
+  padding: 0.3rem 0.75rem;
+}
+.nb-iframe {
+  width: 100%;
+  height: 78vh;
+  border: none;
+  background: #fff;
+  display: block;
+}
 
 /* ── Research summary ───────────────────────────────────── */
 .summary-cols {

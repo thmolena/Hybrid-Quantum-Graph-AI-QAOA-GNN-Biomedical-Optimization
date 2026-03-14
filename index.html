@@ -97,40 +97,92 @@
       <div class="card-header">
         <div class="card-icon">📓</div>
         <div>
-          <h2>Notebook Reports</h2>
-          <p class="card-desc">Fully executed HTML exports with live outputs, plots, and evaluation metrics.</p>
+          <h2>Interactive Notebook Tutorials</h2>
+          <p class="card-desc">Fully executed, deeply annotated HTML notebooks covering quantum computing, graph neural networks, and biomedical classification — with formulas, plots, and step-by-step explanations.</p>
         </div>
       </div>
 
+      <!-- Notebook quick-select cards -->
       <div class="notebook-grid">
-        <a class="nb-card" href="website/notebooks_html/qaoa_demo.html" target="_blank">
+        <button class="nb-card nb-tab-btn active" data-nb="qaoa" onclick="showNotebook('qaoa', this)">
           <div class="nb-icon">⚛</div>
           <div class="nb-body">
-            <h3>QAOA + GNN (MaxCut)</h3>
-            <p>Classical optimization vs learned parameter prediction, timing comparisons, and expectation-value landscapes across graph families.</p>
+            <h3>QAOA + GNN Tutorial</h3>
+            <p>Quantum gates → MaxCut Hamiltonian → variational circuits → GNN warm-starting. Includes 2D landscape heatmap, probability distributions, and approximation ratio analysis.</p>
+            <div class="nb-tags">
+              <span class="nb-tag">Quantum Circuits</span>
+              <span class="nb-tag">Nelder–Mead</span>
+              <span class="nb-tag">GNN Inference</span>
+              <span class="nb-tag">MaxCut</span>
+            </div>
           </div>
-          <div class="nb-arrow">→</div>
-        </a>
+          <div class="nb-arrow">▶</div>
+        </button>
 
-        <a class="nb-card" href="website/notebooks_html/bio_demo.html" target="_blank">
+        <button class="nb-card nb-tab-btn" data-nb="bio" onclick="showNotebook('bio', this)">
           <div class="nb-icon">🧬</div>
           <div class="nb-body">
-            <h3>Biomedical GNN (Breast Cancer)</h3>
-            <p>GNN node classification on a k-NN graph built from the UCI breast cancer dataset. Outputs confusion matrix, accuracy, and PCA projection.</p>
+            <h3>Biomedical GNN Tutorial</h3>
+            <p>WDBC breast cancer dataset → k-NN similarity graph → 2-layer GCN → ROC/AUC analysis. Full derivation of GCN forward pass, cross-entropy loss, and Adam optimiser.</p>
+            <div class="nb-tags">
+              <span class="nb-tag">GCN Theory</span>
+              <span class="nb-tag">k-NN Graphs</span>
+              <span class="nb-tag">ROC / AUC</span>
+              <span class="nb-tag">Clinical ML</span>
+            </div>
           </div>
-          <div class="nb-arrow">→</div>
-        </a>
+          <div class="nb-arrow">▶</div>
+        </button>
 
-        <a class="nb-card" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank">
+        <button class="nb-card nb-tab-btn" data-nb="combined" onclick="showNotebook('combined', this)">
           <div class="nb-icon">🔬</div>
           <div class="nb-body">
-            <h3>Combined Pipeline</h3>
-            <p>Unified narrative connecting the QAOA-GNN optimization workflow with the biomedical application in a single reproducible artifact.</p>
+            <h3>Complete Hybrid Pipeline</h3>
+            <p>End-to-end integration of QAOA + GNN parameter prediction + Biomedical GCN. Covers hybrid quantum-classical theory, adiabatic motivation, and future research directions.</p>
+            <div class="nb-tags">
+              <span class="nb-tag">Hybrid QC</span>
+              <span class="nb-tag">NISQ Era</span>
+              <span class="nb-tag">Full Pipeline</span>
+              <span class="nb-tag">Benchmarks</span>
+            </div>
           </div>
-          <div class="nb-arrow">→</div>
-        </a>
+          <div class="nb-arrow">▶</div>
+        </button>
+      </div>
+
+      <!-- Embedded notebook viewer -->
+      <div class="nb-viewer-container">
+        <div class="nb-viewer-header">
+          <span id="nb-viewer-title" class="nb-viewer-title">⚛ QAOA + GNN Tutorial</span>
+          <div class="nb-viewer-actions">
+            <a id="nb-open-link" href="website/notebooks_html/qaoa_demo.html" target="_blank" class="btn btn-secondary btn-sm">Open in full tab ↗</a>
+          </div>
+        </div>
+        <iframe
+          id="nb-iframe"
+          src="website/notebooks_html/qaoa_demo.html"
+          class="nb-iframe"
+          title="Notebook viewer"
+          loading="lazy">
+        </iframe>
       </div>
     </section>
+
+    <script>
+      const NB_MAP = {
+        qaoa:     { src: 'website/notebooks_html/qaoa_demo.html',             title: '⚛ QAOA + GNN Tutorial' },
+        bio:      { src: 'website/notebooks_html/bio_demo.html',              title: '🧬 Biomedical GNN Tutorial' },
+        combined: { src: 'website/notebooks_html/quantum_ai_bio_combined.html', title: '🔬 Complete Hybrid Pipeline' }
+      };
+      function showNotebook(key, btn) {
+        const nb = NB_MAP[key];
+        document.getElementById('nb-iframe').src         = nb.src;
+        document.getElementById('nb-viewer-title').textContent = nb.title;
+        document.getElementById('nb-open-link').href     = nb.src;
+        document.querySelectorAll('.nb-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+    </script>
 
     <!-- Research summary -->
     <section class="card" id="summary-section">
