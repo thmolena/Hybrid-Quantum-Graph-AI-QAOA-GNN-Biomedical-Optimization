@@ -2,140 +2,155 @@
 
 ## Overview
 
-This repository presents a research-oriented hybrid quantum-classical AI pipeline that integrates:
+This repository is a research-oriented hybrid quantum-classical AI project organized around one recurring idea: express a problem as a graph, then use graph-aware learning and optimization to study it from multiple angles.
 
-- Quantum Approximate Optimization Algorithm (QAOA)
-- Graph Neural Networks (GNNs)
-- Biomedical and network data analysis
+The current codebase supports three closely related workflows:
 
-The primary objective is to examine how **hybrid quantum-classical methods** can improve optimization quality and inference efficiency in graph-structured problems.
+- a genomics-derived QAOA benchmark in which real gene-expression data is converted into small co-expression graphs for exact MaxCut and QAOA analysis
+- a biomedical graph-learning pipeline in which fetal monitoring exams are linked through physiologic similarity and classified with a graph convolutional network
+- a combined demonstration notebook that places the optimization and biomedical branches in one coherent narrative
 
-The workflow formulates domain-specific tasks as graph optimization problems and combines machine learning with variational quantum optimization to evaluate solution quality, computational behavior, and practical transferability.
-
-This work highlights how **quantum-enhanced AI methods** may contribute to high-impact application areas such as:
-
-- Healthcare resource allocation
-- Biomedical experimental design
-- Network resilience and infrastructure optimization
+The implementation uses a lightweight exact statevector simulator for small QAOA instances, a portable GCN implementation with an optional PyTorch Geometric backend, a training script for graph-to-QAOA-parameter regression, and a Flask API plus static website for interactive inference.
 
 ---
 
-## Motivation
+## Current Project Scope
 
-Many scientific and engineering systems naturally form **complex networks**, including:
+The repository is no longer just a generic hybrid-optimization scaffold. The notebooks now focus on two concrete, real-data stories:
 
-- Biological interaction networks
-- Healthcare infrastructure
-- Supply chains
-- Communication networks
+1. Quantum optimization from real transcriptomic data. The QAOA notebook starts from the OpenML `prostate` gene-expression dataset, selects a compact gene panel, derives biologically motivated co-expression graphs, and compares direct classical QAOA parameter search against GNN-predicted parameters.
+2. Biomedical graph classification on a real CTG cohort. The biomedical notebook uses the UCI Cardiotocography dataset to build a risk-sensitive fetal-state classifier on a k-nearest-neighbor exam graph, with attention to class imbalance, leakage-aware preprocessing, and clinically meaningful evaluation.
 
-These settings frequently require solving **large combinatorial optimization problems** that become computationally demanding under purely classical strategies, particularly as graph size and constraint complexity increase.
-
-Hybrid quantum-classical approaches provide a principled framework:
-
-- **Graph Neural Networks (GNNs)** learn structural representations from graph data.
-- **QAOA** explores combinatorial objective landscapes through parameterized quantum circuits.
-- **Classical ML pipelines** support data processing, model training, and empirical evaluation.
-
-By combining these components, the project provides an experimental testbed for **high-dimensional graph optimization** with explicit hybrid feedback loops.
+The combined notebook then shows how these two branches fit together under a single graph-centered hybrid-AI framing.
 
 ---
 
-## System Architecture
+## Notebook Guide
 
-The pipeline contains three major components.
+### `notebooks/qaoa_demo.ipynb`
 
-### 1. Graph Representation
+This notebook is the repository's main quantum-optimization case study. It reframes the QAOA demo around a real genomics source dataset instead of a purely synthetic graph.
 
-Raw data is transformed into graph structures.
+**What goes in**
 
-Nodes represent entities such as:
+- OpenML `prostate` gene-expression dataset
+- 102 patient samples and 12,600 expression features
+- a derived 10-gene panel chosen by variance ranking
+- co-expression graphs built from absolute Pearson correlations
 
-- patients
-- experiments
-- medical facilities
-- biological components
+**What the notebook does**
 
-Edges represent relationships including:
+1. Introduces QAOA, MaxCut, and the exact statevector simulation logic in tutorial form.
+2. Loads the repository's `SimpleGCN` checkpoint from `model.pt` when available.
+3. Defines helper functions for exact MaxCut, QAOA state evaluation, angle normalization, classical optimization, and learned inference.
+4. Fetches the real genomics dataset and constructs one representative full-cohort co-expression graph plus six additional benchmark graphs from stratified patient subsamples.
+5. Runs multi-start Nelder-Mead search on the representative graph to obtain a depth-1 QAOA baseline.
+6. Runs the GNN on the same graph to predict `gamma` and `beta` directly from graph structure.
+7. Visualizes the representative graph, a one-dimensional landscape slice, and the full two-parameter QAOA landscape.
+8. Benchmarks classical search versus GNN inference across the patient-resampled graph collection.
 
-- interactions
-- dependencies
-- resource flows
-- network connections
+**What it displays**
 
-Graph construction enables structured learning and optimization.
+- dataset summary tables for the prostate cohort
+- the selected gene panel and benchmark overview
+- classical and GNN-predicted QAOA angle summaries
+- a representative gene co-expression graph with the exact MaxCut partition
+- a 1D expected-cut slice and a 2D QAOA heatmap
+- benchmark-wide latency and quality summaries
+- the highest-probability output bit strings for the representative graph
 
----
+**What it highlights**
 
-### 2. Graph Neural Networks (GNN)
+- real transcriptomic data can be turned into tractable graph optimization instances
+- exact QAOA remains feasible when the biological source is reduced to a small graph
+- a learned graph model can propose useful QAOA parameters much faster than repeated direct search
 
-Graph Neural Networks learn representations that capture the structure and relationships within the graph.
+### `notebooks/bio_demo.ipynb`
 
-Typical models used include:
+This notebook is the repository's main biomedical learning workflow. It builds an end-to-end graph convolutional pipeline for retrospective fetal-state risk detection on a real public cohort.
 
-- Graph Convolutional Networks (GCN)
-- Graph Attention Networks (GAT)
-- Message Passing Neural Networks (MPNN)
+**What goes in**
 
-These models generate embeddings that summarize graph structure and guide downstream optimization.
+- UCI Cardiotocography dataset via `ucimlrepo.fetch_ucirepo(id=193)`
+- 2,126 fetal monitoring exams
+- 21 physiologic summary features
+- original three-class labels: normal, suspect, and pathologic
 
----
+**What the notebook does**
 
-### 3. Quantum Optimization with QAOA
+1. Reframes the original three-class obstetric label into a binary screening target: pathologic versus non-pathologic.
+2. Audits cohort composition and writes an auditable raw cohort table.
+3. Creates a stratified train, validation, and test split before fitting the scaler.
+4. Standardizes features using training-set statistics only.
+5. Constructs a symmetric 10-nearest-neighbor exam-similarity graph with self-loops and degree normalization.
+6. Defines a two-layer `ClinicalGCN` with dropout and class-weighted cross-entropy.
+7. Trains with validation monitoring and early stopping.
+8. Produces held-out evaluation outputs focused on pathologic detection.
 
-Optimization problems are encoded into **QUBO (Quadratic Unconstrained Binary Optimization)** or **Ising models**.
+**What it writes and displays**
 
-The **Quantum Approximate Optimization Algorithm (QAOA)** is then used to search for high-quality solutions.
+- `outputs/ctg_raw.csv` with case IDs, original labels, and binary framing
+- `outputs/ctg_processed.csv` with standardized features and split assignments
+- cohort, split, and graph statistics printed in the notebook
+- a PCA-based cohort audit and prediction panel
+- a feature-shift bar chart showing the strongest physiologic differences
+- a held-out confusion matrix, ROC curve, and training-dynamics figure
 
-The process includes:
+**What it highlights**
 
-1. Mapping optimization problems to a quantum Hamiltonian
-2. Constructing parameterized quantum circuits
-3. Iteratively optimizing circuit parameters
-4. Measuring candidate solutions
+- the CTG cohort contains 2,126 exams split into 1,445 train, 255 validation, and 426 test cases
+- the exam graph contains 14,776 undirected edges with low density, so each exam exchanges information only with a small physiologic neighborhood
+- the saved notebook run reports 94.1% accuracy, 0.903 balanced accuracy, 85.7% pathologic recall, and 0.963 ROC AUC on the held-out test set
+- the notebook is explicit about scope: this is a research demonstration for retrospective risk screening, not a clinical deployment system
 
-The classical and quantum components interact in a hybrid loop.
+### `notebooks/quantum_ai_bio_combined.ipynb`
 
----
+This notebook is the integrative narrative for the repository. It combines a compact QAOA walkthrough with the real CTG graph-classification branch so readers can see the hybrid theme end to end.
 
-## Example Applications
+**What goes in**
 
-### Healthcare Resource Allocation
+- the repository source modules and plotting stack
+- a small connected Erdős-Rényi MaxCut graph sampled from `src.data.sample_erdos_renyi`
+- the `SimpleGCN` checkpoint for QAOA parameter prediction when available
+- the same real CTG cohort used in `bio_demo.ipynb`
 
-Optimize the distribution of limited resources across healthcare systems, such as:
+**What the notebook does**
 
-- hospital capacity
-- equipment allocation
-- emergency response logistics
+1. Runs a reproducibility and environment audit.
+2. Builds a small MaxCut graph, computes the exact MaxCut solution, and classically optimizes depth-1 QAOA angles.
+3. Loads or initializes `SimpleGCN` and compares GNN-predicted QAOA angles against the classical baseline.
+4. Visualizes the graph, the one-dimensional QAOA response slice, and the full two-parameter landscape.
+5. Loads the UCI CTG cohort, standardizes the features, and writes `outputs/ctg_raw.csv` and `outputs/ctg_processed.csv`.
+6. Builds a 10-nearest-neighbor exam graph and trains a two-layer `BioGCN` with class-weighted loss and early stopping.
+7. Produces a six-panel evaluation dashboard with confusion matrix, ROC, training curves, PCA projections, and cohort feature shifts.
+8. Closes with a synthesis that explains how graph structure supports both optimization and prediction.
 
----
+**What it writes and displays**
 
-### Biomedical Experimental Design
+- `outputs/maxcut_graph.csv`
+- `outputs/qaoa_classical_angles.csv`
+- `outputs/ctg_raw.csv`
+- `outputs/ctg_processed.csv`
+- QAOA baseline, predicted-angle, and landscape figures
+- BioGCN evaluation dashboard on the held-out CTG cohort
 
-Determine optimal experiment combinations under constraints like:
+**What it highlights**
 
-- limited budgets
-- limited lab time
-- experimental dependencies
-
----
-
-### Network Resilience
-
-Identify critical nodes in biological or infrastructure networks and optimize reinforcement strategies to improve system robustness.
+- the QAOA branch is intentionally small and exact, making the optimization geometry easy to inspect
+- the biomedical branch is larger and more applied, showing how graph learning behaves on a real imbalanced cohort
+- the notebook makes the repository's main conceptual claim explicit: graphs are the common language connecting hybrid quantum optimization and biomedical learning
 
 ---
 
 ## Repository Structure
-
-The repository is organized to separate core modeling code, datasets, reproducible notebooks, generated outputs, and demonstration assets.
 
 ```text
 Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/
 ├── README.md
 ├── LICENSE
 ├── requirements.txt
-├── index.html                  ← GitHub Pages root
+├── model.pt
+├── index.html
 ├── data/
 │   └── breast_cancer.csv
 ├── notebooks/
@@ -143,7 +158,11 @@ Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/
 │   ├── qaoa_demo.ipynb
 │   └── quantum_ai_bio_combined.ipynb
 ├── outputs/
+│   ├── breast_cancer_expanded_processed.csv
 │   ├── breast_cancer_processed.csv
+│   ├── breast_cancer_raw.csv
+│   ├── ctg_processed.csv
+│   ├── ctg_raw.csv
 │   ├── maxcut_graph.csv
 │   └── qaoa_classical_angles.csv
 ├── src/
@@ -154,53 +173,79 @@ Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/
 │   ├── server.py
 │   └── train.py
 └── website/
-    ├── README_SITE.md
-    ├── demo.js
-    ├── index.html              ← local dev copy (served from website/)
-    ├── style.css
-    └── notebooks_html/
-        ├── bio_demo.html
-        ├── qaoa_demo.html
-        └── quantum_ai_bio_combined.html
+        ├── README_SITE.md
+        ├── demo.js
+        ├── index.html
+        ├── style.css
+        └── notebooks_html/
+                ├── bio_demo.html
+                ├── qaoa_demo.html
+                └── quantum_ai_bio_combined.html
 ```
 
----
-
-## Project Summary
-
-This project serves as a reproducible research artifact for studying hybrid quantum-classical optimization on graph-structured tasks. The current implementation combines graph representation learning, QAOA parameter optimization, and lightweight deployment interfaces to evaluate how learned priors can accelerate variational optimization.
-
-In addition to model code, the repository includes notebooks, exported HTML reports, and an interactive demo interface to support transparent communication of methods and outcomes. The overall design is intended for interdisciplinary audiences in AI, optimization, and computational biomedicine.
+Current notebook development centers on the CTG and prostate-data workflows. The `breast_cancer.csv` dataset and related output files remain in the repository as earlier supporting artifacts, but they are no longer the main narrative of the README or the current notebooks.
 
 ---
 
-## Key Features
+## Implementation Notes
 
-### End-to-End Hybrid Workflow
+### Graph model
 
-The codebase links graph generation, feature construction, GNN-based parameter prediction, and QAOA state simulation in a unified pipeline. This structure enables controlled experiments on whether learned graph representations improve optimization efficiency and consistency.
+`src/gnn.py` defines `SimpleGCN`, the model used for graph-to-QAOA-parameter prediction.
 
-### Classical-Quantum Bridge via QAOA Parameter Learning
+- input node feature: augmented degree
+- hidden width: 32
+- output: `2 * p` values interpreted as `gamma` and `beta`
+- readout: global mean pooling
+- backend behavior:
+    - uses `torch_geometric.nn.GCNConv` when PyTorch Geometric is available
+    - otherwise falls back to adjacency-matrix message passing with standard PyTorch layers
 
-The training procedure samples graph instances, computes reference QAOA angles via classical optimization, and trains a GNN to infer those angles directly from graph structure. The resulting model approximates expensive search with fast, data-driven inference.
+### QAOA simulator
 
-### Lightweight and Portable Implementation
+`src/qaoa_sim.py` implements a lightweight exact statevector simulator.
 
-The implementation is designed for standard Python environments with minimal dependencies, while optionally leveraging PyTorch Geometric when available. A fallback adjacency-based GNN path preserves reproducibility when specialized graph ML tooling is unavailable.
+- initializes the uniform superposition state directly
+- applies the MaxCut phase operator exactly
+- applies the mixer through dense matrix exponentiation
+- computes the expected cut from the final statevector
 
-### Biomedical and Applied Optimization Demonstrations
+This design is transparent and portable, but it scales exponentially with the number of nodes. It is appropriate for the small exact cases used in the notebooks, not for large quantum instances.
 
-Notebook artifacts include biomedical classification and hybrid optimization demonstrations, illustrating how a shared methodological framework can be adapted to real-world datasets and decision-support contexts.
+### Training pipeline
 
-### API and Web Demo Support
+`src/train.py` generates connected Erdős-Rényi graphs, computes reference QAOA angles by classical optimization, and trains `SimpleGCN` to regress those parameters from graph structure.
 
-A Flask inference endpoint and static web demo provide an interactive interface for evaluating graph inputs and inspecting predicted QAOA parameters with associated expected-cut estimates. This supports rapid validation and communication of experimental behavior.
+The default training command is:
+
+```bash
+python -m src.train --dataset-size 20 --n 6 --p 1 --epochs 10 --model-path model.pt
+```
+
+### API server
+
+`src/server.py` exposes a Flask prediction endpoint.
+
+- route: `POST /predict`
+- input: graph edge list and optional node count
+- output: predicted `gammas`, `betas`, and the resulting expected cut
+
+Example request body:
+
+```json
+{
+    "edges": [[0, 1], [1, 2], [0, 2]],
+    "n": 3
+}
+```
+
+### Website demo
+
+The static site in `website/` calls the Flask API and visualizes predictions for user-supplied graphs. By default, `website/demo.js` targets `http://localhost:5000/predict`. The website README also documents how to override the API base URL for a different deployment target.
 
 ---
 
 ## Quick Start
-
-The following steps reproduce a baseline workflow, from model training to API-based inference.
 
 1. Install dependencies.
 
@@ -208,51 +253,95 @@ The following steps reproduce a baseline workflow, from model training to API-ba
 pip install -r requirements.txt
 ```
 
-2. Train the GNN predictor on generated graph data.
+2. Train the QAOA-parameter predictor if you want a fresh checkpoint.
 
 ```bash
 python -m src.train --dataset-size 20 --n 6 --p 1 --epochs 10 --model-path model.pt
 ```
 
-3. Start the prediction API.
+3. Run the notebooks in the order that matches your goal.
+
+- `notebooks/qaoa_demo.ipynb` for the genomics-derived QAOA benchmark
+- `notebooks/bio_demo.ipynb` for the standalone biomedical CTG workflow
+- `notebooks/quantum_ai_bio_combined.ipynb` for the full integrative narrative
+
+4. Start the inference API.
 
 ```bash
 python -m src.server
 ```
 
-4. Optionally serve the website demo locally in another terminal.
+5. Optionally serve the repository locally for the website and GitHub Pages entry point.
 
 ```bash
 python -m http.server 8000
 ```
 
-Then open `http://localhost:8000` and use the demo to interact with the `/predict` endpoint.
+Then open `http://localhost:8000/`.
 
-> **GitHub Pages**: the live demo is published at  
-> `https://thmolena.github.io/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/`  
-> The root `index.html` is the GitHub Pages entry point; it loads assets from `website/`.
+If you want to serve only the website directory instead, use:
+
+```bash
+python -m http.server 8000 --directory website
+```
+
+Then open `http://localhost:8000/index.html`.
+
+> GitHub Pages: the published site is served from the repository root `index.html`, which loads assets from `website/`.
+
+---
+
+## Generated Artifacts
+
+The repository currently contains several generated CSV artifacts produced by the training scripts and notebooks.
+
+- `outputs/ctg_raw.csv`: raw CTG cohort with original three-class labels and binary screening labels
+- `outputs/ctg_processed.csv`: standardized CTG features with train, validation, and test split annotations
+- `outputs/maxcut_graph.csv`: edge list for the small QAOA demo graph written by the combined notebook
+- `outputs/qaoa_classical_angles.csv`: classically optimized QAOA angles written by the combined notebook
+- `model.pt`: trained `SimpleGCN` checkpoint used by the QAOA notebooks and the Flask API when available
+
+---
+
+## Key Features
+
+### Real-data quantum-to-graph workflow
+
+The QAOA notebook does not stop at synthetic graph generation. It starts from a real transcriptomic matrix, derives compact co-expression graphs, and studies how graph structure affects exact MaxCut and QAOA behavior.
+
+### Leakage-aware biomedical graph learning
+
+The CTG pipeline explicitly separates train, validation, and test partitions before standardization, uses class weighting for the rare pathologic class, and evaluates the held-out cohort with risk-sensitive metrics rather than accuracy alone.
+
+### Portable GNN implementation
+
+The repository runs in a standard PyTorch environment and does not require PyTorch Geometric, while still taking advantage of it when installed.
+
+### Interactive inference path
+
+The codebase includes not only notebooks and training scripts, but also a small deployment path through `src/server.py` and the static website demo.
 
 ---
 
 ## Roadmap
 
-### Near-Term
+### Near-term
 
-Expand benchmark coverage to larger and more diverse graph families, with clearer experiment tracking for convergence behavior, optimization quality, and runtime comparisons between baseline and learned-parameter approaches.
+Expand benchmark coverage to larger and more diverse graph families, add stronger experiment tracking for QAOA quality-speed trade-offs, and enrich the graph features used for learned parameter prediction.
 
-### Mid-Term
+### Mid-term
 
-Strengthen biomedical modeling with richer graph construction strategies, additional node and edge attributes, and stronger evaluation protocols tailored to applied healthcare and biological network tasks.
+Strengthen the biomedical branch with richer graph construction strategies, additional physiologic or metadata features, and broader evaluation protocols for clinically motivated screening analysis.
 
-### Longer-Term
+### Longer-term
 
-Integrate hardware-aware quantum backends and advanced hybrid training loops to move from simulation-centric studies toward deployment-oriented quantum-AI experimentation at larger scale.
+Connect the simulation-centric workflow to hardware-aware backends and more advanced hybrid training loops, while preserving the repository's current emphasis on interpretability and reproducibility.
 
 ---
 
 ## Contributing
 
-Contributions are welcome in the form of algorithmic improvements, additional datasets, ablation studies, notebook enhancements, and reproducibility upgrades. Pull requests with concise technical rationale, experimental assumptions, and validation evidence are especially valuable for maintaining a rigorous and extensible research codebase.
+Contributions are welcome in the form of algorithmic improvements, notebook refinements, additional real-data graph benchmarks, evaluation upgrades, and reproducibility fixes. Pull requests are most useful when they include a concise technical rationale and clear validation evidence.
 
 ---
 
