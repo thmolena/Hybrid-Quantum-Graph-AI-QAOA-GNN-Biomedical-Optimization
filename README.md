@@ -135,7 +135,7 @@ Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/
 ├── README.md
 ├── LICENSE
 ├── requirements.txt
-├── index.html                  ← GitHub Pages entry point (root)
+├── index.html                  ← GitHub Pages root
 ├── data/
 │   └── breast_cancer.csv
 ├── notebooks/
