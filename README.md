@@ -149,8 +149,17 @@ Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/
 ├── README.md
 ├── LICENSE
 ├── requirements.txt
+<<<<<<< Updated upstream
 ├── model.pt
 ├── index.html
+=======
+<<<<<<< HEAD
+├── model.pt
+├── index.html
+=======
+├── index.html                  ← GitHub Pages root
+>>>>>>> e34a9c0f4b8da436cfc29f3055c13028d5cf44d6
+>>>>>>> Stashed changes
 ├── data/
 │   └── breast_cancer.csv
 ├── notebooks/

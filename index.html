@@ -187,6 +187,72 @@
       letter-spacing: 0.05em;
     }
 
+    .demo-explainer {
+      margin-top: 1.25rem;
+      padding: 1rem 1.1rem;
+      border: 1px solid #d7e3f3;
+      border-radius: 0.85rem;
+      background: #f8fbff;
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, 1fr);
+      gap: 1rem;
+    }
+
+    .demo-explainer h3 {
+      margin-bottom: 0.45rem;
+      font-size: 0.98rem;
+      color: #111827;
+    }
+
+    .demo-explainer p,
+    .demo-note {
+      color: #374151;
+      font-size: 0.9rem;
+      line-height: 1.65;
+    }
+
+    .demo-equations {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .eq-line {
+      padding: 0.7rem 0.8rem;
+      border: 1px solid #d7e3f3;
+      border-radius: 0.7rem;
+      background: #ffffff;
+    }
+
+    .eq-label {
+      display: block;
+      margin-bottom: 0.28rem;
+      font-size: 0.74rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #1e3a8a;
+    }
+
+    .eq-line code {
+      display: block;
+      color: #111827;
+      font-size: 0.85rem;
+      line-height: 1.45;
+      white-space: normal;
+    }
+
+    .demo-note {
+      margin-top: 0.6rem;
+      font-size: 0.84rem;
+    }
+
+    @media (max-width: 760px) {
+      .demo-explainer {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .footer {
       border-top-color: #d9e2ec;
     }
@@ -271,6 +337,38 @@
         <div class="graph-panel">
           <svg id="graph-svg" width="100%" height="300"></svg>
           <p class="graph-hint" id="graph-hint">Click <em>Random Graph</em> to generate a graph.</p>
+        </div>
+      </div>
+
+      <div class="demo-explainer" aria-label="Interactive demo explanation">
+        <div>
+          <h3>What the prediction means</h3>
+          <p>
+            The demo samples a graph <strong>G = (V, E)</strong>, builds a simple node-feature view from the graph structure,
+            and then asks the model for a good depth-1 QAOA parameter pair <strong>(γ, β)</strong>. In practical terms,
+            the GNN is learning a shortcut from graph structure to quantum-circuit settings, so it can propose angles
+            without rerunning a full classical search loop for every new graph.
+          </p>
+          <p class="demo-note">
+            The value reported as <strong>Expected Cut</strong> is the average MaxCut score the QAOA state would produce under
+            those angles. When the local API is running, the page uses the trained GNN through <code>/predict</code>; when it is
+            not available, the page falls back to an in-browser depth-1 grid search so the demo still remains interactive.
+          </p>
+        </div>
+
+        <div class="demo-equations">
+          <div class="eq-line">
+            <span class="eq-label">MaxCut Objective</span>
+            <code>C(z) = Σ<sub>(u,v)∈E</sub> (1 - z<sub>u</sub> z<sub>v</sub>) / 2</code>
+          </div>
+          <div class="eq-line">
+            <span class="eq-label">Depth-1 QAOA State</span>
+            <code>|γ, β⟩ = U<sub>B</sub>(β) U<sub>C</sub>(γ) |+⟩<sup>⊗n</sup></code>
+          </div>
+          <div class="eq-line">
+            <span class="eq-label">Quantity Being Maximized</span>
+            <code>⟨C⟩ = ⟨γ, β| Ĉ |γ, β⟩</code>
+          </div>
         </div>
       </div>
     </section>
