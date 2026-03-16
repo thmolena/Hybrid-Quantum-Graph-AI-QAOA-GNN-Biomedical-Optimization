@@ -7,7 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0n+qhfYdqw0W7aGpmD2J4s6m0D8G4RmkLomPvKgkl0vvVuv5QW0si" crossorigin="anonymous">
   <link rel="stylesheet" href="website/style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQx/2dX1t6zK5vCk1vZ1tcHTfb3e8DqRLVQjaxAg/P6MqxsVXni4eWh05rq6Ar" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaMlxQ+8I4eAbOeXtfLOcAfeUeawuO/7dBDEuDfSUdifYEsaOCamc8" crossorigin="anonymous"></script>
   <style>
     body {
       background: #f5f7fb;
@@ -234,12 +237,18 @@
       color: #1e3a8a;
     }
 
-    .eq-line code {
+    .eq-formula {
       display: block;
       color: #111827;
       font-size: 0.85rem;
       line-height: 1.45;
       white-space: normal;
+    }
+
+    .eq-formula .katex-display {
+      margin: 0.15rem 0 0;
+      overflow-x: auto;
+      overflow-y: hidden;
     }
 
     .demo-note {
@@ -359,15 +368,27 @@
         <div class="demo-equations">
           <div class="eq-line">
             <span class="eq-label">MaxCut Objective</span>
-            <code>C(z) = Σ<sub>(u,v)∈E</sub> (1 - z<sub>u</sub> z<sub>v</sub>) / 2</code>
+            <div class="eq-formula">
+              \[
+              C(z) = \sum_{(u,v) \in E} \frac{1 - z_u z_v}{2}
+              \]
+            </div>
           </div>
           <div class="eq-line">
             <span class="eq-label">Depth-1 QAOA State</span>
-            <code>|γ, β⟩ = U<sub>B</sub>(β) U<sub>C</sub>(γ) |+⟩<sup>⊗n</sup></code>
+            <div class="eq-formula">
+              \[
+              |\gamma, \beta\rangle = U_B(\beta)\, U_C(\gamma)\, |+\rangle^{\otimes n}
+              \]
+            </div>
           </div>
           <div class="eq-line">
             <span class="eq-label">Quantity Being Maximized</span>
-            <code>⟨C⟩ = ⟨γ, β| Ĉ |γ, β⟩</code>
+            <div class="eq-formula">
+              \[
+              \langle C \rangle = \langle \gamma, \beta | \, \hat{C} \, | \gamma, \beta \rangle
+              \]
+            </div>
           </div>
         </div>
       </div>
@@ -506,5 +527,18 @@ python -m src.server</pre>
   </footer>
 
   <script src="website/demo.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.renderMathInElement) {
+        window.renderMathInElement(document.body, {
+          delimiters: [
+            {left: '\\[', right: '\\]', display: true},
+            {left: '\\(', right: '\\)', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
 </body>
 </html>
