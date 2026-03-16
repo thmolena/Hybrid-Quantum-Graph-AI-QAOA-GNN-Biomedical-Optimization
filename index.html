@@ -7,10 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0n+qhfYdqw0W7aGpmD2J4s6m0D8G4RmkLomPvKgkl0vvVuv5QW0si" crossorigin="anonymous">
   <link rel="stylesheet" href="website/style.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQx/2dX1t6zK5vCk1vZ1tcHTfb3e8DqRLVQjaxAg/P6MqxsVXni4eWh05rq6Ar" crossorigin="anonymous"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaMlxQ+8I4eAbOeXtfLOcAfeUeawuO/7dBDEuDfSUdifYEsaOCamc8" crossorigin="anonymous"></script>
   <style>
     body {
       background: #f5f7fb;
@@ -245,15 +242,38 @@
       white-space: normal;
     }
 
-    .eq-formula .katex-display {
+    .eq-formula math {
+      display: block;
+      width: 100%;
       margin: 0.15rem 0 0;
+      color: #0f172a;
+      font-size: 1rem;
+      line-height: 1.4;
       overflow-x: auto;
       overflow-y: hidden;
+    }
+
+    .eq-words {
+      margin-top: 0.55rem;
+      color: #475569;
+      font-size: 0.84rem;
+      line-height: 1.55;
+    }
+
+    .eq-words strong {
+      color: #1f2937;
     }
 
     .demo-note {
       margin-top: 0.6rem;
       font-size: 0.84rem;
+    }
+
+    .field-note {
+      margin-top: 0.45rem;
+      color: #64748b;
+      font-size: 0.78rem;
+      line-height: 1.45;
     }
 
     @media (max-width: 760px) {
@@ -307,6 +327,7 @@
               <span id="n-val" class="n-badge">6</span>
             </div>
             <input id="n" type="hidden" value="6">
+            <p class="field-note">Demo range: 3 to 10 nodes, which keeps the depth-1 QAOA prediction path fast and stable in both the browser and the API-backed mode.</p>
           </div>
 
           <div class="btn-group">
@@ -359,9 +380,15 @@
             without rerunning a full classical search loop for every new graph.
           </p>
           <p class="demo-note">
-            The value reported as <strong>Expected Cut</strong> is the average MaxCut score the QAOA state would produce under
-            those angles. When the local API is running, the page uses the trained GNN through <code>/predict</code>; when it is
-            not available, the page falls back to an in-browser depth-1 grid search so the demo still remains interactive.
+            The website currently fixes <strong>p = 1</strong> so the interface stays fast, the optimization problem remains easy to
+            interpret, and the frontend stays consistent with the current backend model, which predicts one <strong>(γ, β)</strong>
+            pair rather than a longer sequence of angles.
+          </p>
+          <p class="demo-note">
+            The value reported as <strong>Expected Cut</strong> is the probability-weighted average number of graph edges cut by
+            the final depth-1 QAOA state for the displayed angles. When a reachable <code>/predict</code> endpoint is available,
+            those angles are proposed by the trained GNN backend; otherwise the page computes a browser-side depth-1 QAOA
+            baseline using exact state simulation together with a lightweight local refinement step.
           </p>
         </div>
 
@@ -369,25 +396,96 @@
           <div class="eq-line">
             <span class="eq-label">MaxCut Objective</span>
             <div class="eq-formula">
-              \[
-              C(z) = \sum_{(u,v) \in E} \frac{1 - z_u z_v}{2}
-              \]
+              <math display="block" aria-label="C of z equals the sum over edges of one minus z sub u z sub v divided by two">
+                <mrow>
+                  <mi>C</mi>
+                  <mo>(</mo>
+                  <mi>z</mi>
+                  <mo>)</mo>
+                  <mo>=</mo>
+                  <munder>
+                    <mo>&sum;</mo>
+                    <mrow>
+                      <mo>(</mo>
+                      <mi>u</mi>
+                      <mo>,</mo>
+                      <mi>v</mi>
+                      <mo>)</mo>
+                      <mo>&isin;</mo>
+                      <mi>E</mi>
+                    </mrow>
+                  </munder>
+                  <mfrac>
+                    <mrow>
+                      <mn>1</mn>
+                      <mo>-</mo>
+                      <msub><mi>z</mi><mi>u</mi></msub>
+                      <msub><mi>z</mi><mi>v</mi></msub>
+                    </mrow>
+                    <mn>2</mn>
+                  </mfrac>
+                </mrow>
+              </math>
+              <p class="eq-words"><strong>Interpretation:</strong> look at every edge in the graph one by one. If its two endpoints end up on opposite sides of the partition, that edge contributes <strong>1</strong>. If they land on the same side, it contributes <strong>0</strong>. Add those edge contributions together, and you get the cut value.</p>
             </div>
           </div>
           <div class="eq-line">
             <span class="eq-label">Depth-1 QAOA State</span>
             <div class="eq-formula">
-              \[
-              |\gamma, \beta\rangle = U_B(\beta)\, U_C(\gamma)\, |+\rangle^{\otimes n}
-              \]
+              <math display="block" aria-label="gamma beta state equals U sub B of beta times U sub C of gamma times plus state tensor n times">
+                <mrow>
+                  <mo>|</mo>
+                  <mi>&gamma;</mi>
+                  <mo>,</mo>
+                  <mi>&beta;</mi>
+                  <mo>&rang;</mo>
+                  <mo>=</mo>
+                  <msub><mi>U</mi><mi>B</mi></msub>
+                  <mo>(</mo><mi>&beta;</mi><mo>)</mo>
+                  <msub><mi>U</mi><mi>C</mi></msub>
+                  <mo>(</mo><mi>&gamma;</mi><mo>)</mo>
+                  <msup>
+                    <mrow>
+                      <mo>|</mo>
+                      <mo>+</mo>
+                      <mo>&rang;</mo>
+                    </mrow>
+                    <mrow>
+                      <mo>&otimes;</mo>
+                      <mi>n</mi>
+                    </mrow>
+                  </msup>
+                </mrow>
+              </math>
+              <p class="eq-words"><strong>Interpretation:</strong> start from a state that treats all possible graph partitions equally. Then apply one cost step controlled by <strong>γ</strong>, which biases the state toward better cuts, and one mixer step controlled by <strong>β</strong>, which redistributes probability across candidate solutions. That final quantum state is the one evaluated by the demo.</p>
             </div>
           </div>
           <div class="eq-line">
             <span class="eq-label">Quantity Being Maximized</span>
             <div class="eq-formula">
-              \[
-              \langle C \rangle = \langle \gamma, \beta | \, \hat{C} \, | \gamma, \beta \rangle
-              \]
+              <math display="block" aria-label="expected C equals bra gamma beta C hat ket gamma beta">
+                <mrow>
+                  <mo>&lang;</mo>
+                  <mi>C</mi>
+                  <mo>&rang;</mo>
+                  <mo>=</mo>
+                  <mo>&lang;</mo>
+                  <mi>&gamma;</mi>
+                  <mo>,</mo>
+                  <mi>&beta;</mi>
+                  <mo>|</mo>
+                  <mover>
+                    <mi>C</mi>
+                    <mo>^</mo>
+                  </mover>
+                  <mo>|</mo>
+                  <mi>&gamma;</mi>
+                  <mo>,</mo>
+                  <mi>&beta;</mi>
+                  <mo>&rang;</mo>
+                </mrow>
+              </math>
+              <p class="eq-words"><strong>Interpretation:</strong> this is the average cut score produced by the final QAOA state. The algorithm assigns probabilities to many possible graph partitions, computes each partition's cut value, and then takes the probability-weighted average. Better angles are the ones that push more probability onto high-cut solutions, which makes this expected value larger.</p>
             </div>
           </div>
         </div>
@@ -527,18 +625,5 @@ python -m src.server</pre>
   </footer>
 
   <script src="website/demo.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      if (window.renderMathInElement) {
-        window.renderMathInElement(document.body, {
-          delimiters: [
-            {left: '\\[', right: '\\]', display: true},
-            {left: '\\(', right: '\\)', display: false}
-          ],
-          throwOnError: false
-        });
-      }
-    });
-  </script>
 </body>
 </html>

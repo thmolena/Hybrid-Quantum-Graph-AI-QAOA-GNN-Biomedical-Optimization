@@ -1,4 +1,28 @@
-const API_BASE_URL = (window.API_BASE_URL || 'http://localhost:5000').replace(/\/$/, '');
+function normalizeBaseUrl(url) {
+  return String(url || '').trim().replace(/\/$/, '');
+}
+
+function buildApiCandidates() {
+  const candidates = [];
+  const configured = normalizeBaseUrl(window.API_BASE_URL);
+  if (configured) candidates.push(configured);
+
+  if (window.location.protocol.startsWith('http')) {
+    const host = window.location.hostname;
+    if (host && host !== 'localhost' && host !== '127.0.0.1' && !host.endsWith('github.io')) {
+      candidates.push(`${window.location.protocol}//${host}:5000`);
+    }
+    candidates.push(`${window.location.protocol}//localhost:5000`);
+    candidates.push(`${window.location.protocol}//127.0.0.1:5000`);
+  }
+
+  candidates.push('http://localhost:5000');
+  candidates.push('http://127.0.0.1:5000');
+
+  return [...new Set(candidates.filter(Boolean).map(normalizeBaseUrl))];
+}
+
+const API_BASE_CANDIDATES = buildApiCandidates();
 
 // ── Client-side QAOA simulation (p=1, exact statevector) ────────────────
 // Runs entirely in the browser when the API is unavailable (e.g. GitHub Pages).
@@ -41,12 +65,11 @@ function applyMixer(re, im, n, beta) {
   }
 }
 
-function qaojsExpCut(n, edges, gamma, beta) {
+function qaojsExpCutFromDiag(n, diag, gamma, beta) {
   const num  = 1 << n;
   const norm = 1 / Math.sqrt(num);
   const re   = new Float64Array(num).fill(norm);
   const im   = new Float64Array(num).fill(0);
-  const diag = computeCutDiag(n, edges);
   applyPhase(re, im, diag, gamma);
   applyMixer(re, im, n, beta);
   let cut = 0;
@@ -54,19 +77,128 @@ function qaojsExpCut(n, edges, gamma, beta) {
   return cut;
 }
 
+function qaojsExpCut(n, edges, gamma, beta) {
+  const diag = computeCutDiag(n, edges);
+  return qaojsExpCutFromDiag(n, diag, gamma, beta);
+}
+
+function wrapAngle(value, period) {
+  const wrapped = value % period;
+  return wrapped < 0 ? wrapped + period : wrapped;
+}
+
+function exactMaxCutFromDiag(diag) {
+  let best = -Infinity;
+  for (let index = 0; index < diag.length; index++) best = Math.max(best, diag[index]);
+  return best;
+}
+
 function qaojsOptimize(n, edges) {
-  // Grid search over (gamma, beta) for p=1
-  const steps = 24;
-  let bestGamma = Math.PI / 4, bestBeta = Math.PI / 8, bestCut = -Infinity;
-  for (let gi = 0; gi < steps; gi++) {
-    for (let bi = 0; bi < steps; bi++) {
-      const gamma = (gi + 0.5) * Math.PI / steps;
-      const beta  = (bi + 0.5) * Math.PI / (2 * steps);
-      const cut   = qaojsExpCut(n, edges, gamma, beta);
-      if (cut > bestCut) { bestCut = cut; bestGamma = gamma; bestBeta = beta; }
+  const diag = computeCutDiag(n, edges);
+  const evaluate = (gamma, beta) => {
+    const wrappedGamma = wrapAngle(gamma, Math.PI);
+    const wrappedBeta = wrapAngle(beta, Math.PI / 2);
+    return {
+      gamma: wrappedGamma,
+      beta: wrappedBeta,
+      cut: qaojsExpCutFromDiag(n, diag, wrappedGamma, wrappedBeta)
+    };
+  };
+
+  const coarseGammaSteps = 16;
+  const coarseBetaSteps = 12;
+  let best = evaluate(Math.PI / 4, Math.PI / 8);
+
+  for (let gi = 0; gi < coarseGammaSteps; gi++) {
+    for (let bi = 0; bi < coarseBetaSteps; bi++) {
+      const candidate = evaluate(
+        (gi + 0.5) * Math.PI / coarseGammaSteps,
+        (bi + 0.5) * Math.PI / (2 * coarseBetaSteps)
+      );
+      if (candidate.cut > best.cut) best = candidate;
     }
   }
-  return { gammas: [bestGamma], betas: [bestBeta], expected_cut: bestCut };
+
+  const seedPoints = [
+    best,
+    evaluate(Math.PI / 8, Math.PI / 10),
+    evaluate(Math.PI / 3, Math.PI / 6),
+    evaluate((2 * Math.PI) / 3, Math.PI / 5),
+    evaluate(Math.random() * Math.PI, Math.random() * Math.PI / 2)
+  ];
+
+  function refineFrom(start) {
+    let current = start;
+    let stepGamma = Math.PI / 6;
+    let stepBeta = Math.PI / 10;
+
+    while (stepGamma > 1e-3 || stepBeta > 1e-3) {
+      let improved = false;
+      const gammaMoves = [0, -stepGamma, stepGamma];
+      const betaMoves = [0, -stepBeta, stepBeta];
+
+      for (const dGamma of gammaMoves) {
+        for (const dBeta of betaMoves) {
+          if (dGamma === 0 && dBeta === 0) continue;
+          const candidate = evaluate(current.gamma + dGamma, current.beta + dBeta);
+          if (candidate.cut > current.cut + 1e-9) {
+            current = candidate;
+            improved = true;
+          }
+        }
+      }
+
+      if (!improved) {
+        stepGamma *= 0.5;
+        stepBeta *= 0.5;
+      }
+    }
+
+    return current;
+  }
+
+  for (const seed of seedPoints) {
+    const refined = refineFrom(seed);
+    if (refined.cut > best.cut) best = refined;
+  }
+
+  return {
+    gammas: [best.gamma],
+    betas: [best.beta],
+    expected_cut: best.cut,
+    exact_maxcut: exactMaxCutFromDiag(diag),
+    solver: 'browser-classical-refinement'
+  };
+}
+
+async function fetchPredictionViaApi(payload) {
+  for (const baseUrl of API_BASE_CANDIDATES) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2500);
+
+    try {
+      const res = await fetch(`${baseUrl}/predict`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+      if (!res.ok) continue;
+
+      const data = await res.json();
+      return { data, baseUrl };
+    } catch (_) {
+      clearTimeout(timeoutId);
+    }
+  }
+
+  return null;
+}
+
+function formatApiLabel(baseUrl) {
+  return baseUrl.replace(/^https?:\/\//, '');
 }
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -174,22 +306,18 @@ document.getElementById('predict').addEventListener('click', async () => {
     showError('Generate a random graph first.');
     return;
   }
+
   errorPanel.classList.add('hidden');
 
   let data = null;
   let source = 'api';
+  let resolvedApiBase = null;
 
-  // 1. Try the local Flask API
-  try {
-    const res = await fetch(`${API_BASE_URL}/predict`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({n: currentN, edges: currentEdges})
-    });
-    if (!res.ok) throw new Error(`${res.status}`);
-    data = await res.json();
-  } catch (_) {
-    // 2. API unavailable — run QAOA entirely in the browser
+  const apiResult = await fetchPredictionViaApi({n: currentN, edges: currentEdges});
+  if (apiResult) {
+    data = apiResult.data;
+    resolvedApiBase = apiResult.baseUrl;
+  } else {
     data   = qaojsOptimize(currentN, currentEdges);
     source = 'browser';
   }
@@ -200,10 +328,10 @@ document.getElementById('predict').addEventListener('click', async () => {
 
   const badge = document.getElementById('source-badge');
   if (source === 'browser') {
-    badge.textContent = '⚡ computed in browser (p=1 grid search)';
+    badge.textContent = '⚡ computed in browser (exact p=1 simulation + local refinement)';
     badge.className = 'source-badge browser';
   } else {
-    badge.textContent = '🖥 computed by local API (GNN)';
+    badge.textContent = `🖥 computed by GNN API (${formatApiLabel(resolvedApiBase)})`;
     badge.className = 'source-badge api';
   }
   badge.classList.remove('hidden');
