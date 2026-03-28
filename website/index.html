@@ -1,12 +1,23 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>GNN-for-QAOA Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hybrid Quantum–Graph AI: QAOA + GNN for Biomedical Optimization</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>GNN-for-QAOA Demo</h1>
+  <!-- Redirect users to the full site at the repository root -->
+  <script>
+    // If served standalone (not via root index.html), redirect to parent
+    if (window.location.pathname.endsWith('/website/') || window.location.pathname.endsWith('/website/index.html')) {
+      window.location.replace('../index.html');
+    }
+  </script>
+
+  <h1>Hybrid Quantum–Graph AI: QAOA + GNN</h1>
+  <p>This directory contains the static website assets. The full interactive demo is at the <a href="../index.html">repository root</a>.</p>
+
   <div id="controls">
     <label for="n">Nodes:</label>
     <input id="n" type="number" value="6" min="2" max="10">
@@ -19,13 +30,13 @@
   <h2>Notebooks (HTML exports)</h2>
   <p>The following exported notebook HTML files provide reproducible experiment artifacts, visual diagnostics, and summary results for the hybrid QAOA-GNN and biomedical workflows.</p>
   <ul>
-    <li><a href="notebooks_html/qaoa_demo.html" target="_blank">QAOA + GNN demo (MaxCut)</a> — shows classical optimization vs GNN prediction, timing, and expectation landscapes.</li>
-    <li><a href="notebooks_html/bio_demo.html" target="_blank">Biomedical GNN demo (breast cancer)</a> — shows GNN classification on real biomedical data, saved CSV, and evaluation metrics.</li>
-    <li><a href="notebooks_html/quantum_ai_bio_combined.html" target="_blank">Combined demo</a> - consolidated outputs and narrative connecting the optimization and biomedical components in a unified research pipeline.</li>
+    <li><a href="notebooks_html/qaoa_demo.html" target="_blank">QAOA + GNN — Genomics-Derived MaxCut Benchmark</a> — prostate gene co-expression graphs, classical Nelder-Mead vs. GNN parameter prediction, approximation ratio analysis, and 2D QAOA landscapes.</li>
+    <li><a href="notebooks_html/bio_demo.html" target="_blank">Biomedical GNN — CTG Fetal Risk Classification</a> — UCI Cardiotocography cohort (2,126 exams), 10-NN physiologic similarity graph, ClinicalGCN, held-out evaluation: 94.1% accuracy · 0.963 ROC AUC · 85.7% pathologic recall.</li>
+    <li><a href="notebooks_html/quantum_ai_bio_combined.html" target="_blank">Complete Hybrid Pipeline</a> — integrative narrative connecting quantum optimization and biomedical graph learning under a unified graph-theoretic framework.</li>
   </ul>
 
   <h2>Research Summary</h2>
-  <p>This project demonstrates an integrated pipeline combining quantum algorithms (QAOA), graph neural networks (GNNs), and biomedical data analysis. Each notebook includes inputs, model design, outputs, performance indicators, visualizations, and reproducible code to support transparent evaluation of the proposed hybrid methodology.</p>
+  <p>This project demonstrates a unified hybrid quantum-classical AI pipeline. On the quantum side, a Graph Convolutional Network predicts QAOA variational angles <strong>(γ, β)</strong> from graph structure, replacing repeated classical optimization with a single forward pass (~1,180× latency reduction). On the biomedical side, a ClinicalGCN classifies fetal monitoring exams via physiologic similarity graphs, achieving 0.963 ROC AUC on a held-out clinical cohort. Both branches share graphs as their core representation, making the architecture modular and domain-agnostic.</p>
 
   <script src="demo.js"></script>
 </body>

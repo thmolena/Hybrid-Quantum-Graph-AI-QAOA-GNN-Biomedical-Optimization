@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hybrid Quantum-Graph AI — QAOA + GNN Demo</title>
+  <title>Hybrid Quantum–Graph AI: QAOA + GNN for Biomedical Optimization</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -292,15 +292,17 @@
   <!-- Hero -->
   <header class="hero">
     <div class="hero-inner">
-      <div class="hero-badge">Research Demo</div>
-      <h1>Hybrid Quantum-Graph AI</h1>
-      <p class="hero-sub">Combining <strong>QAOA</strong> variational quantum circuits with <strong>Graph Neural Networks</strong> for combinatorial optimization and biomedical inference.</p>
+      <div class="hero-badge">Research · Hybrid Quantum-Classical AI</div>
+      <h1>Hybrid Quantum–Graph AI</h1>
+      <p class="hero-sub">A unified framework in which <strong>graphs</strong> serve as the common language connecting <strong>QAOA variational quantum optimization</strong> and <strong>Graph Convolutional Networks</strong> for real-data biomedical inference.</p>
       <div class="hero-pills">
         <span class="pill">QAOA</span>
-        <span class="pill">GNN</span>
+        <span class="pill">GNN / GCN</span>
         <span class="pill">MaxCut</span>
-        <span class="pill">Biomedical</span>
+        <span class="pill">Genomics</span>
+        <span class="pill">Clinical AI</span>
         <span class="pill">PyTorch</span>
+        <span class="pill">Exact Statevector</span>
       </div>
     </div>
   </header>
@@ -508,11 +510,11 @@
           <div class="nb-icon">⚛</div>
           <div class="nb-body">
             <h3>QAOA + GNN Tutorial</h3>
-            <p>Quantum gates → MaxCut Hamiltonian → variational circuits → GNN warm-starting. Includes 2D landscape heatmap, probability distributions, and approximation ratio analysis.</p>
+            <p>Prostate gene-expression matrix (102 patients × 12,600 genes) → co-expression graphs → exact statevector QAOA → GNN parameter prediction. Classical approx. ratio <strong>0.815</strong> vs GNN <strong>0.573</strong> at <strong>~1,180× lower latency</strong>.</p>
             <div class="nb-tags">
-              <span class="nb-tag">Quantum Circuits</span>
+              <span class="nb-tag">Exact Statevector</span>
               <span class="nb-tag">Nelder–Mead</span>
-              <span class="nb-tag">GNN Inference</span>
+              <span class="nb-tag">Transfer Test</span>
               <span class="nb-tag">MaxCut</span>
             </div>
           </div>
@@ -523,12 +525,12 @@
           <div class="nb-icon">🧬</div>
           <div class="nb-body">
             <h3>Biomedical GNN Tutorial</h3>
-            <p>WDBC breast cancer dataset → k-NN similarity graph → 2-layer GCN → ROC/AUC analysis. Full derivation of GCN forward pass, cross-entropy loss, and Adam optimiser.</p>
+            <p>UCI Cardiotocography cohort (2,126 exams) → 10-NN physiologic similarity graph → 2-layer ClinicalGCN → leakage-aware evaluation. Held-out results: <strong>94.1% accuracy · 0.963 ROC AUC · 85.7% pathologic recall</strong>.</p>
             <div class="nb-tags">
-              <span class="nb-tag">GCN Theory</span>
-              <span class="nb-tag">k-NN Graphs</span>
+              <span class="nb-tag">ClinicalGCN</span>
+              <span class="nb-tag">10-NN Graph</span>
               <span class="nb-tag">ROC / AUC</span>
-              <span class="nb-tag">Clinical ML</span>
+              <span class="nb-tag">Class Imbalance</span>
             </div>
           </div>
           <div class="nb-arrow">▶</div>
@@ -595,15 +597,30 @@
       <div class="summary-cols">
         <div>
           <h4>Approach</h4>
-          <p>Graph-structured problems are solved by first learning structural representations with a <strong>Graph Convolutional Network (GCN)</strong>, then using those learned embeddings to initialize QAOA circuit parameters, replacing expensive variational search with fast GNN inference.</p>
+          <p>Graphs serve as the common representation for both branches. On the quantum side, a <strong>SimpleGCN</strong> (trained on synthetic Erdős-Rényi graphs) predicts QAOA angles <strong>(γ, β)</strong> from graph structure, bypassing repeated classical search. On the biomedical side, a <strong>ClinicalGCN</strong> performs message passing over a physiologic similarity graph to classify fetal monitoring exams.</p>
         </div>
         <div>
-          <h4>Applications</h4>
+          <h4>Key Results</h4>
+          <table style="width:100%;border-collapse:collapse;font-size:0.83rem;">
+            <thead><tr style="border-bottom:1px solid #d9e2ec;"><th style="text-align:left;padding:0.3rem 0.4rem;font-weight:600;">Metric</th><th style="text-align:right;padding:0.3rem 0.4rem;font-weight:600;">Value</th></tr></thead>
+            <tbody>
+              <tr><td style="padding:0.28rem 0.4rem;">Classical QAOA approx. ratio</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">0.815</td></tr>
+              <tr><td style="padding:0.28rem 0.4rem;">GNN approx. ratio (transfer test)</td><td style="text-align:right;padding:0.28rem 0.4rem;">0.573</td></tr>
+              <tr><td style="padding:0.28rem 0.4rem;">GNN inference speedup</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">~1,180×</td></tr>
+              <tr><td style="padding:0.28rem 0.4rem;">CTG classification accuracy</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">94.1%</td></tr>
+              <tr><td style="padding:0.28rem 0.4rem;">Pathologic recall</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">85.7%</td></tr>
+              <tr><td style="padding:0.28rem 0.4rem;">ROC AUC</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">0.963</td></tr>
+              <tr><td style="padding:0.28rem 0.4rem;">Balanced accuracy</td><td style="text-align:right;padding:0.28rem 0.4rem;">0.903</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h4>Scope &amp; Limitations</h4>
           <ul class="summary-list">
-            <li>MaxCut combinatorial optimization</li>
-            <li>Healthcare resource allocation</li>
-            <li>Biomedical experimental design</li>
-            <li>Network resilience analysis</li>
+            <li>QAOA simulator is exact statevector — exponential in qubits, benchmarked at ≤10 nodes</li>
+            <li>GNN is trained on 20 synthetic graphs; genomics results are an out-of-distribution transfer test</li>
+            <li>Biomedical pipeline is retrospective research — not validated for clinical deployment</li>
+            <li>No explicit tabular baseline (logistic regression / random forest) vs. GCN on CTG — planned roadmap item</li>
           </ul>
         </div>
         <div>
@@ -621,7 +638,7 @@ python -m src.server</pre>
   </main>
 
   <footer class="footer">
-    <p>Hybrid Quantum-Graph AI · QAOA + GNN · <a href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank">GitHub</a></p>
+    <p>Hybrid Quantum–Graph AI · QAOA + GNN for Biomedical Optimization · <a href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank">GitHub</a></p>
   </footer>
 
   <script src="website/demo.js"></script>
