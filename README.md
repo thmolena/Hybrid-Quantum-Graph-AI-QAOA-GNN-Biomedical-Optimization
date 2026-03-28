@@ -18,11 +18,12 @@ The system is validated on two real datasets: a transcriptomic cohort of 102 pro
 
 | Domain | Result |
 |---|---|
-| QAOA parameter prediction | GNN inference matches classical Nelder-Mead search quality at a fraction of the latency |
+| QAOA — classical approximation ratio | **0.815** mean across 6 patient-resampled co-expression graphs (depth-1 Nelder-Mead) |
+| QAOA — GNN approximation ratio | **0.573** mean; **70.2%** of classical quality at **~1,180× lower latency** (0.054 ms vs 56.6 ms) |
 | Biomedical graph classification | **94.1% accuracy**, **0.963 ROC AUC**, **85.7% pathologic recall** on held-out CTG test set |
 | Balanced accuracy | **0.903** — robust to the class imbalance inherent in rare pathologic events |
 | Graph scale (clinical) | 2,126-node exam graph, 14,776 edges via 10-NN physiologic similarity |
-| Quantum simulation | Exact statevector QAOA on biologically motivated co-expression graphs derived from 10-gene panels |
+| Quantum simulation scope | Exact statevector QAOA, exponential in qubits — benchmarked on 10-node / 10-qubit co-expression graphs |
 
 ---
 
@@ -102,7 +103,16 @@ Real Data Sources
 5. Visualization: co-expression graph with MaxCut partition, 1D QAOA response slice, full 2D angle landscape.
 6. Benchmark comparison of classical search versus GNN inference across the patient-resampled graph collection.
 
-**Key findings.** Real transcriptomic data yields tractable graph optimization instances. Exact QAOA remains feasible when the biological source is reduced to a small co-expression graph. The trained GNN matches classical search solution quality at substantially lower inference cost.
+**Benchmark results** (6 patient-resampled co-expression graphs, depth-1 QAOA).
+
+| Metric | Classical (Nelder-Mead) | GNN (single forward pass) |
+|---|---|---|
+| Mean approximation ratio | 0.815 | 0.573 |
+| GNN quality vs classical | — | 70.2% |
+| Median wall-clock latency | 56.6 ms | 0.054 ms |
+| Median speedup | — | **~1,180×** |
+
+**Scope note.** `model.pt` is trained on 20 synthetic Erdős-Rényi graphs (6 nodes, depth 1). The genomics benchmark is therefore a **transfer test** — the GNN is applied to biology-derived graphs it was never trained on. The approximation-ratio gap versus classical search reflects this distribution shift and is a known limitation discussed in the notebook. Improving in-domain generalization is an explicit roadmap item.
 
 ---
 
@@ -127,7 +137,7 @@ Real Data Sources
 | Pathologic Recall | 85.7% |
 | ROC AUC | 0.963 |
 
-The pipeline is explicitly scoped as a retrospective research demonstration, not a clinical deployment system.
+**Scope note.** The current notebook does not include an explicit tabular baseline comparison (e.g., logistic regression or random forest on the same held-out split). The motivation for the graph approach — that physiological similarity between exams provides a useful relational inductive bias beyond what i.i.d. models capture — is argued qualitatively in the notebook. A rigorous i.i.d. vs. GCN ablation is an explicit near-term roadmap item. The pipeline is otherwise scoped as a retrospective research demonstration, not a clinical deployment system.
 
 ---
 
@@ -199,6 +209,7 @@ Current development centers on the CTG and prostate-data workflows. The `breast_
 - Output: `2 × p` values interpreted as `(γ₁, …, γₚ, β₁, …, βₚ)`
 - Readout: global mean pooling
 - Backend: `torch_geometric.nn.GCNConv` when PyTorch Geometric is available; falls back to explicit adjacency-matrix message passing otherwise
+- **Training regime:** the included `model.pt` checkpoint is trained on 20 synthetic connected Erdős-Rényi graphs (6 nodes, p=1). Application to the genomics co-expression graphs is an out-of-distribution transfer test, not a claim of in-domain training.
 
 `ClinicalGCN` / `BioGCN` are the biomedical classifiers (defined inline in the notebooks).
 
@@ -253,11 +264,16 @@ pip install -r requirements.txt
 # 2. (Optional) Train a fresh GNN checkpoint
 python -m src.train --dataset-size 20 --n 6 --p 1 --epochs 10 --model-path model.pt
 
-# 3. Run the notebooks
+# 3. Run the notebooks interactively
 #    Recommended order:
 #      notebooks/quantum_ai_bio_combined.ipynb   ← full integrative narrative
 #      notebooks/qaoa_demo.ipynb                 ← QAOA benchmark only
 #      notebooks/bio_demo.ipynb                  ← biomedical workflow only
+
+# 3b. Or execute non-interactively for full reproducibility
+jupyter nbconvert --to notebook --execute --inplace notebooks/qaoa_demo.ipynb
+jupyter nbconvert --to notebook --execute --inplace notebooks/bio_demo.ipynb
+jupyter nbconvert --to notebook --execute --inplace notebooks/quantum_ai_bio_combined.ipynb
 
 # 4. Start the inference API
 python -m src.server
@@ -289,6 +305,8 @@ python -m http.server 8000
 - Extend QAOA benchmarks to deeper circuits (`p > 1`) and denser co-expression graphs from larger transcriptomic cohorts.
 - Add systematic experiment tracking for QAOA quality-vs-speed trade-offs across varied graph topologies and node counts.
 - Enrich GNN node features beyond degree to include local graph statistics (clustering coefficient, betweenness centrality) for improved parameter prediction accuracy.
+- **Train `SimpleGCN` on biology-derived co-expression graphs** to close the in-distribution gap and strengthen the approximation ratio from the current transfer-test baseline.
+- **Add explicit tabular baseline comparison** (logistic regression, random forest, MLP) on the held-out CTG split to rigorously quantify the relational learning benefit of the GCN.
 
 ### Mid-term
 - Explore alternative graph construction strategies for the clinical branch: temporal graphs, multi-modal heterogeneous graphs combining physiologic and demographic features.
