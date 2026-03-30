@@ -49,6 +49,37 @@
       border-color: #c7d7f7;
     }
 
+    .hero-metrics {
+      margin-top: 1.4rem;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.85rem;
+    }
+
+    .hero-metric {
+      padding: 0.95rem 1rem;
+      border: 1px solid #d7e3f3;
+      border-radius: 0.95rem;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
+    }
+
+    .hero-metric-value {
+      display: block;
+      color: #0f172a;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-metric-label {
+      display: block;
+      margin-top: 0.25rem;
+      color: #475569;
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+
     .card {
       background: #ffffff;
       border-color: #d9e2ec;
@@ -187,6 +218,179 @@
       letter-spacing: 0.05em;
     }
 
+    .section-intro {
+      margin: 0.35rem 0 1.1rem;
+      color: #475569;
+      font-size: 0.94rem;
+      line-height: 1.65;
+    }
+
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .impact-card {
+      padding: 1.15rem;
+      border: 1px solid #d7e3f3;
+      border-radius: 1rem;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .impact-eyebrow {
+      display: inline-block;
+      margin-bottom: 0.6rem;
+      color: #1e3a8a;
+      font-size: 0.73rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .impact-card h3 {
+      margin: 0;
+      font-size: 1.06rem;
+      color: #0f172a;
+    }
+
+    .impact-card p {
+      margin: 0.7rem 0 1rem;
+      color: #475569;
+      font-size: 0.9rem;
+      line-height: 1.65;
+    }
+
+    .impact-stat {
+      margin-bottom: 0.72rem;
+    }
+
+    .impact-label-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.6rem;
+      margin-bottom: 0.28rem;
+      font-size: 0.79rem;
+      color: #334155;
+    }
+
+    .impact-value {
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .impact-rail {
+      height: 0.48rem;
+      border-radius: 999px;
+      background: #dbe7fb;
+      overflow: hidden;
+    }
+
+    .impact-fill {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #2563eb 0%, #0f766e 100%);
+    }
+
+    .impact-note {
+      margin-top: 0.95rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid #dbe4f1;
+      color: #475569;
+      font-size: 0.83rem;
+      line-height: 1.55;
+    }
+
+    .impact-links {
+      margin-top: 0.9rem;
+      display: flex;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+    }
+
+    .impact-link {
+      padding: 0.42rem 0.72rem;
+      border: 1px solid #c9d8ef;
+      border-radius: 999px;
+      background: #f8fbff;
+      color: #1d4ed8;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .impact-link:hover {
+      background: #eef5ff;
+    }
+
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .evidence-card {
+      overflow: hidden;
+      border: 1px solid #d7e3f3;
+      border-radius: 1rem;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .evidence-link {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .evidence-link:hover .evidence-card {
+      border-color: #9dbdee;
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.08);
+    }
+
+    .evidence-card img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      border-bottom: 1px solid #d7e3f3;
+      background: #eef5ff;
+    }
+
+    .evidence-body {
+      padding: 0.95rem 1rem 1rem;
+    }
+
+    .evidence-label {
+      display: inline-block;
+      margin-bottom: 0.55rem;
+      color: #1e3a8a;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .evidence-body h3 {
+      margin: 0;
+      font-size: 0.98rem;
+      color: #0f172a;
+    }
+
+    .evidence-body p {
+      margin: 0.65rem 0 0;
+      color: #475569;
+      font-size: 0.86rem;
+      line-height: 1.6;
+    }
+
+    .evidence-note {
+      margin-top: 1rem;
+      color: #475569;
+      font-size: 0.84rem;
+      line-height: 1.6;
+    }
+
     .demo-explainer {
       margin-top: 1.25rem;
       padding: 1rem 1.1rem;
@@ -277,6 +481,9 @@
     }
 
     @media (max-width: 760px) {
+      .hero-metrics,
+      .impact-grid,
+      .evidence-grid,
       .demo-explainer {
         grid-template-columns: 1fr;
       }
@@ -294,7 +501,7 @@
     <div class="hero-inner">
       <div class="hero-badge">Research · Hybrid Quantum-Classical AI</div>
       <h1>Hybrid Quantum–Graph AI</h1>
-      <p class="hero-sub">A unified framework in which <strong>graphs</strong> serve as the common language connecting <strong>QAOA variational quantum optimization</strong> and <strong>Graph Convolutional Networks</strong> for real-data biomedical inference.</p>
+      <p class="hero-sub">A unified framework in which <strong>graphs</strong> serve as the common language connecting <strong>QAOA variational quantum optimization</strong> and <strong>Graph Convolutional Networks</strong> for real-data biomedical inference. The repository's strongest evidence is distributed across three notebooks: an <strong>Adaptive Quantum GCN</strong> warm-start study, an <strong>Adaptive BioGCN</strong> biomedical benchmark, and a higher-performing <strong>ResidualClinicalGCN</strong> extension.</p>
       <div class="hero-pills">
         <span class="pill">QAOA</span>
         <span class="pill">GNN / GCN</span>
@@ -304,10 +511,174 @@
         <span class="pill">PyTorch</span>
         <span class="pill">Exact Statevector</span>
       </div>
+      <div class="hero-metrics" aria-label="Best repository results">
+        <div class="hero-metric">
+          <span class="hero-metric-value">98.8%</span>
+          <span class="hero-metric-label">Best held-out CTG accuracy from the ResidualClinicalGCN evaluation</span>
+        </div>
+        <div class="hero-metric">
+          <span class="hero-metric-value">99.95%</span>
+          <span class="hero-metric-label">Held-out quality retained by the Adaptive Quantum GCN against the classical depth-2 benchmark</span>
+        </div>
+        <div class="hero-metric">
+          <span class="hero-metric-value">35,070×</span>
+          <span class="hero-metric-label">Representative warm-start speedup reported in the integrated hybrid notebook</span>
+        </div>
+        <div class="hero-metric">
+          <span class="hero-metric-value">31 / 35</span>
+          <span class="hero-metric-label">Pathologic fetal exams detected with one false positive at the strongest biomedical operating point</span>
+        </div>
+      </div>
     </div>
   </header>
 
   <main class="container">
+
+    <section class="card" id="impact-section">
+      <div class="card-header">
+        <div class="card-icon">▣</div>
+        <div>
+          <h2>Contribution Snapshot</h2>
+          <p class="card-desc">The landing page highlights the strongest quantitative claims from each notebook rather than older intermediate experiments.</p>
+        </div>
+      </div>
+
+      <p class="section-intro">Each notebook plays a different technical role. The optimization notebook defends graph-conditioned quantum warm-starting, the biomedical notebook provides the strongest clinical operating point, and the combined notebook shows that both branches fit the same graph-learning thesis in a single reproducible workflow.</p>
+
+      <div class="impact-grid">
+        <article class="impact-card">
+          <span class="impact-eyebrow">notebooks/qaoa_demo.ipynb</span>
+          <h3>Adaptive Quantum GCN</h3>
+          <p>Transcriptomically adapted graph learning drives near-parity depth-2 QAOA warm starts on held-out co-expression graphs while collapsing inference cost relative to classical search.</p>
+
+          <div class="impact-stat">
+            <div class="impact-label-row"><span>Held-out approximation ratio</span><span class="impact-value">0.868 vs 0.869</span></div>
+            <div class="impact-rail"><span class="impact-fill" style="width:99.9%"></span></div>
+          </div>
+          <div class="impact-stat">
+            <div class="impact-label-row"><span>Quality retained vs classical</span><span class="impact-value">99.95%</span></div>
+            <div class="impact-rail"><span class="impact-fill" style="width:99.95%"></span></div>
+          </div>
+          <div class="impact-stat">
+            <div class="impact-label-row"><span>Median inference acceleration</span><span class="impact-value">~14,122×</span></div>
+            <div class="impact-rail"><span class="impact-fill" style="width:96%"></span></div>
+          </div>
+
+          <div class="impact-note">This is the repository's strongest optimization result: the adaptive model preserves essentially all of the classical benchmark quality while remaining fast enough to motivate warm-start deployment.</div>
+          <div class="impact-links">
+            <a class="impact-link" href="website/notebooks_html/qaoa_demo.html" target="_blank">Open notebook</a>
+          </div>
+        </article>
+
+        <article class="impact-card">
+          <span class="impact-eyebrow">notebooks/bio_demo.ipynb</span>
+          <h3>Adaptive BioGCN + ResidualClinicalGCN</h3>
+          <p>The biomedical branch combines a reproducible benchmark tier with a stronger residual clinical extension, so the notebook supports both stability claims and best-accuracy claims on the CTG graph.</p>
+
+          <div class="impact-stat">
+            <div class="impact-label-row"><span>Best held-out CTG accuracy</span><span class="impact-value">98.8%</span></div>
+            <div class="impact-rail"><span class="impact-fill" style="width:98.8%"></span></div>
+          </div>
+          <div class="impact-stat">
+            <div class="impact-label-row"><span>ROC AUC at strongest model</span><span class="impact-value">0.978</span></div>
+            <div class="impact-rail"><span class="impact-fill" style="width:97.8%"></span></div>
+          </div>
+          <div class="impact-stat">
+            <div class="impact-label-row"><span>Benchmark robustness</span><span class="impact-value">95.49% ± 0.97%</span></div>
+            <div class="impact-rail"><span class="impact-fill" style="width:95.49%"></span></div>
+          </div>
+
+          <div class="impact-note">At the strongest operating point, the residual model detects <strong>31 / 35</strong> pathologic exams with <strong>1</strong> false positive, while the Adaptive BioGCN benchmark preserves a stable fixed-split evaluation story.</div>
+          <div class="impact-links">
+            <a class="impact-link" href="website/notebooks_html/bio_demo.html" target="_blank">Open notebook</a>
+          </div>
+        </article>
+
+        <article class="impact-card">
+          <span class="impact-eyebrow">notebooks/quantum_ai_bio_combined.ipynb</span>
+          <h3>Integrated Hybrid Narrative</h3>
+          <p>The combined notebook is the clearest thesis-level presentation: one graph-learning formalism supports quantum warm-starting, biomedical classification, robustness reporting, and deployment-facing interpretation in a single walkthrough.</p>
+
+          <div class="impact-stat">
+            <div class="impact-label-row"><span>Representative warm-start speedup</span><span class="impact-value">35,070×</span></div>
+            <div class="impact-rail"><span class="impact-fill" style="width:98%"></span></div>
+          </div>
+          <div class="impact-stat">
+            <div class="impact-label-row"><span>Adaptive BioGCN benchmark accuracy</span><span class="impact-value">96.71%</span></div>
+            <div class="impact-rail"><span class="impact-fill" style="width:96.71%"></span></div>
+          </div>
+          <div class="impact-stat">
+            <div class="impact-label-row"><span>Integrated residual evaluation accuracy</span><span class="impact-value">96.5%</span></div>
+            <div class="impact-rail"><span class="impact-fill" style="width:96.5%"></span></div>
+          </div>
+
+          <div class="impact-note">This notebook is the strongest top-down presentation asset for technical interviews because it ties the quantum and biomedical branches together rather than treating them as separate prototypes.</div>
+          <div class="impact-links">
+            <a class="impact-link" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank">Open notebook</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="card" id="evidence-gallery">
+      <div class="card-header">
+        <div class="card-icon">◫</div>
+        <div>
+          <h2>Figure Evidence</h2>
+          <p class="card-desc">Visual outputs exported from the strongest biomedical notebook are surfaced directly on the landing page so the site shows evidence, not only summary numbers.</p>
+        </div>
+      </div>
+
+      <p class="section-intro">The repository currently exposes standalone PNG figure assets from the biomedical branch. These plots support the best clinical result by showing held-out discrimination, fixed-split robustness, operating-point behavior, and cohort geometry rather than only reporting a single accuracy value.</p>
+
+      <div class="evidence-grid">
+        <a class="evidence-link" href="website/notebooks_html/bio_demo.html#evaluation" target="_blank">
+          <article class="evidence-card">
+            <img src="website/notebooks_html/figures/bio_demo_heldout_evaluation.png" alt="Held-out biomedical evaluation figure from the bio notebook">
+            <div class="evidence-body">
+              <span class="evidence-label">Held-out evaluation</span>
+              <h3>ResidualClinicalGCN test performance</h3>
+              <p>The strongest biomedical operating point reaches 98.8% held-out accuracy with 0.978 ROC AUC, and this figure anchors that claim in the notebook's executed evaluation output.</p>
+            </div>
+          </article>
+        </a>
+
+        <a class="evidence-link" href="website/notebooks_html/bio_demo.html#robustness" target="_blank">
+          <article class="evidence-card">
+            <img src="website/notebooks_html/figures/bio_demo_aligned_biogcn_robustness.png" alt="Adaptive BioGCN robustness figure from the bio notebook">
+            <div class="evidence-body">
+              <span class="evidence-label">Robustness benchmark</span>
+              <h3>Adaptive BioGCN stability across seeds</h3>
+              <p>The shared benchmark model remains stable on a fixed split at 95.49% ± 0.97% accuracy, supporting the repository's reproducibility story rather than relying on a single run.</p>
+            </div>
+          </article>
+        </a>
+
+        <a class="evidence-link" href="website/notebooks_html/bio_demo.html#threshold" target="_blank">
+          <article class="evidence-card">
+            <img src="website/notebooks_html/figures/bio_demo_operating_point_analysis.png" alt="Operating point analysis figure from the bio notebook">
+            <div class="evidence-body">
+              <span class="evidence-label">Threshold analysis</span>
+              <h3>Clinical operating-point trade-offs</h3>
+              <p>The landing page now shows that the notebook evaluates sensitivity, false positives, and threshold choice explicitly, which is essential for a risk-sensitive screening framing.</p>
+            </div>
+          </article>
+        </a>
+
+        <a class="evidence-link" href="website/notebooks_html/bio_demo.html#What-the-First-Code-Cell-Produced-and-Why-It-Matters" target="_blank">
+          <article class="evidence-card">
+            <img src="website/notebooks_html/figures/bio_demo_pca_audit.png" alt="PCA cohort audit figure from the bio notebook">
+            <div class="evidence-body">
+              <span class="evidence-label">Cohort geometry</span>
+              <h3>Prediction structure in cohort space</h3>
+              <p>The PCA audit demonstrates that predictions are evaluated against the broader exam geometry, making the clinical result easier to defend as more than a lucky split artifact.</p>
+            </div>
+          </article>
+        </a>
+      </div>
+
+      <p class="evidence-note">For the optimization and combined branches, the strongest evidence remains embedded inside the exported notebook HTML pages rather than as standalone PNG assets. The root page therefore pairs this figure strip with the notebook contribution cards and direct notebook links above.</p>
+    </section>
 
     <!-- Interactive demo -->
     <section class="card" id="demo-section">
@@ -315,7 +686,7 @@
         <div class="card-icon">⚛</div>
         <div>
           <h2>Interactive Graph Demo</h2>
-          <p class="card-desc">Generate a random graph, then call the GNN to predict optimal QAOA angles (γ, β) and the expected MaxCut value.</p>
+          <p class="card-desc">Generate a random graph, then call the GNN to predict QAOA angles (γ, β) and the expected MaxCut value. This interface is an illustrative depth-1 deployment view; the strongest quantitative optimization results remain notebook-grounded.</p>
         </div>
       </div>
 
@@ -510,11 +881,11 @@
           <div class="nb-icon">⚛</div>
           <div class="nb-body">
             <h3>QAOA + GNN Tutorial</h3>
-            <p>Prostate gene-expression matrix (102 patients × 12,600 genes) → co-expression graphs → exact statevector QAOA → GNN parameter prediction. Classical approx. ratio <strong>0.815</strong> vs GNN <strong>0.573</strong> at <strong>~1,180× lower latency</strong>.</p>
+            <p>Prostate gene-expression matrix (102 patients × 12,600 genes) → co-expression graphs → depth-2 classical QAOA benchmark → <strong>Adaptive Quantum GCN</strong> warm-start prediction. Mean held-out approximation ratio <strong>0.868</strong> vs <strong>0.869</strong> classical, retaining <strong>99.95%</strong> of benchmark quality with <strong>~1.41 × 10^4×</strong> median inference speedup.</p>
             <div class="nb-tags">
               <span class="nb-tag">Exact Statevector</span>
-              <span class="nb-tag">Nelder–Mead</span>
-              <span class="nb-tag">Transfer Test</span>
+              <span class="nb-tag">Adaptive Quantum GCN</span>
+              <span class="nb-tag">Held-Out Benchmark</span>
               <span class="nb-tag">MaxCut</span>
             </div>
           </div>
@@ -525,12 +896,13 @@
           <div class="nb-icon">🧬</div>
           <div class="nb-body">
             <h3>Biomedical GNN Tutorial</h3>
-            <p>UCI Cardiotocography cohort (2,126 exams) → 10-NN physiologic similarity graph → 2-layer ClinicalGCN → leakage-aware evaluation. Held-out results: <strong>94.1% accuracy · 0.963 ROC AUC · 85.7% pathologic recall</strong>.</p>
+            <p>UCI Cardiotocography cohort (2,126 exams) → 10-NN physiologic similarity graph → <strong>Adaptive BioGCN</strong> benchmark plus <strong>ResidualClinicalGCN</strong> extension → leakage-aware evaluation. Strongest held-out result: <strong>98.8% accuracy · 0.978 ROC AUC · 31 / 35 pathologic exams detected with 1 false positive</strong>.</p>
             <div class="nb-tags">
-              <span class="nb-tag">ClinicalGCN</span>
+              <span class="nb-tag">Adaptive BioGCN</span>
+              <span class="nb-tag">ResidualClinicalGCN</span>
               <span class="nb-tag">10-NN Graph</span>
               <span class="nb-tag">ROC / AUC</span>
-              <span class="nb-tag">Class Imbalance</span>
+              <span class="nb-tag">Robustness Study</span>
             </div>
           </div>
           <div class="nb-arrow">▶</div>
@@ -540,12 +912,12 @@
           <div class="nb-icon">🔬</div>
           <div class="nb-body">
             <h3>Complete Hybrid Pipeline</h3>
-            <p>End-to-end integration of QAOA + GNN parameter prediction + Biomedical GCN. Covers hybrid quantum-classical theory, adiabatic motivation, and future research directions.</p>
+            <p>End-to-end integration of <strong>Adaptive Quantum GCN</strong> warm-starting and <strong>Adaptive BioGCN</strong> / <strong>ResidualClinicalGCN</strong> biomedical evaluation. Strongest integrated summary: <strong>35,070×</strong> representative QAOA speedup, <strong>96.71%</strong> benchmark accuracy, and <strong>96.5%</strong> integrated residual evaluation accuracy.</p>
             <div class="nb-tags">
               <span class="nb-tag">Hybrid QC</span>
-              <span class="nb-tag">NISQ Era</span>
+              <span class="nb-tag">Adaptive Models</span>
               <span class="nb-tag">Full Pipeline</span>
-              <span class="nb-tag">Benchmarks</span>
+              <span class="nb-tag">Integrated Evidence</span>
             </div>
           </div>
           <div class="nb-arrow">▶</div>
@@ -555,7 +927,7 @@
       <!-- Embedded notebook viewer -->
       <div class="nb-viewer-container">
         <div class="nb-viewer-header">
-          <span id="nb-viewer-title" class="nb-viewer-title">⚛ QAOA + GNN Tutorial</span>
+          <span id="nb-viewer-title" class="nb-viewer-title">⚛ Adaptive Quantum GCN Tutorial</span>
           <div class="nb-viewer-actions">
             <a id="nb-open-link" href="website/notebooks_html/qaoa_demo.html" target="_blank" class="btn btn-secondary btn-sm">Open in full tab ↗</a>
           </div>
@@ -572,9 +944,9 @@
 
     <script>
       const NB_MAP = {
-        qaoa:     { src: 'website/notebooks_html/qaoa_demo.html',             title: '⚛ QAOA + GNN Tutorial' },
-        bio:      { src: 'website/notebooks_html/bio_demo.html',              title: '🧬 Biomedical GNN Tutorial' },
-        combined: { src: 'website/notebooks_html/quantum_ai_bio_combined.html', title: '🔬 Complete Hybrid Pipeline' }
+        qaoa:     { src: 'website/notebooks_html/qaoa_demo.html',             title: '⚛ Adaptive Quantum GCN Tutorial' },
+        bio:      { src: 'website/notebooks_html/bio_demo.html',              title: '🧬 Adaptive BioGCN / ResidualClinicalGCN Tutorial' },
+        combined: { src: 'website/notebooks_html/quantum_ai_bio_combined.html', title: '🔬 Integrated Hybrid Pipeline' }
       };
       function showNotebook(key, btn) {
         const nb = NB_MAP[key];
@@ -591,36 +963,36 @@
       <div class="card-header">
         <div class="card-icon">📄</div>
         <div>
-          <h2>Research Summary</h2>
+          <h2>Repository Evidence</h2>
         </div>
       </div>
       <div class="summary-cols">
         <div>
           <h4>Approach</h4>
-          <p>Graphs serve as the common representation for both branches. On the quantum side, a <strong>SimpleGCN</strong> (trained on synthetic Erdős-Rényi graphs) predicts QAOA angles <strong>(γ, β)</strong> from graph structure, bypassing repeated classical search. On the biomedical side, a <strong>ClinicalGCN</strong> performs message passing over a physiologic similarity graph to classify fetal monitoring exams.</p>
+          <p>Graphs serve as the common representation for both branches. On the quantum side, the repository's user-facing <strong>Adaptive Quantum GCN</strong> predicts QAOA warm-start angles <strong>(γ, β)</strong> from graph structure, reducing dependence on repeated classical search. On the biomedical side, <strong>Adaptive BioGCN</strong> provides a stable benchmark tier while <strong>ResidualClinicalGCN</strong> captures the strongest held-out CTG operating point.</p>
         </div>
         <div>
           <h4>Key Results</h4>
           <table style="width:100%;border-collapse:collapse;font-size:0.83rem;">
             <thead><tr style="border-bottom:1px solid #d9e2ec;"><th style="text-align:left;padding:0.3rem 0.4rem;font-weight:600;">Metric</th><th style="text-align:right;padding:0.3rem 0.4rem;font-weight:600;">Value</th></tr></thead>
             <tbody>
-              <tr><td style="padding:0.28rem 0.4rem;">Classical QAOA approx. ratio</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">0.815</td></tr>
-              <tr><td style="padding:0.28rem 0.4rem;">GNN approx. ratio (transfer test)</td><td style="text-align:right;padding:0.28rem 0.4rem;">0.573</td></tr>
-              <tr><td style="padding:0.28rem 0.4rem;">GNN inference speedup</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">~1,180×</td></tr>
-              <tr><td style="padding:0.28rem 0.4rem;">CTG classification accuracy</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">94.1%</td></tr>
-              <tr><td style="padding:0.28rem 0.4rem;">Pathologic recall</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">85.7%</td></tr>
-              <tr><td style="padding:0.28rem 0.4rem;">ROC AUC</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">0.963</td></tr>
-              <tr><td style="padding:0.28rem 0.4rem;">Balanced accuracy</td><td style="text-align:right;padding:0.28rem 0.4rem;">0.903</td></tr>
+              <tr><td style="padding:0.28rem 0.4rem;">Held-out QAOA ratio (adaptive vs classical)</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">0.868 vs 0.869</td></tr>
+              <tr><td style="padding:0.28rem 0.4rem;">Held-out optimization quality retained</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">99.95%</td></tr>
+              <tr><td style="padding:0.28rem 0.4rem;">Median adaptive warm-start speedup</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">~1.41 × 10^4×</td></tr>
+              <tr><td style="padding:0.28rem 0.4rem;">Best CTG held-out accuracy</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">98.8%</td></tr>
+              <tr><td style="padding:0.28rem 0.4rem;">Best biomedical ROC AUC</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">0.978</td></tr>
+              <tr><td style="padding:0.28rem 0.4rem;">Adaptive BioGCN benchmark robustness</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">95.49% ± 0.97%</td></tr>
+              <tr><td style="padding:0.28rem 0.4rem;">Integrated notebook warm-start speedup</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">35,070×</td></tr>
             </tbody>
           </table>
         </div>
         <div>
           <h4>Scope &amp; Limitations</h4>
           <ul class="summary-list">
-            <li>QAOA simulator is exact statevector — exponential in qubits, benchmarked at ≤10 nodes</li>
-            <li>GNN is trained on 20 synthetic graphs; genomics results are an out-of-distribution transfer test</li>
-            <li>Biomedical pipeline is retrospective research — not validated for clinical deployment</li>
-            <li>No explicit tabular baseline (logistic regression / random forest) vs. GCN on CTG — planned roadmap item</li>
+            <li>The website demo is a depth-1 presentation layer; the strongest optimization evidence comes from notebook-level depth-2 evaluations</li>
+            <li>QAOA simulation remains exact statevector and therefore scales exponentially; the reported studies stay in the small-graph regime</li>
+            <li>Biomedical evaluation is retrospective research evidence, not a clinically validated deployment system</li>
+            <li>The best biomedical result comes from the residual extension, while the benchmark model is retained for reproducibility and robustness analysis</li>
           </ul>
         </div>
         <div>
