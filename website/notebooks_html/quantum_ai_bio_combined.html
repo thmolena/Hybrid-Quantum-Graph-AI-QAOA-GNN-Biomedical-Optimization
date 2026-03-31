@@ -3,39 +3,9 @@
 <html lang="en">
 <head><meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Integrated Hybrid Quantum-Biomedical Notebook</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>Integrated Hybrid Quantum-Biomedical Notebook</title><link href="../notebook-shared.css" rel="stylesheet"/><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <style type="text/css">
     pre { line-height: 125%; }
-.notebook-ribbon {
-  margin: 0.85rem 0 1rem;
-  padding: 0.9rem 1rem;
-  border: 1px solid #d7e3f3;
-  border-radius: 0.85rem;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-.notebook-ribbon-item {
-  flex: 1 1 160px;
-  min-width: 150px;
-}
-.notebook-ribbon-label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #1e3a8a;
-}
-.notebook-ribbon-value {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #0f172a;
-}
-.notebook-ribbon-note {
-  font-size: 0.82rem;
-  color: #475569;
-}
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
@@ -7837,6 +7807,11 @@ a.anchor-link {
 <div class="notebook-ribbon-item"><div class="notebook-ribbon-label">Warm-start speedup</div><div class="notebook-ribbon-value">35,070x</div><div class="notebook-ribbon-note">representative integrated result</div></div>
 <div class="notebook-ribbon-item"><div class="notebook-ribbon-label">Benchmark accuracy</div><div class="notebook-ribbon-value">96.71%</div><div class="notebook-ribbon-note">Adaptive BioGCN</div></div>
 <div class="notebook-ribbon-item"><div class="notebook-ribbon-label">Integrated residual result</div><div class="notebook-ribbon-value">96.5%</div><div class="notebook-ribbon-note">combined notebook evaluation</div></div>
+</div>
+<div class="notebook-jump-nav">
+<a class="notebook-jump-link" href="#part1">Quantum branch</a>
+<a class="notebook-jump-link" href="#part4">Biomedical branch</a>
+<a class="notebook-jump-link" href="#synthesis">Integrated summary</a>
 </div>
 <p><strong>Audience:</strong> assume familiarity with variational algorithms, graph learning, and statistical evaluation.<br/>
 <strong>Scope:</strong> a single reproducible notebook demonstrating (1) depth-$p$ QAOA for MaxCut with classical warm-start via an <strong>Adaptive Quantum GCN</strong>, and (2) transductive GCN classification on a 2,126-node exam-similarity graph built from the UCI Cardiotocography cohort.</p>

@@ -21,26 +21,42 @@
     .hero {
       background: linear-gradient(180deg, #f9fbff 0%, #edf3ff 100%);
       border-bottom: 1px solid #d7e3f3;
+      padding: 3.1rem 2rem 2.35rem;
+      text-align: left;
+    }
+
+    .hero-inner {
+      max-width: 840px;
+      margin: 0 auto;
+      text-align: left;
     }
 
     .hero-badge {
       color: #1e3a8a;
       background: #e6efff;
       border-color: #bfd3ff;
+      margin-bottom: 0.9rem;
     }
 
     .hero h1 {
       background: none;
       -webkit-text-fill-color: #111827;
       color: #111827;
+      margin-bottom: 0.55rem;
     }
 
     .hero-sub {
       color: #374151;
+      margin-bottom: 1rem;
+      max-width: 760px;
     }
 
     .hero-sub strong {
       color: #111827;
+    }
+
+    .hero-pills {
+      justify-content: flex-start;
     }
 
     .pill {
@@ -49,35 +65,56 @@
       border-color: #c7d7f7;
     }
 
-    .hero-metrics {
-      margin-top: 1.4rem;
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.85rem;
-    }
-
-    .hero-metric {
-      padding: 0.95rem 1rem;
-      border: 1px solid #d7e3f3;
-      border-radius: 0.95rem;
-      background: rgba(255, 255, 255, 0.82);
+    .hero-ribbon {
+      margin-top: 1rem;
+      padding: 0.9rem 1rem;
+      text-align: left;
       box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
     }
 
-    .hero-metric-value {
-      display: block;
-      color: #0f172a;
-      font-size: 1.35rem;
-      font-weight: 700;
+    .hero-ribbon .notebook-ribbon-item {
+      min-width: 165px;
+    }
+
+    .hero-ribbon .notebook-ribbon-value {
+      font-size: 1.2rem;
       letter-spacing: -0.02em;
     }
 
-    .hero-metric-label {
-      display: block;
-      margin-top: 0.25rem;
+    .hero-ribbon .notebook-ribbon-label {
+      color: #0f172a;
+    }
+
+    .hero-ribbon .notebook-ribbon-note {
       color: #475569;
-      font-size: 0.8rem;
-      line-height: 1.45;
+      font-size: 0.77rem;
+      line-height: 1.35;
+    }
+
+    .hero-nav {
+      margin-top: 0.45rem;
+      justify-content: flex-start;
+    }
+
+    .hero-nav .notebook-jump-link {
+      background: rgba(255, 255, 255, 0.78);
+      color: #1e3a8a;
+      border-color: #bfd3ff;
+    }
+
+    .hero-nav .notebook-jump-link:hover {
+      background: #f8fbff;
+    }
+
+    .hero-nav .notebook-jump-link.paper-link {
+      background: #edf4ff;
+      border-color: #b6cdf5;
+      color: #1d4ed8;
+      font-weight: 600;
+    }
+
+    .hero-nav .notebook-jump-link.paper-link:hover {
+      background: #e2eeff;
     }
 
     .card {
@@ -192,9 +229,22 @@
       color: #1d4ed8;
     }
 
+    .nb-card {
+      cursor: pointer;
+      transition: border-color .2s, background .2s, transform .15s, box-shadow .2s;
+    }
+
     .nb-card:hover {
       background: #f3f8ff;
       border-color: #9dbdee;
+      box-shadow: 0 12px 28px rgba(37, 99, 235, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .nb-card:focus-visible {
+      outline: 3px solid rgba(37, 99, 235, 0.2);
+      outline-offset: 2px;
+      border-color: #7ea7e8;
     }
 
     .nb-card.active {
@@ -216,6 +266,182 @@
 
     .summary-cols h4 {
       letter-spacing: 0.05em;
+    }
+
+    .summary-layout {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .summary-row {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .summary-row-primary {
+      grid-template-columns: minmax(280px, 0.95fr) minmax(420px, 1.35fr);
+      align-items: stretch;
+    }
+
+    .summary-row-secondary {
+      grid-template-columns: minmax(280px, 1fr) minmax(280px, 1fr);
+      align-items: stretch;
+      margin-top: 0.6rem;
+    }
+
+    .summary-panel {
+      display: flex;
+      flex-direction: column;
+      padding: 1rem 1rem 1.05rem;
+      background: #fbfdff;
+      border: 1px solid #d9e2ec;
+      border-radius: 0.8rem;
+      height: 100%;
+    }
+
+    .summary-row-secondary .summary-panel h4 {
+      margin-bottom: 0.55rem;
+    }
+
+    .summary-row-secondary .summary-list {
+      margin: 0.12rem 0 0;
+      padding-left: 1.05rem;
+      line-height: 1.55;
+    }
+
+    .summary-row-secondary .summary-list li + li {
+      margin-top: 0.42rem;
+    }
+
+    .summary-paper-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 0.42rem;
+      padding: 0.38rem 0.72rem;
+      border: 1px solid #d6e3f6;
+      border-radius: 999px;
+      background: #f6faff;
+      color: #1d4ed8;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background .18s ease, border-color .18s ease, color .18s ease;
+    }
+
+    .summary-paper-link:hover {
+      background: #edf4ff;
+      border-color: #bfd3f4;
+      color: #1e40af;
+    }
+
+    .summary-col-results {
+      padding: 0;
+    }
+
+    .summary-col-quickstart .code-block {
+      margin: 0.12rem 0 0;
+      font-size: 0.72rem;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .quickstart-terminal {
+      position: relative;
+      margin-top: 0.14rem;
+      padding: 1.72rem 0.82rem 0.78rem;
+      background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
+      border: 1px solid #e3ebf4;
+      border-radius: 0.8rem;
+      color: #0f172a;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.96);
+    }
+
+    @media (min-width: 861px) {
+      .summary-row-secondary .summary-panel {
+        min-height: 244px;
+      }
+
+      .summary-col-quickstart .quickstart-terminal {
+        flex: 1;
+      }
+    }
+
+    .quickstart-terminal::before {
+      content: 'quick-start.sh';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 0.4rem 0.82rem 0.4rem 3.4rem;
+      border-bottom: 1px solid #e3ebf4;
+      border-radius: 0.8rem 0.8rem 0 0;
+      background:
+        radial-gradient(circle at 1rem 50%, #efe4e2 0 0.18rem, transparent 0.2rem),
+        radial-gradient(circle at 1.72rem 50%, #efe9df 0 0.18rem, transparent 0.2rem),
+        radial-gradient(circle at 2.44rem 50%, #e3ebe2 0 0.18rem, transparent 0.2rem),
+        linear-gradient(180deg, #fafcff 0%, #f6f9fc 100%);
+      color: #64748b;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      font-family: "SFMono-Regular", "SF Mono", "Menlo", Consolas, monospace;
+    }
+
+    .summary-results-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.83rem;
+      background: #fbfdff;
+      border: 1px solid #d9e2ec;
+      border-radius: 0.8rem;
+      overflow: hidden;
+    }
+
+    .summary-results-table thead tr {
+      border-bottom: 1px solid #d9e2ec;
+      background: #f4f8ff;
+    }
+
+    .summary-results-table th {
+      padding: 0.45rem 0.65rem;
+      font-weight: 600;
+      color: #334155;
+      font-size: 0.78rem;
+    }
+
+    .summary-results-table td {
+      padding: 0.42rem 0.65rem;
+      vertical-align: top;
+    }
+
+    .summary-results-table tbody tr + tr {
+      border-top: 1px solid #e6edf7;
+    }
+
+    .summary-results-table tbody td:first-child {
+      color: #334155;
+      line-height: 1.45;
+    }
+
+    .summary-results-table tbody td:last-child {
+      text-align: right;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    .summary-results-table th:last-child,
+    .summary-results-table td:last-child {
+      white-space: nowrap;
+      width: 1%;
+    }
+
+    @media (max-width: 860px) {
+      .summary-row-primary,
+      .summary-row-secondary {
+        grid-template-columns: 1fr;
+      }
     }
 
     .section-intro {
@@ -259,6 +485,25 @@
       color: #475569;
       font-size: 0.9rem;
       line-height: 1.65;
+    }
+
+    .impact-ribbon {
+      margin: 0.9rem 0 0;
+      padding: 0.8rem 0.9rem;
+    }
+
+    .impact-ribbon .notebook-ribbon-item {
+      min-width: 120px;
+      flex: 1 1 120px;
+    }
+
+    .impact-ribbon .notebook-ribbon-value {
+      font-size: 0.98rem;
+    }
+
+    .impact-ribbon .notebook-ribbon-note {
+      font-size: 0.78rem;
+      line-height: 1.45;
     }
 
     .impact-stat {
@@ -324,31 +569,42 @@
       background: #eef5ff;
     }
 
-    .evidence-grid {
+    .figure-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 1rem;
     }
 
-    .evidence-card {
+    .figure-card {
       overflow: hidden;
       border: 1px solid #d7e3f3;
       border-radius: 1rem;
       background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
     }
 
-    .evidence-link {
+    .figure-link {
       display: block;
       color: inherit;
       text-decoration: none;
+      cursor: pointer;
     }
 
-    .evidence-link:hover .evidence-card {
+    .figure-link:hover .figure-card {
       border-color: #9dbdee;
       box-shadow: 0 10px 24px rgba(37, 99, 235, 0.08);
+      transform: translateY(-2px);
     }
 
-    .evidence-card img {
+    .figure-link:focus-visible {
+      outline: none;
+    }
+
+    .figure-link:focus-visible .figure-card {
+      border-color: #7ea7e8;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .figure-card img {
       display: block;
       width: 100%;
       aspect-ratio: 4 / 3;
@@ -357,11 +613,15 @@
       background: #eef5ff;
     }
 
-    .evidence-body {
+    .figure-card {
+      transition: border-color .2s, box-shadow .2s, transform .15s;
+    }
+
+    .figure-body {
       padding: 0.95rem 1rem 1rem;
     }
 
-    .evidence-label {
+    .figure-label {
       display: inline-block;
       margin-bottom: 0.55rem;
       color: #1e3a8a;
@@ -371,24 +631,32 @@
       text-transform: uppercase;
     }
 
-    .evidence-body h3 {
+    .figure-body h3 {
       margin: 0;
       font-size: 0.98rem;
       color: #0f172a;
     }
 
-    .evidence-body p {
+    .figure-body p {
       margin: 0.65rem 0 0;
       color: #475569;
       font-size: 0.86rem;
       line-height: 1.6;
     }
 
-    .evidence-note {
+    .figure-note {
       margin-top: 1rem;
       color: #475569;
       font-size: 0.84rem;
       line-height: 1.6;
+    }
+
+    .figure-ribbon {
+      margin: 0.4rem 0 1.2rem;
+    }
+
+    .figure-ribbon .notebook-ribbon-item {
+      min-width: 180px;
     }
 
     .demo-explainer {
@@ -481,9 +749,8 @@
     }
 
     @media (max-width: 760px) {
-      .hero-metrics,
       .impact-grid,
-      .evidence-grid,
+      .figure-grid,
       .demo-explainer {
         grid-template-columns: 1fr;
       }
@@ -501,7 +768,7 @@
     <div class="hero-inner">
       <div class="hero-badge">Research · Hybrid Quantum-Classical AI</div>
       <h1>Hybrid Quantum–Graph AI</h1>
-      <p class="hero-sub">A unified framework in which <strong>graphs</strong> serve as the common language connecting <strong>QAOA variational quantum optimization</strong> and <strong>Graph Convolutional Networks</strong> for real-data biomedical inference. The repository's strongest evidence is distributed across three notebooks: an <strong>Adaptive Quantum GCN</strong> warm-start study, an <strong>Adaptive BioGCN</strong> biomedical benchmark, and a higher-performing <strong>ResidualClinicalGCN</strong> extension.</p>
+      <p class="hero-sub">A unified framework in which <strong>graphs</strong> serve as the common language connecting <strong>QAOA variational quantum optimization</strong> and <strong>Graph Convolutional Networks</strong> for real-data biomedical inference. The repository is organized around three core notebook tracks: an <strong>Adaptive Quantum GCN</strong> warm-start study, an <strong>Adaptive BioGCN</strong> biomedical benchmark, and a higher-performing <strong>ResidualClinicalGCN</strong> extension.</p>
       <div class="hero-pills">
         <span class="pill">QAOA</span>
         <span class="pill">GNN / GCN</span>
@@ -511,23 +778,34 @@
         <span class="pill">PyTorch</span>
         <span class="pill">Exact Statevector</span>
       </div>
-      <div class="hero-metrics" aria-label="Best repository results">
-        <div class="hero-metric">
-          <span class="hero-metric-value">98.8%</span>
-          <span class="hero-metric-label">Best held-out CTG accuracy from the ResidualClinicalGCN evaluation</span>
+      <div class="notebook-ribbon hero-ribbon" aria-label="Best repository results">
+        <div class="notebook-ribbon-item">
+          <div class="notebook-ribbon-label">Best CTG result</div>
+          <div class="notebook-ribbon-value">98.8%</div>
+          <div class="notebook-ribbon-note">ResidualClinicalGCN held-out accuracy</div>
         </div>
-        <div class="hero-metric">
-          <span class="hero-metric-value">99.95%</span>
-          <span class="hero-metric-label">Held-out quality retained by the Adaptive Quantum GCN against the classical depth-2 benchmark</span>
+        <div class="notebook-ribbon-item">
+          <div class="notebook-ribbon-label">Quality retained</div>
+          <div class="notebook-ribbon-value">99.95%</div>
+          <div class="notebook-ribbon-note">Adaptive Quantum GCN versus depth-2 classical QAOA</div>
         </div>
-        <div class="hero-metric">
-          <span class="hero-metric-value">35,070×</span>
-          <span class="hero-metric-label">Representative warm-start speedup reported in the integrated hybrid notebook</span>
+        <div class="notebook-ribbon-item">
+          <div class="notebook-ribbon-label">Warm-start speedup</div>
+          <div class="notebook-ribbon-value">35,070×</div>
+          <div class="notebook-ribbon-note">Representative integrated hybrid notebook result</div>
         </div>
-        <div class="hero-metric">
-          <span class="hero-metric-value">31 / 35</span>
-          <span class="hero-metric-label">Pathologic fetal exams detected with one false positive at the strongest biomedical operating point</span>
+        <div class="notebook-ribbon-item">
+          <div class="notebook-ribbon-label">Pathologic detection</div>
+          <div class="notebook-ribbon-value">31 / 35</div>
+          <div class="notebook-ribbon-note">With one false positive at the strongest operating point</div>
         </div>
+      </div>
+      <div class="notebook-jump-nav hero-nav" aria-label="Jump to landing page sections">
+        <a class="notebook-jump-link" href="#impact-section">Contributions</a>
+        <a class="notebook-jump-link" href="#figures-section">Figures</a>
+        <a class="notebook-jump-link" href="#demo-section">Demo</a>
+        <a class="notebook-jump-link" href="#notebooks-section">Notebooks</a>
+        <a class="notebook-jump-link paper-link" href="paper/research_paper.md">Paper</a>
       </div>
     </div>
   </header>
@@ -547,137 +825,159 @@
 
       <div class="impact-grid">
         <article class="impact-card">
-          <span class="impact-eyebrow">notebooks/qaoa_demo.ipynb</span>
+          <span class="impact-eyebrow">Optimization branch</span>
           <h3>Adaptive Quantum GCN</h3>
           <p>Transcriptomically adapted graph learning drives near-parity depth-2 QAOA warm starts on held-out co-expression graphs while collapsing inference cost relative to classical search.</p>
 
-          <div class="impact-stat">
-            <div class="impact-label-row"><span>Held-out approximation ratio</span><span class="impact-value">0.868 vs 0.869</span></div>
-            <div class="impact-rail"><span class="impact-fill" style="width:99.9%"></span></div>
-          </div>
-          <div class="impact-stat">
-            <div class="impact-label-row"><span>Quality retained vs classical</span><span class="impact-value">99.95%</span></div>
-            <div class="impact-rail"><span class="impact-fill" style="width:99.95%"></span></div>
-          </div>
-          <div class="impact-stat">
-            <div class="impact-label-row"><span>Median inference acceleration</span><span class="impact-value">~14,122×</span></div>
-            <div class="impact-rail"><span class="impact-fill" style="width:96%"></span></div>
+          <div class="notebook-ribbon impact-ribbon" aria-label="Optimization notebook summary metrics">
+            <div class="notebook-ribbon-item">
+              <div class="notebook-ribbon-label">Held-out ratio</div>
+              <div class="notebook-ribbon-value">0.868 vs 0.869</div>
+              <div class="notebook-ribbon-note">adaptive versus classical</div>
+            </div>
+            <div class="notebook-ribbon-item">
+              <div class="notebook-ribbon-label">Quality retained</div>
+              <div class="notebook-ribbon-value">99.95%</div>
+              <div class="notebook-ribbon-note">of depth-2 classical quality</div>
+            </div>
+            <div class="notebook-ribbon-item">
+              <div class="notebook-ribbon-label">Inference speedup</div>
+              <div class="notebook-ribbon-value">~14,122×</div>
+              <div class="notebook-ribbon-note">median single-pass acceleration</div>
+            </div>
           </div>
 
           <div class="impact-note">This is the repository's strongest optimization result: the adaptive model preserves essentially all of the classical benchmark quality while remaining fast enough to motivate warm-start deployment.</div>
-          <div class="impact-links">
-            <a class="impact-link" href="website/notebooks_html/qaoa_demo.html" target="_blank">Open notebook</a>
-          </div>
         </article>
 
         <article class="impact-card">
-          <span class="impact-eyebrow">notebooks/bio_demo.ipynb</span>
+          <span class="impact-eyebrow">Biomedical branch</span>
           <h3>Adaptive BioGCN + ResidualClinicalGCN</h3>
           <p>The biomedical branch combines a reproducible benchmark tier with a stronger residual clinical extension, so the notebook supports both stability claims and best-accuracy claims on the CTG graph.</p>
 
-          <div class="impact-stat">
-            <div class="impact-label-row"><span>Best held-out CTG accuracy</span><span class="impact-value">98.8%</span></div>
-            <div class="impact-rail"><span class="impact-fill" style="width:98.8%"></span></div>
-          </div>
-          <div class="impact-stat">
-            <div class="impact-label-row"><span>ROC AUC at strongest model</span><span class="impact-value">0.978</span></div>
-            <div class="impact-rail"><span class="impact-fill" style="width:97.8%"></span></div>
-          </div>
-          <div class="impact-stat">
-            <div class="impact-label-row"><span>Benchmark robustness</span><span class="impact-value">95.49% ± 0.97%</span></div>
-            <div class="impact-rail"><span class="impact-fill" style="width:95.49%"></span></div>
+          <div class="notebook-ribbon impact-ribbon" aria-label="Biomedical notebook summary metrics">
+            <div class="notebook-ribbon-item">
+              <div class="notebook-ribbon-label">Best held-out accuracy</div>
+              <div class="notebook-ribbon-value">98.8%</div>
+              <div class="notebook-ribbon-note">ResidualClinicalGCN</div>
+            </div>
+            <div class="notebook-ribbon-item">
+              <div class="notebook-ribbon-label">ROC AUC</div>
+              <div class="notebook-ribbon-value">0.978</div>
+              <div class="notebook-ribbon-note">at the strongest operating point</div>
+            </div>
+            <div class="notebook-ribbon-item">
+              <div class="notebook-ribbon-label">Benchmark robustness</div>
+              <div class="notebook-ribbon-value">95.49% ± 0.97%</div>
+              <div class="notebook-ribbon-note">Adaptive BioGCN fixed split</div>
+            </div>
           </div>
 
           <div class="impact-note">At the strongest operating point, the residual model detects <strong>31 / 35</strong> pathologic exams with <strong>1</strong> false positive, while the Adaptive BioGCN benchmark preserves a stable fixed-split evaluation story.</div>
-          <div class="impact-links">
-            <a class="impact-link" href="website/notebooks_html/bio_demo.html" target="_blank">Open notebook</a>
-          </div>
         </article>
 
         <article class="impact-card">
-          <span class="impact-eyebrow">notebooks/quantum_ai_bio_combined.ipynb</span>
+          <span class="impact-eyebrow">Integrated branch</span>
           <h3>Integrated Hybrid Narrative</h3>
           <p>The combined notebook is the clearest thesis-level presentation: one graph-learning formalism supports quantum warm-starting, biomedical classification, robustness reporting, and deployment-facing interpretation in a single walkthrough.</p>
 
-          <div class="impact-stat">
-            <div class="impact-label-row"><span>Representative warm-start speedup</span><span class="impact-value">35,070×</span></div>
-            <div class="impact-rail"><span class="impact-fill" style="width:98%"></span></div>
-          </div>
-          <div class="impact-stat">
-            <div class="impact-label-row"><span>Adaptive BioGCN benchmark accuracy</span><span class="impact-value">96.71%</span></div>
-            <div class="impact-rail"><span class="impact-fill" style="width:96.71%"></span></div>
-          </div>
-          <div class="impact-stat">
-            <div class="impact-label-row"><span>Integrated residual evaluation accuracy</span><span class="impact-value">96.5%</span></div>
-            <div class="impact-rail"><span class="impact-fill" style="width:96.5%"></span></div>
+          <div class="notebook-ribbon impact-ribbon" aria-label="Integrated notebook summary metrics">
+            <div class="notebook-ribbon-item">
+              <div class="notebook-ribbon-label">Warm-start speedup</div>
+              <div class="notebook-ribbon-value">35,070×</div>
+              <div class="notebook-ribbon-note">representative integrated result</div>
+            </div>
+            <div class="notebook-ribbon-item">
+              <div class="notebook-ribbon-label">Benchmark accuracy</div>
+              <div class="notebook-ribbon-value">96.71%</div>
+              <div class="notebook-ribbon-note">Adaptive BioGCN</div>
+            </div>
+            <div class="notebook-ribbon-item">
+              <div class="notebook-ribbon-label">Integrated residual result</div>
+              <div class="notebook-ribbon-value">96.5%</div>
+              <div class="notebook-ribbon-note">combined evaluation</div>
+            </div>
           </div>
 
           <div class="impact-note">This notebook is the strongest top-down presentation asset for technical interviews because it ties the quantum and biomedical branches together rather than treating them as separate prototypes.</div>
-          <div class="impact-links">
-            <a class="impact-link" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank">Open notebook</a>
-          </div>
         </article>
       </div>
     </section>
 
-    <section class="card" id="evidence-gallery">
+    <section class="card" id="figures-section">
       <div class="card-header">
         <div class="card-icon">◫</div>
         <div>
-          <h2>Figure Evidence</h2>
-          <p class="card-desc">Visual outputs exported from the strongest biomedical notebook are surfaced directly on the landing page so the site shows evidence, not only summary numbers.</p>
+          <h2>Figure Gallery</h2>
+          <p class="card-desc">Selected biomedical plots are surfaced directly on the landing page so visitors can inspect the strongest evaluation, robustness, and threshold outputs without opening the full notebook first.</p>
         </div>
       </div>
 
-      <p class="section-intro">The repository currently exposes standalone PNG figure assets from the biomedical branch. These plots support the best clinical result by showing held-out discrimination, fixed-split robustness, operating-point behavior, and cohort geometry rather than only reporting a single accuracy value.</p>
+      <p class="section-intro">The repository currently exposes standalone PNG figure assets from the biomedical branch. These plots show held-out discrimination, fixed-split robustness, operating-point behavior, and cohort geometry so the landing page includes direct visual context in addition to the notebook and summary sections.</p>
 
-      <div class="evidence-grid">
-        <a class="evidence-link" href="website/notebooks_html/bio_demo.html#evaluation" target="_blank">
-          <article class="evidence-card">
+      <div class="notebook-ribbon figure-ribbon" aria-label="Figure summary metrics">
+        <div class="notebook-ribbon-item">
+          <div class="notebook-ribbon-label">Held-out evaluation</div>
+          <div class="notebook-ribbon-value">98.8%</div>
+          <div class="notebook-ribbon-note">best biomedical accuracy shown below</div>
+        </div>
+        <div class="notebook-ribbon-item">
+          <div class="notebook-ribbon-label">Robustness</div>
+          <div class="notebook-ribbon-value">95.49% ± 0.97%</div>
+          <div class="notebook-ribbon-note">fixed-split Adaptive BioGCN stability</div>
+        </div>
+        <div class="notebook-ribbon-item">
+          <div class="notebook-ribbon-label">Operating point</div>
+          <div class="notebook-ribbon-value">31 / 35</div>
+          <div class="notebook-ribbon-note">pathologic exams detected with 1 false positive</div>
+        </div>
+      </div>
+
+      <div class="figure-grid">
+        <a class="figure-link" href="website/notebooks_html/bio_demo.html#evaluation" target="_blank">
+          <article class="figure-card">
             <img src="website/notebooks_html/figures/bio_demo_heldout_evaluation.png" alt="Held-out biomedical evaluation figure from the bio notebook">
-            <div class="evidence-body">
-              <span class="evidence-label">Held-out evaluation</span>
+            <div class="figure-body">
+              <span class="figure-label">Held-out evaluation</span>
               <h3>ResidualClinicalGCN test performance</h3>
               <p>The strongest biomedical operating point reaches 98.8% held-out accuracy with 0.978 ROC AUC, and this figure anchors that claim in the notebook's executed evaluation output.</p>
             </div>
           </article>
         </a>
 
-        <a class="evidence-link" href="website/notebooks_html/bio_demo.html#robustness" target="_blank">
-          <article class="evidence-card">
+        <a class="figure-link" href="website/notebooks_html/bio_demo.html#robustness" target="_blank">
+          <article class="figure-card">
             <img src="website/notebooks_html/figures/bio_demo_aligned_biogcn_robustness.png" alt="Adaptive BioGCN robustness figure from the bio notebook">
-            <div class="evidence-body">
-              <span class="evidence-label">Robustness benchmark</span>
+            <div class="figure-body">
+              <span class="figure-label">Robustness benchmark</span>
               <h3>Adaptive BioGCN stability across seeds</h3>
               <p>The shared benchmark model remains stable on a fixed split at 95.49% ± 0.97% accuracy, supporting the repository's reproducibility story rather than relying on a single run.</p>
             </div>
           </article>
         </a>
 
-        <a class="evidence-link" href="website/notebooks_html/bio_demo.html#threshold" target="_blank">
-          <article class="evidence-card">
+        <a class="figure-link" href="website/notebooks_html/bio_demo.html#threshold" target="_blank">
+          <article class="figure-card">
             <img src="website/notebooks_html/figures/bio_demo_operating_point_analysis.png" alt="Operating point analysis figure from the bio notebook">
-            <div class="evidence-body">
-              <span class="evidence-label">Threshold analysis</span>
+            <div class="figure-body">
+              <span class="figure-label">Threshold analysis</span>
               <h3>Clinical operating-point trade-offs</h3>
               <p>The landing page now shows that the notebook evaluates sensitivity, false positives, and threshold choice explicitly, which is essential for a risk-sensitive screening framing.</p>
             </div>
           </article>
         </a>
 
-        <a class="evidence-link" href="website/notebooks_html/bio_demo.html#What-the-First-Code-Cell-Produced-and-Why-It-Matters" target="_blank">
-          <article class="evidence-card">
+        <a class="figure-link" href="website/notebooks_html/bio_demo.html#What-the-First-Code-Cell-Produced-and-Why-It-Matters" target="_blank">
+          <article class="figure-card">
             <img src="website/notebooks_html/figures/bio_demo_pca_audit.png" alt="PCA cohort audit figure from the bio notebook">
-            <div class="evidence-body">
-              <span class="evidence-label">Cohort geometry</span>
+            <div class="figure-body">
+              <span class="figure-label">Cohort geometry</span>
               <h3>Prediction structure in cohort space</h3>
               <p>The PCA audit demonstrates that predictions are evaluated against the broader exam geometry, making the clinical result easier to defend as more than a lucky split artifact.</p>
             </div>
           </article>
         </a>
       </div>
-
-      <p class="evidence-note">For the optimization and combined branches, the strongest evidence remains embedded inside the exported notebook HTML pages rather than as standalone PNG assets. The root page therefore pairs this figure strip with the notebook contribution cards and direct notebook links above.</p>
     </section>
 
     <!-- Interactive demo -->
@@ -870,8 +1170,8 @@
       <div class="card-header">
         <div class="card-icon">📓</div>
         <div>
-          <h2>Interactive Notebook Tutorials</h2>
-          <p class="card-desc">Fully executed, deeply annotated HTML notebooks covering quantum computing, graph neural networks, and biomedical classification — with formulas, plots, and step-by-step explanations.</p>
+          <h2>Notebook Guide</h2>
+          <p class="card-desc">Use this section as the single launch point for the three full notebook walkthroughs, each opened inline or in a separate tab.</p>
         </div>
       </div>
 
@@ -917,7 +1217,7 @@
               <span class="nb-tag">Hybrid QC</span>
               <span class="nb-tag">Adaptive Models</span>
               <span class="nb-tag">Full Pipeline</span>
-              <span class="nb-tag">Integrated Evidence</span>
+              <span class="nb-tag">Integrated Summary</span>
             </div>
           </div>
           <div class="nb-arrow">▶</div>
@@ -929,7 +1229,7 @@
         <div class="nb-viewer-header">
           <span id="nb-viewer-title" class="nb-viewer-title">⚛ Adaptive Quantum GCN Tutorial</span>
           <div class="nb-viewer-actions">
-            <a id="nb-open-link" href="website/notebooks_html/qaoa_demo.html" target="_blank" class="btn btn-secondary btn-sm">Open in full tab ↗</a>
+            <a id="nb-open-link" href="website/notebooks_html/qaoa_demo.html" target="_blank" class="btn btn-secondary btn-sm">Open selected notebook ↗</a>
           </div>
         </div>
         <iframe
@@ -948,6 +1248,7 @@
         bio:      { src: 'website/notebooks_html/bio_demo.html',              title: '🧬 Adaptive BioGCN / ResidualClinicalGCN Tutorial' },
         combined: { src: 'website/notebooks_html/quantum_ai_bio_combined.html', title: '🔬 Integrated Hybrid Pipeline' }
       };
+
       function showNotebook(key, btn) {
         const nb = NB_MAP[key];
         document.getElementById('nb-iframe').src         = nb.src;
@@ -963,46 +1264,51 @@
       <div class="card-header">
         <div class="card-icon">📄</div>
         <div>
-          <h2>Repository Evidence</h2>
+          <h2>Research Summary</h2>
+          <a class="summary-paper-link" href="paper/research_paper.md">Open research_paper.md</a>
         </div>
       </div>
-      <div class="summary-cols">
-        <div>
-          <h4>Approach</h4>
-          <p>Graphs serve as the common representation for both branches. On the quantum side, the repository's user-facing <strong>Adaptive Quantum GCN</strong> predicts QAOA warm-start angles <strong>(γ, β)</strong> from graph structure, reducing dependence on repeated classical search. On the biomedical side, <strong>Adaptive BioGCN</strong> provides a stable benchmark tier while <strong>ResidualClinicalGCN</strong> captures the strongest held-out CTG operating point.</p>
+      <div class="summary-layout">
+        <div class="summary-row summary-row-primary">
+          <div class="summary-panel">
+            <h4>Approach</h4>
+            <p>Graphs serve as the common representation for both branches. On the quantum side, the repository's user-facing <strong>Adaptive Quantum GCN</strong> predicts QAOA warm-start angles <strong>(γ, β)</strong> from graph structure, reducing dependence on repeated classical search. On the biomedical side, <strong>Adaptive BioGCN</strong> provides a stable benchmark tier while <strong>ResidualClinicalGCN</strong> captures the strongest held-out CTG operating point.</p>
+          </div>
+          <div class="summary-panel summary-col-results">
+            <h4>Key Results</h4>
+            <table class="summary-results-table">
+              <thead><tr><th style="text-align:left;">Metric</th><th style="text-align:right;">Value</th></tr></thead>
+              <tbody>
+                <tr><td>Held-out QAOA ratio (adaptive vs classical)</td><td>0.868 vs 0.869</td></tr>
+                <tr><td>Held-out optimization quality retained</td><td>99.95%</td></tr>
+                <tr><td>Median adaptive warm-start speedup</td><td>~1.41 × 10^4×</td></tr>
+                <tr><td>Best CTG held-out accuracy</td><td>98.8%</td></tr>
+                <tr><td>Best biomedical ROC AUC</td><td>0.978</td></tr>
+                <tr><td>Adaptive BioGCN benchmark robustness</td><td>95.49% ± 0.97%</td></tr>
+                <tr><td>Integrated notebook warm-start speedup</td><td>35,070×</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div>
-          <h4>Key Results</h4>
-          <table style="width:100%;border-collapse:collapse;font-size:0.83rem;">
-            <thead><tr style="border-bottom:1px solid #d9e2ec;"><th style="text-align:left;padding:0.3rem 0.4rem;font-weight:600;">Metric</th><th style="text-align:right;padding:0.3rem 0.4rem;font-weight:600;">Value</th></tr></thead>
-            <tbody>
-              <tr><td style="padding:0.28rem 0.4rem;">Held-out QAOA ratio (adaptive vs classical)</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">0.868 vs 0.869</td></tr>
-              <tr><td style="padding:0.28rem 0.4rem;">Held-out optimization quality retained</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">99.95%</td></tr>
-              <tr><td style="padding:0.28rem 0.4rem;">Median adaptive warm-start speedup</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">~1.41 × 10^4×</td></tr>
-              <tr><td style="padding:0.28rem 0.4rem;">Best CTG held-out accuracy</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">98.8%</td></tr>
-              <tr><td style="padding:0.28rem 0.4rem;">Best biomedical ROC AUC</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">0.978</td></tr>
-              <tr><td style="padding:0.28rem 0.4rem;">Adaptive BioGCN benchmark robustness</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">95.49% ± 0.97%</td></tr>
-              <tr><td style="padding:0.28rem 0.4rem;">Integrated notebook warm-start speedup</td><td style="text-align:right;padding:0.28rem 0.4rem;font-weight:600;">35,070×</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div>
-          <h4>Scope &amp; Limitations</h4>
-          <ul class="summary-list">
-            <li>The website demo is a depth-1 presentation layer; the strongest optimization evidence comes from notebook-level depth-2 evaluations</li>
-            <li>QAOA simulation remains exact statevector and therefore scales exponentially; the reported studies stay in the small-graph regime</li>
-            <li>Biomedical evaluation is retrospective research evidence, not a clinically validated deployment system</li>
-            <li>The best biomedical result comes from the residual extension, while the benchmark model is retained for reproducibility and robustness analysis</li>
-          </ul>
-        </div>
-        <div>
-          <h4>Quick Start</h4>
-          <pre class="code-block">pip install -r requirements.txt
+        <div class="summary-row summary-row-secondary">
+          <div class="summary-panel">
+            <h4>Scope &amp; Limitations</h4>
+            <ul class="summary-list">
+              <li>The website demo is a depth-1 presentation layer; the strongest optimization results come from notebook-level depth-2 evaluations</li>
+              <li>QAOA simulation remains exact statevector and therefore scales exponentially; the reported studies stay in the small-graph regime</li>
+              <li>Biomedical evaluation is retrospective research output, not a clinically validated deployment system</li>
+              <li>The best biomedical result comes from the residual extension, while the benchmark model is retained for reproducibility and robustness analysis</li>
+            </ul>
+          </div>
+          <div class="summary-panel summary-col-quickstart">
+            <h4>Quick Start</h4>
+            <pre class="code-block quickstart-terminal">pip install -r requirements.txt
 python -m src.train \
   --dataset-size 20 --n 6 \
   --p 1 --epochs 10 \
   --model-path model.pt
 python -m src.server</pre>
+          </div>
         </div>
       </div>
     </section>

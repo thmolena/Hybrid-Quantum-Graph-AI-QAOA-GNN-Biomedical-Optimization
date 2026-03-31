@@ -4,6 +4,57 @@
 
 ---
 
+## Executive Summary
+
+This project addresses a central research topic at the intersection of quantum optimization and biomedical machine learning: **whether a shared graph-learning framework can be used both to warm-start QAOA on real transcriptomic graphs and to classify clinical risk on real physiologic similarity graphs.**
+
+Its strongest defended contribution is therefore not a generic hybrid slogan, but a three-part evidence structure spanning optimization, reproducible benchmarking, and clinically meaningful operating-point analysis:
+
+1. **Optimization:** an **Adaptive Quantum GCN** reaches **0.868** mean held-out approximation ratio versus **0.869** for direct classical depth-2 QAOA, preserving **99.95%** of classical quality on held-out transcriptomic graphs.
+2. **Biomedical benchmark:** the shared **Adaptive BioGCN** benchmark reaches **96.71%** representative held-out CTG accuracy and remains stable at **95.49% ± 0.97%** across repeated training seeds on a fixed split.
+3. **Best biomedical operating point:** **ResidualClinicalGCN** reaches **98.8%** held-out CTG accuracy with **31 / 35** pathologic exams detected and only **1** false positive.
+
+Within that structure, `notebooks/quantum_ai_bio_combined.ipynb` serves as the most complete integrative presentation, `notebooks/qaoa_demo.ipynb` isolates the strongest optimization evidence, and `notebooks/bio_demo.ipynb` provides the deepest biomedical evaluation.
+
+---
+
+## Reading Guide
+
+| Reading objective | Primary source | Main takeaway |
+|---|---|---|
+| The repository in one pass | `notebooks/quantum_ai_bio_combined.ipynb` | One graph-learning framework links quantum warm-starting and biomedical classification within a single experimental narrative |
+| The strongest optimization result | `notebooks/qaoa_demo.ipynb` | Learned graph-conditioned warm starts can nearly match exact depth-2 classical QAOA on held-out real-data graphs |
+| The strongest biomedical result | `notebooks/bio_demo.ipynb` | The repository pairs a reproducible benchmark tier with a stronger residual clinical model for deeper evaluation |
+| The interactive public-facing overview | `index.html` | The landing page surfaces the strongest results, figures, and notebook entry points without replacing notebook-grounded evidence |
+
+---
+
+## Table of Contents
+
+- [Abstract](#abstract)
+- [Draft Manuscript](#draft-manuscript)
+- [Highlights](#highlights)
+- [Three-Notebook Contribution Matrix](#three-notebook-contribution-matrix)
+- [Performance Summary](#performance-summary)
+- [Technical Contributions](#technical-contributions)
+- [Notebook Guide](#notebook-guide)
+- [Quick Start](#quick-start)
+- [Roadmap](#roadmap)
+
+---
+
+## Draft Manuscript
+
+An academic-style submission draft is included for readers who want a paper-form presentation of the project.
+
+- **Title:** *Research Paper*
+- **Author:** Molena Huynh
+- **Markdown manuscript:** [paper/research_paper.md](paper/research_paper.md)
+
+This draft is maintained as a single Markdown manuscript so the paper narrative, repository evidence, and editable source remain consolidated in one file.
+
+---
+
 ## Abstract
 
 This project addresses a fundamental challenge at the intersection of quantum computing and biomedical AI: how can the structure inherent in biological data — gene co-expression networks, clinical similarity graphs — be exploited simultaneously by quantum optimization algorithms and graph-based deep learning?
@@ -27,13 +78,22 @@ The system is validated on two real datasets: a transcriptomic cohort of 102 pro
 
 ---
 
+## Project Framing
+
+- **One representation, two domains:** graphs are the common formal object in both branches rather than a loose conceptual analogy.
+- **Three notebooks, three roles:** the optimization, biomedical, and integrated notebooks each support a distinct argumentative function.
+- **Benchmark plus extension:** the biomedical results are strengthened by separating a reproducible benchmark configuration from a higher-performing residual model.
+- **Notebook-grounded claims:** the landing page and README summarize the evidence, but the primary quantitative claims remain traceable to executed notebook outputs.
+
+---
+
 ## Three-Notebook Contribution Matrix
 
 | Notebook | Adaptive model emphasis | Best reported result | Why it matters |
 |---|---|---|---|
 | `notebooks/qaoa_demo.ipynb` | **Adaptive Quantum GCN** (`SimpleGCN` after transcriptomic adaptation) | **0.868** mean held-out approximation ratio vs **0.869** classical; **99.95%** quality retention; **~14,122×** median inference speedup | Establishes that learned graph-conditioned warm-starting can nearly close the gap to exact depth-2 classical optimization on held-out real-data transcriptomic graphs |
 | `notebooks/bio_demo.ipynb` | **Adaptive BioGCN** benchmark and **ResidualClinicalGCN** extension | **98.8%** held-out CTG accuracy for `ResidualClinicalGCN`; **96.71%** representative benchmark accuracy for `Adaptive BioGCN`; **95.49% ± 0.97%** benchmark robustness | Provides the repository's strongest biomedical evidence, combining a reproducible benchmark tier with a higher-performing residual clinical model |
-| `notebooks/quantum_ai_bio_combined.ipynb` | **Adaptive Quantum GCN** + **Adaptive BioGCN** in one integrated workflow | **35,070×** representative warm-start speedup, **96.71%** Adaptive BioGCN accuracy, **96.5%** integrated residual evaluation accuracy | Shows the unified graph-learning thesis end to end, rather than presenting the quantum and biomedical branches as unrelated demos |
+| `notebooks/quantum_ai_bio_combined.ipynb` | **Adaptive Quantum GCN** + **Adaptive BioGCN** in one integrated workflow | **35,070×** representative warm-start speedup, **96.71%** Adaptive BioGCN accuracy, **96.5%** integrated residual evaluation accuracy | Shows the unified graph-learning framework end to end, rather than presenting the quantum and biomedical branches as unrelated demos |
 
 ---
 
@@ -218,6 +278,8 @@ Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/
 ├── requirements.txt
 ├── model.pt                        # Trained SimpleGCN checkpoint
 ├── index.html                      # GitHub Pages entry point
+├── paper/
+│   └── research_paper.md           # Consolidated manuscript
 ├── data/
 │   └── breast_cancer.csv           # Earlier supporting artifact
 ├── notebooks/
@@ -359,7 +421,7 @@ python -m http.server 8000
 - Extend QAOA benchmarks to deeper circuits (`p > 1`) and denser co-expression graphs from larger transcriptomic cohorts.
 - Add systematic experiment tracking for QAOA quality-vs-speed trade-offs across varied graph topologies and node counts.
 - Enrich GNN node features beyond degree to include local graph statistics (clustering coefficient, betweenness centrality) for improved parameter prediction accuracy.
-- **Train `SimpleGCN` on biology-derived co-expression graphs** to close the in-distribution gap and strengthen the approximation ratio from the current transfer-test baseline.
+- **Promote the notebook-local transcriptomic adaptation workflow into a reusable training pipeline** so the strongest optimization result no longer lives only inside `qaoa_demo.ipynb`.
 - **Add explicit tabular baseline comparison** (logistic regression, random forest, MLP) on the held-out CTG split to rigorously quantify the relational learning benefit of the GCN.
 
 ### Mid-term

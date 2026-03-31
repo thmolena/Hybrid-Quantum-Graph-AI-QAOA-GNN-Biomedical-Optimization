@@ -3,39 +3,9 @@
 <html lang="en">
 <head><meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Adaptive Quantum GCN Notebook</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>Adaptive Quantum GCN Notebook</title><link href="../notebook-shared.css" rel="stylesheet"/><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <style type="text/css">
     pre { line-height: 125%; }
-.notebook-ribbon {
-  margin: 0.85rem 0 1rem;
-  padding: 0.9rem 1rem;
-  border: 1px solid #d7e3f3;
-  border-radius: 0.85rem;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-.notebook-ribbon-item {
-  flex: 1 1 160px;
-  min-width: 150px;
-}
-.notebook-ribbon-label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #1e3a8a;
-}
-.notebook-ribbon-value {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #0f172a;
-}
-.notebook-ribbon-note {
-  font-size: 0.82rem;
-  color: #475569;
-}
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
@@ -7838,6 +7808,12 @@ a.anchor-link {
 <div class="notebook-ribbon-item"><div class="notebook-ribbon-label">Quality retained</div><div class="notebook-ribbon-value">99.95%</div><div class="notebook-ribbon-note">of depth-2 classical quality</div></div>
 <div class="notebook-ribbon-item"><div class="notebook-ribbon-label">Inference speedup</div><div class="notebook-ribbon-value">~1.4 × 10^4x</div><div class="notebook-ribbon-note">median on this machine</div></div>
 </div>
+<div class="notebook-jump-nav">
+<a class="notebook-jump-link" href="#qc-foundations">Theory</a>
+<a class="notebook-jump-link" href="#optimization">Optimization</a>
+<a class="notebook-jump-link" href="#warmstart">Warm-start</a>
+<a class="notebook-jump-link" href="#landscape">Landscape</a>
+</div>
 <p><strong>Depth-2 Quantum Parameter Learning on Real Transcriptomic Co-expression Graphs</strong></p>
 <p><strong>Top-line contribution:</strong> this notebook is the repository's strongest optimization result. It shows that an <strong>Adaptive Quantum GCN</strong> can be adapted on transcriptomic resamples and then recover <strong>99.95%</strong> of the depth-2 classical QAOA benchmark on held-out real-data graphs.</p>
 <p><strong>Best reported result:</strong> the held-out mean approximation ratio is <strong>0.868</strong> for the adaptive model versus <strong>0.869</strong> for direct classical optimization, with a <strong>~1.4 × 10^4x</strong> median inference speedup on this machine.</p>
@@ -8674,7 +8650,7 @@ This notebook now evaluates a stronger protocol:
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="5.-Computational-Engine-%E2%80%94-From-Transcriptomic-Data-to-a-Depth-2-QAOA-Benchmark">5. Computational Engine — From Transcriptomic Data to a Depth-2 QAOA Benchmark<a class="anchor-link" href="#5.-Computational-Engine-%E2%80%94-From-Transcriptomic-Data-to-a-Depth-2-QAOA-Benchmark">¶</a></h2><p>The next code cell defines the reusable functions that make the upgraded notebook possible.</p>
+<h2 id="5.-Computational-Engine-%E2%80%94-From-Transcriptomic-Data-to-a-Depth-2-QAOA-Benchmark">5. Computational Engine — From Transcriptomic Data to a Depth-2 QAOA Benchmark<a name="optimization"></a><a class="anchor-link" href="#5.-Computational-Engine-%E2%80%94-From-Transcriptomic-Data-to-a-Depth-2-QAOA-Benchmark">¶</a></h2><p>The next code cell defines the reusable functions that make the upgraded notebook possible.</p>
 <h3 id="Why-this-step-matters">Why this step matters<a class="anchor-link" href="#Why-this-step-matters">¶</a></h3><p>The notebook now does more than evaluate a fixed checkpoint. It must:</p>
 <ul>
 <li>derive biologically motivated co-expression graphs from a real expression matrix,</li>
@@ -10942,7 +10918,7 @@ Interpretation
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="7.-Interpreting-the-Benchmark-Wide-Figures">7. Interpreting the Benchmark-Wide Figures<a class="anchor-link" href="#7.-Interpreting-the-Benchmark-Wide-Figures">¶</a></h2><p>The final code cell combines one representative-state visualization with two benchmark-level summaries across the held-out transcriptomic graph family.</p>
+<h2 id="7.-Interpreting-the-Benchmark-Wide-Figures">7. Interpreting the Benchmark-Wide Figures<a name="warmstart"></a><a class="anchor-link" href="#7.-Interpreting-the-Benchmark-Wide-Figures">¶</a></h2><p>The final code cell combines one representative-state visualization with two benchmark-level summaries across the held-out transcriptomic graph family.</p>
 <hr/>
 <h3 id="Figure-1:-Median-latency-on-held-out-graphs">Figure 1: Median latency on held-out graphs<a class="anchor-link" href="#Figure-1:-Median-latency-on-held-out-graphs">¶</a></h3><p>The left panel compares classical depth-2 search against single-pass adapted-model inference. The logarithmic axis is required because iterative search and a forward pass live on different computational scales.</p>
 <h3 id="Figure-2:-Highest-probability-output-states-for-the-representative-graph">Figure 2: Highest-probability output states for the representative graph<a class="anchor-link" href="#Figure-2:-Highest-probability-output-states-for-the-representative-graph">¶</a></h3><p>The middle panel shows the most likely bitstrings in the classical depth-2 state on the representative graph. It tests whether the optimized quantum state is concentrating amplitude on strong cuts rather than spreading mass diffusely.</p>
