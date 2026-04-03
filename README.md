@@ -2,6 +2,8 @@
 
 > A research-grade hybrid quantum-classical system that unifies variational quantum optimization and graph neural network learning under a single graph-theoretic framework, demonstrated on real genomic and clinical datasets.
 
+[![Project Website](https://img.shields.io/badge/Project_Website-Live_Overview-0f766e?style=for-the-badge)](https://thmolena.github.io/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/)
+
 ---
 
 ## Executive Summary
@@ -390,6 +392,11 @@ python -m src.train --dataset-size 20 --n 6 --p 1 --epochs 10 --model-path model
 jupyter nbconvert --to notebook --execute --inplace notebooks/qaoa_demo.ipynb
 jupyter nbconvert --to notebook --execute --inplace notebooks/bio_demo.ipynb
 jupyter nbconvert --to notebook --execute --inplace notebooks/quantum_ai_bio_combined.ipynb
+
+# 3c. Export standalone HTML artifacts with repository-managed image alt text
+python scripts/export_notebook_html.py notebooks/qaoa_demo.ipynb --output qaoa_demo.html --output-dir website/notebooks_html
+python scripts/export_notebook_html.py notebooks/bio_demo.ipynb --output bio_demo.html --output-dir website/notebooks_html
+python scripts/export_notebook_html.py notebooks/quantum_ai_bio_combined.ipynb --output quantum_ai_bio_combined.html --output-dir website/notebooks_html
 
 # 4. Start the inference API
 python -m src.server

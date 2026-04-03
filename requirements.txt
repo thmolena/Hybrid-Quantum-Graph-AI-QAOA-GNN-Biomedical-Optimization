@@ -8,3 +8,4 @@ matplotlib
 scikit-learn
 pandas
 ucimlrepo
+nbconvert>=7.17.0,<8

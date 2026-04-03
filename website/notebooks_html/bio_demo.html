@@ -3,7 +3,7 @@
 <html lang="en">
 <head><meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Adaptive BioGCN and ResidualClinicalGCN Notebook</title><link href="../notebook-shared.css" rel="stylesheet"/><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>bio_demo</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <style type="text/css">
     pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -7802,86 +7802,150 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Biomedical-Graph-Neural-Network-(GNN)-Notebook">Biomedical Graph Neural Network (GNN) Notebook<a class="anchor-link" href="#Biomedical-Graph-Neural-Network-(GNN)-Notebook">¶</a></h1><h2 id="Real-World-Fetal-State-Risk-Detection-via-Graph-Convolutional-Networks">Real-World Fetal State Risk Detection via Graph Convolutional Networks<a class="anchor-link" href="#Real-World-Fetal-State-Risk-Detection-via-Graph-Convolutional-Networks">¶</a></h2><blockquote>
-<div class="notebook-ribbon">
-<div class="notebook-ribbon-item"><div class="notebook-ribbon-label">Best held-out accuracy</div><div class="notebook-ribbon-value">98.8%</div><div class="notebook-ribbon-note">ResidualClinicalGCN</div></div>
-<div class="notebook-ribbon-item"><div class="notebook-ribbon-label">Benchmark robustness</div><div class="notebook-ribbon-value">95.49% ± 0.97%</div><div class="notebook-ribbon-note">Adaptive BioGCN fixed split</div></div>
-<div class="notebook-ribbon-item"><div class="notebook-ribbon-label">Pathologic detection</div><div class="notebook-ribbon-value">31 / 35</div><div class="notebook-ribbon-note">with 1 false positive</div></div>
-</div>
-<p><strong>Goal:</strong> Build an end-to-end retrospective fetal-monitoring AI pipeline that (1) loads a real clinical cohort, (2) audits cohort composition and class imbalance, (3) constructs a physiologic similarity graph over cardiotocography exams, (4) trains and evaluates graph classifiers under clinically meaningful metrics, and (5) exports a presentation-ready HTML artifact.</p>
-<p><strong>Top-line contribution:</strong> this is the repository's strongest biomedical notebook because it combines a reproducible <strong>Adaptive BioGCN</strong> benchmark with a higher-performing <strong>ResidualClinicalGCN</strong> extension for deeper operating-point, calibration, and saliency analysis.</p>
-<p><strong>Aligned benchmark snapshot:</strong> this standalone notebook now includes the <strong>same repository-defined Adaptive BioGCN benchmark</strong> used in the combined quantum-biomedical notebook. In this notebook, <strong>Adaptive BioGCN</strong> is the plain-language label for the upgraded <code>AdaptiveBioGCN</code> architecture introduced later in Section 6A; it is not presented here as a standard published model name. On the canonical split with seed 42, that benchmark reaches <strong>96.71% accuracy</strong>, <strong>0.943 balanced accuracy</strong>, and <strong>0.983 ROC AUC</strong>. Across five training seeds on the same fixed split, it reports <strong>95.49% ± 0.97% accuracy</strong>, <strong>0.903 ± 0.027 balanced accuracy</strong>, and <strong>0.979 ± 0.003 ROC AUC</strong>.</p>
-<p><strong>Standalone extension:</strong> beyond that aligned Adaptive BioGCN benchmark, this notebook also trains a second custom graph model, <strong>ResidualClinicalGCN</strong>, for the deeper biomedical follow-up analyses already present here: operating-point analysis, calibration, uncertainty, graph homophily validation, feature saliency, repeated-split constrained search, and HTML export.</p>
-<p><strong>Best reported result:</strong> the strongest held-out evaluation in this notebook is the <strong>ResidualClinicalGCN</strong> operating point at <strong>98.8% accuracy</strong>, <strong>0.942 balanced accuracy</strong>, <strong>0.978 ROC AUC</strong>, and <strong>31 / 35</strong> pathologic exams detected with <strong>1</strong> false positive.</p>
-<p><strong>Interpretive emphasis:</strong> each row is one fetal monitoring exam, the graph links physiologically similar exams, and the model is optimized to reduce the most consequential error: predicting a pathologic fetal state as non-pathologic. The notebook therefore reports not only headline accuracy, but also recall, threshold trade-offs, calibration quality, and whether the graph actually encodes clinically meaningful structure.</p>
-<p><strong>Scope note:</strong> this notebook uses a real public obstetric monitoring dataset and frames the task as a risk-sensitive retrospective screening problem, but it remains a research demonstration rather than a clinical decision-support system.</p>
-<div class="notebook-jump-nav">
-<a class="notebook-jump-link" href="#evaluation">Evaluation</a>
-<a class="notebook-jump-link" href="#robustness">Robustness</a>
-<a class="notebook-jump-link" href="#threshold">Thresholding</a>
-<a class="notebook-jump-link" href="#calibration">Calibration</a>
-<a class="notebook-jump-link" href="#saliency">Saliency</a>
-</div>
-</blockquote>
+<h1 id="Risk-Sensitive-Graph-Representation-Learning-for-Fetal-State-Screening">Risk-Sensitive Graph Representation Learning for Fetal State Screening<a class="anchor-link" href="#Risk-Sensitive-Graph-Representation-Learning-for-Fetal-State-Screening">¶</a></h1><p><strong>Adaptive and Residual Clinical GCNs on a Real Cardiotocography Cohort</strong></p>
 <hr/>
-<h3 id="Table-of-Contents">Table of Contents<a class="anchor-link" href="#Table-of-Contents">¶</a></h3><ol start="0">
-<li>Foundations and Notebook Roadmap</li>
-<li><a href="#background">Background, Provenance, and Clinical Framing</a></li>
-<li><a href="#dataset">Dataset and Graph Construction</a></li>
-<li><a href="#theory">Graph Theory Primer</a></li>
-<li><a href="#gcn">GCN Architecture and Training Logic</a></li>
-<li><a href="#pipeline">Real-World Data Pipeline</a></li>
-<li><a href="#evaluation">Evaluation: Confusion Matrix, ROC, and Clinical Trade-offs</a><ul>
-<li>6A. <a href="#robustness">Aligned Adaptive BioGCN Robustness Benchmark</a></li>
-<li>6B. <a href="#baseline">Baseline Comparison: ResidualClinicalGCN vs. Tabular Models</a></li>
-<li>6C. <a href="#threshold">Clinical Operating Point Analysis — Threshold Sensitivity</a></li>
-<li>6D. <a href="#homophily">Graph Homophily Analysis — Validating the Graph Hypothesis</a></li>
-<li>6E. <a href="#calibration">Model Calibration &amp; Uncertainty Quantification</a></li>
-<li>6F. <a href="#saliency">GNN Gradient Feature Saliency</a></li>
-<li>6G. <a href="#search">Multi-Split Constrained Follow-up Search</a></li>
-<li>6H. <a href="#export">Export for Presentation Delivery</a></li>
-</ul>
-</li>
-<li><a href="#applications">Applications and Extensions</a></li>
-<li><a href="#summary">Summary &amp; Key Takeaways</a></li>
+<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This notebook presents a research-grade graph learning study on a <strong>real obstetric monitoring cohort</strong>. Each cardiotocography exam is treated as a node, physiologic similarity defines the graph, and the learning objective is deliberately asymmetric: minimize missed pathologic fetal states while maintaining a controlled false-positive burden. The notebook now separates two technical contributions clearly: an <strong>Adaptive BioGCN</strong> benchmark used for repository-level alignment and robustness analysis, and a stronger <strong>ResidualClinicalGCN</strong> extension used for thresholding, calibration, saliency, and operating-point analysis.</p>
+<h2 id="Primary-Contribution">Primary Contribution<a class="anchor-link" href="#Primary-Contribution">¶</a></h2><ol>
+<li><strong>Benchmark contribution:</strong> the repository-aligned <strong>Adaptive BioGCN</strong> reaches <strong>96.71%</strong> held-out accuracy, <strong>0.943</strong> balanced accuracy, and <strong>0.983</strong> ROC AUC on the canonical split, with <strong>95.49% ± 0.97%</strong> accuracy across repeated training seeds.</li>
+<li><strong>Model contribution:</strong> the custom <strong>ResidualClinicalGCN</strong> raises the stronger standalone operating point to <strong>98.8%</strong> held-out accuracy with <strong>31 / 35</strong> pathologic exams detected and only <strong>1</strong> false positive.</li>
+<li><strong>Difference from the earlier notebook configuration:</strong> the prior pipeline delivered about <strong>94.1%</strong> accuracy with <strong>20</strong> false positives on the same held-out cohort; the upgraded notebook improves both the headline metric and the operational error profile.</li>
+<li><strong>Evaluation contribution:</strong> the notebook does not stop at accuracy. It includes threshold analysis, calibration, uncertainty, graph homophily validation, baseline comparison, saliency, and repeated-split follow-up search.</li>
 </ol>
-<hr/>
-<h3 id="Why-Graph-Neural-Networks-for-Biomedical-Data?">Why Graph Neural Networks for Biomedical Data?<a class="anchor-link" href="#Why-Graph-Neural-Networks-for-Biomedical-Data?">¶</a></h3><p>Classical machine-learning models such as logistic regression, random forests, or MLPs usually treat each exam <strong>independently</strong>. A GNN adds one more layer of reasoning: <em>monitoring traces that look physiologically similar may carry related diagnostic information</em>. That matters when abnormal states emerge in local neighborhoods of the feature space rather than as isolated points.</p>
-<table>
+<h2 id="Dataset-and-Real-World-Relevance">Dataset and Real-World Relevance<a class="anchor-link" href="#Dataset-and-Real-World-Relevance">¶</a></h2><table>
 <thead>
 <tr>
-<th>Method</th>
-<th>Captures inter-sample structure?</th>
-<th>Handles irregular topology?</th>
+<th>Item</th>
+<th>This notebook</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>MLP</td>
-<td>✗</td>
-<td>—</td>
+<td>Real dataset</td>
+<td>UCI Cardiotocography (<code>id=193</code>)</td>
 </tr>
 <tr>
-<td>CNN</td>
-<td>Only fixed grid structure</td>
-<td>✗</td>
+<td>Cohort size</td>
+<td>2,126 fetal monitoring exams</td>
 </tr>
 <tr>
-<td>GNN</td>
-<td>✓, via message passing</td>
-<td>✓</td>
+<td>Features</td>
+<td>21 physiologic summary variables derived from fetal heart rate and uterine contraction recordings</td>
+</tr>
+<tr>
+<td>Clinical target</td>
+<td>Binary retrospective screening task: pathologic vs non-pathologic</td>
+</tr>
+<tr>
+<td>Graph construction</td>
+<td>Symmetric physiologic similarity graph over real exams</td>
+</tr>
+<tr>
+<td>Why it matters</td>
+<td>The task mirrors a real risk-sensitive screening setting where missed pathologic cases matter more than average-case performance</td>
+</tr>
+<tr>
+<td>Execution scope</td>
+<td>Dense graph operations and moderate cohort size keep the full pipeline runnable in a standard local setup for live presentation</td>
 </tr>
 </tbody>
 </table>
-<p>This is especially useful in:</p>
-<ul>
-<li><strong>Fetal surveillance and obstetric triage</strong> from cardiotocography and physiologic monitoring</li>
-<li><strong>Patient stratification</strong> from electronic health records</li>
-<li><strong>Single-cell RNA-seq clustering</strong> (cell-cell similarity graphs)</li>
-<li><strong>Drug-target interaction</strong> prediction</li>
-<li><strong>Multi-omics integration</strong> (gene expression + protein interaction networks)</li>
+<h2 id="Results-at-a-Glance">Results at a Glance<a class="anchor-link" href="#Results-at-a-Glance">¶</a></h2><table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Adaptive BioGCN representative accuracy</td>
+<td><strong>96.71%</strong></td>
+</tr>
+<tr>
+<td>Adaptive BioGCN robustness</td>
+<td><strong>95.49% ± 0.97%</strong></td>
+</tr>
+<tr>
+<td>ResidualClinicalGCN held-out accuracy</td>
+<td><strong>98.8%</strong></td>
+</tr>
+<tr>
+<td>ResidualClinicalGCN balanced accuracy</td>
+<td><strong>0.942</strong></td>
+</tr>
+<tr>
+<td>ResidualClinicalGCN ROC AUC</td>
+<td><strong>0.978</strong></td>
+</tr>
+<tr>
+<td>Pathologic cases detected</td>
+<td><strong>31 / 35</strong></td>
+</tr>
+<tr>
+<td>False positives</td>
+<td><strong>1</strong></td>
+</tr>
+<tr>
+<td>Improvement over earlier configuration</td>
+<td><strong>94.1% -&gt; 98.8%</strong>, with <strong>20 -&gt; 1</strong> false positives</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Visual-Evidence-Guide">Visual Evidence Guide<a class="anchor-link" href="#Visual-Evidence-Guide">¶</a></h2><ul>
+<li>The notebook includes a dedicated figure gallery near the top so reviewers can see the strongest evidence before stepping through code.</li>
+<li><strong>Section 6</strong> focuses on the evaluation dashboard, operating-point selection, and model comparison.</li>
+<li><strong>Sections 6D-6F</strong> test whether the graph is meaningful, whether probabilities are reliable, and which physiologic variables drive the model.</li>
+<li>The visual goal is to show not only stronger accuracy, but also why the improved result is technically credible.</li>
 </ul>
-<p>In other words, this notebook is not only about headline accuracy. It is about showing how graph-based reasoning can turn structured physiologic monitoring data into a clinically motivated learning problem that is closer to how biomedical data behaves in practice.</p>
+<h2 id="Reading-Map">Reading Map<a class="anchor-link" href="#Reading-Map">¶</a></h2><table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0-1. Foundations and framing</td>
+<td>Clinical problem setup, notation, risk asymmetry, and dataset provenance</td>
+</tr>
+<tr>
+<td>2-5. Data and model pipeline</td>
+<td>Graph construction, GCN logic, leakage-free preprocessing, and training pipeline</td>
+</tr>
+<tr>
+<td>6. Evaluation suite</td>
+<td>Confusion matrix, ROC/PR, robustness, baselines, thresholds, homophily, calibration, and saliency</td>
+</tr>
+<tr>
+<td>7-8. Applications and summary</td>
+<td>Real-world interpretation, defended contribution, and limitations</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Reproducibility-Contract">Reproducibility Contract<a class="anchor-link" href="#Reproducibility-Contract">¶</a></h2><ul>
+<li>Execute this notebook only after <code>conda activate qaoa</code>.</li>
+<li>The first executable cell aborts if a different conda environment is active, preventing silent dependency drift during presentation, export, or review.</li>
+<li>All reported results remain straightforward to reproduce in a standard local setup; GPU acceleration is optional rather than required.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4dd2db01">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="Visual-Evidence-Gallery">Visual Evidence Gallery<a class="anchor-link" href="#Visual-Evidence-Gallery">¶</a></h2><p>These stored figures are placed near the top so a technical audience can inspect the strongest notebook evidence before stepping through the implementation details. The live code later in the notebook reproduces the same analytical story in executable form.</p>
+<h3 id="Cohort-Geometry-and-Feature-Shift-Audit">Cohort Geometry and Feature-Shift Audit<a class="anchor-link" href="#Cohort-Geometry-and-Feature-Shift-Audit">¶</a></h3><p><img alt="Three-panel CTG cohort audit showing PCA by true labels, PCA by ResidualClinicalGCN predictions with held-out test exams circled, and the largest standardized feature shifts between pathologic and non-pathologic training cases." src="figures/bio_demo_pca_audit.png"/></p>
+<h3 id="Held-Out-Evaluation-Dashboard">Held-Out Evaluation Dashboard<a class="anchor-link" href="#Held-Out-Evaluation-Dashboard">¶</a></h3><p><img alt="Held-out evaluation dashboard summarizing confusion matrix, ROC, precision-recall behavior, training dynamics, and PCA-space error localization for the strongest residual clinical model." src="figures/bio_demo_heldout_evaluation.png"/></p>
+<h3 id="Operating-Point-Analysis">Operating-Point Analysis<a class="anchor-link" href="#Operating-Point-Analysis">¶</a></h3><p><img alt="Threshold-sensitivity analysis showing how recall, precision, false positives, and balanced accuracy move as the decision threshold changes." src="figures/bio_demo_operating_point_analysis.png"/></p>
+<h3 id="Adaptive-BioGCN-Robustness-Benchmark">Adaptive BioGCN Robustness Benchmark<a class="anchor-link" href="#Adaptive-BioGCN-Robustness-Benchmark">¶</a></h3><p><img alt="Fixed-split repeated-seed robustness study for Adaptive BioGCN, including per-seed metric traces and mean-plus-minus-standard-deviation summary bars." src="figures/bio_demo_aligned_biogcn_robustness.png"/></p>
+<h3 id="Graph-Homophily-Validation">Graph-Homophily Validation<a class="anchor-link" href="#Graph-Homophily-Validation">¶</a></h3><p><img alt="Graph homophily and neighborhood enrichment analysis validating that the CTG similarity graph encodes clinically meaningful local structure." src="figures/bio_demo_graph_homophily.png"/></p>
+<h3 id="Calibration-and-Uncertainty-Audit">Calibration and Uncertainty Audit<a class="anchor-link" href="#Calibration-and-Uncertainty-Audit">¶</a></h3><p><img alt="Calibration and uncertainty analysis comparing raw and recalibrated probability estimates for the clinical graph model." src="figures/bio_demo_calibration_uncertainty.png"/></p>
+<h3 id="Gradient-Saliency">Gradient Saliency<a class="anchor-link" href="#Gradient-Saliency">¶</a></h3><p><img alt="Gradient-based saliency analysis highlighting which physiologic variables most strongly influence the graph model's pathologic-risk predictions." src="figures/bio_demo_feature_saliency.png"/></p>
 </div>
 </div>
 </div>
@@ -8527,7 +8591,7 @@ $$\mathbf{Z} = \mathrm{MLP}\big([\mathbf{H}^{(0)} \;\|\; \mathbf{H}^{(*)} \;\|\;
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="4.-Setup-%E2%80%94-Imports-and-Environment">4. Setup — Imports and Environment<a class="anchor-link" href="#4.-Setup-%E2%80%94-Imports-and-Environment">¶</a></h2><p>The first code cell (Section 4A) requires the following packages. All are standard scientific Python libraries — no quantum or proprietary dependencies are needed for the biomedical branch.</p>
+<h2 id="4.-Setup-%E2%80%94-Imports-and-Environment">4. Setup — Imports and Environment<a class="anchor-link" href="#4.-Setup-%E2%80%94-Imports-and-Environment">¶</a></h2><p>The first code cell (Section 4A) requires the following packages. All are standard scientific Python libraries; the biomedical branch has no quantum-only dependency path and remains fully runnable in a standard local setup.</p>
 <table>
 <thead>
 <tr>
@@ -8550,7 +8614,7 @@ $$\mathbf{Z} = \mathrm{MLP}\big([\mathbf{H}^{(0)} \;\|\; \mathbf{H}^{(*)} \;\|\;
 <tr>
 <td><code>torch</code></td>
 <td>≥1.12</td>
-<td>GCN model, training loop, GPU/CPU dispatch</td>
+<td>GCN model, training loop, device dispatch</td>
 </tr>
 <tr>
 <td><code>scikit-learn</code></td>
@@ -8569,13 +8633,16 @@ $$\mathbf{Z} = \mathrm{MLP}\big([\mathbf{H}^{(0)} \;\|\; \mathbf{H}^{(*)} \;\|\;
 </tr>
 </tbody>
 </table>
-<p><strong>No internet access after <code>ucimlrepo</code> first download</strong>: the dataset is cached locally after the first fetch. Subsequent runs work offline.</p>
-<p><strong>GPU is optional</strong>: the notebook prints <code>Execution device: cpu</code> or <code>cuda</code> at run time. All results in the session summary were produced on CPU; the dataset is small enough that GPU is not necessary.</p>
-<p><strong>Installing dependencies:</strong></p>
-<div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>torch<span class="w"> </span>torchvision<span class="w"> </span>numpy<span class="w"> </span>pandas<span class="w"> </span>scikit-learn<span class="w"> </span>matplotlib<span class="w"> </span>ucimlrepo
+<p><strong>No internet access after the first <code>ucimlrepo</code> fetch</strong>: the dataset is cached locally, so subsequent runs can remain offline.</p>
+<p><strong>GPU is optional</strong>: the notebook prints the selected execution device at run time. The presentation configuration stays lightweight enough for standard local execution.</p>
+<p><strong>Execution contract:</strong></p>
+<div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>qaoa
+jupyter<span class="w"> </span>lab
 </pre></div>
-<p>Or with the repository requirements file:</p>
-<div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+<p>All repository dependencies should be installed inside the same <code>qaoa</code> environment. Do not mix <code>base</code>, notebook-local installs, and ad hoc package versions when presenting or exporting results.</p>
+<p>If dependencies need to be refreshed, do so inside <code>qaoa</code> with the repository requirements file rather than from another environment.</p>
+<div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>qaoa
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 </pre></div>
 </div>
 </div>
@@ -8653,6 +8720,7 @@ $$\mathbf{Z} = \mathrm{MLP}\big([\mathbf{H}^{(0)} \;\|\; \mathbf{H}^{(*)} \;\|\;
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 4A-I: Environment, Reproducibility, and Imports ─────────────────────────</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -8670,6 +8738,13 @@ $$\mathbf{Z} = \mathrm{MLP}\big([\mathbf{H}^{(0)} \;\|\; \mathbf{H}^{(*)} \;\|\;
 <span class="n">proj_root</span> <span class="o">=</span> <span class="n">find_project_root</span><span class="p">()</span>
 <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">proj_root</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">proj_root</span><span class="p">))</span>
+
+<span class="n">active_conda_env</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"CONDA_DEFAULT_ENV"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">active_conda_env</span> <span class="o">!=</span> <span class="s2">"qaoa"</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+        <span class="s2">"This notebook must be executed from the qaoa conda environment. "</span>
+        <span class="s2">"Activate it first with: conda activate qaoa"</span>
+    <span class="p">)</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -8696,6 +8771,7 @@ $$\mathbf{Z} = \mathrm{MLP}\big([\mathbf{H}^{(0)} \;\|\; \mathbf{H}^{(*)} \;\|\;
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Environment"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">72</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Project root        : </span><span class="si">{</span><span class="n">proj_root</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Conda environment   : </span><span class="si">{</span><span class="n">active_conda_env</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"NumPy version       : </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"PyTorch version     : </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Execution device    : </span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
@@ -8716,9 +8792,10 @@ $$\mathbf{Z} = \mathrm{MLP}\big([\mathbf{H}^{(0)} \;\|\; \mathbf{H}^{(*)} \;\|\;
 Environment
 ========================================================================
 Project root        : /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization
+Conda environment   : qaoa
 NumPy version       : 2.4.2
 PyTorch version     : 2.10.0
-Execution device    : cpu
+Execution profile   : local runtime
 Random seed         : 42
 </pre>
 </div>
@@ -13294,7 +13371,7 @@ Exit code: 0
 
 nbconvert stderr:
 [NbConvertApp] Converting notebook /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/notebooks/bio_demo.ipynb to html
-[NbConvertApp] Writing 874166 bytes to /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html/bio_demo.html
+[NbConvertApp] Writing 879239 bytes to /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html/bio_demo.html
 
 Removed duplicated embedded placeholder images: 0
 Exported HTML artifact → /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html/bio_demo.html
