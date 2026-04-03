@@ -40,7 +40,7 @@ The CTG notebook constructs a physiologic similarity graph over 2,126 fetal moni
 
 ### 3. The graph abstraction is shared across both branches
 
-The combined notebook is the main evidence for the repository's central argument: one graph-learning formalism can support both variational quantum optimization and biomedical classification in a single end-to-end workflow.
+The combined notebook is the main demonstration of the repository's central argument: one graph-learning formalism can support both variational quantum optimization and biomedical classification in a single end-to-end workflow.
 
 ---
 
@@ -84,7 +84,7 @@ Best entry point for the optimization contribution.
 
 - Uses prostate transcriptomic data to build biologically motivated co-expression graphs
 - Benchmarks exact depth-2 classical QAOA against Adaptive Quantum GCN warm starts
-- Contains the strongest optimization-quality evidence in the repository
+- Contains the strongest optimization-quality result set in the repository
 
 ### notebooks/bio_demo.ipynb
 
