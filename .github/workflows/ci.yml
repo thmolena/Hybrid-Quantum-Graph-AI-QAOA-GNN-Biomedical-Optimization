@@ -1,0 +1,49 @@
+# Continuous Integration workflow
+# Runs on every push and pull request to validate the project.
+# Also supports manual triggering from the GitHub mobile app (Actions tab).
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+  # Allows manual triggering from the GitHub Actions tab (e.g. from iPhone via GitHub mobile app)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Use the token so that any commits pushed back within this job are attributed correctly.
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Lint with flake8
+        run: |
+          pip install flake8
+          # Stop the build for syntax errors or undefined names; warn on style issues.
+          flake8 src/ --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 src/ --count --exit-zero --max-line-length=120 --statistics
+
+      - name: Run tests
+        run: |
+          pip install pytest
+          # Run discovered tests; if no tests exist, pytest exits 5 — treat that as success.
+          pytest --tb=short -q; EXIT=$?; [ $EXIT -eq 5 ] && echo "No tests found." && exit 0 || exit $EXIT
