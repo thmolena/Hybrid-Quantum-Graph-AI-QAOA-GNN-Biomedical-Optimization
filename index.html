@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hybrid Quantum–Graph AI: QAOA + GNN for Biomedical Optimization</title>
+  <title>Hybrid Quantum–Graph AI for Biomedical Optimization</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -779,9 +779,9 @@
   <!-- Hero -->
   <header class="hero">
     <div class="hero-inner">
-      <div class="hero-badge">Research · Hybrid Quantum-Classical AI</div>
-      <h1>Hybrid Quantum–Graph AI</h1>
-      <p class="hero-sub">This repository tells one research story in three steps: learn graph structure for <strong>QAOA warm-start prediction</strong>, test graph learning on <strong>clinical risk classification</strong>, and then connect both branches inside one integrated hybrid narrative.</p>
+      <div class="hero-badge">Research Prototype · Hybrid Quantum-Classical AI</div>
+      <h1>Hybrid Quantum–Graph AI for Biomedical Optimization</h1>
+      <p class="hero-sub">This repository explores whether <strong>GNN-derived graph representations</strong> can provide structure-aware initialization for <strong>QAOA</strong> while supporting a broader graph-learning view of <strong>biomedical optimization</strong>. Start with the canonical notebook, then inspect the two technical appendices.</p>
       <div class="hero-pills">
         <span class="pill">QAOA</span>
         <span class="pill">GNN / GCN</span>
@@ -791,7 +791,7 @@
         <span class="pill">PyTorch</span>
         <span class="pill">Exact Statevector</span>
       </div>
-      <div class="notebook-ribbon hero-ribbon" aria-label="Best repository results">
+      <div class="notebook-ribbon hero-ribbon" aria-label="Representative prototype results">
         <div class="notebook-ribbon-item">
           <div class="notebook-ribbon-label">Best CTG result</div>
           <div class="notebook-ribbon-value">98.8%</div>
@@ -805,7 +805,7 @@
         <div class="notebook-ribbon-item">
           <div class="notebook-ribbon-label">Warm-start speedup</div>
           <div class="notebook-ribbon-value">35,070×</div>
-          <div class="notebook-ribbon-note">Representative integrated hybrid notebook result</div>
+          <div class="notebook-ribbon-note">Representative prototype result from the integrated notebook</div>
         </div>
         <div class="notebook-ribbon-item">
           <div class="notebook-ribbon-label">Pathologic detection</div>
@@ -830,20 +830,32 @@
       <div class="card-header">
         <div class="card-icon">▣</div>
         <div>
-          <h2>Story of the Project</h2>
-          <p class="card-desc">Read the repository in order: optimization method, biomedical validation, then integrated synthesis.</p>
+          <h2>Project Story</h2>
+          <p class="card-desc">Read the repository as one package: canonical thesis notebook first, then the QAOA and biomedical technical appendices.</p>
         </div>
       </div>
 
-      <p class="section-intro">The landing page introduces the logic once, then the notebooks and figures provide the detailed evidence behind each branch.</p>
+      <p class="section-intro">The landing page states the thesis once. The combined notebook carries the main narrative, and the two branch notebooks provide the technical evidence behind it.</p>
 
       <div class="impact-grid">
         <article class="impact-card">
-          <span class="impact-eyebrow">Optimization branch</span>
-          <h3>Adaptive Quantum GCN</h3>
-          <p>This branch starts from transcriptomic data, builds co-expression graphs, and asks whether graph structure alone can predict useful QAOA parameters for MaxCut without rerunning a full classical search for every new graph.</p>
+          <span class="impact-eyebrow">Canonical notebook</span>
+          <h3>Hybrid Quantum-Graph AI Thesis</h3>
+          <p>This notebook is the main entry point for the project. It explains the core hypothesis, shows how the optimization and biomedical branches fit together, and frames the repository as one graph-conditioned research prototype rather than three disconnected demos.</p>
 
-          <div class="impact-note">Use this notebook when the main question is methodological: it contains the core optimization benchmark and the learned warm-start framing for the project.</div>
+          <div class="impact-note">Use this notebook first if you want the thesis-level walkthrough before inspecting either branch in technical detail.</div>
+
+          <div class="impact-links">
+            <a class="impact-link" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank" rel="noreferrer">Open notebook</a>
+          </div>
+        </article>
+
+        <article class="impact-card">
+          <span class="impact-eyebrow">QAOA appendix</span>
+          <h3>Adaptive Quantum GCN</h3>
+          <p>This notebook starts from transcriptomic data, builds co-expression graphs, and asks whether graph structure can predict useful QAOA parameters for MaxCut without rerunning a full classical search for every new graph.</p>
+
+          <div class="impact-note">Use this notebook when the main question is optimization methodology, warm-start quality, or the held-out transcriptomic benchmark.</div>
 
           <div class="impact-links">
             <a class="impact-link" href="website/notebooks_html/qaoa_demo.html" target="_blank" rel="noreferrer">Open notebook</a>
@@ -851,26 +863,14 @@
         </article>
 
         <article class="impact-card">
-          <span class="impact-eyebrow">Biomedical branch</span>
+          <span class="impact-eyebrow">Biomedical appendix</span>
           <h3>Adaptive BioGCN + ResidualClinicalGCN</h3>
-          <p>This branch turns cardiotocography exams into a physiologic similarity graph and asks whether graph-based learning can improve pathologic-risk discrimination while preserving reproducibility, robustness analysis, and threshold-aware evaluation.</p>
+          <p>This notebook turns cardiotocography exams into a physiologic similarity graph and asks whether graph-based learning can improve pathologic-risk discrimination while preserving robustness analysis, threshold awareness, and split-first evaluation discipline.</p>
 
-          <div class="impact-note">Use this notebook when the main question is biomedical validation: it separates the benchmark model from the stronger residual extension and makes the clinical evaluation pipeline explicit.</div>
+          <div class="impact-note">Use this notebook when the main question is biomedical validation, screening behavior, or the distinction between the benchmark and strongest operating-point models.</div>
 
           <div class="impact-links">
             <a class="impact-link" href="website/notebooks_html/bio_demo.html" target="_blank" rel="noreferrer">Open notebook</a>
-          </div>
-        </article>
-
-        <article class="impact-card">
-          <span class="impact-eyebrow">Integrated branch</span>
-          <h3>Integrated Hybrid Narrative</h3>
-          <p>This branch is the synthesis layer: it shows why the optimization and biomedical experiments belong in the same repository and how a shared graph-learning perspective ties them together.</p>
-
-          <div class="impact-note">Use this notebook first if you want the thesis-level walkthrough before inspecting the branch-specific experiments in detail.</div>
-
-          <div class="impact-links">
-            <a class="impact-link" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank" rel="noreferrer">Open notebook</a>
           </div>
         </article>
       </div>
@@ -881,7 +881,7 @@
         <div class="card-icon">◫</div>
         <div>
           <h2>Figure Gallery</h2>
-          <p class="card-desc">These figure previews are the visual evidence for the story above, pulled directly from the executed notebook exports.</p>
+          <p class="card-desc">These figure previews are the visual evidence for the story above, pulled directly from the notebook exports that support the manuscript.</p>
         </div>
       </div>
 
@@ -962,7 +962,7 @@
         <div class="card-icon">⚛</div>
         <div>
           <h2>Interactive Graph Demo</h2>
-          <p class="card-desc">Generate a random graph, then call the GNN to predict QAOA angles (γ, β) and the expected MaxCut value. This interface is an illustrative depth-1 deployment view; the strongest quantitative optimization results remain notebook-grounded.</p>
+          <p class="card-desc">Generate a random graph, then call the GNN to predict QAOA angles (γ, β) and the expected MaxCut value. This interface is an illustrative prototype view; the strongest quantitative optimization evidence remains in the notebooks and manuscript.</p>
         </div>
       </div>
 
@@ -1147,17 +1147,32 @@
         <div class="card-icon">📓</div>
         <div>
           <h2>Notebook Guide</h2>
-          <p class="card-desc">Use this section as the single launch point for the three full notebook walkthroughs.</p>
+          <p class="card-desc">Use this section as the launch point for the canonical notebook and its two supporting technical appendices.</p>
         </div>
       </div>
 
       <!-- Notebook quick-select cards -->
       <div class="notebook-grid">
-        <button class="nb-card nb-tab-btn active" data-nb="qaoa" onclick="showNotebook('qaoa', this)">
+        <button class="nb-card nb-tab-btn active" data-nb="combined" onclick="showNotebook('combined', this)">
+          <div class="nb-icon">🔬</div>
+          <div class="nb-body">
+            <h3>Canonical Research Story</h3>
+            <p>Start here for the thesis-level walkthrough that connects GNN-informed QAOA warm starts and biomedical graph learning inside one coherent research prototype.</p>
+            <div class="nb-tags">
+              <span class="nb-tag">Canonical Notebook</span>
+              <span class="nb-tag">Integrated Narrative</span>
+              <span class="nb-tag">QAOA + Biomedical</span>
+              <span class="nb-tag">Research Prototype</span>
+            </div>
+          </div>
+          <div class="nb-arrow">▶</div>
+        </button>
+
+        <button class="nb-card nb-tab-btn" data-nb="qaoa" onclick="showNotebook('qaoa', this)">
           <div class="nb-icon">⚛</div>
           <div class="nb-body">
-            <h3>QAOA + GNN Tutorial</h3>
-            <p>Start here for the transcriptomic graph pipeline, the exact-statevector QAOA benchmark, and the learned warm-start model that predicts useful MaxCut angles from graph structure.</p>
+            <h3>QAOA Technical Appendix</h3>
+            <p>Use this notebook for the transcriptomic graph pipeline, the exact-statevector QAOA benchmark, and the learned warm-start model that predicts useful MaxCut angles from graph structure.</p>
             <div class="nb-tags">
               <span class="nb-tag">Exact Statevector</span>
               <span class="nb-tag">Adaptive Quantum GCN</span>
@@ -1171,8 +1186,8 @@
         <button class="nb-card nb-tab-btn" data-nb="bio" onclick="showNotebook('bio', this)">
           <div class="nb-icon">🧬</div>
           <div class="nb-body">
-            <h3>Biomedical GNN Tutorial</h3>
-            <p>Start here for the CTG similarity graph, the benchmark biomedical model, the residual extension, and the leakage-aware clinical evaluation workflow.</p>
+            <h3>Biomedical Technical Appendix</h3>
+            <p>Use this notebook for the CTG similarity graph, the benchmark biomedical model, the residual extension, and the leakage-aware screening evaluation workflow.</p>
             <div class="nb-tags">
               <span class="nb-tag">Adaptive BioGCN</span>
               <span class="nb-tag">ResidualClinicalGCN</span>
@@ -1183,34 +1198,19 @@
           </div>
           <div class="nb-arrow">▶</div>
         </button>
-
-        <button class="nb-card nb-tab-btn" data-nb="combined" onclick="showNotebook('combined', this)">
-          <div class="nb-icon">🔬</div>
-          <div class="nb-body">
-            <h3>Complete Hybrid Pipeline</h3>
-            <p>Start here if you want the thesis-style walkthrough that aligns the optimization and biomedical branches in one continuous narrative.</p>
-            <div class="nb-tags">
-              <span class="nb-tag">Hybrid QC</span>
-              <span class="nb-tag">Adaptive Models</span>
-              <span class="nb-tag">Full Pipeline</span>
-              <span class="nb-tag">Integrated Summary</span>
-            </div>
-          </div>
-          <div class="nb-arrow">▶</div>
-        </button>
       </div>
 
       <!-- Embedded notebook viewer -->
       <div class="nb-viewer-container">
         <div class="nb-viewer-header">
-          <span id="nb-viewer-title" class="nb-viewer-title">⚛ Adaptive Quantum GCN Tutorial</span>
+          <span id="nb-viewer-title" class="nb-viewer-title">🔬 Canonical Research Story</span>
           <div class="nb-viewer-actions">
-            <a id="nb-open-link" href="website/notebooks_html/qaoa_demo.html" target="_blank" class="btn btn-secondary btn-sm">Open selected notebook ↗</a>
+            <a id="nb-open-link" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank" class="btn btn-secondary btn-sm">Open selected notebook ↗</a>
           </div>
         </div>
         <iframe
           id="nb-iframe"
-          src="website/notebooks_html/qaoa_demo.html"
+          src="website/notebooks_html/quantum_ai_bio_combined.html"
           class="nb-iframe"
           title="Notebook viewer"
           loading="lazy">
@@ -1220,9 +1220,9 @@
 
     <script>
       const NB_MAP = {
-        qaoa:     { src: 'website/notebooks_html/qaoa_demo.html',             title: '⚛ Adaptive Quantum GCN Tutorial' },
-        bio:      { src: 'website/notebooks_html/bio_demo.html',              title: '🧬 Adaptive BioGCN / ResidualClinicalGCN Tutorial' },
-        combined: { src: 'website/notebooks_html/quantum_ai_bio_combined.html', title: '🔬 Integrated Hybrid Pipeline' }
+        combined: { src: 'website/notebooks_html/quantum_ai_bio_combined.html', title: '🔬 Canonical Research Story' },
+        qaoa:     { src: 'website/notebooks_html/qaoa_demo.html',             title: '⚛ QAOA Technical Appendix' },
+        bio:      { src: 'website/notebooks_html/bio_demo.html',              title: '🧬 Biomedical Technical Appendix' }
       };
 
       function showNotebook(key, btn) {
@@ -1248,10 +1248,10 @@
         <div class="summary-row summary-row-secondary">
           <div class="summary-panel summary-col-quickstart">
             <h4>Quick Start</h4>
-            <pre class="code-block quickstart-terminal">conda activate qaoa
-pip install -r requirements.txt
-python -m src.server
-python -m http.server 8000</pre>
+            <pre class="code-block quickstart-terminal">pip install -r requirements.txt
+jupyter notebook notebooks/quantum_ai_bio_combined.ipynb
+./.venv/bin/python experiments/qaoa/run_qaoa_baselines.py
+./.venv/bin/python experiments/biomedical/run_bio_baselines.py</pre>
           </div>
           <div class="summary-panel">
             <h4>Scope &amp; Limitations</h4>
