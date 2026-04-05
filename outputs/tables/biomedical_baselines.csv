@@ -1,0 +1,4 @@
+model,threshold,accuracy,balanced_accuracy,roc_auc,true_positives,false_positives,false_negatives,true_negatives,test_size
+logistic_regression,0.5,0.941315,0.916003,0.983778,31,21,4,370,426
+random_forest,0.2,0.969484,0.905334,0.994227,29,7,6,384,426
+mlp,0.45,0.983568,0.926014,0.971136,30,2,5,389,426
