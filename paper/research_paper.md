@@ -1,6 +1,6 @@
-# Hybrid Quantum-Graph AI for Biomedical Optimization
+# Hybrid Quantum-Graph Learning for Structured Biomedical Optimization
 
-### GNN-Initialized QAOA for Structure-Aware Optimization
+### GNN-Informed Initialization for QAOA and Graph-Based Clinical Modeling
 
 <div align="center">
 

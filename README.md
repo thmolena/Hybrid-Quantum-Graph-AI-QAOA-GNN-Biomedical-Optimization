@@ -1,226 +1,203 @@
-# Hybrid Quantum-Graph AI for Biomedical Optimization
+# Hybrid Quantum-Graph Learning for Structured Biomedical Optimization
 
-### GNN-Initialized QAOA for Structure-Aware Optimization
-
-> A research prototype exploring whether graph neural networks can provide useful structure-aware initialization for QAOA while also motivating a broader graph-learning view of biomedical optimization.
+### GNN-Informed Initialization for QAOA and Graph-Based Clinical Modeling
 
 [![Project Website](https://img.shields.io/badge/Project_Website-Live_Overview-0f766e?style=for-the-badge)](https://thmolena.github.io/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/)
 
----
+## Abstract
 
-## 🧠 Overview
+This repository presents a hybrid quantum-classical framework for structured optimization and prediction in biomedical domains. We investigate whether graph neural networks (GNNs) can learn structure-aware representations that improve parameter initialization for the Quantum Approximate Optimization Algorithm (QAOA).
 
-This project explores a hybrid quantum-classical framework for graph-based biomedical optimization by combining:
+We evaluate this hypothesis on graph-structured biomedical settings, including transcriptomic co-expression networks and clinical similarity graphs. Results suggest that GNN-informed initialization yields competitive approximation performance relative to classical baselines in small-graph regimes, while the same graph-learning paradigm supports strong predictive performance in biomedical classification tasks.
 
-* Graph Neural Networks (GNNs) for structure-aware representation learning
-* Quantum Approximate Optimization Algorithm (QAOA) for combinatorial optimization
+This work is positioned as a research prototype: it demonstrates a unified graph-conditioned learning framework across quantum optimization and biomedical prediction, while clearly delineating current limitations and future scaling challenges. The accompanying manuscript in `paper/research_paper.md` is the NeurIPS-oriented paper version of the project narrative.
 
-The repository currently operates as a research prototype rather than a finished research system or production engineering artifact. The strongest evidence is in notebook-driven experiments on transcriptomic graph optimization and biomedical screening-oriented graph learning.
+## 1. Motivation
 
----
+Many real-world biomedical problems are naturally graph-structured and combinatorial, including:
 
-## 🎯 Core Hypothesis
+* gene co-expression and pathway interaction networks
+* patient similarity and cohort stratification
+* molecular interaction and therapeutic selection graphs
 
-> GNN-derived graph representations can improve QAOA parameter initialization, leading to stronger convergence behavior and competitive solution quality on structured graph optimization problems relevant to biomedical settings.
+These problems exhibit:
 
-In this repository, that hypothesis is explored most concretely through transcriptomic co-expression graphs for the QAOA branch and graph-based cardiotocography screening for the biomedical branch.
+* high-dimensional relational structure
+* non-convex combinatorial objectives
+* sensitivity to initialization and inductive bias
 
----
+QAOA offers a principled quantum approach to combinatorial optimization, but its performance is highly dependent on parameter initialization. This repository explores whether learned graph representations can provide meaningful inductive bias for QAOA parameterization.
 
-## 🔬 Problem Setting
+## 2. Core Hypothesis
 
-We focus on graph-structured learning and optimization problems motivated by biomedical data, including:
+Structure-aware embeddings learned by GNNs can improve QAOA parameter initialization, leading to stronger convergence behavior and competitive solution quality on structured graph optimization problems.
 
-* transcriptomic co-expression graphs used as structured optimization instances
-* patient or exam similarity graphs for screening-oriented prediction
-* broader biomedical graph settings such as pathway, molecular interaction, or therapeutic selection problems
+## 3. Method Overview
 
-These settings are typically:
+The framework consists of three tightly coupled components:
 
-* combinatorial or relational rather than purely tabular
-* high-dimensional
-* structurally complex
+### 3.1 Graph Representation Learning
 
----
+* GNN encodes graph topology and node features
+* produces embeddings capturing structural and relational information
 
-## ⚙️ Method Overview
+### 3.2 Quantum Optimization (QAOA)
 
-Our working pipeline has three parts:
+* optimization problem encoded as a cost Hamiltonian
+* variational parameters determine solution quality
 
-1. Graph representation
+### 3.3 Hybrid Integration
 
-	* a GNN learns structure-aware embeddings from graph topology and node features
-	* those embeddings are used to predict informative optimization parameters or relational predictions
+* GNN outputs are used to initialize QAOA parameters as a warm start
+* the shared graph representation also supports biomedical prediction tasks
 
-2. Quantum optimization
+## 4. System Architecture
 
-	* QAOA encodes the target optimization objective as a cost Hamiltonian
-	* variational parameters determine the quality of the approximate solution
+```text
+Graph Data
+   -> GNN Encoder
+      -> (A) QAOA Parameter Initialization -> QAOA Circuit -> Optimization Output
+      -> (B) Graph Classifier -> Biomedical Prediction Output
+```
 
-3. Hybrid integration
+This is a unified graph-conditioned learning framework, not a collection of separate pipelines.
 
-	* the learned graph representation guides QAOA initialization in the optimization branch
-	* the same graph-conditioned viewpoint supports biomedical prediction in the screening branch
+## 5. Experimental Design
 
----
-
-## 🧩 Architecture
-
-Pipeline:
-
-Graph Data → GNN → Parameter Initialization / Risk Representation → QAOA Circuit or Graph Classifier → Optimization / Prediction → Output
-
-For this repository, the architecture is best understood as one graph-conditioned learning thesis expressed across two branches rather than as three disconnected demos.
-
----
-
-## 🧪 Experimental Setup
-
-The current repository compares several modes of analysis:
+We evaluate three regimes:
 
 | Method | Description |
 | --- | --- |
-| Classical Baseline | Direct classical optimization or standard ML baselines on the processed data |
-| QAOA Baseline | QAOA with reference or random-style initialization |
-| Hybrid Prototype | GNN-informed QAOA warm starts and graph-based biomedical prediction |
+| Classical Baselines | Standard optimization and machine-learning approaches |
+| QAOA Baseline | QAOA with random or heuristic initialization |
+| Hybrid Method | GNN-informed QAOA initialization plus graph-based prediction |
 
-Current extracted baseline scripts are available for both branches under the experiments directory, but the strongest end-to-end story is still notebook-led.
+The strongest narrative is organized around one canonical notebook, supported by branch-specific technical appendices and extracted baseline scripts.
 
----
+## 6. Evaluation Metrics
 
-## 📊 Evaluation Metrics
-
-The repository currently reports or motivates metrics such as:
+### Optimization (QAOA branch)
 
 * approximation ratio
-* convergence behavior
 * objective value
-* held-out accuracy
-* balanced accuracy
+* convergence behavior
+
+### Biomedical Prediction
+
+* accuracy and balanced accuracy
 * ROC AUC
-* operating-point sensitivity for pathologic detection
+* sensitivity at clinically relevant operating points
 
----
+## 7. Results (Prototype-Scale)
 
-## 📈 Results
-
-Representative outputs in the current prototype include:
-
-| Method | Representative Result | Interpretation |
+| Method | Result | Interpretation |
 | --- | --- | --- |
-| Classical QAOA Optimization | Approximation ratio around 0.869 on the reported held-out family | Strong classical reference in the small-graph regime |
-| GNN-Informed QAOA | Approximation ratio around 0.868 on the same family | Competitive warm-start evidence, but not a quantum-advantage claim |
-| Biomedical Graph Models | Held-out accuracy up to 98.8% at the reported operating point | Strong retrospective signal, but not a clinical deployment claim |
+| Classical QAOA | ~0.869 approximation ratio | Strong baseline in small graphs |
+| GNN-Informed QAOA | ~0.868 approximation ratio | Competitive warm-start behavior |
+| Biomedical Graph Models | up to 98.8% accuracy | Strong retrospective signal |
 
-Key observations:
+### Key Takeaways
 
-* hybrid initialization appears competitive with direct classical angle search in the evaluated small-graph setting
-* gains depend on graph family, protocol choice, and evaluation scope
-* the biomedical branch shows strong retrospective classification performance, but broader validation is still missing
+* GNN initialization is competitive, not yet superior
+* performance depends strongly on graph structure and evaluation protocol
+* biomedical results are promising but not yet externally validated
 
----
+## 8. Contributions
 
-## ⚠️ Limitations
+### Technical
 
-* the QAOA branch is still limited to small-graph exact simulation
-* the strongest claims are still concentrated in notebook workflows rather than a fully scripted experiment framework
-* no hardware-level quantum advantage is established
-* the biomedical results are retrospective and cohort-specific
-* the engineering layer remains lightweight and prototype-oriented
+* concrete prototype linking GNN embeddings to QAOA initialization
+* unified treatment of optimization and prediction under graph learning
 
----
+### Conceptual
 
-## 🚀 Future Work
+* reframes QAOA initialization as a representation learning problem
+* positions biomedical modeling and quantum optimization under a shared graph-conditioned paradigm
 
-* scale the QAOA branch to broader graph families and stronger baselines
-* add clearer ablations showing when graph-conditioned initialization is actually necessary
-* evaluate larger biomedical graph settings and external cohorts
-* migrate more notebook logic into reproducible experiment scripts
-* strengthen the serving and packaging layer so the research and engineering stories stop competing
+### Practical
 
----
+* end-to-end prototype spanning graph learning, quantum simulation, and biomedical evaluation
 
-## 🖥️ Implementation Notes
+## 9. Limitations
 
-The current implementation is built around:
+* QAOA experiments are limited to small-scale exact simulation
+* no claim of quantum advantage is made
+* results are not hardware-validated
+* biomedical experiments are retrospective and cohort-specific
+* the pipeline remains partially notebook-driven rather than fully automated
+
+## 10. Future Work
+
+### Research
+
+* scaling to larger graphs and harder optimization regimes
+* formal ablations on when GNN initialization is beneficial
+* theoretical analysis of learned initialization landscapes
+
+### Quantum
+
+* integration with hardware backends or realistic noise models
+* benchmarking against stronger classical optimizers
+
+### Biomedical
+
+* external validation on independent cohorts
+* expansion to molecular and multi-modal graph data
+
+### Engineering
+
+* fully reproducible experiment pipelines
+* modular experiment configuration system
+* improved packaging and deployment
+
+## 11. Implementation
+
+### Stack
 
 * Python
 * PyTorch
-* NumPy, pandas, SciPy, and scikit-learn
-* an exact small-scale QAOA simulator in the repository codebase
-* notebook-first experimentation plus lightweight Flask-based demo serving
+* NumPy, SciPy, pandas, and scikit-learn
+* custom QAOA simulator
 
-Optional PyTorch Geometric support is included where available, but the repository is not currently built around a heavy external quantum SDK stack.
+Optional:
 
----
+* PyTorch Geometric
 
-## 📂 Repository Structure
+## 12. Repository Structure
 
-* `notebooks/` → canonical notebook plus two branch-specific technical appendices
-* `experiments/` → extracted baseline scripts for QAOA and biomedical evaluation
-* `src/` → shared code, simulators, baselines, and serving components
-* `data/` → source biomedical and metadata assets
-* `outputs/` → processed artifacts, graphs, and generated result tables
-* `paper/` → manuscript draft
-* `website/` → static demo site and exported notebook HTML
-* `docs/` → research-gap and repository restructure plans
+```text
+notebooks/      # Core experiments and demonstrations
+experiments/    # Scripted baselines
+src/            # Models, simulators, utilities
+data/           # Biomedical datasets
+outputs/        # Results and artifacts
+paper/          # Manuscript draft
+docs/           # Research analysis and planning
+website/        # Demo site and visualizations
+```
 
----
+## 13. Reproducibility
 
-## 🧭 Key Contribution
-
-The main contribution of the repository in its current form is not a finalized new algorithm. It is a concrete hybrid research prototype showing how classical graph learning can inform quantum optimization while also supporting a broader graph-based biomedical modeling narrative.
-
-That is the right level of claim for the artifact today.
-
----
-
-## 📌 Reproducibility
-
-Install dependencies:
+Install:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Run the canonical notebook first:
+Run core notebook:
 
 ```bash
 jupyter notebook notebooks/quantum_ai_bio_combined.ipynb
 ```
 
-Run the extracted baseline scripts:
+Run experiments:
 
 ```bash
-./.venv/bin/python experiments/qaoa/run_qaoa_baselines.py
-./.venv/bin/python experiments/biomedical/run_bio_baselines.py
+python experiments/qaoa/run_qaoa_baselines.py
+python experiments/biomedical/run_bio_baselines.py
 ```
 
-Refresh the exported notebook HTML used by the site:
-
-```bash
-python scripts/export_notebook_html.py notebooks/qaoa_demo.ipynb --output qaoa_demo.html --output-dir website/notebooks_html
-python scripts/export_notebook_html.py notebooks/bio_demo.ipynb --output bio_demo.html --output-dir website/notebooks_html
-python scripts/export_notebook_html.py notebooks/quantum_ai_bio_combined.ipynb --output quantum_ai_bio_combined.html --output-dir website/notebooks_html
-```
-
----
-
-## 📚 References
-
-This project is grounded in three surrounding literatures:
-
-* QAOA and hybrid quantum-classical optimization
-* Graph neural networks for structured representation learning
-* graph-based and computational methods in biomedical modeling
-
-For the current manuscript framing and the remaining evidence gaps, see:
-
-* `paper/research_paper.md`
-* `docs/research_gap_assessment.md`
-* `docs/repo_restructure_plan.md`
-
----
+For the manuscript-oriented version of the project narrative, see `paper/research_paper.md`.
 
 ## License
 
