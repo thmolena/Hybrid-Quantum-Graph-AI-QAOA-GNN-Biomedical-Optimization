@@ -781,7 +781,7 @@
     <div class="hero-inner">
       <div class="hero-badge">Research · Hybrid Quantum-Classical AI</div>
       <h1>Hybrid Quantum–Graph AI</h1>
-      <p class="hero-sub">A graph-centered research workflow that links <strong>QAOA warm-start prediction</strong> and <strong>biomedical graph classification</strong> under one shared representation. The repository is organized around three complementary assets: a QAOA benchmark notebook, a CTG clinical notebook, and a combined notebook that ties both branches into one argument.</p>
+      <p class="hero-sub">This repository tells one research story in three steps: learn graph structure for <strong>QAOA warm-start prediction</strong>, test graph learning on <strong>clinical risk classification</strong>, and then connect both branches inside one integrated hybrid narrative.</p>
       <div class="hero-pills">
         <span class="pill">QAOA</span>
         <span class="pill">GNN / GCN</span>
@@ -814,11 +814,11 @@
         </div>
       </div>
       <div class="notebook-jump-nav hero-nav" aria-label="Jump to landing page sections">
-        <a class="notebook-jump-link" href="#impact-section">Contributions</a>
+        <a class="notebook-jump-link" href="#impact-section">Story</a>
         <a class="notebook-jump-link" href="#figures-section">Figures</a>
         <a class="notebook-jump-link" href="#demo-section">Demo</a>
         <a class="notebook-jump-link" href="#notebooks-section">Notebooks</a>
-        <a class="notebook-jump-link paper-link" href="paper/research_paper.md">Paper</a>
+        <a class="notebook-jump-link paper-link" href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/blob/main/paper/research_paper.md" target="_blank" rel="noreferrer">Paper</a>
         <a class="notebook-jump-link repo-link" href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank" rel="noreferrer">Repository</a>
       </div>
     </div>
@@ -830,38 +830,20 @@
       <div class="card-header">
         <div class="card-icon">▣</div>
         <div>
-          <h2>Contribution Snapshot</h2>
-          <p class="card-desc">Each notebook answers a different research question, so this section focuses on role and contribution instead of repeating the same headline numbers.</p>
+          <h2>Story of the Project</h2>
+          <p class="card-desc">Read the repository in order: optimization method, biomedical validation, then integrated synthesis.</p>
         </div>
       </div>
 
-      <p class="section-intro">Read the repository as three layers of analysis: optimization quality on transcriptomic graphs, clinical discrimination on exam-similarity graphs, and an integrated narrative that shows why both results belong in the same project.</p>
+      <p class="section-intro">The landing page introduces the logic once, then the notebooks and figures provide the detailed evidence behind each branch.</p>
 
       <div class="impact-grid">
         <article class="impact-card">
           <span class="impact-eyebrow">Optimization branch</span>
           <h3>Adaptive Quantum GCN</h3>
-          <p>This notebook tests whether graph structure alone can support useful QAOA angle prediction on real transcriptomic co-expression graphs.</p>
+          <p>This branch starts from transcriptomic data, builds co-expression graphs, and asks whether graph structure alone can predict useful QAOA parameters for MaxCut without rerunning a full classical search for every new graph.</p>
 
-          <div class="notebook-ribbon impact-ribbon" aria-label="Optimization notebook summary metrics">
-            <div class="notebook-ribbon-item">
-              <div class="notebook-ribbon-label">Held-out ratio</div>
-              <div class="notebook-ribbon-value">0.868 vs 0.869</div>
-              <div class="notebook-ribbon-note">adaptive versus classical</div>
-            </div>
-            <div class="notebook-ribbon-item">
-              <div class="notebook-ribbon-label">Quality retained</div>
-              <div class="notebook-ribbon-value">99.95%</div>
-              <div class="notebook-ribbon-note">of depth-2 classical quality</div>
-            </div>
-            <div class="notebook-ribbon-item">
-              <div class="notebook-ribbon-label">Inference speedup</div>
-              <div class="notebook-ribbon-value">~14,122×</div>
-              <div class="notebook-ribbon-note">median single-pass acceleration</div>
-            </div>
-          </div>
-
-          <div class="impact-note">Use this notebook when the main question is optimization quality: it contains the strongest direct comparison between learned warm starts and depth-2 classical QAOA.</div>
+          <div class="impact-note">Use this notebook when the main question is methodological: it contains the core optimization benchmark and the learned warm-start framing for the project.</div>
 
           <div class="impact-links">
             <a class="impact-link" href="website/notebooks_html/qaoa_demo.html" target="_blank" rel="noreferrer">Open notebook</a>
@@ -871,27 +853,9 @@
         <article class="impact-card">
           <span class="impact-eyebrow">Biomedical branch</span>
           <h3>Adaptive BioGCN + ResidualClinicalGCN</h3>
-          <p>This notebook tests whether graph-based clinical modeling improves pathologic-risk detection while remaining interpretable through robustness and operating-point analysis.</p>
+          <p>This branch turns cardiotocography exams into a physiologic similarity graph and asks whether graph-based learning can improve pathologic-risk discrimination while preserving reproducibility, robustness analysis, and threshold-aware evaluation.</p>
 
-          <div class="notebook-ribbon impact-ribbon" aria-label="Biomedical notebook summary metrics">
-            <div class="notebook-ribbon-item">
-              <div class="notebook-ribbon-label">Best held-out accuracy</div>
-              <div class="notebook-ribbon-value">98.8%</div>
-              <div class="notebook-ribbon-note">ResidualClinicalGCN</div>
-            </div>
-            <div class="notebook-ribbon-item">
-              <div class="notebook-ribbon-label">ROC AUC</div>
-              <div class="notebook-ribbon-value">0.978</div>
-              <div class="notebook-ribbon-note">at the strongest operating point</div>
-            </div>
-            <div class="notebook-ribbon-item">
-              <div class="notebook-ribbon-label">Benchmark robustness</div>
-              <div class="notebook-ribbon-value">95.49% ± 0.97%</div>
-              <div class="notebook-ribbon-note">Adaptive BioGCN fixed split</div>
-            </div>
-          </div>
-
-          <div class="impact-note">Use this notebook when the main question is biomedical performance: it separates the reproducible benchmark configuration from the stronger residual evaluation model.</div>
+          <div class="impact-note">Use this notebook when the main question is biomedical validation: it separates the benchmark model from the stronger residual extension and makes the clinical evaluation pipeline explicit.</div>
 
           <div class="impact-links">
             <a class="impact-link" href="website/notebooks_html/bio_demo.html" target="_blank" rel="noreferrer">Open notebook</a>
@@ -901,27 +865,9 @@
         <article class="impact-card">
           <span class="impact-eyebrow">Integrated branch</span>
           <h3>Integrated Hybrid Narrative</h3>
-          <p>This notebook is the thesis-level walkthrough: it shows how the same graph-learning framing supports both the optimization and biomedical branches in one reproducible presentation.</p>
+          <p>This branch is the synthesis layer: it shows why the optimization and biomedical experiments belong in the same repository and how a shared graph-learning perspective ties them together.</p>
 
-          <div class="notebook-ribbon impact-ribbon" aria-label="Integrated notebook summary metrics">
-            <div class="notebook-ribbon-item">
-              <div class="notebook-ribbon-label">Warm-start speedup</div>
-              <div class="notebook-ribbon-value">35,070×</div>
-              <div class="notebook-ribbon-note">representative integrated result</div>
-            </div>
-            <div class="notebook-ribbon-item">
-              <div class="notebook-ribbon-label">Benchmark accuracy</div>
-              <div class="notebook-ribbon-value">96.71%</div>
-              <div class="notebook-ribbon-note">Adaptive BioGCN</div>
-            </div>
-            <div class="notebook-ribbon-item">
-              <div class="notebook-ribbon-label">Integrated residual result</div>
-              <div class="notebook-ribbon-value">96.5%</div>
-              <div class="notebook-ribbon-note">combined evaluation</div>
-            </div>
-          </div>
-
-          <div class="impact-note">Use this notebook first if you want the highest-level explanation of the repository before drilling into branch-specific experiments.</div>
+          <div class="impact-note">Use this notebook first if you want the thesis-level walkthrough before inspecting the branch-specific experiments in detail.</div>
 
           <div class="impact-links">
             <a class="impact-link" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank" rel="noreferrer">Open notebook</a>
@@ -935,29 +881,11 @@
         <div class="card-icon">◫</div>
         <div>
           <h2>Figure Gallery</h2>
-          <p class="card-desc">The landing page now surfaces figure assets from the quantum, biomedical, and integrated notebooks directly, so the visual results are visible without opening the exports first.</p>
+          <p class="card-desc">These figure previews are the visual evidence for the story above, pulled directly from the executed notebook exports.</p>
         </div>
       </div>
 
-      <p class="section-intro">These figures are loaded from repository-managed PNG exports under website/notebooks_html/figures, which keeps the visuals stable on the landing page and in GitHub Pages deployments.</p>
-
-      <div class="notebook-ribbon figure-ribbon" aria-label="Figure summary metrics">
-        <div class="notebook-ribbon-item">
-          <div class="notebook-ribbon-label">Optimization result</div>
-          <div class="notebook-ribbon-value">0.868 vs 0.869</div>
-          <div class="notebook-ribbon-note">held-out adaptive versus classical depth-2 ratio</div>
-        </div>
-        <div class="notebook-ribbon-item">
-          <div class="notebook-ribbon-label">Biomedical result</div>
-          <div class="notebook-ribbon-value">95.49% ± 0.97%</div>
-          <div class="notebook-ribbon-note">fixed-split Adaptive BioGCN stability</div>
-        </div>
-        <div class="notebook-ribbon-item">
-          <div class="notebook-ribbon-label">Integrated result</div>
-          <div class="notebook-ribbon-value">35,070×</div>
-          <div class="notebook-ribbon-note">representative warm-start speedup in the combined notebook</div>
-        </div>
-      </div>
+      <p class="section-intro">Each card points to a notebook export so the image and its surrounding analysis stay together when you want to inspect the underlying experiment.</p>
 
       <div class="figure-grid">
         <a class="figure-link" href="website/notebooks_html/qaoa_demo.html" target="_blank" rel="noreferrer">
@@ -988,7 +916,7 @@
             <div class="figure-body">
               <span class="figure-label">Held-out evaluation</span>
               <h3>ResidualClinicalGCN test performance</h3>
-              <p>The strongest biomedical operating point reaches 98.8% held-out accuracy with 0.978 ROC AUC, and this figure anchors that claim in the notebook's executed evaluation output.</p>
+              <p>This figure anchors the held-out biomedical evaluation inside the executed notebook rather than reducing the result to a standalone claim on the landing page.</p>
             </div>
           </article>
         </a>
@@ -999,7 +927,7 @@
             <div class="figure-body">
               <span class="figure-label">Robustness benchmark</span>
               <h3>Adaptive BioGCN stability across seeds</h3>
-              <p>The shared benchmark model remains stable on a fixed split at 95.49% ± 0.97% accuracy, supporting the repository's reproducibility story rather than relying on a single run.</p>
+              <p>This robustness view shows that the benchmark branch is supported by repeated seeded evaluation rather than a single favorable split.</p>
             </div>
           </article>
         </a>
@@ -1219,7 +1147,7 @@
         <div class="card-icon">📓</div>
         <div>
           <h2>Notebook Guide</h2>
-          <p class="card-desc">Use this section as the single launch point for the three full notebook walkthroughs, each opened inline or in a separate tab.</p>
+          <p class="card-desc">Use this section as the single launch point for the three full notebook walkthroughs.</p>
         </div>
       </div>
 
@@ -1229,7 +1157,7 @@
           <div class="nb-icon">⚛</div>
           <div class="nb-body">
             <h3>QAOA + GNN Tutorial</h3>
-            <p>Prostate gene-expression matrix (102 patients × 12,600 genes) → co-expression graphs → depth-2 classical QAOA benchmark → <strong>Adaptive Quantum GCN</strong> warm-start prediction. Mean held-out approximation ratio <strong>0.868</strong> vs <strong>0.869</strong> classical, retaining <strong>99.95%</strong> of benchmark quality with <strong>~1.41 × 10^4×</strong> median inference speedup.</p>
+            <p>Start here for the transcriptomic graph pipeline, the exact-statevector QAOA benchmark, and the learned warm-start model that predicts useful MaxCut angles from graph structure.</p>
             <div class="nb-tags">
               <span class="nb-tag">Exact Statevector</span>
               <span class="nb-tag">Adaptive Quantum GCN</span>
@@ -1244,7 +1172,7 @@
           <div class="nb-icon">🧬</div>
           <div class="nb-body">
             <h3>Biomedical GNN Tutorial</h3>
-            <p>UCI Cardiotocography cohort (2,126 exams) → 10-NN physiologic similarity graph → <strong>Adaptive BioGCN</strong> benchmark plus <strong>ResidualClinicalGCN</strong> extension → leakage-aware evaluation. Strongest held-out result: <strong>98.8% accuracy · 0.978 ROC AUC · 31 / 35 pathologic exams detected with 1 false positive</strong>.</p>
+            <p>Start here for the CTG similarity graph, the benchmark biomedical model, the residual extension, and the leakage-aware clinical evaluation workflow.</p>
             <div class="nb-tags">
               <span class="nb-tag">Adaptive BioGCN</span>
               <span class="nb-tag">ResidualClinicalGCN</span>
@@ -1260,7 +1188,7 @@
           <div class="nb-icon">🔬</div>
           <div class="nb-body">
             <h3>Complete Hybrid Pipeline</h3>
-            <p>End-to-end integration of <strong>Adaptive Quantum GCN</strong> warm-starting and <strong>Adaptive BioGCN</strong> / <strong>ResidualClinicalGCN</strong> biomedical evaluation. Strongest integrated summary: <strong>35,070×</strong> representative QAOA speedup, <strong>96.71%</strong> benchmark accuracy, and <strong>96.5%</strong> integrated residual evaluation accuracy.</p>
+            <p>Start here if you want the thesis-style walkthrough that aligns the optimization and biomedical branches in one continuous narrative.</p>
             <div class="nb-tags">
               <span class="nb-tag">Hybrid QC</span>
               <span class="nb-tag">Adaptive Models</span>
@@ -1312,48 +1240,27 @@
       <div class="card-header">
         <div class="card-icon">📄</div>
         <div>
-          <h2>Repository Guide</h2>
-          <a class="summary-paper-link" href="paper/research_paper.md">Open research_paper.md</a>
+          <h2>Run &amp; Limits</h2>
+          <p class="card-desc">This final section covers local execution and the main constraints for interpreting the results.</p>
         </div>
       </div>
       <div class="summary-layout">
-        <div class="summary-row summary-row-primary">
-          <div class="summary-panel">
-            <h4>How To Read The Repo</h4>
-            <p>Start with the combined notebook if you want the full project thesis first. Move to the QAOA notebook if you want the strongest optimization comparison, and move to the biomedical notebook if you want the strongest CTG evaluation and operating-point analysis. The landing page is a guided overview, not a replacement for notebook-level detail.</p>
-          </div>
-          <div class="summary-panel summary-col-results">
-            <h4>Primary Artifacts</h4>
-            <table class="summary-results-table">
-              <thead><tr><th style="text-align:left;">Asset</th><th style="text-align:right;">Use</th></tr></thead>
-              <tbody>
-                <tr><td>Landing page</td><td>Overview</td></tr>
-                <tr><td>Combined notebook</td><td>Thesis</td></tr>
-                <tr><td>QAOA notebook</td><td>Optimization</td></tr>
-                <tr><td>Bio notebook</td><td>Clinical evaluation</td></tr>
-                <tr><td>Paper draft</td><td>Manuscript</td></tr>
-                <tr><td>Flask API</td><td>Interactive demo</td></tr>
-                <tr><td>HTML exports</td><td>Static sharing</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
         <div class="summary-row summary-row-secondary">
-          <div class="summary-panel">
-            <h4>Scope &amp; Limitations</h4>
-            <ul class="summary-list">
-              <li>The website demo is a depth-1 presentation layer; the strongest optimization results come from notebook-level depth-2 evaluations</li>
-              <li>QAOA simulation remains exact statevector and therefore scales exponentially; the reported studies stay in the small-graph regime</li>
-              <li>Biomedical evaluation is retrospective research output, not a clinically validated deployment system</li>
-              <li>The best biomedical result comes from the residual extension, while the benchmark model is retained for reproducibility and robustness analysis</li>
-            </ul>
-          </div>
           <div class="summary-panel summary-col-quickstart">
             <h4>Quick Start</h4>
             <pre class="code-block quickstart-terminal">conda activate qaoa
 pip install -r requirements.txt
 python -m src.server
 python -m http.server 8000</pre>
+          </div>
+          <div class="summary-panel">
+            <h4>Scope &amp; Limitations</h4>
+            <ul class="summary-list">
+              <li>The website demo is a depth-1 presentation layer; the strongest optimization evidence comes from notebook-level depth-2 evaluations</li>
+              <li>QAOA simulation is exact statevector and therefore remains limited to small graphs because runtime scales exponentially</li>
+              <li>The biomedical results are retrospective research outputs, not a clinically validated deployment system</li>
+              <li>The residual biomedical model provides the strongest held-out result, while the benchmark model is retained for reproducibility and robustness analysis</li>
+            </ul>
           </div>
         </div>
       </div>
