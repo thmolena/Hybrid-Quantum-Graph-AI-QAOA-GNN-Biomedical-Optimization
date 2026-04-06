@@ -7802,53 +7802,20 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Risk-Sensitive-Graph-Representation-Learning-for-Fetal-State-Screening">Risk-Sensitive Graph Representation Learning for Fetal State Screening<a class="anchor-link" href="#Risk-Sensitive-Graph-Representation-Learning-for-Fetal-State-Screening">¶</a></h1><p><strong>Adaptive and Residual Clinical GCNs on a Real Cardiotocography Cohort</strong></p>
+<h1 id="Technical-Appendix:-Graph-Conditioned-Parameterization-for-Risk-Sensitive-CTG-Screening">Technical Appendix: Graph-Conditioned Parameterization for Risk-Sensitive CTG Screening<a class="anchor-link" href="#Technical-Appendix:-Graph-Conditioned-Parameterization-for-Risk-Sensitive-CTG-Screening">¶</a></h1><p><strong>NeurIPS Submission Supplement: Biomedical Branch</strong></p>
 <hr/>
-<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This notebook presents a research-grade graph learning study on a <strong>real obstetric monitoring cohort</strong>. Each cardiotocography exam is treated as a node, physiologic similarity defines the graph, and the learning objective is deliberately asymmetric: minimize missed pathologic fetal states while maintaining a controlled false-positive burden. The notebook now separates two technical contributions clearly: an <strong>Adaptive BioGCN</strong> benchmark used for repository-level alignment and robustness analysis, and a stronger <strong>ResidualClinicalGCN</strong> extension used for thresholding, calibration, saliency, and operating-point analysis.</p>
-<h2 id="Primary-Contribution">Primary Contribution<a class="anchor-link" href="#Primary-Contribution">¶</a></h2><ol>
-<li><strong>Benchmark contribution:</strong> the repository-aligned <strong>Adaptive BioGCN</strong> reaches <strong>96.71%</strong> held-out accuracy, <strong>0.943</strong> balanced accuracy, and <strong>0.983</strong> ROC AUC on the canonical split, with <strong>95.49% ± 0.97%</strong> accuracy across repeated training seeds.</li>
-<li><strong>Model contribution:</strong> the custom <strong>ResidualClinicalGCN</strong> raises the stronger standalone operating point to <strong>98.8%</strong> held-out accuracy with <strong>31 / 35</strong> pathologic exams detected and only <strong>1</strong> false positive.</li>
-<li><strong>Difference from the earlier notebook configuration:</strong> the prior pipeline delivered about <strong>94.1%</strong> accuracy with <strong>20</strong> false positives on the same held-out cohort; the upgraded notebook improves both the headline metric and the operational error profile.</li>
-<li><strong>Evaluation contribution:</strong> the notebook does not stop at accuracy. It includes threshold analysis, calibration, uncertainty, graph homophily validation, baseline comparison, saliency, and repeated-split follow-up search.</li>
-</ol>
-<h2 id="Dataset-and-Real-World-Relevance">Dataset and Real-World Relevance<a class="anchor-link" href="#Dataset-and-Real-World-Relevance">¶</a></h2><table>
-<thead>
-<tr>
-<th>Item</th>
-<th>This notebook</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Real dataset</td>
-<td>UCI Cardiotocography (<code>id=193</code>)</td>
-</tr>
-<tr>
-<td>Cohort size</td>
-<td>2,126 fetal monitoring exams</td>
-</tr>
-<tr>
-<td>Features</td>
-<td>21 physiologic summary variables derived from fetal heart rate and uterine contraction recordings</td>
-</tr>
-<tr>
-<td>Clinical target</td>
-<td>Binary retrospective screening task: pathologic vs non-pathologic</td>
-</tr>
-<tr>
-<td>Graph construction</td>
-<td>Symmetric physiologic similarity graph over real exams</td>
-</tr>
-<tr>
-<td>Why it matters</td>
-<td>The task mirrors a real risk-sensitive screening setting where missed pathologic cases matter more than average-case performance</td>
-</tr>
-<tr>
-<td>Execution scope</td>
-<td>Dense graph operations and moderate cohort size keep the full pipeline runnable in a standard local setup for live presentation</td>
-</tr>
-</tbody>
-</table>
+<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This notebook is the biomedical-specific technical appendix for the submission. It should be read as the detailed support for the clinical branch rather than as an unrelated demo. The central question is whether graph-based relational learning improves retrospective <strong>pathologic fetal-state screening</strong> on the cardiotocography cohort under risk-sensitive evaluation. The notebook therefore emphasizes cohort audit, graph validity, operating-point behavior, calibration, uncertainty, and benchmark comparison.</p>
+<h2 id="Notebook-Role">Notebook Role<a class="anchor-link" href="#Notebook-Role">¶</a></h2><ul>
+<li>This is the submission's <strong>biomedical branch notebook</strong>.</li>
+<li>It contains the screening-specific evaluation details that would overload the overview notebook.</li>
+<li>It is the correct place to inspect whether the clinical graph story is technically serious rather than cosmetically attached.</li>
+</ul>
+<h2 id="What-This-Notebook-Adds">What This Notebook Adds<a class="anchor-link" href="#What-This-Notebook-Adds">¶</a></h2><ul>
+<li>Cohort-specific preprocessing and graph-construction detail.</li>
+<li>Separate benchmark and stronger operating-point models.</li>
+<li>Threshold analysis, calibration, uncertainty, homophily validation, and saliency.</li>
+<li>A biomedical evaluation story that goes beyond one held-out accuracy number.</li>
+</ul>
 <h2 id="Results-at-a-Glance">Results at a Glance<a class="anchor-link" href="#Results-at-a-Glance">¶</a></h2><table>
 <thead>
 <tr>
@@ -7863,7 +7830,7 @@ a.anchor-link {
 </tr>
 <tr>
 <td>Adaptive BioGCN robustness</td>
-<td><strong>95.49% ± 0.97%</strong></td>
+<td><strong>95.49% +/- 0.97%</strong></td>
 </tr>
 <tr>
 <td>ResidualClinicalGCN held-out accuracy</td>
@@ -7885,48 +7852,12 @@ a.anchor-link {
 <td>False positives</td>
 <td><strong>1</strong></td>
 </tr>
-<tr>
-<td>Improvement over earlier configuration</td>
-<td><strong>94.1% -&gt; 98.8%</strong>, with <strong>20 -&gt; 1</strong> false positives</td>
-</tr>
 </tbody>
 </table>
-<h2 id="Visual-Evidence-Guide">Visual Evidence Guide<a class="anchor-link" href="#Visual-Evidence-Guide">¶</a></h2><ul>
-<li>The notebook includes a dedicated figure gallery near the top so reviewers can see the strongest evidence before stepping through code.</li>
-<li><strong>Section 6</strong> focuses on the evaluation dashboard, operating-point selection, and model comparison.</li>
-<li><strong>Sections 6D-6F</strong> test whether the graph is meaningful, whether probabilities are reliable, and which physiologic variables drive the model.</li>
-<li>The visual goal is to show not only stronger accuracy, but also why the improved result is technically credible.</li>
-</ul>
-<h2 id="Reading-Map">Reading Map<a class="anchor-link" href="#Reading-Map">¶</a></h2><table>
-<thead>
-<tr>
-<th>Section</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0-1. Foundations and framing</td>
-<td>Clinical problem setup, notation, risk asymmetry, and dataset provenance</td>
-</tr>
-<tr>
-<td>2-5. Data and model pipeline</td>
-<td>Graph construction, GCN logic, leakage-free preprocessing, and training pipeline</td>
-</tr>
-<tr>
-<td>6. Evaluation suite</td>
-<td>Confusion matrix, ROC/PR, robustness, baselines, thresholds, homophily, calibration, and saliency</td>
-</tr>
-<tr>
-<td>7-8. Applications and summary</td>
-<td>Real-world interpretation, defended contribution, and limitations</td>
-</tr>
-</tbody>
-</table>
-<h2 id="Reproducibility-Contract">Reproducibility Contract<a class="anchor-link" href="#Reproducibility-Contract">¶</a></h2><ul>
-<li>Execute this notebook only after <code>conda activate qaoa</code>.</li>
-<li>The first executable cell aborts if a different conda environment is active, preventing silent dependency drift during presentation, export, or review.</li>
-<li>All reported results remain straightforward to reproduce in a standard local setup; GPU acceleration is optional rather than required.</li>
+<h2 id="Reading-Contract">Reading Contract<a class="anchor-link" href="#Reading-Contract">¶</a></h2><ul>
+<li>Read the overview notebook first if you want the full paper thesis.</li>
+<li>Read this notebook when the question is whether the biomedical branch is rigorous enough to defend on its own.</li>
+<li>Interpret the scope honestly: retrospective single-cohort screening research, not clinical deployment.</li>
 </ul>
 </div>
 </div>
@@ -7956,177 +7887,43 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Project-Summary">Project Summary<a class="anchor-link" href="#Project-Summary">¶</a></h2><p>This notebook is the biomedical learning branch of the repository's broader hybrid theme: use graph-based machine learning to learn structure from scientific data, then connect that structure to downstream optimization ideas such as QAOA in the companion notebook. Here the focus is a larger and more clinically consequential cohort: fetal cardiotocography exams used to screen for potentially pathologic fetal state.</p>
-<h3 id="Headline-contribution">Headline contribution<a class="anchor-link" href="#Headline-contribution">¶</a></h3><p>This standalone notebook now does two related jobs:</p>
-<ol>
-<li>it exposes the <strong>repository-aligned Adaptive BioGCN reference model</strong> used in the combined notebook, including a fixed-split multi-seed robustness benchmark, and</li>
-<li>it extends the biomedical story with deeper standalone analyses: threshold selection, calibration, uncertainty, homophily validation, feature saliency, and repeated-split follow-up search.</li>
-</ol>
-<h3 id="Clarifying-the-model-names">Clarifying the model names<a class="anchor-link" href="#Clarifying-the-model-names">¶</a></h3><p>The notebook contains <strong>two custom graph classifiers</strong>, and the distinction matters:</p>
-<ul>
-<li><strong>Adaptive BioGCN benchmark</strong> is the plain-language label for this repository's upgraded benchmark architecture, instantiated later as <code>AdaptiveBioGCN</code>. It is the shared benchmark model used in both biomedical notebooks.</li>
-<li><strong>ResidualClinicalGCN</strong> is a separate custom residual extension used in this standalone notebook for the deeper threshold, calibration, and saliency analyses.</li>
-<li>The phrase <strong>reference model</strong> here means <strong>internal benchmark model for comparison and reproducibility</strong>, not an external gold-standard clinical model.</li>
-<li>Within this repository, this adaptive benchmark is used in <strong>this notebook</strong> and in <strong><code>quantum_ai_bio_combined.ipynb</code></strong>. The notebook does not cite it as an established published architecture or a previously adopted literature baseline under that exact plain-language name.</li>
-</ul>
-<h3 id="Repository-aligned-Adaptive-BioGCN-benchmark">Repository-aligned Adaptive BioGCN benchmark<a class="anchor-link" href="#Repository-aligned-Adaptive-BioGCN-benchmark">¶</a></h3><p>The aligned reference model is the same upgraded biomedical architecture introduced in the combined notebook and implemented here as <code>AdaptiveBioGCN</code>:</p>
-<ul>
-<li>symmetric <strong>$k=15$</strong> exam-similarity graph,</li>
-<li>wider hidden state <strong>$96 \rightarrow 48$</strong>,</li>
-<li><strong>batch normalization</strong> and <strong>GELU</strong> activations,</li>
-<li><strong>AdamW</strong> optimization.</li>
-</ul>
-<p>Operationally, this makes Adaptive BioGCN a <strong>project-specific upgraded CTG GCN benchmark</strong>, not a claim that the notebook has introduced a universally recognized new model family. Its representative executed result on the canonical split is <strong>96.71% accuracy</strong>, <strong>0.943 balanced accuracy</strong>, <strong>0.808 MCC</strong>, and <strong>0.983 ROC AUC</strong>. More importantly for a strict technical interview, the notebook now also reports a fixed-split robustness summary across five training seeds: <strong>95.49% ± 0.97% accuracy</strong>, <strong>0.903 ± 0.027 balanced accuracy</strong>, and <strong>0.979 ± 0.003 ROC AUC</strong>.</p>
-<h3 id="What-enters-the-notebook">What enters the notebook<a class="anchor-link" href="#What-enters-the-notebook">¶</a></h3><table>
+<h2 id="How-This-Notebook-Fits-the-Repository">How This Notebook Fits the Repository<a class="anchor-link" href="#How-This-Notebook-Fits-the-Repository">¶</a></h2><p>This notebook is one branch of a larger research story, not a standalone portfolio project competing with the other notebooks.</p>
+<table>
 <thead>
 <tr>
-<th>Element</th>
-<th>Meaning in this notebook</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Raw input data</td>
-<td>2,126 cardiotocography (CTG) exams from the UCI Cardiotocography dataset</td>
-</tr>
-<tr>
-<td>Features</td>
-<td>21 real-valued fetal heart rate and uterine contraction summary measures</td>
-</tr>
-<tr>
-<td>Original labels</td>
-<td>Three expert-consensus fetal states: normal, suspect, pathologic</td>
-</tr>
-<tr>
-<td>Tutorial target</td>
-<td>Binary risk task: <strong>pathologic</strong> vs <strong>non-pathologic</strong> (normal + suspect)</td>
-</tr>
-<tr>
-<td>Structural assumption</td>
-<td>Exams with similar physiological signatures should be connected in a similarity graph</td>
-</tr>
-</tbody>
-</table>
-<h3 id="What-the-model-stack-is">What the model stack is<a class="anchor-link" href="#What-the-model-stack-is">¶</a></h3><table>
-<thead>
-<tr>
-<th>Stage</th>
+<th>Notebook</th>
 <th>Role</th>
-<th>Output</th>
+<th>Use it when you want to know...</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Label framing</td>
-<td>Collapse the original 3-class obstetric label into a high-risk screening target</td>
-<td>Binary pathologic indicator</td>
+<td><code>quantum_ai_bio_combined.ipynb</code></td>
+<td><strong>Canonical thesis notebook</strong></td>
+<td>how the optimization and biomedical branches fit together</td>
 </tr>
 <tr>
-<td>Standardisation</td>
-<td>Put all 21 measurements on a comparable scale using training-set statistics only</td>
-<td>Standardised feature matrix $X_{\mathrm{std}}$</td>
+<td><code>qaoa_demo.ipynb</code></td>
+<td>Optimization appendix</td>
+<td>how the transcriptomic warm-start claim is evaluated</td>
 </tr>
 <tr>
-<td>Graph construction</td>
-<td>Connect each CTG exam to its nearest neighbours in feature space</td>
-<td>Symmetric $k$-NN adjacency matrix $\tilde{A}$</td>
-</tr>
-<tr>
-<td><strong>Adaptive BioGCN reference model</strong></td>
-<td>Repository-aligned benchmark used in both biomedical notebooks</td>
-<td>Fixed-split representative and multi-seed robustness metrics</td>
-</tr>
-<tr>
-<td><strong>ResidualClinicalGCN extension</strong></td>
-<td>Standalone follow-up model used for deeper threshold/calibration analyses in this notebook</td>
-<td>Per-exam class logits and probabilities</td>
-</tr>
-<tr>
-<td>Evaluation</td>
-<td>Measure screening usefulness on held-out exams</td>
-<td>Confusion matrix, ROC, and full clinical metrics</td>
-</tr>
-<tr>
-<td>Baseline comparison</td>
-<td>Same train/test split with LR, RF, MLP</td>
-<td>Tabular ablation of graph inductive bias</td>
-</tr>
-<tr>
-<td><strong>Operating point analysis</strong></td>
-<td><strong>Validation-calibrated threshold plus threshold sweep with precision-recall tradeoffs</strong></td>
-<td><strong>Deployable sensitivity-specificity map</strong></td>
-</tr>
-<tr>
-<td><strong>Graph homophily analysis</strong></td>
-<td><strong>Edge homophily coefficient + neighbourhood enrichment test</strong></td>
-<td><strong>Quantifies whether the graph encodes clinical structure</strong></td>
-</tr>
-<tr>
-<td><strong>Calibration study</strong></td>
-<td><strong>Raw vs. Platt vs. isotonic vs. temperature scaling</strong></td>
-<td><strong>Reliability, Brier score, and uncertainty audit</strong></td>
+<td><code>bio_demo.ipynb</code></td>
+<td><strong>This notebook</strong>: biomedical appendix</td>
+<td>whether the screening and calibration story is technically credible</td>
 </tr>
 </tbody>
 </table>
-<h3 id="What-leaves-the-notebook">What leaves the notebook<a class="anchor-link" href="#What-leaves-the-notebook">¶</a></h3><table>
-<thead>
-<tr>
-<th>Artifact</th>
-<th>Why it matters</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>outputs/ctg_raw.csv</code></td>
-<td>Auditable table of the original cohort with 3-class and binary labels</td>
-</tr>
-<tr>
-<td><code>outputs/ctg_processed.csv</code></td>
-<td>Reusable standardised cohort with split labels</td>
-</tr>
-<tr>
-<td>PCA and feature-shift figures</td>
-<td>Human-readable view of cohort geometry and strongest physiologic differences</td>
-</tr>
-<tr>
-<td>Confusion matrix and ROC figure</td>
-<td>Clinically aligned picture of pathologic-risk detection</td>
-</tr>
-<tr>
-<td>Training history plot</td>
-<td>Evidence that optimisation was stable rather than arbitrary</td>
-</tr>
-<tr>
-<td><strong>Adaptive BioGCN robustness table</strong></td>
-<td><strong>Mean ± std evidence that the aligned benchmark is not a single-seed anecdote</strong></td>
-</tr>
-<tr>
-<td><strong>Validation-selected threshold</strong></td>
-<td><strong>Explicit decision rule that maximises held-out validation performance before test evaluation</strong></td>
-</tr>
-<tr>
-<td><strong>Threshold sensitivity table</strong></td>
-<td><strong>Clinical-policy guide: recall, precision, FP-rate at every decision threshold</strong></td>
-</tr>
-<tr>
-<td><strong>Graph homophily analysis</strong></td>
-<td><strong>Evidence that the $k$-NN graph encodes clinically meaningful physiologic clustering</strong></td>
-</tr>
-<tr>
-<td><strong>Precision–Recall curve</strong></td>
-<td><strong>More informative than ROC under 8.2% pathologic prevalence; includes AP score</strong></td>
-</tr>
-<tr>
-<td><strong>Baseline comparison table</strong></td>
-<td><strong>LR / RF / MLP vs. graph models on identical held-out split</strong></td>
-</tr>
-<tr>
-<td><strong>Calibration and uncertainty figures</strong></td>
-<td><strong>Probability reliability and epistemic-risk audit for presentation and review</strong></td>
-</tr>
-</tbody>
-</table>
-<h3 id="Why-the-binary-framing-is-realistic-%E2%80%94-and-why-the-graph-approach-is-justified">Why the binary framing is realistic — and why the graph approach is justified<a class="anchor-link" href="#Why-the-binary-framing-is-realistic-%E2%80%94-and-why-the-graph-approach-is-justified">¶</a></h3><p>The source dataset is natively a <strong>3-class</strong> fetal-state problem: normal, suspect, and pathologic. This notebook reframes it as <strong>pathologic vs non-pathologic</strong> — a risk-sensitive screening objective where the worst mistake is missing a truly pathologic tracing.</p>
+<h3 id="What-this-notebook-is-responsible-for">What this notebook is responsible for<a class="anchor-link" href="#What-this-notebook-is-responsible-for">¶</a></h3><ul>
+<li>Defending the biomedical graph-learning claim at technical depth.</li>
+<li>Showing that the evaluation is operating-point-aware rather than accuracy-only.</li>
+<li>Making the cohort and deployment limits explicit.</li>
+</ul>
+<h3 id="What-this-notebook-is-not-responsible-for">What this notebook is not responsible for<a class="anchor-link" href="#What-this-notebook-is-not-responsible-for">¶</a></h3><ul>
+<li>Carrying the full cross-domain thesis by itself.</li>
+<li>Acting as the optimization notebook.</li>
+<li>Implying a deployment-ready clinical system.</li>
+</ul>
 </div>
 </div>
 </div>
@@ -8716,7 +8513,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 4A-I: Environment, Reproducibility, and Imports ─────────────────────────</span>
@@ -8795,7 +8592,7 @@ Project root        : /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/
 Conda environment   : qaoa
 NumPy version       : 2.4.2
 PyTorch version     : 2.10.0
-Execution profile   : local runtime
+Execution device    : cpu
 Random seed         : 42
 </pre>
 </div>
@@ -8807,7 +8604,7 @@ Random seed         : 42
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 4A-II: Cohort ingest and provenance audit ─────────────────────────────────</span>
@@ -8907,7 +8704,7 @@ Binary prevalence  : 0.0828  (8.3%)
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 4A-III: Stratified splits + leakage-free standardisation ─────────────────</span>
@@ -8993,7 +8790,7 @@ Saved processed cohort → /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docum
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 4A-IV: Feature gap analysis (training partition only) ────────────────────</span>
@@ -9049,7 +8846,7 @@ Saved processed cohort → /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docum
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 4A-V: k-NN similarity graph + symmetric normalisation ────────────────────</span>
@@ -9163,7 +8960,7 @@ Graph density        : 0.6541%
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 4A-VI: ResidualClinicalGCN — tuned residual graph architecture ───────────</span>
@@ -9371,7 +9168,7 @@ Design note          : residual carry-through + triple-view fusion head
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 4A-VII: Train the tuned residual GCN ──────────────────────────────────────</span>
@@ -9694,7 +9491,7 @@ Held-out ROC AUC            : 0.9780
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [9]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 4A-VIII: PCA cohort audit ─────────────────────────────────────────────────</span>
@@ -10129,7 +9926,7 @@ Held-out ROC AUC            : 0.9780
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [9]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Detailed evaluation: confusion matrix, pathologic ROC, and training diagnostics</span>
@@ -10542,7 +10339,7 @@ Summary metrics (pathologic treated as positive class)
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── Section 6A: Aligned Adaptive BioGCN robustness benchmark ─────────────────</span>
@@ -10791,25 +10588,43 @@ Saved figure assets -&gt; /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docume
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="6B.-Baseline-Comparison:-ResidualClinicalGCN-vs.-Tabular-Models-">6B. Baseline Comparison: ResidualClinicalGCN vs. Tabular Models <a name="baseline"></a><a class="anchor-link" href="#6B.-Baseline-Comparison:-ResidualClinicalGCN-vs.-Tabular-Models-">¶</a></h2><p>A common and rigorous interview question is: <strong>"Why use a graph model at all? Does the graph structure still help after you tune strong tabular baselines?"</strong></p>
-<p>The cell below runs three scikit-learn classifiers on the <strong>same train/test split</strong> used by the notebook pipeline, using the same <code>X_std</code> standardised features but <strong>without any graph structure</strong>. This provides a direct ablation of the graph inductive bias.</p>
-<h3 id="What-the-Table-Reveals">What the Table Reveals<a class="anchor-link" href="#What-the-Table-Reveals">¶</a></h3><p>| Model | Uses graph structure | Uses class-imbalance weighting |</p>
-<p>|---|---|---|</p>
-<p>| Logistic Regression | No | Yes (<code>class_weight="balanced"</code>) |</p>
-<p>| Random Forest (100 trees) | No | Yes (<code>class_weight="balanced"</code>) |</p>
-<p>| MLP (100-50, ReLU) | No | No |</p>
-<p>| <strong>ResidualClinicalGCN</strong> | <strong>Yes</strong> (symmetric $k$-NN graph + residual message passing + three-view fusion head) | <strong>Yes</strong> (class-weighted cross-entropy + validation-selected threshold) |</p>
-<h3 id="Interpreting-the-Results">Interpreting the Results<a class="anchor-link" href="#Interpreting-the-Results">¶</a></h3><ul>
-<li><p><strong>High accuracy alone is misleading</strong> on imbalanced data (35/426 pathologic = 8.2%). A model that predicts "normal" for every exam scores 91.8% accuracy.</p>
-</li>
-<li><p><strong>Pathologic recall</strong> remains clinically critical: a missed pathologic case (FN) carries far greater risk than a false alarm (FP).</p>
-</li>
-<li><p><strong>ROC AUC</strong> summarises discrimination across all thresholds, independent of the chosen operating point.</p>
-</li>
-<li><p>The upgraded graph model now carries a stronger technical argument than the earlier notebook version because it combines graph structure with residual feature preservation, a three-view fusion head, and a validation-calibrated threshold rather than relying on a fixed <code>0.50</code> rule.</p>
-</li>
+<h2 id="6B.-Baseline-Comparison:-ResidualClinicalGCN-vs.-Expanded-Tabular-Models-">6B. Baseline Comparison: ResidualClinicalGCN vs. Expanded Tabular Models <a name="baseline"></a><a class="anchor-link" href="#6B.-Baseline-Comparison:-ResidualClinicalGCN-vs.-Expanded-Tabular-Models-">¶</a></h2><p>A rigorous reviewer question is now sharper than before: <strong>"Does the graph model still matter once you compare it against stronger tabular baselines, not just a lightweight trio of defaults?"</strong></p>
+<p>The cell below reads the reproducible biomedical baseline table generated by <code>experiments/biomedical/run_bio_baselines.py</code> and places the notebook's <code>ResidualClinicalGCN</code> result beside that expanded benchmark. This means the notebook is no longer comparing the graph model only against logistic regression, random forest, and a small MLP. It now includes calibrated and boosted baselines on the same processed cohort split, including:</p>
+<ul>
+<li>logistic regression and calibrated logistic regression,</li>
+<li>random forest and calibrated random forest,</li>
+<li>XGBoost and calibrated XGBoost,</li>
+<li>LightGBM and calibrated LightGBM,</li>
+<li>the original MLP reference,</li>
+<li><strong>ResidualClinicalGCN</strong> from this notebook.</li>
 </ul>
-<h3 id="Interview-level-takeaway">Interview-level takeaway<a class="anchor-link" href="#Interview-level-takeaway">¶</a></h3><p>The baseline table is stronger evidence than a generic "GNNs are better" claim. It lets you say something precise: <strong>on the exact same cohort split, the graph-aware residual model reaches 98.8% held-out accuracy with only five total test errors while remaining explicitly designed around the rare pathologic class.</strong> That is a defensible contribution, not marketing language.</p>
+<h3 id="What-the-updated-table-reveals">What the updated table reveals<a class="anchor-link" href="#What-the-updated-table-reveals">¶</a></h3><table>
+<thead>
+<tr>
+<th>Model family</th>
+<th>Uses graph structure</th>
+<th>Uses calibration / threshold tuning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Logistic / forest / boosting baselines</td>
+<td>No</td>
+<td>Some variants use explicit calibration and validation-selected thresholds</td>
+</tr>
+<tr>
+<td><strong>ResidualClinicalGCN</strong></td>
+<td><strong>Yes</strong> (symmetric $k$-NN graph + residual message passing + three-view fusion head)</td>
+<td><strong>Yes</strong> (validation-selected threshold and explicit operating-point analysis)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="How-to-read-the-result-responsibly">How to read the result responsibly<a class="anchor-link" href="#How-to-read-the-result-responsibly">¶</a></h3><ul>
+<li><strong>The graph model is still strong</strong>, reaching 98.8% held-out accuracy, 0.942 balanced accuracy, and the clinically interpretable operating point of 31/35 pathologic detections with 1 false positive.</li>
+<li><strong>The tabular benchmark is now genuinely strong as well</strong>: calibrated LightGBM and XGBoost slightly exceed the graph model on this split, which makes the benchmark story more defensible rather than weaker.</li>
+<li><strong>This changes the claim</strong> from "the GNN beats simple baselines" to a more rigorous statement: the graph model remains competitive and operationally interpretable even when benchmarked against modern boosted and calibrated tabular models.</li>
+</ul>
+<h3 id="Interview-level-takeaway">Interview-level takeaway<a class="anchor-link" href="#Interview-level-takeaway">¶</a></h3><p>The stronger table supports a more credible conclusion than a blanket "graph models win" claim. The notebook can now say something narrower and technically safer: <strong>ResidualClinicalGCN is a strong graph-based screening model on this split, but the current best tabular baselines are at least as strong and in some threshold settings slightly stronger.</strong> That is reviewer-facing evidence, not marketing language.</p>
 </div>
 </div>
 </div>
@@ -10818,85 +10633,113 @@ Saved figure assets -&gt; /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docume
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── Baseline Comparison: ResidualClinicalGCN vs. Tabular Models ───────────────</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── Baseline Comparison: ResidualClinicalGCN vs. Expanded Tabular Models ──────</span>
 <span class="c1"># Run AFTER the main pipeline code cell (Section 4A) and the detailed</span>
-<span class="c1"># evaluation code cell (Section 6). All required variables must already be in</span>
-<span class="c1"># kernel scope: X_std, train_idx_np, test_idx_np, y, final_preds,</span>
-<span class="c1"># final_probs, SEED, pd.</span>
+<span class="c1"># evaluation code cell (Section 6). This cell reads the reproducible baseline</span>
+<span class="c1"># benchmark table generated by experiments/biomedical/run_bio_baselines.py and</span>
+<span class="c1"># appends the notebook's graph-model operating point for a like-for-like view.</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestClassifier</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">balanced_accuracy_score</span><span class="p">,</span>
     <span class="n">roc_auc_score</span><span class="p">,</span> <span class="n">recall_score</span><span class="p">,</span> <span class="n">precision_score</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.neural_network</span><span class="w"> </span><span class="kn">import</span> <span class="n">MLPClassifier</span>
+    <span class="n">confusion_matrix</span><span class="p">,</span>
+ <span class="p">)</span>
 
-<span class="n">BASELINES</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"Logistic Regression"</span><span class="p">:</span> <span class="n">LogisticRegression</span><span class="p">(</span>
-        <span class="n">max_iter</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="s2">"balanced"</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">SEED</span>
-    <span class="p">),</span>
-    <span class="s2">"Random Forest (100)"</span><span class="p">:</span> <span class="n">RandomForestClassifier</span><span class="p">(</span>
-        <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="s2">"balanced"</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">SEED</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span>
-    <span class="p">),</span>
-    <span class="c1"># MLPClassifier does not support class_weight; imbalance is partially</span>
-    <span class="c1"># addressed by the training set composition. This is noted in Section 6B.</span>
-    <span class="s2">"MLP (100-50, ReLU)"</span><span class="p">:</span> <span class="n">MLPClassifier</span><span class="p">(</span>
-        <span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s2">"relu"</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
-        <span class="n">random_state</span><span class="o">=</span><span class="n">SEED</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="n">baseline_path</span> <span class="o">=</span> <span class="n">proj_root</span> <span class="o">/</span> <span class="s2">"outputs"</span> <span class="o">/</span> <span class="s2">"tables"</span> <span class="o">/</span> <span class="s2">"biomedical_baselines.csv"</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">baseline_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"Expected baseline table at </span><span class="si">{</span><span class="n">baseline_path</span><span class="si">}</span><span class="s2">. Run experiments/biomedical/run_bio_baselines.py first."</span>
+    <span class="p">)</span>
+
+<span class="n">baseline_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">baseline_path</span><span class="p">)</span>
+<span class="n">baseline_name_map</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"logistic_regression"</span><span class="p">:</span> <span class="s2">"Logistic Regression"</span><span class="p">,</span>
+    <span class="s2">"calibrated_logistic_regression"</span><span class="p">:</span> <span class="s2">"Calibrated Logistic Regression"</span><span class="p">,</span>
+    <span class="s2">"random_forest"</span><span class="p">:</span> <span class="s2">"Random Forest"</span><span class="p">,</span>
+    <span class="s2">"calibrated_random_forest"</span><span class="p">:</span> <span class="s2">"Calibrated Random Forest"</span><span class="p">,</span>
+    <span class="s2">"xgboost"</span><span class="p">:</span> <span class="s2">"XGBoost"</span><span class="p">,</span>
+    <span class="s2">"calibrated_xgboost"</span><span class="p">:</span> <span class="s2">"Calibrated XGBoost"</span><span class="p">,</span>
+    <span class="s2">"lightgbm"</span><span class="p">:</span> <span class="s2">"LightGBM"</span><span class="p">,</span>
+    <span class="s2">"calibrated_lightgbm"</span><span class="p">:</span> <span class="s2">"Calibrated LightGBM"</span><span class="p">,</span>
+    <span class="s2">"mlp"</span><span class="p">:</span> <span class="s2">"MLP"</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="n">X_train_base</span> <span class="o">=</span> <span class="n">X_std</span><span class="p">[</span><span class="n">train_idx_np</span><span class="p">]</span>
-<span class="n">y_train_base</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">train_idx_np</span><span class="p">]</span>
-<span class="n">X_test_base</span>  <span class="o">=</span> <span class="n">X_std</span><span class="p">[</span><span class="n">test_idx_np</span><span class="p">]</span>
-<span class="n">y_test_base</span>  <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">test_idx_np</span><span class="p">]</span>
-
-<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">clf</span> <span class="ow">in</span> <span class="n">BASELINES</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_base</span><span class="p">,</span> <span class="n">y_train_base</span><span class="p">)</span>
-    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_base</span><span class="p">)</span>
-    <span class="n">y_prob</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test_base</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="s2">"predict_proba"</span><span class="p">)</span>
-        <span class="k">else</span> <span class="n">clf</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X_test_base</span><span class="p">)</span>
+<span class="n">tabular_rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">baseline_df</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">tp_base</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">true_positives</span><span class="p">)</span>
+    <span class="n">fp_base</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">false_positives</span><span class="p">)</span>
+    <span class="n">fn_base</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">false_negatives</span><span class="p">)</span>
+    <span class="n">recall_base</span> <span class="o">=</span> <span class="n">tp_base</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">tp_base</span> <span class="o">+</span> <span class="n">fn_base</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">precision_base</span> <span class="o">=</span> <span class="n">tp_base</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">tp_base</span> <span class="o">+</span> <span class="n">fp_base</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">tabular_rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">"Model"</span><span class="p">:</span> <span class="n">baseline_name_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">model</span><span class="p">)),</span>
+            <span class="s2">"Accuracy"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">accuracy</span><span class="p">),</span>
+            <span class="s2">"Bal. Acc."</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">balanced_accuracy</span><span class="p">),</span>
+            <span class="s2">"ROC AUC"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">roc_auc</span><span class="p">),</span>
+            <span class="s2">"Path. Recall"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">recall_base</span><span class="p">),</span>
+            <span class="s2">"Path. Precision"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">precision_base</span><span class="p">),</span>
+            <span class="s2">"Threshold"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">threshold</span><span class="p">),</span>
+            <span class="s2">"False Positives"</span><span class="p">:</span> <span class="n">fp_base</span><span class="p">,</span>
+            <span class="s2">"False Negatives"</span><span class="p">:</span> <span class="n">fn_base</span><span class="p">,</span>
+            <span class="s2">"Uses graph"</span><span class="p">:</span> <span class="s2">"No"</span><span class="p">,</span>
+        <span class="p">}</span>
     <span class="p">)</span>
-    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-        <span class="s2">"Model"</span><span class="p">:</span>           <span class="n">name</span><span class="p">,</span>
-        <span class="s2">"Accuracy"</span><span class="p">:</span>        <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test_base</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
-        <span class="s2">"Bal. Acc."</span><span class="p">:</span>       <span class="n">balanced_accuracy_score</span><span class="p">(</span><span class="n">y_test_base</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
-        <span class="s2">"Path. Recall"</span><span class="p">:</span>    <span class="n">recall_score</span><span class="p">(</span><span class="n">y_test_base</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-        <span class="s2">"Path. Precision"</span><span class="p">:</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">y_test_base</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-        <span class="s2">"ROC AUC"</span><span class="p">:</span>         <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_test_base</span><span class="p">,</span> <span class="n">y_prob</span><span class="p">),</span>
-    <span class="p">})</span>
 
-<span class="c1"># ── Add graph-model row from pre-computed predictions ──────────────────────────</span>
+<span class="n">y_test_base</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">test_idx_np</span><span class="p">]</span>
 <span class="n">gcn_test_preds</span> <span class="o">=</span> <span class="n">final_preds</span><span class="p">[</span><span class="n">test_idx_np</span><span class="p">]</span>
 <span class="n">gcn_test_probs</span> <span class="o">=</span> <span class="n">final_probs</span><span class="p">[</span><span class="n">test_idx_np</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-<span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-    <span class="s2">"Model"</span><span class="p">:</span>           <span class="s2">"ResidualClinicalGCN (this work)"</span><span class="p">,</span>
-    <span class="s2">"Accuracy"</span><span class="p">:</span>        <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test_base</span><span class="p">,</span> <span class="n">gcn_test_preds</span><span class="p">),</span>
-    <span class="s2">"Bal. Acc."</span><span class="p">:</span>       <span class="n">balanced_accuracy_score</span><span class="p">(</span><span class="n">y_test_base</span><span class="p">,</span> <span class="n">gcn_test_preds</span><span class="p">),</span>
-    <span class="s2">"Path. Recall"</span><span class="p">:</span>    <span class="n">recall_score</span><span class="p">(</span><span class="n">y_test_base</span><span class="p">,</span> <span class="n">gcn_test_preds</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-    <span class="s2">"Path. Precision"</span><span class="p">:</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">y_test_base</span><span class="p">,</span> <span class="n">gcn_test_preds</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-    <span class="s2">"ROC AUC"</span><span class="p">:</span>         <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_test_base</span><span class="p">,</span> <span class="n">gcn_test_probs</span><span class="p">),</span>
-<span class="p">})</span>
+<span class="n">tn_graph</span><span class="p">,</span> <span class="n">fp_graph</span><span class="p">,</span> <span class="n">fn_graph</span><span class="p">,</span> <span class="n">tp_graph</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test_base</span><span class="p">,</span> <span class="n">gcn_test_preds</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="n">graph_row</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"Model"</span><span class="p">:</span> <span class="s2">"ResidualClinicalGCN (this notebook)"</span><span class="p">,</span>
+    <span class="s2">"Accuracy"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test_base</span><span class="p">,</span> <span class="n">gcn_test_preds</span><span class="p">)),</span>
+    <span class="s2">"Bal. Acc."</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">balanced_accuracy_score</span><span class="p">(</span><span class="n">y_test_base</span><span class="p">,</span> <span class="n">gcn_test_preds</span><span class="p">)),</span>
+    <span class="s2">"ROC AUC"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_test_base</span><span class="p">,</span> <span class="n">gcn_test_probs</span><span class="p">)),</span>
+    <span class="s2">"Path. Recall"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">recall_score</span><span class="p">(</span><span class="n">y_test_base</span><span class="p">,</span> <span class="n">gcn_test_preds</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">)),</span>
+    <span class="s2">"Path. Precision"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">precision_score</span><span class="p">(</span><span class="n">y_test_base</span><span class="p">,</span> <span class="n">gcn_test_preds</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">)),</span>
+    <span class="s2">"Threshold"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">decision_threshold</span><span class="p">),</span>
+    <span class="s2">"False Positives"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">fp_graph</span><span class="p">),</span>
+    <span class="s2">"False Negatives"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">fn_graph</span><span class="p">),</span>
+    <span class="s2">"Uses graph"</span><span class="p">:</span> <span class="s2">"Yes"</span><span class="p">,</span>
+<span class="p">}</span>
 
-<span class="n">comparison_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"Model"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">72</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Held-out test set comparison  (n=</span><span class="si">{}</span><span class="s2">, pathologic=</span><span class="si">{}</span><span class="s2">)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-    <span class="nb">len</span><span class="p">(</span><span class="n">y_test_base</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y_test_base</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
-<span class="p">)</span> <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">72</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">comparison_df</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">float_format</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">72</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Graph-model decision threshold: τ=</span><span class="si">{</span><span class="n">decision_threshold</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  (selected on validation split)"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Key: Path. Recall = sensitivity for pathologic class (FN risk)."</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"     Bal. Acc.    = mean(sensitivity, specificity): imbalance-corrected."</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"     Note: MLP uses no class weighting (sklearn MLPClassifier limitation)."</span><span class="p">)</span>
+<span class="n">comparison_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">tabular_rows</span> <span class="o">+</span> <span class="p">[</span><span class="n">graph_row</span><span class="p">])</span>
+<span class="n">comparison_df</span> <span class="o">=</span> <span class="n">comparison_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">"Bal. Acc."</span><span class="p">,</span> <span class="s2">"Accuracy"</span><span class="p">,</span> <span class="s2">"ROC AUC"</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">display_columns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"Model"</span><span class="p">,</span>
+    <span class="s2">"Accuracy"</span><span class="p">,</span>
+    <span class="s2">"Bal. Acc."</span><span class="p">,</span>
+    <span class="s2">"ROC AUC"</span><span class="p">,</span>
+    <span class="s2">"Path. Recall"</span><span class="p">,</span>
+    <span class="s2">"Path. Precision"</span><span class="p">,</span>
+    <span class="s2">"Threshold"</span><span class="p">,</span>
+    <span class="s2">"False Positives"</span><span class="p">,</span>
+    <span class="s2">"False Negatives"</span><span class="p">,</span>
+    <span class="s2">"Uses graph"</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">88</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expanded held-out benchmark comparison  (n=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">y_test_base</span><span class="p">)</span><span class="si">}</span><span class="s2">, pathologic=</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">y_test_base</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">88</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">comparison_df</span><span class="p">[</span><span class="n">display_columns</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+
+<span class="n">best_tabular_row</span> <span class="o">=</span> <span class="n">comparison_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">comparison_df</span><span class="p">[</span><span class="s2">"Uses graph"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"No"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">graph_display_row</span> <span class="o">=</span> <span class="n">comparison_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">comparison_df</span><span class="p">[</span><span class="s2">"Uses graph"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Yes"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Key comparison"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Best tabular baseline : </span><span class="si">{</span><span class="n">best_tabular_row</span><span class="p">[</span><span class="s1">'Model'</span><span class="p">]</span><span class="si">}</span><span class="s2">  |  accuracy </span><span class="si">{</span><span class="n">best_tabular_row</span><span class="p">[</span><span class="s1">'Accuracy'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  |  bal. acc. </span><span class="si">{</span><span class="n">best_tabular_row</span><span class="p">[</span><span class="s1">'Bal. Acc.'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Graph operating point : </span><span class="si">{</span><span class="n">graph_display_row</span><span class="p">[</span><span class="s1">'Model'</span><span class="p">]</span><span class="si">}</span><span class="s2">  |  accuracy </span><span class="si">{</span><span class="n">graph_display_row</span><span class="p">[</span><span class="s1">'Accuracy'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  |  bal. acc. </span><span class="si">{</span><span class="n">graph_display_row</span><span class="p">[</span><span class="s1">'Bal. Acc.'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Graph confusion counts: TP=</span><span class="si">{</span><span class="n">tp_graph</span><span class="si">}</span><span class="s2">  FN=</span><span class="si">{</span><span class="n">fn_graph</span><span class="si">}</span><span class="s2">  FP=</span><span class="si">{</span><span class="n">fp_graph</span><span class="si">}</span><span class="s2">  TN=</span><span class="si">{</span><span class="n">tn_graph</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Graph-model decision threshold: τ=</span><span class="si">{</span><span class="n">decision_threshold</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  (selected on validation split)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Interpretation: the graph model remains strong and clinically interpretable, but the"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"current best calibrated / boosted tabular baselines are now visible in the same table."</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -10909,21 +10752,192 @@ Saved figure assets -&gt; /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docume
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>========================================================================
-Held-out test set comparison  (n=426, pathologic=35)
-========================================================================
-                                 Accuracy  Bal. Acc.  Path. Recall  Path. Precision  ROC AUC
-Model                                                                                       
-Logistic Regression                0.9413     0.9030        0.8571           0.6000   0.9843
-Random Forest (100)                0.9671     0.8000        0.6000           1.0000   0.9951
-MLP (100-50, ReLU)                 0.9742     0.8429        0.6857           1.0000   0.9945
-ResidualClinicalGCN (this work)    0.9883     0.9416        0.8857           0.9688   0.9780
-========================================================================
+<pre>========================================================================================
+Expanded held-out benchmark comparison  (n=426, pathologic=35)
+========================================================================================
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-Graph-model decision threshold: τ=0.56  (selected on validation split)
-Key: Path. Recall = sensitivity for pathologic class (FN risk).
-     Bal. Acc.    = mean(sensitivity, specificity): imbalance-corrected.
-     Note: MLP uses no class weighting (sklearn MLPClassifier limitation).
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>Model</th>
+<th>Accuracy</th>
+<th>Bal. Acc.</th>
+<th>ROC AUC</th>
+<th>Path. Recall</th>
+<th>Path. Precision</th>
+<th>Threshold</th>
+<th>False Positives</th>
+<th>False Negatives</th>
+<th>Uses graph</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>Calibrated LightGBM</td>
+<td>0.9906</td>
+<td>0.9559</td>
+<td>0.9913</td>
+<td>0.9143</td>
+<td>0.9697</td>
+<td>0.20</td>
+<td>1</td>
+<td>3</td>
+<td>No</td>
+</tr>
+<tr>
+<th>1</th>
+<td>XGBoost</td>
+<td>0.9883</td>
+<td>0.9546</td>
+<td>0.9914</td>
+<td>0.9143</td>
+<td>0.9412</td>
+<td>0.10</td>
+<td>2</td>
+<td>3</td>
+<td>No</td>
+</tr>
+<tr>
+<th>2</th>
+<td>ResidualClinicalGCN (this notebook)</td>
+<td>0.9883</td>
+<td>0.9416</td>
+<td>0.9780</td>
+<td>0.8857</td>
+<td>0.9688</td>
+<td>0.56</td>
+<td>1</td>
+<td>4</td>
+<td>Yes</td>
+</tr>
+<tr>
+<th>3</th>
+<td>Calibrated Logistic Regression</td>
+<td>0.9554</td>
+<td>0.9367</td>
+<td>0.9858</td>
+<td>0.9143</td>
+<td>0.6667</td>
+<td>0.15</td>
+<td>16</td>
+<td>3</td>
+<td>No</td>
+</tr>
+<tr>
+<th>4</th>
+<td>LightGBM</td>
+<td>0.9859</td>
+<td>0.9273</td>
+<td>0.9930</td>
+<td>0.8571</td>
+<td>0.9677</td>
+<td>0.10</td>
+<td>1</td>
+<td>5</td>
+<td>No</td>
+</tr>
+<tr>
+<th>5</th>
+<td>MLP</td>
+<td>0.9836</td>
+<td>0.9260</td>
+<td>0.9711</td>
+<td>0.8571</td>
+<td>0.9375</td>
+<td>0.45</td>
+<td>2</td>
+<td>5</td>
+<td>No</td>
+</tr>
+<tr>
+<th>6</th>
+<td>Logistic Regression</td>
+<td>0.9413</td>
+<td>0.9160</td>
+<td>0.9838</td>
+<td>0.8857</td>
+<td>0.5962</td>
+<td>0.50</td>
+<td>21</td>
+<td>4</td>
+<td>No</td>
+</tr>
+<tr>
+<th>7</th>
+<td>Calibrated XGBoost</td>
+<td>0.9718</td>
+<td>0.9066</td>
+<td>0.9848</td>
+<td>0.8286</td>
+<td>0.8286</td>
+<td>0.15</td>
+<td>6</td>
+<td>6</td>
+<td>No</td>
+</tr>
+<tr>
+<th>8</th>
+<td>Random Forest</td>
+<td>0.9695</td>
+<td>0.9053</td>
+<td>0.9942</td>
+<td>0.8286</td>
+<td>0.8056</td>
+<td>0.20</td>
+<td>7</td>
+<td>6</td>
+<td>No</td>
+</tr>
+<tr>
+<th>9</th>
+<td>Calibrated Random Forest</td>
+<td>0.9601</td>
+<td>0.9002</td>
+<td>0.9909</td>
+<td>0.8286</td>
+<td>0.7250</td>
+<td>0.15</td>
+<td>11</td>
+<td>6</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>
+Key comparison
+  Best tabular baseline : Calibrated LightGBM  |  accuracy 0.9906  |  bal. acc. 0.9559
+  Graph operating point : ResidualClinicalGCN (this notebook)  |  accuracy 0.9883  |  bal. acc. 0.9416
+  Graph confusion counts: TP=31  FN=4  FP=1  TN=390
+  Graph-model decision threshold: τ=0.56  (selected on validation split)
+Interpretation: the graph model remains strong and clinically interpretable, but the
+current best calibrated / boosted tabular baselines are now visible in the same table.
 </pre>
 </div>
 </div>
@@ -10960,7 +10974,7 @@ Key: Path. Recall = sensitivity for pathologic class (FN risk).
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── Section 6C: Clinical Operating Point Analysis ────────────────────────────</span>
@@ -11328,7 +11342,7 @@ At τ=0.10 (≥90% recall), it misses only 0 cases at the cost of 61.6 false ala
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── Section 6D: Graph Homophily Analysis ─────────────────────────────────────</span>
@@ -11629,7 +11643,7 @@ Saved figure assets -&gt; /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docume
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── Section 6E: Post-hoc Calibration &amp; Uncertainty Quantification ─────────────</span>
@@ -12270,278 +12284,157 @@ Interpretation:
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── Section 6F: GNN Gradient Feature Saliency ─────────────────────────────────</span>
 
-
-
 <span class="c1"># Requires: model, Xt, At, test_idx, test_idx_np, y_true_test, feature_names</span>
-
-<span class="c1"># Also requires: BASELINES (from Section 6B) with "Random Forest (100)" already fitted.</span>
-
-
+<span class="c1"># Uses a Random Forest trained on the same train split as a tabular reference so</span>
+<span class="c1"># this section remains compatible with the expanded Section 6B benchmark table.</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
-
-
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestClassifier</span>
 
 <span class="n">TOP_FEATURES</span> <span class="o">=</span> <span class="mi">10</span>
 
-
-
 <span class="c1"># ── 1. Back-propagate pathologic logit through the full GCN + adjacency graph ─</span>
-
 <span class="c1"># The gradient flows through both the linear layers AND the adj @ X operations,</span>
-
 <span class="c1"># so it captures how each raw input feature contributes *after* neighbourhood</span>
-
 <span class="c1"># aggregation — unlike tabular importance measures that ignore graph structure.</span>
 
-
-
 <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-
 <span class="n">Xt_grad</span> <span class="o">=</span> <span class="n">Xt</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
-
-
-<span class="n">logits_sal</span>       <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">Xt_grad</span><span class="p">,</span> <span class="n">At</span><span class="p">)</span>
-
-<span class="n">patho_mask_np</span>    <span class="o">=</span> <span class="n">y_true_test</span> <span class="o">==</span> <span class="mi">1</span>
-
+<span class="n">logits_sal</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">Xt_grad</span><span class="p">,</span> <span class="n">At</span><span class="p">)</span>
+<span class="n">patho_mask_np</span> <span class="o">=</span> <span class="n">y_true_test</span> <span class="o">==</span> <span class="mi">1</span>
 <span class="n">patho_mask_torch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">patho_mask_np</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">bool</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">Xt</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 
-
-
 <span class="c1"># Target: sum of pathologic logit over truly pathologic test nodes</span>
-
 <span class="n">target_score</span> <span class="o">=</span> <span class="n">logits_sal</span><span class="p">[</span><span class="n">test_idx</span><span class="p">][</span><span class="n">patho_mask_torch</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-
 <span class="n">target_score</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
 
-
-
-<span class="n">grads</span>          <span class="o">=</span> <span class="n">Xt_grad</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>   <span class="c1"># shape: (n_nodes, n_features)</span>
-
+<span class="n">grads</span> <span class="o">=</span> <span class="n">Xt_grad</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
 <span class="n">saliency_patho</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">grads</span><span class="p">[</span><span class="n">test_idx_np</span><span class="p">][</span><span class="n">patho_mask_np</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-
-
-<span class="n">top_gnn_idx</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">saliency_patho</span><span class="p">)[</span><span class="o">-</span><span class="n">TOP_FEATURES</span><span class="p">:][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
+<span class="n">top_gnn_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">saliency_patho</span><span class="p">)[</span><span class="o">-</span><span class="n">TOP_FEATURES</span><span class="p">:][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">top_gnn_feat</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">feature_names</span><span class="p">[</span><span class="n">top_gnn_idx</span><span class="p">]}</span>
 
-
-
 <span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">72</span><span class="p">)</span>
-
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"GNN Gradient Saliency — top </span><span class="si">{</span><span class="n">TOP_FEATURES</span><span class="si">}</span><span class="s2"> features (pathologic test nodes, n=</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">patho_mask_np</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
-
 <span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">72</span><span class="p">)</span>
-
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'Rank'</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s1">'Feature'</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s1">'Grad Saliency'</span><span class="si">:</span><span class="s2">&gt;14</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
 <span class="k">for</span> <span class="n">rank</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">top_gnn_idx</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
-
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">rank</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">feature_names</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">saliency_patho</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;14.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-
-
-<span class="c1"># ── 2. Random Forest feature importance (already fitted in Section 6B) ─────────</span>
-
-<span class="n">rf_clf</span>        <span class="o">=</span> <span class="n">BASELINES</span><span class="p">[</span><span class="s2">"Random Forest (100)"</span><span class="p">]</span>
-
+<span class="c1"># ── 2. Random Forest feature importance on the same training split ─────────────</span>
+<span class="n">rf_clf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span>
+    <span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+    <span class="n">class_weight</span><span class="o">=</span><span class="s2">"balanced_subsample"</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="n">SEED</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+ <span class="p">)</span>
+<span class="n">rf_clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_std</span><span class="p">[</span><span class="n">train_idx_np</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">train_idx_np</span><span class="p">])</span>
 <span class="n">rf_importance</span> <span class="o">=</span> <span class="n">rf_clf</span><span class="o">.</span><span class="n">feature_importances_</span>
-
-<span class="n">top_rf_idx</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">rf_importance</span><span class="p">)[</span><span class="o">-</span><span class="n">TOP_FEATURES</span><span class="p">:][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
-<span class="n">top_rf_feat</span>   <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">feature_names</span><span class="p">[</span><span class="n">top_rf_idx</span><span class="p">]}</span>
-
-
+<span class="n">top_rf_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">rf_importance</span><span class="p">)[</span><span class="o">-</span><span class="n">TOP_FEATURES</span><span class="p">:][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">top_rf_feat</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">feature_names</span><span class="p">[</span><span class="n">top_rf_idx</span><span class="p">]}</span>
 
 <span class="nb">print</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Random Forest Gini Importance — top </span><span class="si">{</span><span class="n">TOP_FEATURES</span><span class="si">}</span><span class="s2"> features (same training set)"</span><span class="p">)</span>
-
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Random Forest Gini Importance — top </span><span class="si">{</span><span class="n">TOP_FEATURES</span><span class="si">}</span><span class="s2"> features (same training split)"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">72</span><span class="p">)</span>
-
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'Rank'</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s1">'Feature'</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s1">'Gini Importance'</span><span class="si">:</span><span class="s2">&gt;16</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
 <span class="k">for</span> <span class="n">rank</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">top_rf_idx</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
-
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">rank</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">feature_names</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">rf_importance</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;16.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-
-
 <span class="c1"># ── 3. Agreement analysis ──────────────────────────────────────────────────────</span>
-
-<span class="n">overlap</span>  <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">top_gnn_feat</span> <span class="o">&amp;</span> <span class="n">top_rf_feat</span><span class="p">)</span>
-
+<span class="n">overlap</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">top_gnn_feat</span> <span class="o">&amp;</span> <span class="n">top_rf_feat</span><span class="p">)</span>
 <span class="n">gnn_only</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">top_gnn_feat</span> <span class="o">-</span> <span class="n">top_rf_feat</span><span class="p">)</span>
-
-<span class="n">rf_only</span>  <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">top_rf_feat</span> <span class="o">-</span> <span class="n">top_gnn_feat</span><span class="p">)</span>
-
-
+<span class="n">rf_only</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">top_rf_feat</span> <span class="o">-</span> <span class="n">top_gnn_feat</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">()</span>
-
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Feature agreement analysis  (top-</span><span class="si">{</span><span class="n">TOP_FEATURES</span><span class="si">}</span><span class="s2"> overlap between GNN saliency and RF importance):"</span><span class="p">)</span>
-
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Shared features (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">overlap</span><span class="p">)</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">TOP_FEATURES</span><span class="si">}</span><span class="s2">)  : </span><span class="si">{</span><span class="n">overlap</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  GNN-only        (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">gnn_only</span><span class="p">)</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">TOP_FEATURES</span><span class="si">}</span><span class="s2">)  : </span><span class="si">{</span><span class="n">gnn_only</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  RF-only         (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">rf_only</span><span class="p">)</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">TOP_FEATURES</span><span class="si">}</span><span class="s2">)   : </span><span class="si">{</span><span class="n">rf_only</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-
-
 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">overlap</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">6</span><span class="p">:</span>
-
     <span class="nb">print</span><span class="p">()</span>
-
     <span class="nb">print</span><span class="p">(</span><span class="s2">"Strong agreement: the GCN surfaces the same discriminative features as the"</span><span class="p">)</span>
-
     <span class="nb">print</span><span class="p">(</span><span class="s2">"tabular baseline — neighbourhood aggregation amplifies rather than distorts"</span><span class="p">)</span>
-
     <span class="nb">print</span><span class="p">(</span><span class="s2">"physiological signals. Consistent with high edge homophily (Section 6D)."</span><span class="p">)</span>
-
 <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">overlap</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
-
     <span class="nb">print</span><span class="p">()</span>
-
     <span class="nb">print</span><span class="p">(</span><span class="s2">"Partial agreement: several features shared, but the GCN additionally weights"</span><span class="p">)</span>
-
     <span class="nb">print</span><span class="p">(</span><span class="s2">"features that become discriminative only through neighbourhood aggregation,"</span><span class="p">)</span>
-
     <span class="nb">print</span><span class="p">(</span><span class="s2">"suggesting the graph structure surfaces context-dependent signals."</span><span class="p">)</span>
-
 <span class="k">else</span><span class="p">:</span>
-
     <span class="nb">print</span><span class="p">()</span>
-
     <span class="nb">print</span><span class="p">(</span><span class="s2">"Low overlap: the GCN relies on different features than the RF, indicating"</span><span class="p">)</span>
-
     <span class="nb">print</span><span class="p">(</span><span class="s2">"neighbourhood aggregation fundamentally reshapes which signals are important."</span><span class="p">)</span>
 
-
-
 <span class="c1"># ── 4. Comparison bar chart ────────────────────────────────────────────────────</span>
-
 <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 
-
-
-<span class="n">gnn_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"crimson"</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">feature_names</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="ow">in</span> <span class="n">top_rf_feat</span> <span class="k">else</span> <span class="s2">"steelblue"</span>
-
-              <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">top_gnn_idx</span><span class="p">]</span>
-
+<span class="n">gnn_colors</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"crimson"</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">feature_names</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="ow">in</span> <span class="n">top_rf_feat</span> <span class="k">else</span> <span class="s2">"steelblue"</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">top_gnn_idx</span>
+<span class="p">]</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span>
-
     <span class="nb">range</span><span class="p">(</span><span class="n">TOP_FEATURES</span><span class="p">),</span> <span class="n">saliency_patho</span><span class="p">[</span><span class="n">top_gnn_idx</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span>
-
     <span class="n">color</span><span class="o">=</span><span class="n">gnn_colors</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-
-<span class="p">)</span>
-
+ <span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">TOP_FEATURES</span><span class="p">))</span>
-
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">feature_names</span><span class="p">[</span><span class="n">top_gnn_idx</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]])</span>
-
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Mean $|\partial\,\mathrm</span><span class="si">{logit}</span><span class="s2">_\mathrm</span><span class="si">{patho}</span><span class="s2">\,/\,\partial\,x_j|$  (pathologic test nodes)"</span><span class="p">)</span>
-
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
-
     <span class="sa">f</span><span class="s2">"GNN Gradient Saliency — Top </span><span class="si">{</span><span class="n">TOP_FEATURES</span><span class="si">}</span><span class="s2"> Features</span><span class="se">\n</span><span class="s2">"</span>
-
     <span class="sa">f</span><span class="s2">"(crimson = also in RF top-</span><span class="si">{</span><span class="n">TOP_FEATURES</span><span class="si">}</span><span class="s2">;  blue = GNN-only)"</span><span class="p">,</span>
-
     <span class="n">fontweight</span><span class="o">=</span><span class="s2">"bold"</span><span class="p">,</span>
-
-<span class="p">)</span>
-
+ <span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">"x"</span><span class="p">)</span>
 
-
-
-<span class="n">rf_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"crimson"</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">feature_names</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="ow">in</span> <span class="n">top_gnn_feat</span> <span class="k">else</span> <span class="s2">"steelblue"</span>
-
-             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">top_rf_idx</span><span class="p">]</span>
-
+<span class="n">rf_colors</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"crimson"</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">feature_names</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="ow">in</span> <span class="n">top_gnn_feat</span> <span class="k">else</span> <span class="s2">"steelblue"</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">top_rf_idx</span>
+<span class="p">]</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span>
-
     <span class="nb">range</span><span class="p">(</span><span class="n">TOP_FEATURES</span><span class="p">),</span> <span class="n">rf_importance</span><span class="p">[</span><span class="n">top_rf_idx</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span>
-
     <span class="n">color</span><span class="o">=</span><span class="n">rf_colors</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-
-<span class="p">)</span>
-
+ <span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">TOP_FEATURES</span><span class="p">))</span>
-
 <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">feature_names</span><span class="p">[</span><span class="n">top_rf_idx</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]])</span>
-
 <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Gini feature importance (mean decrease in impurity)"</span><span class="p">)</span>
-
 <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
-
     <span class="sa">f</span><span class="s2">"Random Forest Gini Importance — Top </span><span class="si">{</span><span class="n">TOP_FEATURES</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span>
-
     <span class="sa">f</span><span class="s2">"(crimson = also in GNN top-</span><span class="si">{</span><span class="n">TOP_FEATURES</span><span class="si">}</span><span class="s2">;  blue = RF-only)"</span><span class="p">,</span>
-
     <span class="n">fontweight</span><span class="o">=</span><span class="s2">"bold"</span><span class="p">,</span>
-
-<span class="p">)</span>
-
+ <span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">"x"</span><span class="p">)</span>
 
-
-
 <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span>
-
     <span class="sa">f</span><span class="s2">"Feature Importance: GNN Gradient Saliency vs. Random Forest Gini  "</span>
-
     <span class="sa">f</span><span class="s2">"(</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">overlap</span><span class="p">)</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">TOP_FEATURES</span><span class="si">}</span><span class="s2"> features shared)"</span><span class="p">,</span>
-
     <span class="n">fontweight</span><span class="o">=</span><span class="s2">"bold"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.02</span><span class="p">,</span>
-
-<span class="p">)</span>
-
+ <span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 
-
-
 <span class="n">notebook_figure_dir</span> <span class="o">=</span> <span class="n">proj_root</span> <span class="o">/</span> <span class="s2">"notebooks"</span> <span class="o">/</span> <span class="s2">"figures"</span>
-
 <span class="n">html_figure_dir</span> <span class="o">=</span> <span class="n">proj_root</span> <span class="o">/</span> <span class="s2">"website"</span> <span class="o">/</span> <span class="s2">"notebooks_html"</span> <span class="o">/</span> <span class="s2">"figures"</span>
-
 <span class="k">for</span> <span class="n">figure_dir</span> <span class="ow">in</span> <span class="p">(</span><span class="n">notebook_figure_dir</span><span class="p">,</span> <span class="n">html_figure_dir</span><span class="p">):</span>
-
     <span class="n">figure_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
 <span class="n">figure_name</span> <span class="o">=</span> <span class="s2">"bio_demo_feature_saliency.png"</span>
-
 <span class="k">for</span> <span class="n">figure_path</span> <span class="ow">in</span> <span class="p">(</span><span class="n">notebook_figure_dir</span> <span class="o">/</span> <span class="n">figure_name</span><span class="p">,</span> <span class="n">html_figure_dir</span> <span class="o">/</span> <span class="n">figure_name</span><span class="p">):</span>
-
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">figure_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">"tight"</span><span class="p">)</span>
-
 <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saved figure assets -&gt; </span><span class="si">{</span><span class="n">notebook_figure_dir</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">figure_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"                     -&gt; </span><span class="si">{</span><span class="n">html_figure_dir</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">figure_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-
-
 <span class="nb">print</span><span class="p">()</span>
-
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Methodological note: GNN saliency flows through the adjacency (adj @ X), so it"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"captures how each raw feature contributes *after* neighbourhood aggregation."</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"RF Gini importance measures training-time purity gain, independent of graph structure."</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Features appearing in both rankings are robustly discriminative across methods."</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"measures context-sensitive importance. The RF importance provides a tabular"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"reference that ignores graph structure, making agreement and disagreement"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"between the two views interpretable."</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -12569,24 +12462,24 @@ Rank       Feature   Grad Saliency
    9          MSTV        0.485026
   10      Variance        0.420120
 
-Random Forest Gini Importance — top 10 features (same training set)
+Random Forest Gini Importance — top 10 features (same training split)
 ========================================================================
 Rank       Feature   Gini Importance
-   1          ASTV          0.162385
-   2          Mean          0.136473
-   3            DP          0.090709
-   4          ALTV          0.089357
-   5        Median          0.084642
-   6      Variance          0.065533
-   7          MLTV          0.064768
-   8          Mode          0.054440
-   9          MSTV          0.049007
-  10            AC          0.032159
+   1          ASTV          0.172643
+   2          Mean          0.130800
+   3            DP          0.100145
+   4        Median          0.091931
+   5          ALTV          0.076567
+   6          Mode          0.059154
+   7          MLTV          0.058070
+   8          MSTV          0.052045
+   9      Variance          0.046986
+  10         Width          0.040271
 
 Feature agreement analysis  (top-10 overlap between GNN saliency and RF importance):
-  Shared features (8/10)  : ['AC', 'ALTV', 'ASTV', 'DP', 'MSTV', 'Mean', 'Median', 'Variance']
-  GNN-only        (2/10)  : ['LB', 'Nmax']
-  RF-only         (2/10)   : ['MLTV', 'Mode']
+  Shared features (7/10)  : ['ALTV', 'ASTV', 'DP', 'MSTV', 'Mean', 'Median', 'Variance']
+  GNN-only        (3/10)  : ['AC', 'LB', 'Nmax']
+  RF-only         (3/10)   : ['MLTV', 'Mode', 'Width']
 
 Strong agreement: the GCN surfaces the same discriminative features as the
 tabular baseline — neighbourhood aggregation amplifies rather than distorts
@@ -12595,9 +12488,9 @@ Saved figure assets -&gt; /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docume
                      -&gt; /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html/figures/bio_demo_feature_saliency.png
 
 Methodological note: GNN saliency flows through the adjacency (adj @ X), so it
-captures how each raw feature contributes *after* neighbourhood aggregation.
-RF Gini importance measures training-time purity gain, independent of graph structure.
-Features appearing in both rankings are robustly discriminative across methods.
+measures context-sensitive importance. The RF importance provides a tabular
+reference that ignores graph structure, making agreement and disagreement
+between the two views interpretable.
 </pre>
 </div>
 </div>
@@ -12639,7 +12532,7 @@ Features appearing in both rankings are robustly discriminative across methods.
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [17]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── Section 6G: Multi-split constrained model search ──────────────────────────</span>
@@ -13245,7 +13138,7 @@ Conclusion: none of the searched configurations kept FP &lt;= 1 consistently acr
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [17]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [18]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── Section 6H: Export the executed notebook to HTML ──────────────────────────</span>
@@ -13371,7 +13264,7 @@ Exit code: 0
 
 nbconvert stderr:
 [NbConvertApp] Converting notebook /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/notebooks/bio_demo.ipynb to html
-[NbConvertApp] Writing 879239 bytes to /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html/bio_demo.html
+[NbConvertApp] Writing 868722 bytes to /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html/bio_demo.html
 
 Removed duplicated embedded placeholder images: 0
 Exported HTML artifact → /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html/bio_demo.html
@@ -13474,209 +13367,12 @@ Exported HTML artifact → /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docum
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="8.-Summary-&amp;-Key-Takeaways-">8. Summary &amp; Key Takeaways <a name="summary"></a><a class="anchor-link" href="#8.-Summary-&amp;-Key-Takeaways-">¶</a></h2><h3 id="What-We-Built">What We Built<a class="anchor-link" href="#What-We-Built">¶</a></h3><table>
-<thead>
-<tr>
-<th>Step</th>
-<th>Output</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Load the full CTG cohort</td>
-<td>2,126 real exam records with 21 physiologic features</td>
-</tr>
-<tr>
-<td>Preserve original 3-class label, define binary risk task</td>
-<td>Pathologic vs. non-pathologic screening objective</td>
-</tr>
-<tr>
-<td>Create stratified train / val / test splits</td>
-<td>Leakage-aware experimental design</td>
-</tr>
-<tr>
-<td>Fit scaler on training data only</td>
-<td>Standardised feature matrix without held-out contamination</td>
-</tr>
-<tr>
-<td>Save raw and processed cohort tables</td>
-<td>Auditable CSV artifacts (<code>outputs/ctg_raw.csv</code>, <code>outputs/ctg_processed.csv</code>)</td>
-</tr>
-<tr>
-<td>Build a symmetric exam similarity graph</td>
-<td>$k$-NN graph over standardised feature vectors (<code>k = 10</code>)</td>
-</tr>
-<tr>
-<td>Train a <strong>ResidualClinicalGCN</strong></td>
-<td>Residual graph classifier with a three-view fusion head</td>
-</tr>
-<tr>
-<td>Select threshold on validation only</td>
-<td>Reported test metric is tied to an explicit operating rule ($\tau \approx 0.56$)</td>
-</tr>
-<tr>
-<td>Evaluate with confusion matrix, ROC, and full metrics</td>
-<td>Clinically aligned reporting (recall, balanced accuracy, AUC)</td>
-</tr>
-<tr>
-<td>Run baseline comparison vs. tabular classifiers</td>
-<td>Ablation of graph inductive bias vs. LR / RF / MLP</td>
-</tr>
-<tr>
-<td><strong>Clinical operating point analysis</strong></td>
-<td><strong>Threshold sensitivity table + PR curve + operating point map</strong></td>
-</tr>
-<tr>
-<td><strong>Graph homophily analysis</strong></td>
-<td><strong>Edge homophily coefficient + neighbourhood enrichment test</strong></td>
-</tr>
-<tr>
-<td><strong>Post-hoc calibration &amp; uncertainty</strong></td>
-<td><strong>Raw vs Platt vs isotonic vs temperature scaling, Brier score, ECE, MC Dropout uncertainty</strong></td>
-</tr>
-<tr>
-<td><strong>Expanded robustness appendix</strong></td>
-<td><strong>12 nearby configurations x 8 repeated train/validation resplits = 96 constrained follow-up evaluations on the same held-out test set</strong></td>
-</tr>
-<tr>
-<td><strong>Presentation export</strong></td>
-<td><strong>Executed notebook rendered to <code>website/notebooks_html/bio_demo.html</code> with explicit figure alt text metadata for cleaner HTML output</strong></td>
-</tr>
-<tr>
-<td><strong>GNN gradient feature saliency</strong></td>
-<td><strong>Which CTG features drive pathologic predictions vs. RF Gini importance</strong></td>
-</tr>
-</tbody>
-</table>
-<hr/>
-<h3 id="Quantitative-Results-%E2%80%94-Held-out-Test-Set-(n-=-426,-35-pathologic)">Quantitative Results — Held-out Test Set (n = 426, 35 pathologic)<a class="anchor-link" href="#Quantitative-Results-%E2%80%94-Held-out-Test-Set-(n-=-426,-35-pathologic)">¶</a></h3><table>
-<thead>
-<tr>
-<th>Metric</th>
-<th>ResidualClinicalGCN</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Accuracy</td>
-<td><strong>98.8%</strong></td>
-</tr>
-<tr>
-<td>Balanced Accuracy</td>
-<td><strong>0.942</strong></td>
-</tr>
-<tr>
-<td>Pathologic Recall</td>
-<td><strong>88.6%</strong> (TP = 31, FN = 4)</td>
-</tr>
-<tr>
-<td>Pathologic Precision</td>
-<td><strong>96.9%</strong> (FP = 1)</td>
-</tr>
-<tr>
-<td>NPV</td>
-<td><strong>99.0%</strong></td>
-</tr>
-<tr>
-<td>ROC AUC</td>
-<td><strong>0.978</strong></td>
-</tr>
-<tr>
-<td>Decision Threshold</td>
-<td><strong>0.56</strong> (selected on validation split)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="Calibration-Follow-up">Calibration Follow-up<a class="anchor-link" href="#Calibration-Follow-up">¶</a></h3><p>The post-hoc calibration study adds an important deployment-level result on top of the classification outcome:</p>
+<h2 id="6H.-Export-for-Presentation-Delivery-">6H. Export for Presentation Delivery <a name="export"></a><a class="anchor-link" href="#6H.-Export-for-Presentation-Delivery-">¶</a></h2><p>A presentation-ready notebook is more useful when it can be rendered as a standalone artifact. The executed narrative, tables, and figures are therefore exported to HTML so the full result can be reviewed without opening Jupyter.</p>
+<p>The export target is the repository's existing presentation directory:</p>
 <ul>
-<li><strong>Raw softmax ECE:</strong> 0.1043</li>
-<li><strong>Temperature-scaled ECE:</strong> 0.0139</li>
-<li><strong>Temperature parameter:</strong> $T = 0.1857$</li>
-<li><strong>Accuracy after calibration:</strong> still <strong>98.8%</strong></li>
-<li><strong>False positives after calibration:</strong> still <strong>1</strong></li>
+<li><code>website/notebooks_html/bio_demo.html</code></li>
 </ul>
-<p>That means the notebook now improves the <em>probability scale</em> substantially without sacrificing the operating point that made the classifier attractive in the first place. Temperature scaling emerged as the strongest deployable calibrator under the notebook's explicit rule: improve reliability without increasing false positives or materially reducing accuracy.</p>
-<h3 id="Expanded-Robustness-Appendix">Expanded Robustness Appendix<a class="anchor-link" href="#Expanded-Robustness-Appendix">¶</a></h3><p>The follow-up search was widened from a single validation split to a materially stronger appendix:</p>
-<ul>
-<li><strong>12 nearby residual-GCN configurations</strong> around the deployed model</li>
-<li><strong>8 repeated stratified train/validation resplits</strong> inside the non-test pool</li>
-<li><strong>96 total repeated-split evaluations</strong> on the same held-out test cohort</li>
-<li><strong>16 runs</strong> satisfied the test-time constraint <strong>FP &lt;= 1</strong></li>
-</ul>
-<p>The important result is that <strong>none of those 96 repeated-split runs beat the deployed notebook result of 98.8% accuracy with FP = 1</strong>, and <strong>no configuration maintained FP &lt;= 1 across all repeated splits</strong>. The canonical notebook model therefore remains the strongest defended operating point in this appendix.</p>
-<h3 id="What-Differentiates-This-Pipeline-from-a-Standard-Tabular-Approach">What Differentiates This Pipeline from a Standard Tabular Approach<a class="anchor-link" href="#What-Differentiates-This-Pipeline-from-a-Standard-Tabular-Approach">¶</a></h3><table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Tabular (LR / RF / MLP)</th>
-<th>ResidualClinicalGCN</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Inductive bias</td>
-<td>Each exam processed in isolation</td>
-<td>Neighbourhood-aware message passing with residual feature preservation</td>
-</tr>
-<tr>
-<td>Information source</td>
-<td>Feature vector only</td>
-<td>Feature vector + local graph context + re-propagated graph evidence</td>
-</tr>
-<tr>
-<td>Threshold selection</td>
-<td>Usually fixed at 0.5 or post-hoc ad hoc</td>
-<td><strong>Validation-selected threshold plus full threshold sweep</strong></td>
-</tr>
-<tr>
-<td>Graph validation</td>
-<td>N/A</td>
-<td>Edge homophily $h$ vs. random baseline (Section 6D)</td>
-</tr>
-<tr>
-<td>Class imbalance</td>
-<td><code>class_weight</code> in loss</td>
-<td>Class-weighted cross-entropy + validation-calibrated decision rule</td>
-</tr>
-<tr>
-<td>Transductive/Inductive</td>
-<td>Inductive (any new exam)</td>
-<td><strong>Transductive</strong> (graph must be rebuilt for new data)</td>
-</tr>
-<tr>
-<td>Calibration</td>
-<td>Scalar probability (often unchecked)</td>
-<td><strong>Four-way reliability comparison with temperature scaling selected for deployment</strong></td>
-</tr>
-<tr>
-<td>Feature interpretability</td>
-<td>Tree Gini / LR weights (global)</td>
-<td>Gradient saliency through graph aggregation — class-specific, post-hoc (Section 6F)</td>
-</tr>
-<tr>
-<td>Robustness appendix</td>
-<td>Usually a single chosen split</td>
-<td><strong>96 repeated-split follow-up evaluations around the deployed model</strong></td>
-</tr>
-</tbody>
-</table>
-<hr/>
-<h3 id="Improvement-Over-the-Earlier-Notebook-Version">Improvement Over the Earlier Notebook Version<a class="anchor-link" href="#Improvement-Over-the-Earlier-Notebook-Version">¶</a></h3><p>The previous notebook configuration achieved <strong>94.1% accuracy</strong> with <strong>20 false positives</strong> on the same held-out test cohort. The upgraded pipeline improves that to <strong>98.8% accuracy</strong> with only <strong>1 false positive</strong> while detecting <strong>31 of 35 pathologic exams</strong>.</p>
-<p>That translates into a reduction from roughly <strong>25 total test errors to 5</strong>, an <strong>80% drop in held-out mistakes</strong>. The improvement is attributable to three concrete changes, each of which is technically defensible in an interview or review setting:</p>
-<ol>
-<li><strong>Residual graph encoding</strong> reduces over-smoothing and preserves raw physiologic signal.</li>
-<li><strong>Three-view fusion</strong> lets the classifier compare projected raw features, residual graph state, and re-propagated neighbourhood evidence explicitly.</li>
-<li><strong>Validation-selected thresholding</strong> replaces the arbitrary <code>0.50</code> rule with a held-out policy choice.</li>
-</ol>
-<p>The newest follow-up contributes two more practical gains:</p>
-<ol start="4">
-<li><strong>Validation-fit temperature scaling</strong> makes the reported probability scale far more trustworthy without degrading the deployed confusion matrix.</li>
-<li><strong>A larger repeated-split robustness appendix</strong> shows that the notebook is not omitting an obviously better nearby constrained model.</li>
-</ol>
-<h3 id="Technical-Takeaway">Technical Takeaway<a class="anchor-link" href="#Technical-Takeaway">¶</a></h3><p>The notebook now demonstrates a complete, rigorous graph-ML workflow: label reframing, leakage-free preprocessing, similarity-graph construction, residual message passing, validation-aware checkpointing, validation-calibrated threshold selection, post-hoc probability calibration, pathologic-focused evaluation, tabular baseline ablation, cost-sensitive threshold analysis, graph structure validation via homophily, repeated-split constrained follow-up search, figure accessibility metadata, and HTML export for presentation delivery. That combination signals research-grade experimental practice rather than a toy demo.</p>
-<h3 id="Interpretive-Takeaway">Interpretive Takeaway<a class="anchor-link" href="#Interpretive-Takeaway">¶</a></h3><p>The notebook does not just ask "can a GCN classify CTG exams?" It asks a stronger question: <em>can graph structure, if validated and used carefully, materially improve real held-out screening performance while remaining interpretable, calibratable, and robust to repeated validation resplits?</em> The answer in this notebook is yes: a graph-aware residual model pushes held-out accuracy close to <strong>99%</strong>, reduces false alarms to a single case, improves confidence calibration, and survives a broader nearby robustness sweep without being displaced.</p>
-<h3 id="Presentation-Artifact">Presentation Artifact<a class="anchor-link" href="#Presentation-Artifact">¶</a></h3><p>The fully executed interview-ready HTML export is written to <strong><code>website/notebooks_html/bio_demo.html</code></strong>.</p>
-<h3 id="Next-Notebook">Next Notebook<a class="anchor-link" href="#Next-Notebook">¶</a></h3><p>Proceed to <strong><code>qaoa_demo.ipynb</code></strong> to see how the Quantum Approximate Optimization Algorithm solves MaxCut instances, and how a GNN can reduce per-instance optimisation effort by learning graph-informed priors.</p>
+<p>This keeps the interview-ready artifact colocated with the existing published notebook renders.</p>
 </div>
 </div>
 </div>
@@ -13685,7 +13381,7 @@ Exported HTML artifact → /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docum
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [18]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [19]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">72</span><span class="p">)</span>
@@ -13714,6 +13410,14 @@ Exported HTML artifact → /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docum
 
 <span class="nb">print</span><span class="p">()</span>
 
+<span class="n">best_tabular_summary</span> <span class="o">=</span> <span class="n">comparison_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">comparison_df</span><span class="p">[</span><span class="s2">"Uses graph"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"No"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Expanded baseline benchmark:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Best tabular model  </span><span class="si">{</span><span class="n">best_tabular_summary</span><span class="p">[</span><span class="s1">'Model'</span><span class="p">]</span><span class="si">}</span><span class="s2">   |  Accuracy  </span><span class="si">{</span><span class="n">best_tabular_summary</span><span class="p">[</span><span class="s1">'Accuracy'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">   |  Bal. Acc.  </span><span class="si">{</span><span class="n">best_tabular_summary</span><span class="p">[</span><span class="s1">'Bal. Acc.'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"  The graph model remains clinically interpretable, but the strongest boosted tabular"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"  baselines are now at least as strong on this split."</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">()</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Calibration follow-up:"</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Selected method  </span><span class="si">{</span><span class="n">calibrated_method</span><span class="si">}</span><span class="s2">   |  ECE  </span><span class="si">{</span><span class="n">calibrated_row</span><span class="p">[</span><span class="s1">'ECE'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  (raw </span><span class="si">{</span><span class="n">raw_row</span><span class="p">[</span><span class="s1">'ECE'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
@@ -13738,7 +13442,7 @@ Exported HTML artifact → /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docum
 
 <span class="nb">print</span><span class="p">()</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Section 6B  — comparison_df      : ResidualClinicalGCN vs. LR / RF / MLP on identical test split"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Section 6B  — comparison_df      : ResidualClinicalGCN plus calibrated / boosted tabular baselines"</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Section 6C  — threshold_df       : recall / precision / FP-rate at each threshold τ"</span><span class="p">)</span>
 
@@ -13782,6 +13486,11 @@ Key results (ResidualClinicalGCN, held-out test set n=426, 35 pathologic):
   Pathol. Recall    88.6%   |  Precision       96.9%   |  ROC AUC  0.978
   Threshold τ     0.56    |  TP=31  FN=4  FP=1  TN=390
 
+Expanded baseline benchmark:
+  Best tabular model  Calibrated LightGBM   |  Accuracy  0.9906   |  Bal. Acc.  0.9559
+  The graph model remains clinically interpretable, but the strongest boosted tabular
+  baselines are now at least as strong on this split.
+
 Calibration follow-up:
   Selected method  Temperature scaling   |  ECE  0.0139  (raw 0.1043)
   Brier score      0.0138  (raw 0.0250)
@@ -13794,7 +13503,7 @@ Expanded robustness appendix:
   No searched candidate exceeded the deployed 98.8% model while keeping FP &lt;= 1.
   No searched configuration kept FP &lt;= 1 across all repeated splits.
 
-Section 6B  — comparison_df      : ResidualClinicalGCN vs. LR / RF / MLP on identical test split
+Section 6B  — comparison_df      : ResidualClinicalGCN plus calibrated / boosted tabular baselines
 Section 6C  — threshold_df       : recall / precision / FP-rate at each threshold τ
 Section 6D  — graph homophily    : edge homophily h vs. random baseline
 Section 6E  — calibration_df     : raw vs Platt vs isotonic vs temperature reliability metrics

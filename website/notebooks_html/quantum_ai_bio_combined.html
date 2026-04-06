@@ -7802,19 +7802,21 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Research-Story:-Hybrid-Quantum-Graph-AI-for-Biomedical-Optimization">Research Story: Hybrid Quantum-Graph AI for Biomedical Optimization<a class="anchor-link" href="#Research-Story:-Hybrid-Quantum-Graph-AI-for-Biomedical-Optimization">¶</a></h1><p><strong>Thesis Notebook for the Repository</strong></p>
+<h1 id="Graph-Conditioned-Parameterization-as-a-Task-Agnostic-Interface">Graph-Conditioned Parameterization as a Task-Agnostic Interface<a class="anchor-link" href="#Graph-Conditioned-Parameterization-as-a-Task-Agnostic-Interface">¶</a></h1><p><strong>NeurIPS Submission Overview: Bridging Combinatorial Optimization and Clinical Prediction</strong></p>
 <hr/>
-<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This notebook is the main research narrative for the repository. Its job is not to act as a third independent demo. Its job is to state the single thesis that holds the project together: <strong>graph-conditioned learning can serve as a useful computational layer in both QAOA warm-start prediction and biomedical screening-oriented graph classification</strong>. The optimization branch uses real transcriptomic co-expression graphs and exact depth-2 QAOA audit. The biomedical branch uses a real cardiotocography cohort and risk-sensitive graph classification. Read this notebook first if the question is whether the repository contains one coherent idea or just several adjacent experiments.</p>
+<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This notebook is the overview companion to the submission. It introduces <strong>graph-conditioned parameterization (GCP)</strong> as a reusable interface for mapping structured graphs to task-specific decision variables, with graph neural networks serving as <strong>structure-aware parameter generators</strong> whose outputs are consumed by downstream solvers or decision rules. The notebook instantiates that perspective in two settings: QAOA warm-start parameter generation on transcriptomic co-expression graphs and risk scoring for graph-based clinical prediction on cardiotocography.</p>
 <h2 id="Notebook-Role">Notebook Role<a class="anchor-link" href="#Notebook-Role">¶</a></h2><ul>
-<li>This is the repository's <strong>integrated story</strong> notebook.</li>
-<li>It synthesizes the strongest high-level evidence from both branches.</li>
-<li>It focuses on thesis, method role, evidence, and limits rather than on every branch-specific implementation detail.</li>
+<li>This is the submission's <strong>integrated overview notebook</strong>.</li>
+<li>It presents the paper's central technical object: a graph model used as a <strong>structure-to-parameter interface</strong> rather than only as an end-task predictor.</li>
+<li>It synthesizes the strongest evidence from both empirical settings while keeping branch-specific implementation detail in the appendix notebooks.</li>
+<li>It is the right entry point when the question is whether the two domains support one coherent interface claim rather than two loosely connected demonstrations.</li>
 </ul>
 <h2 id="What-This-Notebook-Claims">What This Notebook Claims<a class="anchor-link" href="#What-This-Notebook-Claims">¶</a></h2><ul>
-<li>Graph structure is the shared representation layer across both branches.</li>
-<li>A GNN can be used as a warm-start mechanism for small exact-simulation QAOA studies on transcriptomic graph families.</li>
-<li>Graph learning can also support retrospective biomedical screening on a clinically motivated similarity graph.</li>
-<li>The current artifact is a <strong>research prototype</strong> with real empirical content, not a production system and not yet a closed research submission.</li>
+<li>Many graph-learning problems can be written in the common form <strong>graph -&gt; parameterization -&gt; downstream objective</strong>.</li>
+<li>In this submission, that interface is instantiated for <strong>QAOA angle generation</strong> and <strong>clinical risk scoring</strong>.</li>
+<li>In the QAOA branch, the adapted GNN preserves near-parity with direct classical depth-2 search while maintaining a strong latency advantage on held-out transcriptomic graphs.</li>
+<li>In the biomedical branch, graph-conditioned risk scores remain competitive under threshold-aware reporting, calibration analysis, and stronger tabular benchmarking.</li>
+<li>The contribution is the reusable interface framing and its empirical instantiation across two settings, not a claim of quantum advantage, clinical readiness, or demonstrated cross-domain transfer.</li>
 </ul>
 <h2 id="Results-at-a-Glance">Results at a Glance<a class="anchor-link" href="#Results-at-a-Glance">¶</a></h2><table>
 <thead>
@@ -7830,7 +7832,7 @@ a.anchor-link {
 </tr>
 <tr>
 <td>Transcriptomic representative adapted ratio</td>
-<td><strong>0.8836</strong></td>
+<td><strong>0.8975</strong></td>
 </tr>
 <tr>
 <td>Transcriptomic held-out classical ratio</td>
@@ -7838,23 +7840,23 @@ a.anchor-link {
 </tr>
 <tr>
 <td>Transcriptomic held-out adapted ratio</td>
-<td><strong>0.8594</strong></td>
+<td><strong>0.8682</strong></td>
 </tr>
 <tr>
 <td>Transcriptomic quality retention</td>
-<td><strong>98.93%</strong></td>
+<td><strong>99.95%</strong></td>
 </tr>
 <tr>
 <td>Transcriptomic median speedup</td>
-<td><strong>20,124x</strong></td>
+<td><strong>2,640x</strong></td>
 </tr>
 <tr>
-<td>Integrated CTG held-out accuracy</td>
-<td><strong>95.54%</strong></td>
+<td>CTG graph operating-point accuracy</td>
+<td><strong>98.8%</strong></td>
 </tr>
 <tr>
-<td>Integrated CTG fixed-split robustness</td>
-<td><strong>96.48% +/- 0.45%</strong></td>
+<td>CTG graph operating-point balanced accuracy</td>
+<td><strong>0.942</strong></td>
 </tr>
 </tbody>
 </table>
@@ -7862,7 +7864,7 @@ a.anchor-link {
 <li>Start here for the unified thesis.</li>
 <li>Use the QAOA notebook for optimization-specific detail and baseline work.</li>
 <li>Use the biomedical notebook for screening-specific detail, calibration, and operating-point analysis.</li>
-<li>Treat the strongest claims here as the best integrated view of an in-progress research program.</li>
+<li>Treat the claims here as the best overview of the current empirical submission scope.</li>
 </ul>
 </div>
 </div>
