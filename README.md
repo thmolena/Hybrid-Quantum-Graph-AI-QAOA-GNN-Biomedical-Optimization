@@ -1,19 +1,17 @@
-# Graph-Conditioned Parameterization as a Task-Agnostic Interface
+# Graph-Conditioned Parameterization for Optimization and Clinical Risk Scoring
 
-### An Evidence Atlas Across Transcriptomic Optimization and Clinical Screening
+### Transcriptomic QAOA Initialization and CTG Similarity-Graph Risk Modeling
 
 [![Project Website](https://img.shields.io/badge/Project_Website-Open-0f766e?style=for-the-badge)](https://thmolena.github.io/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/)
 [![Paper Draft](https://img.shields.io/badge/Paper-Research_Draft-1d4ed8?style=for-the-badge)](paper/research_paper.md)
 
-This repository presents one graph-to-decision story through three linked views:
+This repository studies graph-conditioned parameterization in two settings:
 
-- transcriptomic co-expression graphs used to generate depth-2 QAOA parameters for MaxCut
-- cardiotocography similarity graphs used to generate pathologic-risk scores for screening analysis
-- an integrated notebook and manuscript that frame both as **graph-conditioned parameterization**
+- transcriptomic co-expression graphs used to predict depth-2 QAOA parameters for MaxCut
+- cardiotocography similarity graphs used to predict node-level pathologic-risk scores
+- an integrated notebook and manuscript that place both tasks in the same graph-to-parameterization formulation
 
-The project is scoped as a research study. It does **not** claim quantum advantage, clinical readiness, or cross-domain transfer.
-
-## Evidence Atlas
+## Results Overview
 
 <table>
   <tr>
@@ -33,7 +31,7 @@ The project is scoped as a research study. It does **not** claim quantum advanta
     </td>
     <td width="50%">
       <img src="website/notebooks_html/figures/combined_transcriptomic_benchmark.png" alt="Integrated benchmark figure" />
-      <p><strong>Integrated framing.</strong> The combined notebook places optimization and screening inside one graph-to-parameterization interface.</p>
+      <p><strong>Integrated formulation.</strong> The combined notebook places both branches inside the same graph-to-parameterization-to-objective pipeline.</p>
     </td>
   </tr>
 </table>
@@ -46,33 +44,33 @@ The project is scoped as a research study. It does **not** claim quantum advanta
 | Biomedical | CTG patient-similarity graph | node-level pathologic-risk scores | thresholded screening behavior | accuracy, balanced accuracy, calibration, robustness |
 | Integrated | shared graph-conditioned interface | task-specific decision variables | branch-specific downstream evaluation | comparative framing across both domains |
 
-## Notebook Atlas
+## Notebooks
 
 ### 1. Integrated notebook
 
 [notebooks/quantum_ai_bio_combined.ipynb](notebooks/quantum_ai_bio_combined.ipynb)
 
-Use this notebook when you want the full project narrative in one place.
+Integrated technical view of both branches.
 
-- compares both branches under one interface statement
-- surfaces the strongest combined figures near the top
-- keeps the distinction between shared framing and domain-specific evaluation explicit
+- shared graph-to-parameterization formulation
+- transcriptomic optimization and CTG screening in one workflow
+- branch-specific evaluation retained inside a common interface
 
 ### 2. Transcriptomic QAOA notebook
 
 [notebooks/qaoa_demo.ipynb](notebooks/qaoa_demo.ipynb)
 
-Use this notebook when you want the optimization evidence in detail.
+Technical notebook for the optimization branch.
 
-- real transcriptomic co-expression graphs
+- transcriptomic co-expression graphs
 - exact depth-2 statevector simulation
-- learned-initializer comparison, ablations, and landscape diagnostics
+- initializer comparison, ablations, and landscape diagnostics
 
 ### 3. CTG screening notebook
 
 [notebooks/bio_demo.ipynb](notebooks/bio_demo.ipynb)
 
-Use this notebook when you want the biomedical evidence in detail.
+Technical notebook for the biomedical branch.
 
 - split-first preprocessing and k-NN graph construction
 - threshold-aware evaluation and calibration analysis
@@ -88,10 +86,10 @@ Use this notebook when you want the biomedical evidence in detail.
 | CTG graph operating point | 98.8% accuracy, 0.942 balanced accuracy | Strong graph-based screening behavior |
 | Strongest tabular CTG baseline | 99.06% accuracy, 0.956 balanced accuracy | Calibrated LightGBM remains slightly stronger on this split |
 
-## Project Surfaces
+## Artifacts
 
 - Website: [index.html](index.html)
-- Paper draft: [paper/research_paper.md](paper/research_paper.md)
+- Paper: [paper/research_paper.md](paper/research_paper.md)
 - Notebook exports: [website/notebooks_html](website/notebooks_html)
 - QAOA baselines: [experiments/qaoa/run_qaoa_baselines.py](experiments/qaoa/run_qaoa_baselines.py)
 - Biomedical baselines: [experiments/biomedical/run_bio_baselines.py](experiments/biomedical/run_bio_baselines.py)
