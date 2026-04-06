@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hybrid Quantum–Graph Learning for Structured Biomedical Optimization</title>
-  <meta name="description" content="GNN-Informed Initialization for QAOA and Graph-Based Clinical Modeling">
+  <title>Graph-Conditioned Parameterization as a Task-Agnostic Interface</title>
+  <meta name="description" content="Bridging Combinatorial Optimization and Clinical Prediction through graph-conditioned parameterization.">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Hybrid Quantum–Graph Learning for Structured Biomedical Optimization">
-  <meta property="og:description" content="GNN-Informed Initialization for QAOA and Graph-Based Clinical Modeling">
+  <meta property="og:title" content="Graph-Conditioned Parameterization as a Task-Agnostic Interface">
+  <meta property="og:description" content="Bridging Combinatorial Optimization and Clinical Prediction through graph-conditioned parameterization.">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Hybrid Quantum–Graph Learning for Structured Biomedical Optimization">
-  <meta name="twitter:description" content="GNN-Informed Initialization for QAOA and Graph-Based Clinical Modeling">
+  <meta name="twitter:title" content="Graph-Conditioned Parameterization as a Task-Agnostic Interface">
+  <meta name="twitter:description" content="Bridging Combinatorial Optimization and Clinical Prediction through graph-conditioned parameterization.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -145,7 +145,6 @@
 
     .card-header h2,
     .nb-body h3,
-    .nb-viewer-title,
     .summary-cols h4,
     .footer,
     .footer a {
@@ -202,7 +201,6 @@
     .result-panel,
     .graph-panel,
     .nb-card,
-    .nb-viewer-container,
     .code-block {
       background: #fbfdff;
       border-color: #d7e3f3;
@@ -267,21 +265,10 @@
       border-color: #7ea7e8;
     }
 
-    .nb-card.active {
-      background: #eef5ff;
-      border-color: #7ea7e8;
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.12);
-    }
-
     .nb-tag {
       background: #eef5ff;
       color: #1e3a8a;
       border-color: #bfd3ff;
-    }
-
-    .nb-viewer-header {
-      background: #f8fbff;
-      border-bottom-color: #d7e3f3;
     }
 
     .summary-cols h4 {
@@ -589,6 +576,45 @@
       background: #eef5ff;
     }
 
+    .notebook-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .notebook-summary-card {
+      padding: 1rem 1rem 1.05rem;
+      border: 1px solid #d7e3f3;
+      border-radius: 1rem;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .notebook-summary-card h3 {
+      margin: 0;
+      font-size: 1rem;
+      color: #0f172a;
+    }
+
+    .notebook-summary-card p {
+      margin: 0.68rem 0 0.85rem;
+      color: #475569;
+      font-size: 0.88rem;
+      line-height: 1.62;
+    }
+
+    .notebook-summary-list {
+      margin: 0;
+      padding-left: 1rem;
+      color: #334155;
+      font-size: 0.84rem;
+      line-height: 1.55;
+    }
+
+    .notebook-summary-list li + li {
+      margin-top: 0.35rem;
+    }
+
     .figure-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -770,6 +796,7 @@
 
     @media (max-width: 760px) {
       .impact-grid,
+      .notebook-summary-grid,
       .figure-grid,
       .demo-explainer {
         grid-template-columns: 1fr;
@@ -786,9 +813,9 @@
   <!-- Hero -->
   <header class="hero">
     <div class="hero-inner">
-      <div class="hero-badge">Research Project · Hybrid Quantum-Classical AI</div>
-      <h1>Hybrid Quantum–Graph Learning for Structured Biomedical Optimization</h1>
-      <p class="hero-sub">This repository studies whether <strong>graph-conditioned learning</strong> can serve as a reusable computational interface across two different problems: parameter initialization for <strong>QAOA</strong> on transcriptomic co-expression graphs and graph-based biomedical screening on clinical similarity graphs.</p>
+      <div class="hero-badge">Research Manuscript · Graph-Conditioned Parameterization</div>
+      <h1>Graph-Conditioned Parameterization as a Task-Agnostic Interface</h1>
+      <p class="hero-sub"><strong>Bridging combinatorial optimization and clinical prediction.</strong> This repository presents graph-conditioned parameterization as a reusable interface in which graph neural networks act as structure-aware parameter generators whose outputs are consumed by downstream solvers or decision rules.</p>
       <div class="hero-pills">
         <span class="pill">QAOA</span>
         <span class="pill">GNN / GCN</span>
@@ -800,22 +827,22 @@
       </div>
       <div class="notebook-ribbon hero-ribbon" aria-label="Representative prototype results">
         <div class="notebook-ribbon-item">
-          <div class="notebook-ribbon-label">Best CTG result</div>
+          <div class="notebook-ribbon-label">CTG held-out operating point</div>
           <div class="notebook-ribbon-value">98.8%</div>
           <div class="notebook-ribbon-note">ResidualClinicalGCN held-out accuracy</div>
         </div>
         <div class="notebook-ribbon-item">
-          <div class="notebook-ribbon-label">Held-out QAOA ratio</div>
+          <div class="notebook-ribbon-label">QAOA held-out mean ratio</div>
           <div class="notebook-ribbon-value">0.8682</div>
           <div class="notebook-ribbon-note">Adapted GNN mean ratio versus 0.8686 for direct classical search</div>
         </div>
         <div class="notebook-ribbon-item">
-          <div class="notebook-ribbon-label">Median speedup</div>
-          <div class="notebook-ribbon-value">2640×</div>
-          <div class="notebook-ribbon-note">0.256 ms GNN inference versus 675.9 ms direct classical search</div>
+          <div class="notebook-ribbon-label">Median end-to-end latency</div>
+          <div class="notebook-ribbon-value">0.256 ms</div>
+          <div class="notebook-ribbon-note">Versus 675.9 ms for direct classical search, about 2640x lower</div>
         </div>
         <div class="notebook-ribbon-item">
-          <div class="notebook-ribbon-label">Pathologic detection</div>
+          <div class="notebook-ribbon-label">Pathologic detection at selected threshold</div>
           <div class="notebook-ribbon-value">31 / 35</div>
           <div class="notebook-ribbon-note">With one false positive at the strongest operating point</div>
         </div>
@@ -837,8 +864,8 @@
       <div class="card-header">
         <div class="card-icon">▣</div>
         <div>
-          <h2>Project Story</h2>
-          <p class="card-desc">Read the repository as one paper-scale package: canonical thesis notebook first, then the QAOA and biomedical technical appendices.</p>
+          <h2>Interface Overview</h2>
+          <p class="card-desc">Read the repository as one manuscript-scale interface claim: integrated overview first, then the QAOA and biomedical technical appendices.</p>
         </div>
       </div>
 
@@ -847,8 +874,8 @@
       <div class="impact-grid">
         <article class="impact-card">
           <span class="impact-eyebrow">Canonical notebook</span>
-          <h3>Hybrid Quantum-Graph Learning Thesis</h3>
-          <p>This notebook is the main entry point for the project. It explains the core hypothesis, shows how the optimization and biomedical branches fit together, and frames the repository as one graph-conditioned research study rather than three disconnected demos.</p>
+          <h3>Integrated Interface Overview</h3>
+          <p>This notebook introduces graph-conditioned parameterization as the paper's central technical object and shows how the optimization and biomedical branches instantiate the same structure-to-parameter template.</p>
 
           <div class="impact-note">Use this notebook first if you want the thesis-level walkthrough before inspecting either branch in technical detail.</div>
 
@@ -859,8 +886,8 @@
 
         <article class="impact-card">
           <span class="impact-eyebrow">QAOA appendix</span>
-          <h3>Adaptive Quantum GCN</h3>
-          <p>This notebook starts from transcriptomic data, builds co-expression graphs, and asks whether graph structure can predict useful QAOA parameters for MaxCut while preserving held-out quality and substantially reducing per-instance search cost.</p>
+          <h3>QAOA Parameterization Appendix</h3>
+          <p>This notebook starts from transcriptomic data, builds co-expression graphs, and asks whether graph structure can predict useful depth-2 QAOA parameters for MaxCut while preserving held-out quality and reducing search cost.</p>
 
           <div class="impact-note">Use this notebook when the main question is optimization methodology, warm-start quality, or the held-out transcriptomic benchmark.</div>
 
@@ -871,8 +898,8 @@
 
         <article class="impact-card">
           <span class="impact-eyebrow">Biomedical appendix</span>
-          <h3>Adaptive BioGCN + ResidualClinicalGCN</h3>
-          <p>This notebook turns cardiotocography exams into a physiologic similarity graph and asks whether graph-based learning can improve pathologic-risk discrimination while preserving robustness analysis, threshold awareness, split-first evaluation discipline, and comparison against stronger tabular baselines.</p>
+          <h3>Clinical Risk Parameterization Appendix</h3>
+          <p>This notebook turns cardiotocography exams into a physiologic similarity graph and asks whether graph-based learning can produce useful pathologic-risk scores under threshold-aware evaluation, calibration analysis, and stronger tabular benchmarking.</p>
 
           <div class="impact-note">Use this notebook when the main question is biomedical validation, screening behavior, or the distinction between the benchmark and strongest operating-point models.</div>
 
@@ -989,31 +1016,6 @@
                 <div class="notebook-ribbon-item">
                   <div class="notebook-ribbon-label">Balanced acc.</div>
                   <div class="notebook-ribbon-value">0.942</div>
-                </div>
-              </div>
-            </div>
-          </article>
-        </a>
-
-        <a class="figure-link" href="website/notebooks_html/bio_demo.html" target="_blank">
-          <article class="figure-card">
-            <img src="website/notebooks_html/figures/bio_demo_aligned_biogcn_robustness.png" alt="Adaptive BioGCN robustness figure from the bio notebook" loading="lazy">
-            <div class="figure-body">
-              <span class="figure-label">Robustness benchmark</span>
-              <h3>95.49% +/- 0.97% across repeated seeded runs</h3>
-              <p>The benchmark BioGCN model is supported by repeated-seed evaluation on a fixed split, separating reproducibility evidence from the stronger residual operating point.</p>
-              <div class="notebook-ribbon figure-ribbon" aria-label="Robustness results">
-                <div class="notebook-ribbon-item">
-                  <div class="notebook-ribbon-label">Mean accuracy</div>
-                  <div class="notebook-ribbon-value">95.49%</div>
-                </div>
-                <div class="notebook-ribbon-item">
-                  <div class="notebook-ribbon-label">Std. dev.</div>
-                  <div class="notebook-ribbon-value">0.97%</div>
-                </div>
-                <div class="notebook-ribbon-item">
-                  <div class="notebook-ribbon-label">Protocol</div>
-                  <div class="notebook-ribbon-value">Repeated seeds</div>
                 </div>
               </div>
             </div>
@@ -1213,93 +1215,91 @@
         <div class="card-icon">📓</div>
         <div>
           <h2>Notebook Guide</h2>
-          <p class="card-desc">Use this section as the launch point for the canonical notebook and its two supporting technical appendices.</p>
+          <p class="card-desc">Use this section as a concise index to the integrated overview and the two technical appendices.</p>
         </div>
       </div>
 
-      <!-- Notebook quick-select cards -->
       <div class="notebook-grid">
-        <button class="nb-card nb-tab-btn active" data-nb="combined" onclick="showNotebook('combined', this)">
+        <a class="nb-card" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank" rel="noreferrer">
           <div class="nb-icon">🔬</div>
           <div class="nb-body">
-            <h3>Canonical Research Story</h3>
-            <p>Start here for the thesis-level walkthrough that connects GNN-informed QAOA warm starts and biomedical graph learning inside one coherent research study.</p>
+            <h3>Integrated Overview Notebook</h3>
+            <p>Start here for the paper-scale walkthrough that introduces graph-conditioned parameterization and shows how both empirical branches support the same interface claim.</p>
             <div class="nb-tags">
-              <span class="nb-tag">Canonical Notebook</span>
-              <span class="nb-tag">Integrated Narrative</span>
-              <span class="nb-tag">QAOA + Biomedical</span>
-              <span class="nb-tag">Paper-Scale Narrative</span>
+              <span class="nb-tag">Overview</span>
+              <span class="nb-tag">Interface Framing</span>
+              <span class="nb-tag">QAOA + Clinical</span>
             </div>
           </div>
           <div class="nb-arrow">▶</div>
-        </button>
+        </a>
 
-        <button class="nb-card nb-tab-btn" data-nb="qaoa" onclick="showNotebook('qaoa', this)">
+        <a class="nb-card" href="website/notebooks_html/qaoa_demo.html" target="_blank" rel="noreferrer">
           <div class="nb-icon">⚛</div>
           <div class="nb-body">
             <h3>QAOA Technical Appendix</h3>
-            <p>Use this notebook for the transcriptomic graph pipeline, the exact-statevector QAOA benchmark, and the learned warm-start model that predicts useful MaxCut angles from graph structure.</p>
+            <p>Use this notebook for the transcriptomic graph pipeline, the exact-statevector benchmark, and the learned warm-start model that predicts useful QAOA angles from graph structure.</p>
             <div class="nb-tags">
               <span class="nb-tag">Exact Statevector</span>
-              <span class="nb-tag">Adaptive Quantum GCN</span>
               <span class="nb-tag">Held-Out Benchmark</span>
+              <span class="nb-tag">Runtime + Ablation</span>
               <span class="nb-tag">MaxCut</span>
             </div>
           </div>
           <div class="nb-arrow">▶</div>
-        </button>
+        </a>
 
-        <button class="nb-card nb-tab-btn" data-nb="bio" onclick="showNotebook('bio', this)">
+        <a class="nb-card" href="website/notebooks_html/bio_demo.html" target="_blank" rel="noreferrer">
           <div class="nb-icon">🧬</div>
           <div class="nb-body">
             <h3>Biomedical Technical Appendix</h3>
-            <p>Use this notebook for the CTG similarity graph, the benchmark biomedical model, the residual extension, the leakage-aware screening evaluation workflow, and the graph-versus-tabular interpretation of the current results.</p>
+            <p>Use this notebook for the CTG similarity graph, the threshold-aware clinical evaluation workflow, and the graph-versus-tabular interpretation of the current screening results.</p>
             <div class="nb-tags">
-              <span class="nb-tag">Adaptive BioGCN</span>
               <span class="nb-tag">ResidualClinicalGCN</span>
-              <span class="nb-tag">10-NN Graph</span>
-              <span class="nb-tag">ROC / AUC</span>
-              <span class="nb-tag">Robustness Study</span>
+              <span class="nb-tag">Operating Point</span>
+              <span class="nb-tag">Calibration</span>
+              <span class="nb-tag">Tabular Baselines</span>
             </div>
           </div>
           <div class="nb-arrow">▶</div>
-        </button>
+        </a>
       </div>
 
-      <!-- Embedded notebook viewer -->
-      <div class="nb-viewer-container">
-        <div class="nb-viewer-header">
-          <span id="nb-viewer-title" class="nb-viewer-title">🔬 Canonical Research Story</span>
-          <div class="nb-viewer-actions">
-            <a id="nb-open-link" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank" class="btn btn-secondary btn-sm">Open selected notebook ↗</a>
-          </div>
-        </div>
-        <iframe
-          id="nb-iframe"
-          src="website/notebooks_html/quantum_ai_bio_combined.html"
-          class="nb-iframe"
-          title="Notebook viewer"
-          loading="lazy">
-        </iframe>
+      <div class="notebook-summary-grid" aria-label="Notebook result summaries">
+        <article class="notebook-summary-card">
+          <span class="impact-eyebrow">Overview</span>
+          <h3>One interface, two empirical settings</h3>
+          <p>The integrated notebook states the common template once and keeps the paper's scope explicit: structured graph input, learned parameterization, downstream objective.</p>
+          <ul class="notebook-summary-list">
+            <li>Defines the reusable graph-conditioned parameterization view</li>
+            <li>Connects the QAOA and clinical branches without claiming cross-domain transfer</li>
+            <li><a class="impact-link" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank" rel="noreferrer">Open overview notebook</a></li>
+          </ul>
+        </article>
+
+        <article class="notebook-summary-card">
+          <span class="impact-eyebrow">Optimization evidence</span>
+          <h3>Near-parity quality with a strong latency advantage</h3>
+          <p>The QAOA appendix is where the core optimization claim is defended with held-out evaluation, learned-baseline comparison, runtime measurements, and diagnostic plots.</p>
+          <ul class="notebook-summary-list">
+            <li>0.8682 mean held-out ratio versus 0.8686 for direct classical search</li>
+            <li>2640x lower median latency: 0.256 ms versus 675.9 ms</li>
+            <li><a class="impact-link" href="website/notebooks_html/qaoa_demo.html" target="_blank" rel="noreferrer">Open QAOA appendix</a></li>
+          </ul>
+        </article>
+
+        <article class="notebook-summary-card">
+          <span class="impact-eyebrow">Clinical evidence</span>
+          <h3>Threshold-aware screening behavior on CTG</h3>
+          <p>The biomedical appendix is where the screening claim is made concrete through held-out metrics, operating-point analysis, calibration, and comparison against stronger tabular baselines.</p>
+          <ul class="notebook-summary-list">
+            <li>98.8% accuracy, 0.942 balanced accuracy, and 0.978 ROC AUC</li>
+            <li>31 of 35 pathologic cases detected with one false positive</li>
+            <li><a class="impact-link" href="website/notebooks_html/bio_demo.html" target="_blank" rel="noreferrer">Open biomedical appendix</a></li>
+          </ul>
+        </article>
       </div>
     </section>
-
-    <script>
-      const NB_MAP = {
-        combined: { src: 'website/notebooks_html/quantum_ai_bio_combined.html', title: '🔬 Canonical Research Story' },
-        qaoa:     { src: 'website/notebooks_html/qaoa_demo.html',             title: '⚛ QAOA Technical Appendix' },
-        bio:      { src: 'website/notebooks_html/bio_demo.html',              title: '🧬 Biomedical Technical Appendix' }
-      };
-
-      function showNotebook(key, btn) {
-        const nb = NB_MAP[key];
-        document.getElementById('nb-iframe').src         = nb.src;
-        document.getElementById('nb-viewer-title').textContent = nb.title;
-        document.getElementById('nb-open-link').href     = nb.src;
-        document.querySelectorAll('.nb-tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      }
-    </script>
 
     <!-- Research summary -->
     <section class="card" id="summary-section">
