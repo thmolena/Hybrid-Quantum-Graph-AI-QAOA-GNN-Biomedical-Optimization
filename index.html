@@ -33,9 +33,20 @@
     }
 
     .hero-inner {
-      max-width: 840px;
+      max-width: 1180px;
       margin: 0 auto;
       text-align: left;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+      gap: 1.4rem;
+      align-items: start;
+    }
+
+    .hero-copy {
+      min-width: 0;
     }
 
     .hero-badge {
@@ -135,6 +146,100 @@
       background: #1f2937;
       border-color: #1f2937;
       color: #ffffff;
+    }
+
+    .hero-stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
+      gap: 0.85rem;
+      min-width: 0;
+    }
+
+    .hero-stage-main {
+      grid-row: 1 / span 2;
+      min-height: 100%;
+    }
+
+    .hero-stage-panel {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid #d6e4f4;
+      border-radius: 1.1rem;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(246, 250, 255, 0.98) 100%);
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+      text-decoration: none;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .hero-stage-panel:hover {
+      transform: translateY(-2px);
+      border-color: #aac5ec;
+      box-shadow: 0 20px 48px rgba(37, 99, 235, 0.12);
+    }
+
+    .hero-stage-panel:focus-visible {
+      outline: 3px solid rgba(37, 99, 235, 0.16);
+      outline-offset: 2px;
+    }
+
+    .hero-stage-panel img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      background: #edf4ff;
+    }
+
+    .hero-stage-body {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 0.45rem;
+      padding: 0.9rem 0.95rem 1rem;
+    }
+
+    .hero-stage-label {
+      display: inline-flex;
+      width: fit-content;
+      padding: 0.28rem 0.5rem;
+      border-radius: 999px;
+      background: #edf4ff;
+      color: #1e3a8a;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .hero-stage-panel h2 {
+      margin: 0;
+      color: #0f172a;
+      font-size: 1rem;
+      line-height: 1.28;
+    }
+
+    .hero-stage-panel p {
+      margin: 0;
+      color: #475569;
+      font-size: 0.84rem;
+      line-height: 1.55;
+    }
+
+    .hero-stage-metric {
+      margin-top: auto;
+      padding-top: 0.55rem;
+      border-top: 1px solid #e2ebf7;
+      color: #0f172a;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .hero-stage-metric strong {
+      color: #047857;
+      font-size: 0.95rem;
+      font-weight: 700;
     }
 
     .card {
@@ -795,11 +900,17 @@
     }
 
     @media (max-width: 760px) {
+      .hero-grid,
+      .hero-stage,
       .impact-grid,
       .notebook-summary-grid,
       .figure-grid,
       .demo-explainer {
         grid-template-columns: 1fr;
+      }
+
+      .hero-stage-main {
+        grid-row: auto;
       }
     }
 
@@ -813,47 +924,83 @@
   <!-- Hero -->
   <header class="hero">
     <div class="hero-inner">
-      <div class="hero-badge">Research Manuscript · Graph-Conditioned Parameterization</div>
-      <h1>Graph-Conditioned Parameterization as a Task-Agnostic Interface</h1>
-      <p class="hero-sub"><strong>Bridging combinatorial optimization and clinical prediction.</strong> This work studies graph-conditioned parameterization as a reusable interface in which graph neural networks act as structure-aware parameter generators whose outputs are consumed by downstream solvers or decision rules.</p>
-      <div class="hero-pills">
-        <span class="pill">QAOA</span>
-        <span class="pill">GNN / GCN</span>
-        <span class="pill">MaxCut</span>
-        <span class="pill">Genomics</span>
-        <span class="pill">Clinical AI</span>
-        <span class="pill">PyTorch</span>
-        <span class="pill">Exact Statevector</span>
-      </div>
-      <div class="notebook-ribbon hero-ribbon" aria-label="Representative prototype results">
-        <div class="notebook-ribbon-item">
-          <div class="notebook-ribbon-label">CTG held-out operating point</div>
-          <div class="notebook-ribbon-value">98.8%</div>
-          <div class="notebook-ribbon-note">ResidualClinicalGCN held-out accuracy</div>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="hero-badge">Evidence Atlas · Graph-Conditioned Parameterization</div>
+          <h1>Graph-Conditioned Parameterization as a Task-Agnostic Interface</h1>
+          <p class="hero-sub"><strong>One graph-to-decision story across transcriptomic optimization and clinical screening.</strong> The repository is organized as an evidence-first atlas: figures, notebooks, and the manuscript all present graph neural networks as structure-aware parameter generators whose outputs are consumed by downstream solvers or thresholded decision rules.</p>
+          <div class="hero-pills">
+            <span class="pill">QAOA</span>
+            <span class="pill">Graph Learning</span>
+            <span class="pill">Transcriptomics</span>
+            <span class="pill">Clinical Screening</span>
+            <span class="pill">MaxCut</span>
+            <span class="pill">PyTorch</span>
+            <span class="pill">Exact Simulation</span>
+          </div>
+          <div class="notebook-ribbon hero-ribbon" aria-label="Representative prototype results">
+            <div class="notebook-ribbon-item">
+              <div class="notebook-ribbon-label">CTG held-out operating point</div>
+              <div class="notebook-ribbon-value">98.8%</div>
+              <div class="notebook-ribbon-note">ResidualClinicalGCN held-out accuracy</div>
+            </div>
+            <div class="notebook-ribbon-item">
+              <div class="notebook-ribbon-label">QAOA held-out mean ratio</div>
+              <div class="notebook-ribbon-value">0.8682</div>
+              <div class="notebook-ribbon-note">Adapted GNN mean ratio versus 0.8686 for direct classical search</div>
+            </div>
+            <div class="notebook-ribbon-item">
+              <div class="notebook-ribbon-label">Median end-to-end latency</div>
+              <div class="notebook-ribbon-value">0.256 ms</div>
+              <div class="notebook-ribbon-note">Versus 675.9 ms for direct classical search, about 2640x lower</div>
+            </div>
+            <div class="notebook-ribbon-item">
+              <div class="notebook-ribbon-label">Pathologic detection at selected threshold</div>
+              <div class="notebook-ribbon-value">31 / 35</div>
+              <div class="notebook-ribbon-note">With one false positive at the strongest operating point</div>
+            </div>
+          </div>
+          <div class="notebook-jump-nav hero-nav" aria-label="Jump to landing page sections">
+            <a class="notebook-jump-link" href="#impact-section">Story</a>
+            <a class="notebook-jump-link" href="#figures-section">Figures</a>
+            <a class="notebook-jump-link" href="#demo-section">Demo</a>
+            <a class="notebook-jump-link" href="#notebooks-section">Notebooks</a>
+            <a class="notebook-jump-link paper-link" href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/blob/main/paper/research_paper.md" target="_blank" rel="noreferrer">Paper</a>
+            <a class="notebook-jump-link repo-link" href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank" rel="noreferrer">Repository</a>
+          </div>
         </div>
-        <div class="notebook-ribbon-item">
-          <div class="notebook-ribbon-label">QAOA held-out mean ratio</div>
-          <div class="notebook-ribbon-value">0.8682</div>
-          <div class="notebook-ribbon-note">Adapted GNN mean ratio versus 0.8686 for direct classical search</div>
+
+        <div class="hero-stage" aria-label="Evidence atlas previews">
+          <a class="hero-stage-panel hero-stage-main" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank" rel="noreferrer">
+            <img src="website/notebooks_html/figures/combined_transcriptomic_benchmark.png" alt="Integrated graph-conditioned evidence preview" loading="eager">
+            <div class="hero-stage-body">
+              <span class="hero-stage-label">Integrated view</span>
+              <h2>Shared graph-to-parameterization framing</h2>
+              <p>The combined notebook treats transcriptomic optimization and CTG screening as two instances of the same graph-conditioned interface.</p>
+              <div class="hero-stage-metric"><strong>1</strong> interface, <strong>2</strong> domains, distinct downstream objectives</div>
+            </div>
+          </a>
+
+          <a class="hero-stage-panel" href="website/notebooks_html/qaoa_demo.html" target="_blank" rel="noreferrer">
+            <img src="website/notebooks_html/figures/qaoa_demo_benchmark_overview.png" alt="Transcriptomic QAOA preview" loading="eager">
+            <div class="hero-stage-body">
+              <span class="hero-stage-label">Transcriptomic QAOA</span>
+              <h2>Held-out quality near direct search</h2>
+              <p>The adapted graph model preserves classical-quality depth-2 proposals on real-data graphs while sharply reducing inference cost.</p>
+              <div class="hero-stage-metric"><strong>0.8682</strong> held-out mean ratio</div>
+            </div>
+          </a>
+
+          <a class="hero-stage-panel" href="website/notebooks_html/bio_demo.html" target="_blank" rel="noreferrer">
+            <img src="website/notebooks_html/figures/bio_demo_heldout_evaluation.png" alt="Clinical CTG preview" loading="eager">
+            <div class="hero-stage-body">
+              <span class="hero-stage-label">Clinical screening</span>
+              <h2>Threshold-aware graph operating point</h2>
+              <p>The clinical branch emphasizes held-out discrimination, operating-point behavior, calibration, and robustness against stronger tabular baselines.</p>
+              <div class="hero-stage-metric"><strong>98.8%</strong> held-out accuracy</div>
+            </div>
+          </a>
         </div>
-        <div class="notebook-ribbon-item">
-          <div class="notebook-ribbon-label">Median end-to-end latency</div>
-          <div class="notebook-ribbon-value">0.256 ms</div>
-          <div class="notebook-ribbon-note">Versus 675.9 ms for direct classical search, about 2640x lower</div>
-        </div>
-        <div class="notebook-ribbon-item">
-          <div class="notebook-ribbon-label">Pathologic detection at selected threshold</div>
-          <div class="notebook-ribbon-value">31 / 35</div>
-          <div class="notebook-ribbon-note">With one false positive at the strongest operating point</div>
-        </div>
-      </div>
-      <div class="notebook-jump-nav hero-nav" aria-label="Jump to landing page sections">
-        <a class="notebook-jump-link" href="#impact-section">Story</a>
-        <a class="notebook-jump-link" href="#figures-section">Figures</a>
-        <a class="notebook-jump-link" href="#demo-section">Demo</a>
-        <a class="notebook-jump-link" href="#notebooks-section">Notebooks</a>
-        <a class="notebook-jump-link paper-link" href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/blob/main/paper/research_paper.md" target="_blank" rel="noreferrer">Paper</a>
-        <a class="notebook-jump-link repo-link" href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank" rel="noreferrer">Repository</a>
       </div>
     </div>
   </header>
@@ -864,12 +1011,12 @@
       <div class="card-header">
         <div class="card-icon">▣</div>
         <div>
-          <h2>Research Overview</h2>
-          <p class="card-desc">The central theme is graph-conditioned parameterization across transcriptomic optimization and clinical prediction.</p>
+          <h2>Atlas Overview</h2>
+          <p class="card-desc">The repository is organized around one evidence-first narrative across the manuscript, executed notebooks, and figure gallery.</p>
         </div>
       </div>
 
-      <p class="section-intro">The four panels below highlight the common analytical thread, the transcriptomic QAOA experiments, and the CTG screening experiments through the strongest quantitative findings and visual evidence.</p>
+      <p class="section-intro">These panels establish the shared framing first, then separate the two empirical branches so the optimization and biomedical evidence remain legible on their own terms.</p>
 
       <div class="impact-grid">
         <article class="impact-card">

@@ -1,223 +1,135 @@
 # Graph-Conditioned Parameterization as a Task-Agnostic Interface
 
-### Bridging Combinatorial Optimization and Clinical Prediction
+### An Evidence Atlas Across Transcriptomic Optimization and Clinical Screening
 
 [![Project Website](https://img.shields.io/badge/Project_Website-Open-0f766e?style=for-the-badge)](https://thmolena.github.io/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/)
+[![Paper Draft](https://img.shields.io/badge/Paper-Research_Draft-1d4ed8?style=for-the-badge)](paper/research_paper.md)
 
-Interactive figures, notebook renders, and supplementary material are available on the project website.
+This repository presents one graph-to-decision story through three linked views:
 
-## Abstract
+- transcriptomic co-expression graphs used to generate depth-2 QAOA parameters for MaxCut
+- cardiotocography similarity graphs used to generate pathologic-risk scores for screening analysis
+- an integrated notebook and manuscript that frame both as **graph-conditioned parameterization**
 
-This work studies whether graph-conditioned learning can serve as a reusable computational interface across two different problems: QAOA parameter initialization on transcriptomic co-expression graphs and graph-based biomedical screening on cardiotocography data.
+The project is scoped as a research study. It does **not** claim quantum advantage, clinical readiness, or cross-domain transfer.
 
-On six held-out transcriptomic graphs, the adapted GNN initializer achieves a mean depth-2 QAOA approximation ratio of 0.8682 ± 0.0312, versus 0.8686 ± 0.0308 for direct classical search, while reducing median end-to-end latency from 675.9 ms to 0.256 ms. In the biomedical branch, the strongest graph model reaches 98.8% held-out accuracy and 0.942 balanced accuracy, while the expanded tabular baseline suite now includes calibrated logistic regression, calibrated random forest, XGBoost, and LightGBM variants.
+## Evidence Atlas
 
-The project is best read as a research study with explicit scope limits: it does not claim quantum advantage, clinical readiness, or head-to-head superiority over the latest learned-QAOA literature. The accompanying manuscript in `paper/research_paper.md` is the paper-form version of this positioning.
+<table>
+  <tr>
+    <td width="50%">
+      <img src="website/notebooks_html/figures/qaoa_demo_benchmark_overview.png" alt="Held-out QAOA benchmark overview" />
+      <p><strong>Transcriptomic QAOA benchmark.</strong> Adapted GNN mean ratio: <strong>0.8682</strong>. Direct classical search: <strong>0.8686</strong>.</p>
+    </td>
+    <td width="50%">
+      <img src="website/notebooks_html/figures/qaoa_demo_graph_conditioned_initialization.png" alt="QAOA speed-quality tradeoff" />
+      <p><strong>Inference cost reduction.</strong> Median latency falls from <strong>675.9 ms</strong> to <strong>0.256 ms</strong>, about <strong>2640x</strong> lower.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="website/notebooks_html/figures/bio_demo_heldout_evaluation.png" alt="Held-out CTG evaluation" />
+      <p><strong>Clinical operating point.</strong> ResidualClinicalGCN reaches <strong>98.8%</strong> held-out accuracy and <strong>0.942</strong> balanced accuracy.</p>
+    </td>
+    <td width="50%">
+      <img src="website/notebooks_html/figures/combined_transcriptomic_benchmark.png" alt="Integrated benchmark figure" />
+      <p><strong>Integrated framing.</strong> The combined notebook places optimization and screening inside one graph-to-parameterization interface.</p>
+    </td>
+  </tr>
+</table>
 
-## 1. Motivation
+## System View
 
-Many real-world biomedical problems are naturally graph-structured and combinatorial, including:
+| Branch | Input graph | Learned parameterization | Downstream objective | Main evidence |
+| --- | --- | --- | --- | --- |
+| QAOA | prostate transcriptomic co-expression graph | depth-2 angle vector $(\gamma_1, \gamma_2, \beta_1, \beta_2)$ | expected MaxCut value | held-out approximation ratio, ablations, runtime |
+| Biomedical | CTG patient-similarity graph | node-level pathologic-risk scores | thresholded screening behavior | accuracy, balanced accuracy, calibration, robustness |
+| Integrated | shared graph-conditioned interface | task-specific decision variables | branch-specific downstream evaluation | comparative framing across both domains |
 
-* gene co-expression and pathway interaction networks
-* patient similarity and cohort stratification
-* molecular interaction and therapeutic selection graphs
+## Notebook Atlas
 
-These problems exhibit:
+### 1. Integrated notebook
 
-* high-dimensional relational structure
-* non-convex combinatorial objectives
-* sensitivity to initialization and inductive bias
+[notebooks/quantum_ai_bio_combined.ipynb](notebooks/quantum_ai_bio_combined.ipynb)
 
-QAOA offers a principled quantum approach to combinatorial optimization, but its performance is highly dependent on parameter initialization. This work explores whether learned graph representations can provide meaningful inductive bias for QAOA parameterization.
+Use this notebook when you want the full project narrative in one place.
 
-## 2. Core Hypothesis
+- compares both branches under one interface statement
+- surfaces the strongest combined figures near the top
+- keeps the distinction between shared framing and domain-specific evaluation explicit
 
-Structure-aware embeddings learned by GNNs can compress graph structure into actionable downstream signals, yielding competitive QAOA warm starts in one branch and clinically meaningful graph-based discrimination in another.
+### 2. Transcriptomic QAOA notebook
 
-## 3. Method Overview
+[notebooks/qaoa_demo.ipynb](notebooks/qaoa_demo.ipynb)
 
-The framework consists of three tightly coupled components:
+Use this notebook when you want the optimization evidence in detail.
 
-### 3.1 Graph Representation Learning
+- real transcriptomic co-expression graphs
+- exact depth-2 statevector simulation
+- learned-initializer comparison, ablations, and landscape diagnostics
 
-* GNN encodes graph topology and node features
-* produces embeddings capturing structural and relational information
+### 3. CTG screening notebook
 
-### 3.2 Quantum Optimization (QAOA)
+[notebooks/bio_demo.ipynb](notebooks/bio_demo.ipynb)
 
-* optimization problem encoded as a cost Hamiltonian
-* variational parameters determine solution quality
+Use this notebook when you want the biomedical evidence in detail.
 
-### 3.3 Hybrid Integration
+- split-first preprocessing and k-NN graph construction
+- threshold-aware evaluation and calibration analysis
+- graph-versus-tabular benchmarking with robustness and saliency audits
 
-* GNN outputs are used to initialize QAOA parameters as a warm start
-* the shared graph representation also supports biomedical prediction tasks
+## Representative Results
 
-## 4. System Architecture
-
-```text
-Graph Data
-   -> GNN Encoder
-      -> (A) QAOA Parameter Initialization -> QAOA Circuit -> Optimization Output
-      -> (B) Graph Classifier -> Biomedical Prediction Output
-```
-
-This is a unified graph-conditioned learning framework, not a collection of separate pipelines.
-
-## 5. Evidence Snapshot
-
-| Branch | Main result | Interpretation |
+| Result | Value | Interpretation |
 | --- | --- | --- |
-| QAOA | 0.8682 ± 0.0312 vs. 0.8686 ± 0.0308 classical | Quality near parity, value is in the compute-quality tradeoff |
-| QAOA runtime | 0.256 ms median vs. 675.9 ms classical | About 2640x lower median latency |
-| Biomedical graph model | 98.8% accuracy, 0.942 balanced accuracy | Strong graph-based operating point |
-| Biomedical tabular benchmark | 99.06% accuracy, 0.956 balanced accuracy | Calibrated LightGBM is the strongest current tabular baseline |
+| QAOA held-out mean ratio | 0.8682 | Near-parity with 0.8686 for direct classical search |
+| QAOA median latency | 0.256 ms | About 2640x lower than direct classical search |
+| Prior-style learned QAOA baseline | 0.8208 | Faster than search but weaker than the graph-conditioned model |
+| CTG graph operating point | 98.8% accuracy, 0.942 balanced accuracy | Strong graph-based screening behavior |
+| Strongest tabular CTG baseline | 99.06% accuracy, 0.956 balanced accuracy | Calibrated LightGBM remains slightly stronger on this split |
 
-## 6. Experimental Design
+## Project Surfaces
 
-We evaluate three regimes:
+- Website: [index.html](index.html)
+- Paper draft: [paper/research_paper.md](paper/research_paper.md)
+- Notebook exports: [website/notebooks_html](website/notebooks_html)
+- QAOA baselines: [experiments/qaoa/run_qaoa_baselines.py](experiments/qaoa/run_qaoa_baselines.py)
+- Biomedical baselines: [experiments/biomedical/run_bio_baselines.py](experiments/biomedical/run_bio_baselines.py)
 
-| Method | Description |
-| --- | --- |
-| Classical Baselines | Standard optimization and machine-learning approaches |
-| QAOA Baseline | QAOA with random or heuristic initialization |
-| Hybrid Method | GNN-informed QAOA initialization plus graph-based prediction |
+## Reproducibility
 
-The strongest narrative is organized around one canonical notebook, supported by branch-specific technical appendices and extracted baseline scripts.
-
-## 7. Evaluation Metrics
-
-### Optimization (QAOA branch)
-
-* approximation ratio
-* objective value
-* convergence behavior
-
-### Biomedical Prediction
-
-* accuracy and balanced accuracy
-* ROC AUC
-* sensitivity at clinically relevant operating points
-
-## 8. Results
-
-| Method | Result | Interpretation |
-| --- | --- | --- |
-| Classical QAOA | 0.8686 ± 0.0308 | Exact held-out reference |
-| GNN-Informed QAOA | 0.8682 ± 0.0312 | Retains 99.95% of classical quality |
-| Best tabular biomedical baseline | 99.06% accuracy, 0.956 balanced accuracy | Calibrated LightGBM currently leads the non-graph table |
-| Best graph biomedical model | 98.8% accuracy, 0.942 balanced accuracy | Strong graph operating point with 31/35 pathologic cases detected |
-
-### Key Takeaways
-
-* GNN initialization is competitive, not superior, and the key benefit is inference efficiency
-* the QAOA claim is strengthened by explicit ablation, runtime, and convergence evidence
-* the biomedical branch is now benchmarked against stronger tabular baselines rather than only lightweight comparators
-* biomedical results remain retrospective and cohort-specific
-
-## 9. Comparison to Prior Learned-QAOA Work
-
-Recent learned-initialization papers such as Graph Learning for Parameter Prediction of Quantum Approximate Optimization Algorithm, QSeer: A Quantum-Inspired Graph Neural Network for Parameter Initialization in Quantum Approximate Optimization Algorithm Circuits, and Conditional Diffusion-based Parameter Generation for Quantum Approximate Optimization Algorithm push more directly on learned QAOA parameter generation itself. This study makes a narrower claim. Its distinguishing contribution is the combination of biologically derived graph instances, held-out quality and runtime analysis, explicit ablations, and a shared graph-conditioned framing that also supports biomedical evaluation. A direct experimental comparison to those learned-QAOA methods remains future work.
-
-## 10. Contributions
-
-### Technical
-
-* concrete prototype linking GNN embeddings to QAOA initialization
-* unified treatment of optimization and prediction under graph learning
-
-### Conceptual
-
-* reframes QAOA initialization as a representation learning problem
-* positions biomedical modeling and quantum optimization under a shared graph-conditioned paradigm
-
-### Practical
-
-* end-to-end prototype spanning graph learning, quantum simulation, and biomedical evaluation
-
-## 11. Limitations
-
-* QAOA experiments are limited to small-scale exact simulation
-* no claim of quantum advantage is made
-* results are not hardware-validated
-* biomedical experiments are retrospective and cohort-specific
-* the strongest tabular biomedical baselines are currently as strong as or stronger than the graph models on this dataset
-* direct head-to-head comparison with recent learned-QAOA papers is still missing
-* the pipeline remains partially notebook-driven rather than fully automated
-
-## 12. Future Work
-
-### Research
-
-* scaling to larger graphs and harder optimization regimes
-* formal ablations on when GNN initialization is beneficial
-* theoretical analysis of learned initialization landscapes
-
-### Quantum
-
-* integration with hardware backends or realistic noise models
-* benchmarking against recent learned-QAOA initialization methods and stronger classical optimizers
-
-### Biomedical
-
-* external validation on independent cohorts
-* expansion to molecular and multi-modal graph data
-* calibration-focused comparison between graph and tabular models
-
-### Engineering
-
-* fully reproducible experiment pipelines
-* modular experiment configuration system
-* improved packaging and deployment
-
-## 13. Implementation
-
-### Stack
-
-* Python
-* PyTorch
-* NumPy, SciPy, pandas, and scikit-learn
-* custom QAOA simulator
-
-Optional:
-
-* PyTorch Geometric
-
-## 14. Project Structure
-
-```text
-notebooks/      # Core experiments and demonstrations
-experiments/    # Scripted baselines
-src/            # Models, simulators, utilities
-data/           # Biomedical datasets
-outputs/        # Results and artifacts
-paper/          # Manuscript draft
-docs/           # Research analysis and planning
-website/        # Demo site and visualizations
-```
-
-## 15. Reproducibility
-
-Install:
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Run core notebook:
+Run the main notebooks:
 
 ```bash
 jupyter notebook notebooks/quantum_ai_bio_combined.ipynb
+jupyter notebook notebooks/qaoa_demo.ipynb
+jupyter notebook notebooks/bio_demo.ipynb
 ```
 
-Run experiments:
+Run the baseline scripts:
 
 ```bash
 python experiments/qaoa/run_qaoa_baselines.py
 python experiments/biomedical/run_bio_baselines.py
 ```
 
-For the manuscript-oriented version of the project narrative, see `paper/research_paper.md`.
+## Repository Layout
+
+```text
+notebooks/      core analyses and demonstration notebooks
+experiments/    baseline scripts and extracted evaluations
+src/            models, simulators, utilities, and serving code
+data/           source biomedical and transcriptomic inputs
+outputs/        processed datasets, tables, and generated artifacts
+paper/          manuscript draft
+website/        static site and exported notebook HTML
+```
 
 ## License
 

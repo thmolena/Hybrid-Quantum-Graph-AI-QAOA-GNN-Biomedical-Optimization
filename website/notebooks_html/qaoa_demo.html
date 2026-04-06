@@ -7802,14 +7802,35 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Graph-Conditioned-Parameterization-for-QAOA-on-Transcriptomic-Graphs">Graph-Conditioned Parameterization for QAOA on Transcriptomic Graphs<a class="anchor-link" href="#Graph-Conditioned-Parameterization-for-QAOA-on-Transcriptomic-Graphs">¶</a></h1><p><strong>Depth-2 QAOA Experiments on Transcriptomic Co-Expression Graphs</strong></p>
+<h1 id="Graph-Conditioned-Parameterization-Atlas:-Optimization-Branch">Graph-Conditioned Parameterization Atlas: Optimization Branch<a class="anchor-link" href="#Graph-Conditioned-Parameterization-Atlas:-Optimization-Branch">¶</a></h1><p><strong>Depth-2 QAOA on Transcriptomic Co-Expression Graphs</strong></p>
 <hr/>
-<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This analysis studies whether graph-conditioned parameterization can predict depth-2 QAOA angles for real transcriptomic co-expression graphs while preserving approximation quality relative to direct classical search. The emphasis is on held-out approximation ratio, learned-initializer comparisons, optimization geometry, and runtime.</p>
-<h2 id="Experimental-Scope">Experimental Scope<a class="anchor-link" href="#Experimental-Scope">¶</a></h2><ul>
-<li>Real transcriptomic co-expression graphs derived from prostate expression data.</li>
-<li>Exact depth-2 statevector simulation for MaxCut.</li>
-<li>Comparisons against direct classical search, heuristic initialization, graph-ablated variants, and a prior-style learned regressor.</li>
-</ul>
+<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This notebook presents the optimization branch of the graph-conditioned parameterization atlas. Transcriptomic co-expression graphs are mapped to depth-2 QAOA angle vectors, and those learned proposals are evaluated through held-out approximation quality, runtime, ablations, and optimization diagnostics.</p>
+<h2 id="System-View">System View<a class="anchor-link" href="#System-View">¶</a></h2><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Instantiation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Input graph</td>
+<td>Transcriptomic co-expression graph derived from prostate expression data</td>
+</tr>
+<tr>
+<td>Learned parameterization</td>
+<td>Depth-2 angle vector $(\gamma_1, \gamma_2, \beta_1, \beta_2)$</td>
+</tr>
+<tr>
+<td>Downstream objective</td>
+<td>Expected MaxCut value under exact simulation</td>
+</tr>
+<tr>
+<td>Main evidence</td>
+<td>Held-out ratio, quality retention, runtime, ablations, landscape diagnostics</td>
+</tr>
+</tbody>
+</table>
 <h2 id="Results-at-a-Glance">Results at a Glance<a class="anchor-link" href="#Results-at-a-Glance">¶</a></h2><table>
 <thead>
 <tr>
@@ -7848,11 +7869,10 @@ a.anchor-link {
 </tr>
 </tbody>
 </table>
-<h2 id="Experimental-Questions">Experimental Questions<a class="anchor-link" href="#Experimental-Questions">¶</a></h2><ul>
-<li>How closely can learned graph-conditioned angles match direct classical depth-2 search on held-out graphs?</li>
-<li>How much of the performance depends on graph edges, node features, and transcriptomic adaptation?</li>
-<li>What latency reduction is obtained relative to direct search?</li>
-<li>What do the landscape and state-concentration diagnostics reveal about the learned proposals?</li>
+<h2 id="Reading-Path">Reading Path<a class="anchor-link" href="#Reading-Path">¶</a></h2><ul>
+<li>Start with the signal gallery to inspect the benchmark figures before stepping into the implementation cells.</li>
+<li>Use the roadmap to move from graph construction and representative setup to held-out comparison and then to diagnostics.</li>
+<li>Interpret runtime and quality together; the main claim is the tradeoff, not unconditional superiority.</li>
 </ul>
 </div>
 </div>
@@ -7864,7 +7884,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Experimental-Roadmap">Experimental Roadmap<a class="anchor-link" href="#Experimental-Roadmap">¶</a></h2><p>The analysis proceeds from graph construction and representative-problem setup to held-out evaluation, initializer comparison, and diagnostic analysis.</p>
+<h2 id="Reading-Map">Reading Map<a class="anchor-link" href="#Reading-Map">¶</a></h2><p>The notebook proceeds from transcriptomic graph construction and representative-problem setup to held-out evaluation, initializer comparison, and diagnostic analysis.</p>
 <table>
 <thead>
 <tr>
@@ -7906,7 +7926,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Visual-Evidence-Gallery">Visual Evidence Gallery<a class="anchor-link" href="#Visual-Evidence-Gallery">¶</a></h2><p>These saved figures surface the strongest notebook evidence before the implementation details. The later result sections reproduce the same figures live; the gallery exists so the exported HTML and the notebook opening both carry the most important visual record.</p>
+<h2 id="Signal-Gallery">Signal Gallery<a class="anchor-link" href="#Signal-Gallery">¶</a></h2><p>These saved figures surface the strongest evidence immediately, matching the repository landing page and manuscript draft. The later result sections reproduce the same visuals from executable analysis cells, but the gallery makes the opening screen evidence-first rather than code-first.</p>
 <h3 id="Held-Out-Benchmark-Overview">Held-Out Benchmark Overview<a class="anchor-link" href="#Held-Out-Benchmark-Overview">¶</a></h3><p><img alt="Three-panel benchmark figure summarizing median latency across held-out transcriptomic graphs, the representative depth-2 output-state concentration, and per-graph approximation-ratio comparisons between classical search, the adapted GNN, and the legacy transfer baseline." src="figures/qaoa_demo_benchmark_overview.png"/></p>
 <h3 id="Landscape-Geometry">Landscape Geometry<a class="anchor-link" href="#Landscape-Geometry">¶</a></h3><p><img alt="Two-panel landscape-geometry figure showing the distribution of values in the representative depth-2 slice and the fraction of slice grid points that remain near the optimum." src="figures/qaoa_demo_landscape_geometry.png"/></p>
 <h3 id="Quantum-State-Concentration">Quantum State Concentration<a class="anchor-link" href="#Quantum-State-Concentration">¶</a></h3><p><img alt="Two-panel state-concentration figure comparing cut value against QAOA measurement probability and showing the cumulative concentration of probability mass on high-quality bitstrings versus a uniform baseline." src="figures/qaoa_demo_state_concentration.png"/></p>
@@ -8006,7 +8026,7 @@ $$U_B(\beta) = e^{-i\beta B} = \prod_{i=1}^n e^{-i\beta X_i} = \prod_{i=1}^n R_X
 <h2 id="1A.-Quantum-Foundations">1A. Quantum Foundations<a class="anchor-link" href="#1A.-Quantum-Foundations">¶</a></h2><p>The previous section introduced the formal mathematical notation. This bridge section translates every key idea into everyday language before you move on. Read it alongside the formal section, not instead of it.</p>
 <hr/>
 <h3 id="Qubits">Qubits<a class="anchor-link" href="#Qubits">¶</a></h3><p>A classical bit is like a coin lying flat on a table: it is either heads (0) or tails (1).</p>
-<p>A qubit is like a coin that is spinning in the air: while it spins, it carries both possibilities at once. When you catch it (measure it), it lands on one side — and from that point it behaves like a regular bit.</p>
+<p>A qubit is like a coin that is spinning in the air: while it spins, it carries both possibilities at once. When you catch it (measure it), it lands on one side, and from that point it behaves like a regular bit.</p>
 <p>The fractions $|\alpha|^2$ and $|\beta|^2$ in the formal section just say:</p>
 <ul>
 <li>$|\alpha|^2$ is the probability of landing on 0</li>
@@ -8015,11 +8035,11 @@ $$U_B(\beta) = e^{-i\beta B} = \prod_{i=1}^n e^{-i\beta X_i} = \prod_{i=1}^n R_X
 <p>Because one of those must happen, the two probabilities must add up to exactly 1. That is why $|\alpha|^2 + |\beta|^2 = 1$.</p>
 <hr/>
 <h3 id="Multiple-qubits:-the-exponential-advantage">Multiple qubits: the exponential advantage<a class="anchor-link" href="#Multiple-qubits:-the-exponential-advantage">¶</a></h3><p>When you have $n$ qubits together, the number of "spinning coin" combinations grows exponentially. With 6 qubits there are $2^6 = 64$ possible states. With 20 qubits there are $2^{20} \approx 1{,}000{,}000$ states.</p>
-<p>The quantum state vector stores one complex number for each of these combinations. So the simulator in this notebook stores 64 complex numbers for $n=6$ qubits.</p>
+<p>The quantum state vector stores one complex number for each of these combinations. So the simulator here stores 64 complex numbers for $n=6$ qubits.</p>
 <p>This exponential growth is exactly why quantum computers could eventually outperform classical ones on certain problems: they can represent and manipulate an exponentially large space in a compact physical system.</p>
 <hr/>
 <h3 id="Quantum-gates:-rotating-the-coin-mid-spin">Quantum gates: rotating the coin mid-spin<a class="anchor-link" href="#Quantum-gates:-rotating-the-coin-mid-spin">¶</a></h3><p>A quantum gate is just a transformation applied to qubits while they are still in superposition.</p>
-<p>The <strong>Hadamard gate (H)</strong> is the starting gate used in QAOA. It takes a qubit sitting at 0 and puts it exactly halfway between 0 and 1 — an equal superposition. Applied to all $n$ qubits at once, the whole register is now in an equal mix of all $2^n$ possible bit strings. That is the starting point for QAOA.</p>
+<p>The <strong>Hadamard gate (H)</strong> is the starting gate used in QAOA. It takes a qubit sitting at 0 and puts it exactly halfway between 0 and 1, an equal superposition. Applied to all $n$ qubits at once, the whole register is now in an equal mix of all $2^n$ possible bit strings. That is the starting point for QAOA.</p>
 <p>The <strong>R_Z</strong> and <strong>R_X</strong> gates are rotation gates. They rotate the qubit state by a controllable angle. Think of tilting the spinning coin in a specific direction by a specific amount.</p>
 <p>In QAOA:</p>
 <ul>
@@ -8029,7 +8049,7 @@ $$U_B(\beta) = e^{-i\beta B} = \prod_{i=1}^n e^{-i\beta X_i} = \prod_{i=1}^n R_X
 <hr/>
 <h3 id="The-two-parameters-gamma-and-beta">The two parameters gamma and beta<a class="anchor-link" href="#The-two-parameters-gamma-and-beta">¶</a></h3><p>$\gamma$ (gamma) controls the cost evolution. It sets how strongly the circuit "feels" the graph structure when it evolves. Large $\gamma$ means the problem cost has a big effect on the quantum state; small $\gamma$ means a weaker effect.</p>
 <p>$\beta$ (beta) controls the mixing evolution. It sets how much the circuit explores all possibilities versus focusing. After the cost gates have biased the state toward good solutions, the mixer adjusts how far the state spreads out.</p>
-<p>Together, finding the right $(\gamma, \beta)$ pair is the main challenge QAOA solves. That is precisely what this notebook compares: finding them by classical trial-and-error versus predicting them with a GNN.</p>
+<p>Together, finding the right $(\gamma, \beta)$ pair is the main challenge QAOA solves. That is precisely what this analysis compares: finding them by classical trial-and-error versus predicting them with a GNN.</p>
 <hr/>
 <h3 id="The-QAOA-circuit-as-a-recipe">The QAOA circuit as a recipe<a class="anchor-link" href="#The-QAOA-circuit-as-a-recipe">¶</a></h3><p>At depth $p=1$, the QAOA circuit follows this exact sequence:</p>
 <ol>
@@ -8041,7 +8061,7 @@ $$U_B(\beta) = e^{-i\beta B} = \prod_{i=1}^n e^{-i\beta X_i} = \prod_{i=1}^n R_X
 <p>The measurement gives a bit string, e.g. <code>010110</code>, which is interpreted as an assignment of nodes to Group A (0 bits) and Group B (1 bits). The number of cut edges for that bit string is the score.</p>
 <p>Running the circuit many times and averaging the scores gives the expected cut value $\langle C \rangle$. Maximizing that quantity over $(\gamma, \beta)$ is the optimization problem.</p>
 <hr/>
-<h3 id="Mental-model-to-carry-forward">Mental model to carry forward<a class="anchor-link" href="#Mental-model-to-carry-forward">¶</a></h3><p>For the rest of this notebook, keep this single picture in mind:</p>
+<h3 id="Mental-model-to-carry-forward">Mental model to carry forward<a class="anchor-link" href="#Mental-model-to-carry-forward">¶</a></h3><p>For the rest of this analysis, keep this single picture in mind:</p>
 <ul>
 <li>The quantum circuit produces a probability distribution over all $2^n$ bit strings.</li>
 <li>Each bit string represents one possible way to split the graph nodes.</li>
@@ -8115,13 +8135,13 @@ $$U_B(\beta) = e^{-i\beta B} = \prod_{i=1}^n e^{-i\beta X_i} = \prod_{i=1}^n R_X
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="2A.-MaxCut-%E2%80%94-From-Puzzle-to-Quantum-Hamiltonian">2A. MaxCut — From Puzzle to Quantum Hamiltonian<a class="anchor-link" href="#2A.-MaxCut-%E2%80%94-From-Puzzle-to-Quantum-Hamiltonian">¶</a></h2><p>The formal section above is dense. This bridge section rebuilds the same ideas in plain language and links them to the real genomics workflow used later in the notebook.</p>
+<h2 id="2A.-MaxCut-%E2%80%94-From-Puzzle-to-Quantum-Hamiltonian">2A. MaxCut — From Puzzle to Quantum Hamiltonian<a class="anchor-link" href="#2A.-MaxCut-%E2%80%94-From-Puzzle-to-Quantum-Hamiltonian">¶</a></h2><p>The formal section above is dense. This bridge section rebuilds the same ideas in plain language and links them to the real genomics workflow used later in the analysis.</p>
 <hr/>
-<h3 id="What-is-MaxCut-in-this-notebook?">What is MaxCut in this notebook?<a class="anchor-link" href="#What-is-MaxCut-in-this-notebook?">¶</a></h3><p>MaxCut is still a graph partitioning problem, but here the graph is a <strong>gene co-expression network</strong>. Each node is one selected gene, and each edge marks a strong pairwise expression relationship in the cohort.</p>
+<h3 id="What-is-MaxCut-here?">What is MaxCut here?<a class="anchor-link" href="#What-is-MaxCut-here?">¶</a></h3><p>MaxCut is still a graph partitioning problem, but here the graph is a <strong>gene co-expression network</strong>. Each node is one selected gene, and each edge marks a strong pairwise expression relationship in the cohort.</p>
 <p>The optimization question is therefore not abstract. It asks how the graph of coordinated gene activity can be split into two strongly separated groups.</p>
 <hr/>
 <h3 id="Why-is-that-useful?">Why is that useful?<a class="anchor-link" href="#Why-is-that-useful?">¶</a></h3><p>In a biological network, strong connections often indicate genes that move together across patients. Partitioning such a graph can highlight competing or complementary structure in the data.</p>
-<p>This notebook does not claim that MaxCut is the only or definitive genomics objective. Instead, it uses MaxCut as a clean and interpretable graph-optimization testbed built from real transcriptomic measurements.</p>
+<p>This analysis does not claim that MaxCut is the only or definitive genomics objective. Instead, it uses MaxCut as a clean and interpretable graph-optimization testbed built from real transcriptomic measurements.</p>
 <hr/>
 <h3 id="Converting-MaxCut-into-a-score-formula">Converting MaxCut into a score formula<a class="anchor-link" href="#Converting-MaxCut-into-a-score-formula">¶</a></h3><p>The formal section introduced the score</p>
 <p>$$C(\mathbf{z}) = \sum_{(u,v)\in E} \frac{1 - z_u z_v}{2}$$</p>
@@ -8147,7 +8167,7 @@ $$U_B(\beta) = e^{-i\beta B} = \prod_{i=1}^n e^{-i\beta X_i} = \prod_{i=1}^n R_X
 <p>$$r = \frac{\text{expected cut}}{\text{exact MaxCut}}$$</p>
 <p>A value near 1.0 means the QAOA state is placing high probability on strong graph partitions. Lower values indicate that either the circuit depth is limited, the angle choice is weaker, or the learned predictor has not fully captured the graph structure.</p>
 <hr/>
-<h3 id="Key-takeaway-before-the-code">Key takeaway before the code<a class="anchor-link" href="#Key-takeaway-before-the-code">¶</a></h3><p>The remainder of the notebook derives graph instances from a real prostate gene-expression dataset, studies one full-cohort graph in detail, and then evaluates several patient-resampled graphs to compare classical QAOA parameter search with GNN-predicted parameters.</p>
+<h3 id="Key-takeaway-before-the-code">Key takeaway before the code<a class="anchor-link" href="#Key-takeaway-before-the-code">¶</a></h3><p>The remainder of the analysis derives graph instances from a real prostate gene-expression dataset, studies one full-cohort graph in detail, and then evaluates several patient-resampled graphs to compare classical QAOA parameter search with GNN-predicted parameters.</p>
 <p>The main outputs to track are:</p>
 <ul>
 <li>expected cut $\langle C \rangle$,</li>
@@ -8317,14 +8337,14 @@ Independent rotations $R_X(2\beta)$ on each qubit — $O(n)$ operations.</p>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="4A.-How-to-Read-the-Code-Cells">4A. How to Read the Code Cells<a class="anchor-link" href="#4A.-How-to-Read-the-Code-Cells">¶</a></h2><p>The code cells now implement a stronger genomics-first workflow: build a real transcriptomic graph family, solve depth-2 QAOA exactly where needed, adapt a graph model on separate resampled graphs, and then evaluate on held-out graphs.</p>
 <hr/>
-<h3 id="Cell-1:-Imports-and-environment-checks">Cell 1: Imports and environment checks<a class="anchor-link" href="#Cell-1:-Imports-and-environment-checks">¶</a></h3><p>This cell loads the numerical, plotting, optimization, and learning libraries used throughout the notebook, resolves the project root, and imports the repository's <code>SimpleGCN</code> model.</p>
-<h3 id="Cell-2:-Legacy-checkpoint-plus-adapted-model-shell">Cell 2: Legacy checkpoint plus adapted-model shell<a class="anchor-link" href="#Cell-2:-Legacy-checkpoint-plus-adapted-model-shell">¶</a></h3><p>This cell loads the repository's original depth-1 checkpoint for historical comparison, then instantiates the stronger <strong>Adaptive Quantum GCN</strong> model shell that will be adapted inside the notebook.</p>
+<h3 id="Cell-1:-Imports-and-environment-checks">Cell 1: Imports and environment checks<a class="anchor-link" href="#Cell-1:-Imports-and-environment-checks">¶</a></h3><p>This cell loads the numerical, plotting, optimization, and learning libraries used throughout the analysis, resolves the project root, and imports the repository's <code>SimpleGCN</code> model.</p>
+<h3 id="Cell-2:-Legacy-checkpoint-plus-adapted-model-shell">Cell 2: Legacy checkpoint plus adapted-model shell<a class="anchor-link" href="#Cell-2:-Legacy-checkpoint-plus-adapted-model-shell">¶</a></h3><p>This cell loads the repository's original depth-1 checkpoint for historical comparison, then instantiates the stronger <strong>Adaptive Quantum GCN</strong> model shell that will be adapted in this workflow.</p>
 <p>What matters here is the separation of roles:</p>
 <ul>
 <li>the <strong>legacy checkpoint</strong> represents the old transfer baseline,</li>
 <li>the <strong>Adaptive Quantum GCN shell</strong> is the model that will be trained on transcriptomic graph instances.</li>
 </ul>
-<h3 id="Cell-3:-Computational-engine">Cell 3: Computational engine<a class="anchor-link" href="#Cell-3:-Computational-engine">¶</a></h3><p>This cell defines the reusable machinery for the rest of the notebook:</p>
+<h3 id="Cell-3:-Computational-engine">Cell 3: Computational engine<a class="anchor-link" href="#Cell-3:-Computational-engine">¶</a></h3><p>This cell defines the reusable machinery for the rest of the analysis:</p>
 <ul>
 <li>exact MaxCut,</li>
 <li>exact depth-$p$ QAOA evaluation,</li>
@@ -8338,9 +8358,9 @@ Independent rotations $R_X(2\beta)$ on each qubit — $O(n)$ operations.</p>
 <li>an <strong>adaptation set</strong> used to train the depth-2 GNN,</li>
 <li>a <strong>held-out benchmark set</strong> used only for final evaluation.</li>
 </ul>
-<h3 id="Cell-5:-Classical-depth-2-QAOA-on-the-representative-graph">Cell 5: Classical depth-2 QAOA on the representative graph<a class="anchor-link" href="#Cell-5:-Classical-depth-2-QAOA-on-the-representative-graph">¶</a></h3><p>This cell computes the strongest depth-2 QAOA solution for the full-cohort graph by direct multi-start optimization. That result is the representative reference point for the rest of the notebook.</p>
+<h3 id="Cell-5:-Classical-depth-2-QAOA-on-the-representative-graph">Cell 5: Classical depth-2 QAOA on the representative graph<a class="anchor-link" href="#Cell-5:-Classical-depth-2-QAOA-on-the-representative-graph">¶</a></h3><p>This cell computes the strongest depth-2 QAOA solution for the full-cohort graph by direct multi-start optimization. That result is the representative reference point for the rest of the analysis.</p>
 <h3 id="Cell-6:-Transcriptomic-domain-adaptation-and-learned-prediction">Cell 6: Transcriptomic domain adaptation and learned prediction<a class="anchor-link" href="#Cell-6:-Transcriptomic-domain-adaptation-and-learned-prediction">¶</a></h3><p>This cell generates classical supervision on the adaptation graphs, trains the depth-2 <strong>Adaptive Quantum GCN</strong> (<code>SimpleGCN</code> backbone), and evaluates the adapted model on the representative graph.</p>
-<p>This is the decisive upgrade relative to the original notebook.</p>
+<p>This is the decisive upgrade relative to the earlier version.</p>
 <h3 id="Cell-7:-Representative-graph-figures">Cell 7: Representative-graph figures<a class="anchor-link" href="#Cell-7:-Representative-graph-figures">¶</a></h3><p>This cell visualizes the graph itself, the classical-to-learned interpolation path in parameter space, and a two-dimensional slice through the depth-2 landscape.</p>
 <h3 id="Cell-8:-Held-out-benchmark-evaluation">Cell 8: Held-out benchmark evaluation<a class="anchor-link" href="#Cell-8:-Held-out-benchmark-evaluation">¶</a></h3><p>This cell evaluates the held-out patient-resampled graphs and summarizes:</p>
 <ul>
@@ -8349,7 +8369,7 @@ Independent rotations $R_X(2\beta)$ on each qubit — $O(n)$ operations.</p>
 <li>lift over the original transfer baseline,</li>
 <li>latency retained by single-pass inference.</li>
 </ul>
-<p>That final benchmark is the main evidence cell for the notebook's contribution.</p>
+<p>That final benchmark is the main evidence cell for the central claim.</p>
 </div>
 </div>
 </div>
@@ -10417,7 +10437,7 @@ Interpretation
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="6A.-Why-the-Notebook-Returns-to-a-Held-Out-Multi-Graph-Benchmark">6A. Why the Notebook Returns to a Held-Out Multi-Graph Benchmark<a class="anchor-link" href="#6A.-Why-the-Notebook-Returns-to-a-Held-Out-Multi-Graph-Benchmark">¶</a></h2><p>The representative graph is ideal for explanation, but it is not enough to support a claim about quality retention. The next cell therefore evaluates a <strong>held-out benchmark of patient-resampled transcriptomic graphs</strong> that were not used for model adaptation.</p>
+<h2 id="6A.-Why-the-Analysis-Returns-to-a-Held-Out-Multi-Graph-Benchmark">6A. Why the Analysis Returns to a Held-Out Multi-Graph Benchmark<a class="anchor-link" href="#6A.-Why-the-Analysis-Returns-to-a-Held-Out-Multi-Graph-Benchmark">¶</a></h2><p>The representative graph is ideal for explanation, but it is not enough to support a claim about quality retention. The next cell therefore evaluates a <strong>held-out benchmark of patient-resampled transcriptomic graphs</strong> that were not used for model adaptation.</p>
 <h3 id="What-the-next-code-cell-does">What the next code cell does<a class="anchor-link" href="#What-the-next-code-cell-does">¶</a></h3><ul>
 <li>solves depth-2 QAOA classically on each held-out graph,</li>
 <li>evaluates the adapted depth-2 GNN on the same graphs,</li>
@@ -10853,9 +10873,9 @@ Interpretation
 <h3 id="Figure-2:-Highest-probability-output-states-for-the-representative-graph">Figure 2: Highest-probability output states for the representative graph<a class="anchor-link" href="#Figure-2:-Highest-probability-output-states-for-the-representative-graph">¶</a></h3><p>The middle panel shows the most likely bitstrings in the classical depth-2 state on the representative graph. It tests whether the optimized quantum state is concentrating amplitude on strong cuts rather than spreading mass diffusely.</p>
 <h3 id="Figure-3:-Quality-across-all-held-out-transcriptomic-graphs">Figure 3: Quality across all held-out transcriptomic graphs<a class="anchor-link" href="#Figure-3:-Quality-across-all-held-out-transcriptomic-graphs">¶</a></h3><p>The right panel compares three quantities on every held-out graph:</p>
 <ul>
-<li>the <strong>classical depth-2 reference</strong>,</li>
-<li>the <strong>adapted depth-2 GNN</strong>,</li>
-<li>the <strong>old legacy transfer baseline</strong>.</li>
+<li>the classical depth-2 reference,</li>
+<li>the adapted depth-2 GNN,</li>
+<li>the old legacy transfer baseline.</li>
 </ul>
 <p>That third bar set is important: it makes the improvement claim explicit instead of merely implied.</p>
 <h3 id="The-combined-message-of-the-final-figure-set">The combined message of the final figure set<a class="anchor-link" href="#The-combined-message-of-the-final-figure-set">¶</a></h3><p>By the end of this section, readers should be able to answer three questions clearly:</p>
@@ -10874,18 +10894,18 @@ Interpretation
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="7A.-Model,-Data,-and-Interpretation-Notes">7A. Model, Data, and Interpretation Notes<a class="anchor-link" href="#7A.-Model,-Data,-and-Interpretation-Notes">¶</a></h2><h3 id="What-changed-relative-to-the-original-notebook">What changed relative to the original notebook<a class="anchor-link" href="#What-changed-relative-to-the-original-notebook">¶</a></h3><p>The repository checkpoint is still included, but it now serves as a <strong>legacy reference</strong> rather than as the main learned result. The upgraded learned result comes from a depth-2 <code>SimpleGCN</code> adapted on transcriptomic graph instances derived from the same cohort family as the benchmark.</p>
+<h2 id="7A.-Model,-Data,-and-Interpretation-Notes">7A. Model, Data, and Interpretation Notes<a class="anchor-link" href="#7A.-Model,-Data,-and-Interpretation-Notes">¶</a></h2><h3 id="What-changed-relative-to-the-earlier-version">What changed relative to the earlier version<a class="anchor-link" href="#What-changed-relative-to-the-earlier-version">¶</a></h3><p>The repository checkpoint is still included, but it now serves as a legacy reference rather than as the main learned result. The upgraded learned result comes from a depth-2 <code>SimpleGCN</code> adapted on transcriptomic graph instances derived from the same cohort family as the benchmark.</p>
 <p>That changes the interpretation materially.</p>
 <p>The adapted model should be read as:</p>
 <ul>
 <li>a graph-conditioned depth-2 QAOA proposal model,</li>
-<li>a notebook-local demonstration of transcriptomic domain adaptation,</li>
+<li>a transcriptomic domain-adaptation result on this cohort family,</li>
 <li>a learned warm-start mechanism that nearly closes the classical quality gap on held-out graphs.</li>
 </ul>
 <h3 id="What-this-still-does-not-prove">What this still does not prove<a class="anchor-link" href="#What-this-still-does-not-prove">¶</a></h3><ul>
-<li>It does <strong>not</strong> prove generalization across independent external cohorts.</li>
-<li>It does <strong>not</strong> prove scalability beyond exact-statevector graph sizes.</li>
-<li>It does <strong>not</strong> make a biology-specific causal claim about the selected genes.</li>
+<li>It does not prove generalization across independent external cohorts.</li>
+<li>It does not prove scalability beyond exact-statevector graph sizes.</li>
+<li>It does not make a biology-specific causal claim about the selected genes.</li>
 </ul>
 <h3 id="Why-the-result-is-still-strong">Why the result is still strong<a class="anchor-link" href="#Why-the-result-is-still-strong">¶</a></h3><p>Within the exact small-graph regime, the benchmark is unusually strict:</p>
 <ul>
@@ -10893,7 +10913,7 @@ Interpretation
 <li>every learned claim is compared to the stronger depth-2 classical optimizer,</li>
 <li>the adapted model is evaluated on held-out transcriptomic graphs rather than on the same graphs used for supervision.</li>
 </ul>
-<p>That makes the notebook a stronger technical artifact than a single-graph visualization or a zero-shot transfer demo.</p>
+<p>That makes the analysis stronger than a single-graph visualization or a zero-shot transfer baseline.</p>
 </div>
 </div>
 </div>

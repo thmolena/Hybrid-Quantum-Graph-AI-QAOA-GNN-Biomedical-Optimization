@@ -7802,14 +7802,33 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Graph-Conditioned-Parameterization-as-a-Task-Agnostic-Interface">Graph-Conditioned Parameterization as a Task-Agnostic Interface<a class="anchor-link" href="#Graph-Conditioned-Parameterization-as-a-Task-Agnostic-Interface">¶</a></h1><p><strong>Integrated Analysis Across Combinatorial Optimization and Clinical Prediction</strong></p>
+<h1 id="Graph-Conditioned-Parameterization-Atlas">Graph-Conditioned Parameterization Atlas<a class="anchor-link" href="#Graph-Conditioned-Parameterization-Atlas">¶</a></h1><p><strong>Integrated Analysis Across Transcriptomic Optimization and Clinical Screening</strong></p>
 <hr/>
-<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This notebook studies graph-conditioned parameterization as a common framework for mapping structured graphs to task-specific decision variables. The analysis brings together two empirical settings: depth-2 QAOA angle generation on transcriptomic co-expression graphs and pathologic-risk scoring on cardiotocography similarity graphs.</p>
-<h2 id="Central-Questions">Central Questions<a class="anchor-link" href="#Central-Questions">¶</a></h2><ul>
-<li>Can the same graph-to-parameterization template describe both quantum angle generation and clinical risk scoring?</li>
-<li>What empirical evidence supports that interpretation in each setting?</li>
-<li>Where do the limits of the shared framing appear with respect to transfer, scaling, and deployment?</li>
-</ul>
+<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This notebook is the integrated view of the graph-conditioned parameterization atlas. It places two empirical settings under one interface statement: transcriptomic co-expression graphs mapped to depth-2 QAOA angle vectors, and CTG similarity graphs mapped to pathologic-risk scores for thresholded screening analysis.</p>
+<h2 id="System-View">System View<a class="anchor-link" href="#System-View">¶</a></h2><table>
+<thead>
+<tr>
+<th>Branch</th>
+<th>Input graph</th>
+<th>Learned parameterization</th>
+<th>Downstream objective</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transcriptomic QAOA</td>
+<td>gene co-expression graph</td>
+<td>depth-2 angle vector $(\gamma_1, \gamma_2, \beta_1, \beta_2)$</td>
+<td>expected MaxCut value</td>
+</tr>
+<tr>
+<td>CTG screening</td>
+<td>patient-similarity graph</td>
+<td>node-level pathologic-risk scores</td>
+<td>thresholded screening behavior</td>
+</tr>
+</tbody>
+</table>
 <h2 id="Results-at-a-Glance">Results at a Glance<a class="anchor-link" href="#Results-at-a-Glance">¶</a></h2><table>
 <thead>
 <tr>
@@ -7852,10 +7871,10 @@ a.anchor-link {
 </tr>
 </tbody>
 </table>
-<h2 id="Analytical-Outline">Analytical Outline<a class="anchor-link" href="#Analytical-Outline">¶</a></h2><ul>
-<li>Transcriptomic QAOA experiments: held-out quality, learned-initializer comparison, runtime, and geometry.</li>
-<li>CTG screening experiments: held-out evaluation, operating points, calibration, and robustness.</li>
-<li>Cross-setting interpretation: common interface, distinct objectives, and the limits of shared framing.</li>
+<h2 id="Reading-Path">Reading Path<a class="anchor-link" href="#Reading-Path">¶</a></h2><ul>
+<li>Start with the signal gallery to see how the two branches are presented side by side.</li>
+<li>Use the comparative view to separate what is shared from what remains domain-specific.</li>
+<li>Treat the notebook as an interface study, not as a claim of transfer or deployment readiness.</li>
 </ul>
 </div>
 </div>
@@ -7867,7 +7886,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Comparative-View">Comparative View<a class="anchor-link" href="#Comparative-View">¶</a></h2><p>The two empirical settings differ in objective, supervision, and downstream evaluation, but they share the same graph-to-parameterization pattern.</p>
+<h2 id="Comparative-View">Comparative View<a class="anchor-link" href="#Comparative-View">¶</a></h2><p>The two empirical settings differ in objective, supervision, and evaluation, but they share the same graph-to-parameterization pattern. This table is the bridge between the repository landing page, the manuscript draft, and the notebook evidence below.</p>
 <table>
 <thead>
 <tr>
@@ -7895,7 +7914,7 @@ a.anchor-link {
 </tr>
 </tbody>
 </table>
-<p>The notebook uses this comparison to separate what is genuinely shared from what remains domain-specific.</p>
+<p>The notebook uses this comparison to keep the shared interface claim clear without erasing the fact that the two branches solve different problems.</p>
 </div>
 </div>
 </div>
@@ -7906,7 +7925,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Visual-Evidence-Gallery">Visual Evidence Gallery<a class="anchor-link" href="#Visual-Evidence-Gallery">¶</a></h2><p>These saved figures expose the strongest integrated evidence before the notebook reaches the implementation details. The optimization half and the biomedical half both write reusable PNG assets so the notebook opening and the exported HTML share the same technical evidence path.</p>
+<h2 id="Signal-Gallery">Signal Gallery<a class="anchor-link" href="#Signal-Gallery">¶</a></h2><p>These saved figures expose the main evidence before the implementation details, keeping the integrated notebook aligned with the repository landing page and the manuscript draft. The optimization and biomedical halves both contribute reusable figure assets so the opening view reads as a coherent atlas rather than two disconnected analyses.</p>
 <h3 id="Transcriptomic-Adaptation-and-Benchmark">Transcriptomic Adaptation and Benchmark<a class="anchor-link" href="#Transcriptomic-Adaptation-and-Benchmark">¶</a></h3><p><img alt="Two-panel transcriptomic gallery: the adaptation loss curve showing convergence of the Adaptive Quantum GCN on transcriptomic resamples and the benchmark figure summarizing the representative graph geometry plus held-out quality retention across real-data graphs." src="figures/combined_transcriptomic_adaptation.png"/></p>
 <p><img alt="Four-panel transcriptomic benchmark figure showing the representative transcriptomic graph, the interpolation path from the learned prediction to the classical optimum, the visible depth-2 landscape slice, and the held-out quality comparison over benchmark graphs." src="figures/combined_transcriptomic_benchmark.png"/></p>
 <h3 id="Integrated-Biomedical-Evaluation">Integrated Biomedical Evaluation<a class="anchor-link" href="#Integrated-Biomedical-Evaluation">¶</a></h3><p><img alt="Six-panel biomedical evaluation dashboard showing confusion matrix, ROC, precision-recall behavior, training dynamics, and PCA-space localization of true labels and prediction discordances for the integrated residual clinical model." src="figures/combined_ctg_evaluation_dashboard.png"/></p>
@@ -9236,7 +9255,7 @@ Saved figure assets -&gt; /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docume
 </tr>
 </tbody>
 </table>
-<p>The task is deliberately framed as <strong>binary risk detection</strong>. In a technical interview, that is the right clinical abstraction: the key question is whether the model can surface rare pathologic exams while keeping the false-alert burden low.</p>
+<p>The task is deliberately framed as <strong>binary risk detection</strong>. That is the right clinical abstraction here: the key question is whether the model can surface rare pathologic exams while keeping the false-alert burden low.</p>
 <h3 id="4.2-Protocol">4.2 Protocol<a class="anchor-link" href="#4.2-Protocol">¶</a></h3><ol>
 <li>Load the CTG cohort through <code>ucimlrepo</code>.</li>
 <li>Create a stratified train / validation / test split.</li>
@@ -9247,16 +9266,16 @@ Saved figure assets -&gt; /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docume
 <li>Report the held-out test metrics once, with no test-set threshold tuning.</li>
 </ol>
 <p>That protocol is what makes the biomedical improvement claim defensible.</p>
-<h3 id="4.3-Why-the-Model-Was-Upgraded">4.3 Why the Model Was Upgraded<a class="anchor-link" href="#4.3-Why-the-Model-Was-Upgraded">¶</a></h3><p>The combined notebook originally used a simpler BioGCN variant. This revision upgrades the biomedical branch to <strong>ResidualClinicalGCN</strong>, which is stronger for three reasons:</p>
+<h3 id="4.3-Why-the-Model-Was-Upgraded">4.3 Why the Model Was Upgraded<a class="anchor-link" href="#4.3-Why-the-Model-Was-Upgraded">¶</a></h3><p>The combined study originally used a simpler BioGCN variant. This revision upgrades the biomedical branch to <strong>ResidualClinicalGCN</strong>, which is stronger for three reasons:</p>
 <ul>
 <li><strong>Residual carry-through:</strong> preserves shallow feature information that can otherwise be oversmoothed.</li>
 <li><strong>Three-view fusion head:</strong> combines projected features, residual representation, and one more propagated view before classification.</li>
-<li><strong>Threshold-aware deployment:</strong> the notebook now supports both a balanced operating point and a recall-first operating point chosen from validation behavior only.</li>
+<li><strong>Threshold-aware deployment:</strong> the analysis now supports both a balanced operating point and a recall-first operating point chosen from validation behavior only.</li>
 </ul>
-<p>This last point matters operationally. If the interview emphasis is minimizing missed pathologic cases, the right adjustment is usually not retraining from scratch but changing the deployment threshold in a controlled, validation-backed way.</p>
+<p>This last point matters operationally. If the emphasis is minimizing missed pathologic cases, the right adjustment is usually not retraining from scratch but changing the deployment threshold in a controlled, validation-backed way.</p>
 <h3 id="4.4-Why-Transductive-GCN-Is-Appropriate">4.4 Why Transductive GCN Is Appropriate<a class="anchor-link" href="#4.4-Why-Transductive-GCN-Is-Appropriate">¶</a></h3><p>All exams are represented in one graph, but only the training labels are used during optimization. That is a standard transductive regime for graph convolutional models.</p>
 <p>The important distinction is: <strong>graph connectivity is shared, supervision is not</strong>. Test nodes benefit from cohort geometry without their labels being exposed during fitting.</p>
-<h3 id="4.5-What-Counts-as-Success">4.5 What Counts as Success<a class="anchor-link" href="#4.5-What-Counts-as-Success">¶</a></h3><p>A weak model could exploit class imbalance and report high overall accuracy while still missing many pathologic exams. For that reason, this notebook treats the following as the real success criteria:</p>
+<h3 id="4.5-What-Counts-as-Success">4.5 What Counts as Success<a class="anchor-link" href="#4.5-What-Counts-as-Success">¶</a></h3><p>A weak model could exploit class imbalance and report high overall accuracy while still missing many pathologic exams. For that reason, this analysis treats the following as the real success criteria:</p>
 <ul>
 <li>high held-out accuracy,</li>
 <li>high balanced accuracy,</li>
@@ -10193,9 +10212,9 @@ Summary metrics (active held-out operating point)
 <li><strong>Fixed split seed:</strong> 42</li>
 <li><strong>Training seeds:</strong> 7, 21, 42, 84, 126</li>
 <li><strong>Model:</strong> the same integrated <code>ResidualClinicalGCN</code> configuration used in the representative CTG section</li>
-<li><strong>Threshold:</strong> the representative notebook operating threshold selected earlier in the combined workflow</li>
+<li><strong>Threshold:</strong> the representative operating threshold selected earlier in the combined workflow</li>
 </ul>
-<p>The outputs below report per-seed metrics together with the aggregate <strong>mean ± standard deviation</strong>. For interview and presentation purposes, that stability summary is the right way to discuss whether the biomedical branch is robust or merely lucky.</p>
+<p>The outputs below report per-seed metrics together with the aggregate <strong>mean ± standard deviation</strong>. That stability summary is the right way to discuss whether the biomedical branch is robust or merely lucky.</p>
 </div>
 </div>
 </div>
