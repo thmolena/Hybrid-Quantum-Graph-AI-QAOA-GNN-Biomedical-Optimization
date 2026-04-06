@@ -842,7 +842,7 @@
         </div>
       </div>
 
-      <p class="section-intro">The landing page states the thesis once. The combined notebook carries the main narrative, and the two branch notebooks provide the ablation, runtime, benchmark, and operating-point evidence behind it.</p>
+      <p class="section-intro">This root landing page is the single public overview. The combined notebook carries the main narrative, the two branch notebooks provide the benchmark evidence, and the `website/` directory only serves the exported assets behind this page.</p>
 
       <div class="impact-grid">
         <article class="impact-card">
@@ -888,75 +888,134 @@
         <div class="card-icon">◫</div>
         <div>
           <h2>Figure Gallery</h2>
-          <p class="card-desc">These figure previews are the visual evidence for the story above, pulled directly from the notebook exports that support the manuscript.</p>
+          <p class="card-desc">These figure previews surface the strongest quantitative evidence on the page itself, while still linking back to the executed notebook exports that contain the surrounding analysis.</p>
         </div>
       </div>
 
-      <p class="section-intro">Each card points to a notebook export so the image and its surrounding analysis stay together when you want to inspect the underlying experiment.</p>
+      <p class="section-intro">Each card highlights the result that matters most in that visualization, so the gallery reads as evidence rather than decoration.</p>
 
       <div class="figure-grid">
         <a class="figure-link" href="website/notebooks_html/qaoa_demo.html" target="_blank" rel="noreferrer">
           <article class="figure-card">
             <img src="website/notebooks_html/figures/qaoa_demo_benchmark_overview.png" alt="QAOA benchmark overview figure" loading="lazy">
             <div class="figure-body">
-              <span class="figure-label">Optimization benchmark</span>
-              <h3>Held-out QAOA comparison</h3>
-              <p>The QAOA branch shows that transcriptomic adaptation closes almost all of the gap to the depth-2 classical baseline on held-out graphs.</p>
+              <span class="figure-label">Held-out QAOA benchmark</span>
+              <h3>0.8682 mean ratio on transcriptomic test graphs</h3>
+              <p>The adapted GNN nearly matches direct classical search at 0.8686 and retains 99.95% of the held-out reference quality across the six-graph evaluation set.</p>
+              <div class="notebook-ribbon figure-ribbon" aria-label="Held-out QAOA results">
+                <div class="notebook-ribbon-item">
+                  <div class="notebook-ribbon-label">Adapted GNN</div>
+                  <div class="notebook-ribbon-value">0.8682</div>
+                </div>
+                <div class="notebook-ribbon-item">
+                  <div class="notebook-ribbon-label">Classical</div>
+                  <div class="notebook-ribbon-value">0.8686</div>
+                </div>
+                <div class="notebook-ribbon-item">
+                  <div class="notebook-ribbon-label">Retention</div>
+                  <div class="notebook-ribbon-value">99.95%</div>
+                </div>
+              </div>
             </div>
           </article>
         </a>
 
         <a class="figure-link" href="website/notebooks_html/qaoa_demo.html" target="_blank" rel="noreferrer">
           <article class="figure-card">
-            <img src="website/notebooks_html/figures/qaoa_demo_residual_regret.png" alt="QAOA residual regret figure" loading="lazy">
+            <img src="website/notebooks_html/figures/qaoa_demo_graph_conditioned_initialization.png" alt="QAOA graph-conditioned initialization figure" loading="lazy">
             <div class="figure-body">
-              <span class="figure-label">Optimization diagnostics</span>
-              <h3>Residual regret across graphs</h3>
-              <p>The optimization diagnostics make clear that the learned warm start is evaluated across a benchmark set rather than a single hand-picked graph.</p>
+              <span class="figure-label">Speed-quality trade-off</span>
+              <h3>2640x lower median latency with a stronger learned proposal</h3>
+              <p>Inference drops from 675.9 ms to 0.256 ms while the graph-conditioned initializer improves on the prior-style learned baseline from 0.8208 to 0.8682.</p>
+              <div class="notebook-ribbon figure-ribbon" aria-label="QAOA speed-quality results">
+                <div class="notebook-ribbon-item">
+                  <div class="notebook-ribbon-label">Median latency</div>
+                  <div class="notebook-ribbon-value">0.256 ms</div>
+                </div>
+                <div class="notebook-ribbon-item">
+                  <div class="notebook-ribbon-label">Speedup</div>
+                  <div class="notebook-ribbon-value">2640x</div>
+                </div>
+                <div class="notebook-ribbon-item">
+                  <div class="notebook-ribbon-label">Prior-style baseline</div>
+                  <div class="notebook-ribbon-value">0.8208</div>
+                </div>
+              </div>
             </div>
           </article>
         </a>
 
-        <a class="figure-link" href="website/notebooks_html/bio_demo.html#evaluation" target="_blank">
+        <a class="figure-link" href="website/notebooks_html/bio_demo.html" target="_blank">
           <article class="figure-card">
             <img src="website/notebooks_html/figures/bio_demo_heldout_evaluation.png" alt="Held-out biomedical evaluation figure from the bio notebook" loading="lazy">
             <div class="figure-body">
-              <span class="figure-label">Held-out evaluation</span>
-              <h3>ResidualClinicalGCN test performance</h3>
-              <p>This figure anchors the held-out biomedical evaluation inside the executed notebook rather than reducing the result to a standalone claim on the landing page.</p>
+              <span class="figure-label">Clinical evaluation</span>
+              <h3>98.8% held-out accuracy at the strongest graph operating point</h3>
+              <p>ResidualClinicalGCN reaches 0.942 balanced accuracy and 0.978 ROC AUC on the CTG test split, keeping the graph model competitive under the stricter manuscript framing.</p>
+              <div class="notebook-ribbon figure-ribbon" aria-label="Held-out clinical results">
+                <div class="notebook-ribbon-item">
+                  <div class="notebook-ribbon-label">Accuracy</div>
+                  <div class="notebook-ribbon-value">98.8%</div>
+                </div>
+                <div class="notebook-ribbon-item">
+                  <div class="notebook-ribbon-label">Balanced acc.</div>
+                  <div class="notebook-ribbon-value">0.942</div>
+                </div>
+                <div class="notebook-ribbon-item">
+                  <div class="notebook-ribbon-label">ROC AUC</div>
+                  <div class="notebook-ribbon-value">0.978</div>
+                </div>
+              </div>
             </div>
           </article>
         </a>
 
-        <a class="figure-link" href="website/notebooks_html/bio_demo.html#robustness" target="_blank">
+        <a class="figure-link" href="website/notebooks_html/bio_demo.html" target="_blank">
+          <article class="figure-card">
+            <img src="website/notebooks_html/figures/bio_demo_operating_point_analysis.png" alt="Biomedical operating-point analysis figure from the bio notebook" loading="lazy">
+            <div class="figure-body">
+              <span class="figure-label">Screening behavior</span>
+              <h3>31 of 35 pathologic cases detected with one false positive</h3>
+              <p>The selected operating point is visible as a threshold trade-off, not a cherry-picked headline number, which makes the clinical result easier to interpret in practice.</p>
+              <div class="notebook-ribbon figure-ribbon" aria-label="Operating-point results">
+                <div class="notebook-ribbon-item">
+                  <div class="notebook-ribbon-label">Detected</div>
+                  <div class="notebook-ribbon-value">31 / 35</div>
+                </div>
+                <div class="notebook-ribbon-item">
+                  <div class="notebook-ribbon-label">False positives</div>
+                  <div class="notebook-ribbon-value">1</div>
+                </div>
+                <div class="notebook-ribbon-item">
+                  <div class="notebook-ribbon-label">Balanced acc.</div>
+                  <div class="notebook-ribbon-value">0.942</div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </a>
+
+        <a class="figure-link" href="website/notebooks_html/bio_demo.html" target="_blank">
           <article class="figure-card">
             <img src="website/notebooks_html/figures/bio_demo_aligned_biogcn_robustness.png" alt="Adaptive BioGCN robustness figure from the bio notebook" loading="lazy">
             <div class="figure-body">
               <span class="figure-label">Robustness benchmark</span>
-              <h3>Adaptive BioGCN stability across seeds</h3>
-              <p>This robustness view shows that the benchmark branch is supported by repeated seeded evaluation rather than a single favorable split.</p>
-            </div>
-          </article>
-        </a>
-
-        <a class="figure-link" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank" rel="noreferrer">
-          <article class="figure-card">
-            <img src="website/notebooks_html/figures/combined_transcriptomic_benchmark.png" alt="Combined notebook transcriptomic benchmark figure" loading="lazy">
-            <div class="figure-body">
-              <span class="figure-label">Integrated optimization</span>
-              <h3>Combined transcriptomic benchmark</h3>
-              <p>The integrated notebook keeps the quantum branch visible inside the full project narrative instead of treating it as a detached demo.</p>
-            </div>
-          </article>
-        </a>
-
-        <a class="figure-link" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank" rel="noreferrer">
-          <article class="figure-card">
-            <img src="website/notebooks_html/figures/combined_ctg_evaluation_dashboard.png" alt="Combined notebook CTG evaluation dashboard" loading="lazy">
-            <div class="figure-body">
-              <span class="figure-label">Integrated biomedical view</span>
-              <h3>Combined CTG evaluation dashboard</h3>
-              <p>The integrated export also carries the biomedical evaluation story, so the combined notebook remains a real reference point rather than a slide-style overview.</p>
+              <h3>95.49% +/- 0.97% across repeated seeded runs</h3>
+              <p>The benchmark BioGCN model is supported by repeated-seed evaluation on a fixed split, separating reproducibility evidence from the stronger residual operating point.</p>
+              <div class="notebook-ribbon figure-ribbon" aria-label="Robustness results">
+                <div class="notebook-ribbon-item">
+                  <div class="notebook-ribbon-label">Mean accuracy</div>
+                  <div class="notebook-ribbon-value">95.49%</div>
+                </div>
+                <div class="notebook-ribbon-item">
+                  <div class="notebook-ribbon-label">Std. dev.</div>
+                  <div class="notebook-ribbon-value">0.97%</div>
+                </div>
+                <div class="notebook-ribbon-item">
+                  <div class="notebook-ribbon-label">Protocol</div>
+                  <div class="notebook-ribbon-value">Repeated seeds</div>
+                </div>
+              </div>
             </div>
           </article>
         </a>

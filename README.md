@@ -2,7 +2,9 @@
 
 ### GNN-Informed Initialization for QAOA and Graph-Based Clinical Modeling
 
-[![Project Website](https://img.shields.io/badge/Project_Website-Live_Overview-0f766e?style=for-the-badge)](https://thmolena.github.io/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/)
+[![Live Site](https://img.shields.io/badge/Live_Site-Open-0f766e?style=for-the-badge)](https://thmolena.github.io/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/)
+
+The GitHub Pages root landing page is the single public overview for this repository. The `website/` directory exists to hold the static assets and exported notebook HTML that power that landing page.
 
 ## Abstract
 
