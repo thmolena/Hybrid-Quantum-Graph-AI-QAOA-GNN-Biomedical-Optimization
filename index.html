@@ -786,9 +786,9 @@
   <!-- Hero -->
   <header class="hero">
     <div class="hero-inner">
-      <div class="hero-badge">Research Prototype · Hybrid Quantum-Classical AI</div>
+      <div class="hero-badge">Research Project · Hybrid Quantum-Classical AI</div>
       <h1>Hybrid Quantum–Graph Learning for Structured Biomedical Optimization</h1>
-      <p class="hero-sub">This repository presents a hybrid quantum-classical framework for structured optimization and prediction in biomedical domains. We investigate whether <strong>graph neural networks (GNNs)</strong> can learn structure-aware representations that improve parameter initialization for the <strong>Quantum Approximate Optimization Algorithm (QAOA)</strong>.</p>
+      <p class="hero-sub">This repository studies whether <strong>graph-conditioned learning</strong> can serve as a reusable computational interface across two different problems: parameter initialization for <strong>QAOA</strong> on transcriptomic co-expression graphs and graph-based biomedical screening on clinical similarity graphs.</p>
       <div class="hero-pills">
         <span class="pill">QAOA</span>
         <span class="pill">GNN / GCN</span>
@@ -805,14 +805,14 @@
           <div class="notebook-ribbon-note">ResidualClinicalGCN held-out accuracy</div>
         </div>
         <div class="notebook-ribbon-item">
-          <div class="notebook-ribbon-label">Quality retained</div>
-          <div class="notebook-ribbon-value">99.95%</div>
-          <div class="notebook-ribbon-note">Adaptive Quantum GCN versus depth-2 classical QAOA</div>
+          <div class="notebook-ribbon-label">Held-out QAOA ratio</div>
+          <div class="notebook-ribbon-value">0.8682</div>
+          <div class="notebook-ribbon-note">Adapted GNN mean ratio versus 0.8686 for direct classical search</div>
         </div>
         <div class="notebook-ribbon-item">
-          <div class="notebook-ribbon-label">Warm-start speedup</div>
-          <div class="notebook-ribbon-value">35,070×</div>
-          <div class="notebook-ribbon-note">Representative prototype result from the integrated notebook</div>
+          <div class="notebook-ribbon-label">Median speedup</div>
+          <div class="notebook-ribbon-value">2640×</div>
+          <div class="notebook-ribbon-note">0.256 ms GNN inference versus 675.9 ms direct classical search</div>
         </div>
         <div class="notebook-ribbon-item">
           <div class="notebook-ribbon-label">Pathologic detection</div>
@@ -838,17 +838,17 @@
         <div class="card-icon">▣</div>
         <div>
           <h2>Project Story</h2>
-          <p class="card-desc">Read the repository as one package: canonical thesis notebook first, then the QAOA and biomedical technical appendices.</p>
+          <p class="card-desc">Read the repository as one paper-scale package: canonical thesis notebook first, then the QAOA and biomedical technical appendices.</p>
         </div>
       </div>
 
-      <p class="section-intro">The landing page states the thesis once. The combined notebook carries the main narrative, and the two branch notebooks provide the technical evidence behind it.</p>
+      <p class="section-intro">The landing page states the thesis once. The combined notebook carries the main narrative, and the two branch notebooks provide the ablation, runtime, benchmark, and operating-point evidence behind it.</p>
 
       <div class="impact-grid">
         <article class="impact-card">
           <span class="impact-eyebrow">Canonical notebook</span>
           <h3>Hybrid Quantum-Graph Learning Thesis</h3>
-          <p>This notebook is the main entry point for the project. It explains the core hypothesis, shows how the optimization and biomedical branches fit together, and frames the repository as one graph-conditioned research prototype rather than three disconnected demos.</p>
+          <p>This notebook is the main entry point for the project. It explains the core hypothesis, shows how the optimization and biomedical branches fit together, and frames the repository as one graph-conditioned research study rather than three disconnected demos.</p>
 
           <div class="impact-note">Use this notebook first if you want the thesis-level walkthrough before inspecting either branch in technical detail.</div>
 
@@ -860,7 +860,7 @@
         <article class="impact-card">
           <span class="impact-eyebrow">QAOA appendix</span>
           <h3>Adaptive Quantum GCN</h3>
-          <p>This notebook starts from transcriptomic data, builds co-expression graphs, and asks whether graph structure can predict useful QAOA parameters for MaxCut without rerunning a full classical search for every new graph.</p>
+          <p>This notebook starts from transcriptomic data, builds co-expression graphs, and asks whether graph structure can predict useful QAOA parameters for MaxCut while preserving held-out quality and substantially reducing per-instance search cost.</p>
 
           <div class="impact-note">Use this notebook when the main question is optimization methodology, warm-start quality, or the held-out transcriptomic benchmark.</div>
 
@@ -872,7 +872,7 @@
         <article class="impact-card">
           <span class="impact-eyebrow">Biomedical appendix</span>
           <h3>Adaptive BioGCN + ResidualClinicalGCN</h3>
-          <p>This notebook turns cardiotocography exams into a physiologic similarity graph and asks whether graph-based learning can improve pathologic-risk discrimination while preserving robustness analysis, threshold awareness, and split-first evaluation discipline.</p>
+          <p>This notebook turns cardiotocography exams into a physiologic similarity graph and asks whether graph-based learning can improve pathologic-risk discrimination while preserving robustness analysis, threshold awareness, split-first evaluation discipline, and comparison against stronger tabular baselines.</p>
 
           <div class="impact-note">Use this notebook when the main question is biomedical validation, screening behavior, or the distinction between the benchmark and strongest operating-point models.</div>
 
@@ -1164,12 +1164,12 @@
           <div class="nb-icon">🔬</div>
           <div class="nb-body">
             <h3>Canonical Research Story</h3>
-            <p>Start here for the thesis-level walkthrough that connects GNN-informed QAOA warm starts and biomedical graph learning inside one coherent research prototype.</p>
+            <p>Start here for the thesis-level walkthrough that connects GNN-informed QAOA warm starts and biomedical graph learning inside one coherent research study.</p>
             <div class="nb-tags">
               <span class="nb-tag">Canonical Notebook</span>
               <span class="nb-tag">Integrated Narrative</span>
               <span class="nb-tag">QAOA + Biomedical</span>
-              <span class="nb-tag">Research Prototype</span>
+              <span class="nb-tag">Paper-Scale Narrative</span>
             </div>
           </div>
           <div class="nb-arrow">▶</div>
@@ -1194,7 +1194,7 @@
           <div class="nb-icon">🧬</div>
           <div class="nb-body">
             <h3>Biomedical Technical Appendix</h3>
-            <p>Use this notebook for the CTG similarity graph, the benchmark biomedical model, the residual extension, and the leakage-aware screening evaluation workflow.</p>
+            <p>Use this notebook for the CTG similarity graph, the benchmark biomedical model, the residual extension, the leakage-aware screening evaluation workflow, and the graph-versus-tabular interpretation of the current results.</p>
             <div class="nb-tags">
               <span class="nb-tag">Adaptive BioGCN</span>
               <span class="nb-tag">ResidualClinicalGCN</span>

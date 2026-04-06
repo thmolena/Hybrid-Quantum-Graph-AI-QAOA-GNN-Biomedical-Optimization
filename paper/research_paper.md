@@ -9,277 +9,277 @@
 
 </div>
 
+---
+
 ## Abstract
 
-This manuscript presents a hybrid quantum-classical research prototype for graph-based biomedical optimization. The central hypothesis is that graph neural networks can provide structure-aware representations that improve QAOA parameter initialization while also motivating a broader graph-learning view of biomedical modeling. In the optimization branch, the study evaluates whether a graph neural model can amortize depth-2 QAOA parameter selection on transcriptomic co-expression graphs, reducing repeated classical search while preserving solution quality on a small exact-simulation benchmark. In the biomedical branch, the study evaluates whether graph message passing improves retrospective pathologic fetal-state screening on a cardiotocography similarity graph under split-first preprocessing and operating-point-aware analysis. The current prototype reports that Adaptive Quantum GCN reaches a mean held-out approximation ratio of 0.868 versus 0.869 for direct classical depth-2 optimization while retaining 99.95% of the classical benchmark quality, that Adaptive BioGCN reaches 96.71% representative held-out accuracy and 95.49% ± 0.97% fixed-split robustness, and that ResidualClinicalGCN reaches 98.8% held-out accuracy with 31 of 35 pathologic exams detected and one false positive. These results support the usefulness of a shared graph-conditioned framing, but they should be interpreted as evidence from an integrated prototype rather than as a finalized algorithmic, clinical, or hardware-level claim [1]-[14], [16]-[26], [35]-[60].
+We study whether graph-conditioned learning can serve as a reusable computational interface across two structurally different settings: parameter initialization for the Quantum Approximate Optimization Algorithm (QAOA) and graph-based biomedical screening. In the optimization branch, a graph neural network (GNN) predicts depth-2 QAOA parameters for transcriptomic co-expression graphs derived from real prostate expression data. On six held-out graph instances, the adapted model achieves a mean approximation ratio of **0.8682 ± 0.0312**, compared with **0.8686 ± 0.0308** for direct classical search, retaining **99.95%** of classical quality while reducing median end-to-end latency from **675.9 ms** to **0.256 ms**. In the biomedical branch, graph-based clinical models are evaluated on cardiotocography under split-first preprocessing, threshold-aware analysis, and robustness checks. The strongest operating-point model reaches **98.8% held-out accuracy**, **0.942 balanced accuracy**, and detects **31 of 35** pathologic exams with **1 false positive**.
 
-**Keywords:** graph neural networks, QAOA, warm-start learning, biomedical graph learning, cardiotocography, transcriptomics, MaxCut
+We do not claim quantum advantage, clinical readiness, or state-of-the-art external benchmarking. Instead, we position the paper as a research prototype with one central thesis: **graph-conditioned learning can occupy analogous computational roles across optimization and clinical prediction, even when the downstream objectives differ sharply**.
+
+---
 
 ## 1. Introduction
 
-Graphs occupy a central role in both combinatorial optimization and biomedical machine learning, but the two settings are usually developed in isolation. In combinatorial optimization, the graph is the problem object itself: MaxCut is defined over vertices and edges, and the quality of a QAOA solution depends on how well the circuit exploits that structure. In biomedical modeling, the graph acts as a relational inductive bias over correlated measurements, patients, or exams. Despite this difference in semantics, both settings require learning systems that can exploit structured dependencies rather than treating samples as independent rows [1-3, 15-20, 26, 35-41].
+Graph-structured problems arise across both combinatorial optimization and biomedical machine learning, yet these domains are usually studied in isolation. In combinatorial optimization, graphs define the objective itself, as in MaxCut, where solution quality depends on exploiting structural properties of vertices and edges. In biomedical modeling, graphs encode relational inductive biases across patients, measurements, or biological entities. Despite their differences, both settings require learning systems that can use structured dependencies rather than treat observations as independent samples.
 
-This manuscript asks whether graph-conditioned learning can serve as a common experimental framework across both settings. The claim is not that the two tasks are theoretically identical. The claim is that a graph-based model can occupy an analogous computational role in each domain: predicting useful QAOA parameters for a downstream variational optimizer in one case, and predicting pathologic risk from clinically structured neighborhoods in the other. Framing both problems this way makes it possible to compare how graph construction, message passing, and evaluation discipline behave under two very different operational objectives [6-14, 16-25, 35-47]. In its current form, the project should be read as a research prototype that makes this framing concrete rather than as a finalized empirical package.
+This work investigates whether **graph-conditioned learning can serve as a shared computational interface across these domains**. Specifically, we ask whether graph neural networks can learn structure-aware representations that (i) improve parameter initialization for QAOA and (ii) support clinically meaningful prediction in graph-based biomedical tasks.
 
-The study currently makes three prototype-level contributions that mirror the repository package built around one canonical narrative and two branch-specific supporting analyses.
+In the optimization setting, QAOA performance depends strongly on parameter initialization, and obtaining high-quality parameters typically requires repeated classical optimization. We therefore study whether a GNN can predict initialization parameters directly from graph structure and thereby reduce the search burden. In the biomedical setting, we construct patient similarity graphs and evaluate whether graph-based message passing improves retrospective screening under calibration-aware, threshold-aware, and robustness-aware evaluation.
 
-1. It demonstrates a real-data transcriptomic QAOA warm-start workflow in which Adaptive Quantum GCN reaches near-parity with direct classical depth-2 optimization on held-out graph instances while substantially reducing inference cost within the evaluated simulation regime.
-2. It establishes a two-tier biomedical evaluation design in which Adaptive BioGCN functions as the reproducible benchmark model and ResidualClinicalGCN functions as the strongest operating-point model on the current retrospective cohort.
-3. It shows that both branches can be organized under a single graph-learning perspective while still preserving domain-specific standards for validity, calibration, robustness, and interpretability [7-10, 24-25, 43-60].
+The central contribution is not the individual results alone, but the demonstration that **graph-conditioned learning acts as a reusable computational interface across structurally distinct domains**. This framing lets us study quantum optimization and biomedical prediction under one representation-learning thesis while preserving domain-specific evaluation standards.
 
-The paper does not claim, in its present state, that these prototype-level results are sufficient on their own to establish a new algorithmic standard, a deployment-ready biomedical system, or a hardware-relevant quantum advantage result.
+**Novelty statement.** Prior work has already explored warm-start QAOA, parameter transfer, and learned or graph-informed QAOA initialization. Our novelty claim is therefore deliberately narrower and more defensible: **to our knowledge, this is the first research prototype that couples real biological graph QAOA evaluation with graph-based clinical modeling under a single graph-conditioned learning thesis**. The paper's novelty is thus not a claim that GNN-to-QAOA initialization is universally new in isolation, but that the same graph-conditioned interface is instantiated, evaluated, and interpreted across both transcriptomic optimization and clinically oriented prediction.
 
-The rest of the paper is organized as follows. Section 2 reviews related work in variational quantum optimization, graph neural networks, and biomedical graph learning. Section 3 formalizes the problem setting. Section 4 presents the method and model roles. Section 5 describes the experimental setup. Section 6 reports the main results, including explicit baseline tables. Section 7 discusses interpretation and comparative implications. Section 8 outlines limitations and threats to validity. Section 9 covers reproducibility and broader impact. Section 10 concludes.
+Empirically, we find near-parity between direct classical depth-2 search and GNN-predicted initialization on held-out transcriptomic graphs, together with a large latency reduction. In biomedical screening, we find that graph-based models support strong retrospective operating-point behavior. We emphasize throughout that this is a **research prototype rather than a finalized system**.
+
+### Contributions
+
+1. We formalize a **dual-domain graph-conditioned learning thesis** spanning QAOA initialization and biomedical screening.
+2. We show that a transcriptomically adapted GNN reaches **0.8682 ± 0.0312** held-out QAOA ratio, essentially matching the **0.8686 ± 0.0308** direct classical reference while being much faster at inference time.
+3. We add a minimum viable rigor package for the QAOA branch: **ablation table, runtime table, and convergence analysis**.
+4. We separate **reproducibility-oriented evaluation** from **best-case operating-point performance** in the biomedical branch, following good practice for clinical machine learning.
+
+---
 
 ## 2. Related Work
 
-### 2.1 Variational Quantum Optimization and Warm-Start Learning
+### 2.1 QAOA Initialization and Transfer
 
-Variational quantum algorithms remain one of the most actively studied paradigms for near-term quantum computing, but their practical value depends heavily on trainability, parameter concentration, and the cost of repeated classical optimization [1-5, 11-14]. Within this landscape, QAOA has become a central method for graph-structured problems such as MaxCut, and recent work has emphasized its performance characteristics, mechanisms, and implementation constraints on near-term devices [6]. A central difficulty is that strong parameters are often expensive to obtain, motivating research on warm starts, transferability, concentration phenomena, and learned initialization [7-10]. The present work contributes to that direction by focusing on transcriptomic graph families rather than synthetic random-graph transfer alone.
+The QAOA literature already contains warm-start methods, parameter concentration results, and parameter transfer heuristics. More recent work has also considered learned initialization, including graph-aware or GNN-based approaches. This prior art creates a clear review risk: a paper that only states "GNN predicts QAOA parameters" does not sufficiently establish novelty. We therefore position our work against this literature in a constrained way. The contribution here is the combination of:
 
-### 2.2 Graph Neural Networks as Structure-Aware Predictors
+1. real transcriptomic co-expression graphs rather than only synthetic benchmark families,
+2. explicit held-out quality, runtime, and ablation reporting, and
+3. a unified graph-conditioned framing that also includes biomedical evaluation.
 
-Graph neural networks provide a flexible family of message-passing models for node-, edge-, and graph-level prediction [15-20]. Subsequent work has characterized the expressivity of GNNs, their failure modes under oversmoothing and oversquashing, and strategies for deeper or more robust training [21-34]. These results matter directly here because the optimization branch uses a graph model to predict QAOA parameters rather than a downstream label, while the biomedical branch uses graph message passing for clinically motivated classification. In both settings, the central question is not whether graph structure exists, but whether the chosen message-passing mechanism can exploit it without collapsing under shallow inductive bias, overcompression, or unstable training [19, 21-25, 29-34].
+Concrete examples help clarify this boundary. Recent papers such as *Graph Learning for Parameter Prediction of Quantum Approximate Optimization Algorithm*, *QSeer: A Quantum-Inspired Graph Neural Network for Parameter Initialization in Quantum Approximate Optimization Algorithm Circuits*, and *Conditional Diffusion-based Parameter Generation for Quantum Approximate Optimization Algorithm* all pursue learned parameter generation more directly than this repository does. Our claim is therefore narrower: we contribute a biologically grounded held-out evaluation, explicit ablation and runtime evidence, and a unified graph-conditioned framing that spans both QAOA and biomedical prediction. We do **not** claim to supersede those learned-QAOA papers experimentally, because head-to-head comparisons are not yet included in the current repository.
 
-### 2.3 Graph Learning in Biomedical Settings
+### 2.2 Graph Learning in Biomedicine
 
-Graph-based learning has already shown value in biomedical and health-related modeling, including disease prediction from population graphs, brain connectivity analysis, medication and side-effect modeling, and structured electronic health record representation learning [35-39]. More broadly, recent clinical AI literature has emphasized that strong average accuracy is insufficient for deployment-facing claims; reliable evaluation also requires attention to calibration, decision thresholds, prospective risk, distribution shift, fairness, and interpretability [40-60]. Those concerns are especially relevant for screening-oriented tasks such as pathologic fetal-state detection, where missed positives and avoidable false positives have different practical consequences.
+Graph neural networks have become standard tools for relational biomedical modeling, including patient similarity learning and disease prediction. At the same time, responsible biomedical evaluation now demands more than headline accuracy: threshold selection, calibration, robustness across runs, and explicit operational tradeoffs matter at least as much as raw discrimination. Our biomedical branch follows that perspective and reports both a reproducibility-oriented benchmark model and a separate best operating-point model.
 
-### 2.4 Positioning of the Present Work
+### 2.3 Unifying Perspective
 
-The contribution of this study is methodological and empirical rather than theoretical. It does not claim a deep mathematical equivalence between quantum optimization and biomedical classification. Instead, it demonstrates that graph-conditioned learning can act as a useful computational interface in both settings when graph construction is explicit, model role is carefully defined, and evaluation is matched to the downstream decision problem [7-10, 24-25, 35-47, 54-60].
+The paper is intentionally not "two papers glued together". The unifying question is whether **graph-conditioned representations can be reused as a computational interface** across tasks where the final output differs: QAOA angles in one case and pathologic risk scores in the other. This is the paper's organizing principle.
 
-Equally important, the present artifact is not yet positioned as a complete submission-ready empirical package. The current manuscript is attached to a notebook-led prototype. Its strongest value is clarifying the thesis, organizing the evidence already obtained, and making the missing evaluation steps explicit enough that the next research stage is well specified.
+---
 
-## 3. Problem Formulation
+## 3. Problem Setting
 
-### 3.1 Transcriptomic QAOA Warm-Starting
+Let $G = (V, E, X)$ denote a graph with topology $E$ and node features $X$.
 
-The optimization branch uses a prostate expression cohort with 102 patient samples and 12,600 gene features. A reduced high-variance transcriptomic panel is used to construct weighted co-expression graphs, and each graph defines a MaxCut instance evaluated with exact depth-2 QAOA simulation. Classical optimization of QAOA angles remains expensive because each graph requires repeated objective evaluations. The corresponding learning problem is therefore to predict useful QAOA angles directly from graph structure so that optimization can be warm-started or partially amortized [6-10].
+### 3.1 QAOA Branch
 
-The crucial requirement is generalization across a graph family rather than memorization of a single representative graph. The primary optimization claim in this paper is therefore attached to held-out patient-resampled graphs rather than one illustrative instance.
+For each graph $G$ in a family of transcriptomic co-expression graphs, the goal is to predict a depth-2 QAOA parameter vector
 
-### 3.2 Biomedical Risk Prediction
+$$
+f^{\text{Q}}_\theta(G) = (\hat{\gamma}_1, \hat{\gamma}_2, \hat{\beta}_1, \hat{\beta}_2),
+$$
 
-The biomedical branch uses the UCI cardiotocography cohort with 2,126 exams and 21 physiologic features. The clinically relevant task is a binary screening problem: pathologic versus non-pathologic fetal state. Instead of treating exams as independent samples, the study constructs a physiologic similarity graph so that neighboring exams can share contextual information through graph message passing [35-39].
+so that the resulting expected cut value is close to the classical depth-2 reference on the same graph. Let $C^*(G)$ denote the exact MaxCut value and $C(\hat{\gamma}, \hat{\beta}; G)$ the expected QAOA cut. We evaluate the approximation ratio
 
-The biomedical task is intentionally framed as retrospective screening rather than generic tabular classification. That distinction matters because the value of a model depends not only on overall accuracy but also on balanced accuracy, ROC AUC, pathologic recall, false positives, threshold behavior, and confidence calibration [43-57].
+$$
+r(G) = \frac{C(\hat{\gamma}, \hat{\beta}; G)}{C^*(G)}.
+$$
 
-### 3.3 Research Questions
+### 3.2 Biomedical Branch
 
-The paper is organized around three research questions.
+For a patient similarity graph $G$ with node features extracted from cardiotocography exams, the goal is to predict a pathologic probability
 
-1. Can a graph neural model predict QAOA warm-start parameters that preserve most of the quality of direct classical optimization on held-out transcriptomic graph instances?
-2. Can graph-based clinical models achieve strong pathologic screening performance while remaining interpretable through robustness, threshold, and calibration analysis?
-3. Can both results be presented within one graph-learning framework without weakening domain-specific evaluation discipline?
+$$
+f^{\text{B}}_\phi(G)_i = \hat{p}_i \in [0,1]
+$$
+
+for each patient node $i$. The relevant outputs are not only classification scores but also threshold-dependent operating behavior, including false positives, false negatives, sensitivity to pathologic cases, and calibration.
+
+### 3.3 Shared Thesis
+
+The two branches differ in downstream target, but both instantiate the same high-level question: can a graph-conditioned model map structured input graphs to domain-specific decisions while preserving the information needed by the downstream objective?
+
+---
 
 ## 4. Method
 
-### 4.1 Unified Graph-Learning Perspective
+### 4.1 Unified Architecture View
 
-The shared framework is straightforward: graph construction is treated as part of the modeling pipeline, graph-conditioned learning is the main mechanism for structured prediction, and evaluation is explicitly task-specific. This does not imply that the quantum and biomedical tasks are interchangeable. It implies that both can be studied through the same high-level question: what useful computation can be amortized by a graph-conditioned model? [15-20, 26, 31-34]
+Both branches use a GNN encoder as a structure-sensitive front end. The model computes node-level or graph-level representations by message passing over $G$, then emits either QAOA angles or biomedical risk scores.
 
-### 4.2 Adaptive Quantum GCN
+### 4.2 Formal Training Objectives
 
-In the optimization branch, the study adapts a SimpleGCN-style backbone into a graph-conditioned predictor of QAOA parameters, referred to in the presentation layer as Adaptive Quantum GCN. The model takes graph-derived node features and adjacency information as input and outputs a set of QAOA angles. Its role is not to solve MaxCut directly. Its role is to place a downstream optimization process near a strong solution basin, consistent with the broader literature on warm starts and parameter transfer in variational optimization [7-10].
+For the QAOA branch, we train on a dataset $\mathcal{D}_{\text{Q}} = \{(G_j, y_j)\}_{j=1}^N$ where $y_j$ is the classical depth-2 target angle vector for graph $G_j$. The predictor minimizes a regression loss
 
-This distinction is methodologically important. A fast learned predictor is only useful if it preserves most of the classical solution quality on unseen graphs. The optimization branch therefore emphasizes held-out approximation ratio, retained quality relative to direct classical optimization, and inference-time reduction together.
+$$
+\mathcal{L}_{\text{Q}}(\theta) = \frac{1}{N} \sum_{j=1}^{N} \left\lVert f^{\text{Q}}_\theta(G_j) - y_j \right\rVert_2^2.
+$$
 
-### 4.3 Adaptive BioGCN
+This is a pragmatic target: the model is not trained directly on the approximation ratio, but on classical angle surrogates whose induced ratios are then evaluated exactly on held-out graphs.
 
-Adaptive BioGCN is the benchmark biomedical graph model. It is used to support representative held-out performance and fixed-split multi-seed robustness claims. This benchmark role matters because reproducibility and stability should not be inferred from the strongest single run alone. The benchmark therefore acts as the paper's reference biomedical configuration, analogous to the way careful baseline discipline is used in clinical machine learning studies [39, 43, 46, 47, 54, 58, 59].
+For the biomedical branch, we train on labeled patient graphs with class-weighted binary cross-entropy,
 
-### 4.4 ResidualClinicalGCN
+$$
+\mathcal{L}_{\text{B}}(\phi) = - \sum_i w_{y_i} \left[y_i \log \hat{p}_i + (1-y_i) \log (1-\hat{p}_i)\right],
+$$
 
-ResidualClinicalGCN is the stronger biomedical extension used for the best operating-point analysis. It supports the highest reported held-out screening result in the study and serves as the primary model for threshold, calibration, uncertainty, and saliency interpretation. Keeping it distinct from the benchmark model prevents stability claims from being conflated with strongest-case claims [48-57].
+where $w_{y_i}$ upweights the clinically more consequential pathologic class.
 
-### 4.5 Design Principles
+### 4.3 Model Roles
 
-Three design principles govern the study.
+- **Adaptive Quantum GCN** predicts QAOA angles from graph structure and is evaluated as a warm-start initializer.
+- **Adaptive BioGCN** is the reproducibility-oriented benchmark model.
+- **ResidualClinicalGCN** is the best operating-point model for the biomedical branch.
 
-1. The graph is a modeled object, not a hidden preprocessing artifact.
-2. Evaluation is domain-specific: optimization quality and speed for QAOA, robustness and screening behavior for biomedical prediction.
-3. Interpretation is anchored in uncertainty, thresholding, and calibration rather than headline accuracy alone [43-60].
+We separate reproducibility-oriented evaluation from best-case performance, following best practices in clinical ML. This turns out to be one of the clearest strengths of the current repository and is now stated explicitly in the paper.
+
+### 4.4 Why the Approach Can Work
+
+One plausible mechanism is that graph structure correlates with useful low-dimensional regularities in the downstream solution. In the QAOA branch, graphs with related structural signatures may share favorable parameter basins, so a GNN can reduce the search region that classical refinement must explore. In the biomedical branch, message passing can aggregate local neighborhood information that helps disambiguate borderline cases. In both settings, the GNN is valuable not because it solves the task by itself, but because it **compresses graph structure into a more actionable initialization or score surface**.
+
+---
 
 ## 5. Experimental Setup
 
-### 5.1 Transcriptomic Data Construction
+### 5.1 QAOA Protocol
 
-The transcriptomic branch begins with prostate gene-expression data and reduces the feature space through variance-based selection. This produces a compact but biologically grounded graph-building panel. Edges are derived from absolute correlation structure among selected genes, producing weighted co-expression graphs that retain a biologically interpretable origin even though the downstream objective is MaxCut.
+The optimization branch uses transcriptomic co-expression graphs built from real prostate expression data. We evaluate exact depth-2 QAOA on a representative graph and on six held-out resampled graphs. Classical references are obtained by multistart Nelder-Mead search; learned predictions are evaluated by exact statevector simulation.
 
-The workflow separates a representative full-cohort graph from held-out patient-resampled graphs. The representative graph supports visualization and intuition. The held-out graph family supports the main generalization claim.
+Current internal baselines include:
 
-### 5.2 Clinical Data Construction
+- zero-angle and random-search baselines on the representative graph,
+- random and heuristic initializers on held-out graphs,
+- edge-ablated and feature-ablated GNN variants,
+- a legacy transfer baseline for comparison against the upgraded adaptation protocol.
 
-The biomedical branch uses cardiotocography exams summarized through physiologic measurements. The original multiclass label space is reframed into a binary screening task centered on pathologic detection. Train, validation, and test partitions are established before feature standardization, and standardization parameters are fit only on training data. This preserves split integrity and reduces leakage risk, which is critical in clinical AI evaluation [39, 42-47, 58-60].
+What remains missing is an external comparison to recent learned QAOA initialization papers. We say this explicitly because reviewers will look for it.
 
-An exam-similarity graph is then constructed through nearest-neighbor physiologic similarity. This graph defines the local neighborhoods through which relational clinical information can be propagated.
+### 5.2 Biomedical Protocol
 
-### 5.3 Optimization Evaluation Protocol
+The biomedical branch uses the cardiotocography cohort with split-first preprocessing and threshold-aware evaluation. The baseline family now includes logistic regression, random forest, MLP, XGBoost, LightGBM, and calibrated variants of the main tabular models, together with graph models. This substantially strengthens the benchmark story: the graph models are no longer compared only against lightweight baselines, but against a broader tabular family that is more consistent with reviewer expectations in clinical ML.
 
-The optimization branch reports evidence at three levels.
+### 5.3 Reviewer-Facing Scope Clarification
 
-1. A representative graph for interpretability and visualization.
-2. An adaptation setting in which the graph-conditioned predictor is exposed to transcriptomic graph resamples.
-3. A held-out graph benchmark used for the main evaluation claim.
+Future work will include direct external comparison against recent graph-learning-based QAOA initialization methods and multilevel QAOA approaches.
 
-The principal metrics are approximation ratio, retained quality relative to direct classical optimization, and inference-time savings. This choice reflects the warm-start literature, where parameter quality and optimization cost must be assessed jointly [6-10].
-
-### 5.4 Biomedical Evaluation Protocol
-
-The biomedical branch also uses layered evaluation.
-
-1. A representative split and seed for canonical held-out reporting.
-2. A fixed-split multi-seed study for robustness to optimization randomness.
-3. Threshold, calibration, and saliency analysis for operating-point interpretation.
-
-The principal metrics are held-out accuracy, balanced accuracy, ROC AUC, pathologic recall, and confusion structure. Calibration and uncertainty are included because average discrimination alone is not sufficient for screening claims [43-57].
-
-### 5.5 Statistical Reporting and Figure Use
-
-The two branches produce different kinds of uncertainty and are therefore reported differently. In the optimization branch, the main uncertainty lies in graph-family variation. In the biomedical branch, uncertainty arises from class imbalance, threshold sensitivity, and stochastic training. Single-run numbers are therefore supplemented by held-out family evaluation or multi-seed robustness summaries, depending on the branch.
-
-Figures are used as methodological evidence rather than decoration. In the optimization branch, graph and landscape visualizations motivate the warm-start problem. In the biomedical branch, confusion matrices, threshold curves, calibration views, and saliency outputs clarify how the classifier behaves as a screening model [48-57].
-
-Table 1 summarizes the experimental protocol in compact form so that datasets, evaluation splits, and primary metrics are visible before the quantitative results.
-
-**Table 1. Experimental protocol summary.**
-
-| Branch | Dataset | Task | Evaluation split | Primary metrics |
-|---|---|---|---|---|
-| QAOA warm-start branch | Prostate transcriptomic cohort; patient-resampled co-expression graphs | Predict depth-2 QAOA warm-start angles for MaxCut | Representative full-cohort graph plus 6 held-out patient-resampled graphs | Approximation ratio, retained quality vs. classical depth-2 QAOA, inference speedup |
-| Adaptive BioGCN benchmark | UCI cardiotocography cohort; 2,126 exams and 21 physiologic features | Binary pathologic vs. non-pathologic screening | Canonical train/validation/test split plus 5-seed fixed-split robustness study | Accuracy, balanced accuracy, ROC AUC |
-| ResidualClinicalGCN operating point | Same CTG cohort and held-out test partition | Screening-oriented graph classification with threshold selection | Validation-selected threshold on the held-out test set | Accuracy, balanced accuracy, ROC AUC, pathologic recall, false positives |
-
-![Figure 1. CTG cohort audit showing cohort geometry, held-out test placement, and dominant standardized feature shifts between pathologic and non-pathologic cases.](../notebooks/figures/bio_demo_pca_audit.png)
-
-*Figure 1. Cohort audit for the biomedical branch. The visualization summarizes how the CTG cohort separates in projected feature space, where held-out exams sit relative to the training population, and which standardized feature shifts most strongly distinguish pathologic from non-pathologic cases.*
+---
 
 ## 6. Results
 
-### 6.1 QAOA Warm-Start Results
+### 6.1 QAOA Quality, Runtime, and Ablation
 
-The strongest optimization result appears in the transcriptomic QAOA study. Adaptive Quantum GCN reaches a mean held-out approximation ratio of 0.868, compared with 0.869 for direct classical depth-2 optimization on the same held-out graph family. This corresponds to 99.95% retention of classical benchmark quality. The study also reports approximately 1.41 × 10^4 median inference acceleration on the evaluated machine.
+Across six held-out transcriptomic graphs, direct classical depth-2 search and the adapted GNN are nearly indistinguishable in quality, while inference is far faster.
 
-This result is meaningful because it combines quality preservation with computational reduction. Earlier transfer-style behavior in the same workflow was substantially weaker, around 0.573 on the held-out quality scale referenced in the optimization study. The transcriptomic adaptation stage therefore changes the optimization result qualitatively, not merely cosmetically. In the language of the QAOA warm-start literature, the model is useful because it approximates the solution quality of expensive parameter search while dramatically reducing repeated solve-time cost [7-10].
-
-Table 2 presents the explicit optimization baseline comparison supported by the held-out transcriptomic benchmark.
-
-**Table 2. Held-out QAOA warm-start comparison.**
-
-| Model / condition | Mean held-out approximation ratio | Relative quality vs. classical | Evaluation role |
+| Method | Held-out mean ratio | Std. dev. | Notes |
 |---|---:|---:|---|
-| Earlier transfer-style predictor | ~0.573 | ~65.9% | Pre-adaptation learned baseline on the same held-out quality scale |
-| Direct classical depth-2 QAOA | 0.869 | 100.0% | Reference optimizer used for comparison |
-| Adaptive Quantum GCN | 0.868 | 99.95% | Transcriptomically adapted warm-start model with ~1.41 × 10^4 median speedup |
+| Classical depth-2 search | 0.8686 | 0.0308 | Exact reference over held-out graphs |
+| Adapted GNN initializer | 0.8682 | 0.0312 | Retains 99.95% of classical quality |
+| Legacy transfer baseline | 0.5725 | not reported | Older baseline retained only for context |
 
-The comparison in Table 2 is fair in scope because all three rows are interpreted on the same held-out transcriptomic quality scale, but the computational budgets differ: the classical row is a solve-time reference, whereas the learned rows are amortized predictors.
+This is the main quantitative argument for the QAOA branch: the learned initializer is **competitive, not superior**, and the benefit comes from the compute-quality tradeoff rather than a higher final ratio.
 
-### 6.2 Adaptive BioGCN Benchmark Results
+The QAOA branch now also includes the ablation package that was missing from the earlier manuscript.
 
-Adaptive BioGCN reaches 96.71% representative held-out accuracy, 0.943 balanced accuracy, and 0.983 ROC AUC on the canonical split. Under fixed-split multi-seed evaluation, it reports 95.49% ± 0.97% accuracy and 0.979 ± 0.003 ROC AUC. These numbers support the role of Adaptive BioGCN as the reproducible biomedical benchmark.
+| Initializer | Mean ratio | Std. dev. | Mean retention vs. classical |
+|---|---:|---:|---:|
+| Random initialization | 0.6586 | 0.1170 | 0.7576 |
+| Heuristic initialization | 0.8634 | 0.0313 | 0.9940 |
+| GNN (no graph edges) | 0.7086 | 0.0333 | 0.8156 |
+| GNN (no node features) | 0.6535 | 0.0319 | 0.7520 |
+| **GNN full model (ours)** | **0.8682** | **0.0312** | **0.9995** |
 
-The importance of this benchmark is methodological. It provides a stable reference configuration against which stronger biomedical extensions can be interpreted, mirroring the emphasis on reproducible baselines in clinical machine learning and graph learning [30, 35-39, 43, 46, 54, 58, 59].
+These ablations sharpen the claim considerably. They show that the full model's performance is not reproduced by a graph-agnostic random baseline and degrades strongly when either topology or node features are removed.
 
-Table 3 makes the biomedical baseline comparisons explicit. The tabular rows are taken from the notebook's identical held-out split evaluation, while the graph rows summarize the benchmark and strongest graph configurations reported by the study.
+Runtime analysis likewise shifts the interpretation from "interesting demo" toward a more rigorous efficiency argument.
 
-**Table 3. Biomedical baseline comparison on the held-out CTG evaluation.**
+| Method | Median runtime (ms) | Relative to classical |
+|---|---:|---:|
+| Classical depth-2 search | 675.9079 | 1.0x |
+| Random initialization + evaluation | 0.2363 | 2859.97x faster |
+| Heuristic initialization + evaluation | 0.2384 | 2835.24x faster |
+| GNN (no graph edges) | 0.2531 | 2670.04x faster |
+| GNN (no node features) | 0.2626 | 2574.28x faster |
+| **GNN full model (ours)** | **0.2560** | **2640.48x faster** |
 
-| Model | Graph-aware | Accuracy | Balanced accuracy | ROC AUC | Note |
-|---|---|---:|---:|---:|---|
-| Logistic Regression | No | 0.9413 | 0.9030 | 0.9843 | Class-weighted linear tabular baseline |
-| Random Forest (100) | No | 0.9671 | 0.8000 | 0.9951 | High ROC AUC, weaker thresholded balance on the pathologic class |
-| MLP (100-50, ReLU) | No | 0.9742 | 0.8429 | 0.9945 | Feed-forward tabular baseline without class weighting |
-| Adaptive BioGCN | Yes | 0.9671 | 0.9430 | 0.9830 | Reproducible benchmark graph model on the canonical split |
-| ResidualClinicalGCN | Yes | 0.9883 | 0.9416 | 0.9780 | Best operating point; 31/35 pathologic exams detected with 1 false positive |
+Finally, the representative-graph convergence traces show that both the heuristic initializer and the full GNN reach the same final ratio of **0.8976**, with the full model requiring **191** function evaluations versus **196** for the heuristic baseline. By contrast, the edge-ablated model ends at **0.8439**, and random or feature-free initializers stall at **0.7731**. This does not prove asymptotic scaling, but it does provide mechanistic evidence that graph-conditioned initialization places local search in a better basin.
 
-Limitations of Comparison Protocol. Table 3 should be interpreted as a controlled split-level comparison rather than a fully uniform model-selection benchmark: all methods are evaluated on the same held-out partition, but the tabular baselines, Adaptive BioGCN benchmark, and ResidualClinicalGCN screening configuration are not all selected under an identical optimization target, hyperparameter budget, or threshold-selection rule.
+### 6.2 Biomedical Results and Statistical Framing
 
-The comparison in Table 3 is fair with respect to held-out split reuse, but not every row is tuned for the same operational objective: Adaptive BioGCN is the reproducibility benchmark, whereas ResidualClinicalGCN is the strongest threshold-selected screening configuration.
+The biomedical branch is intentionally reported in two layers: a reproducibility-oriented benchmark model and a best operating-point model.
 
-Random Forest achieves the highest ROC AUC in Table 3 because its probability ranking over pathologic versus non-pathologic cases remains strong across thresholds, but its balanced accuracy is weaker because the default operating behavior sacrifices minority-class sensitivity once a concrete decision threshold is imposed. The graph models, especially ResidualClinicalGCN, are stronger under thresholded screening evaluation because they trade a small amount of ranking-based discrimination for materially better class balance and false-positive control at the selected operating point.
+| Model | Accuracy | Balanced accuracy | ROC AUC | Notes |
+|---|---:|---:|---:|---|
+| Logistic regression | 94.13% | 0.916 | 0.984 | Strong linear baseline |
+| Calibrated logistic regression | 95.54% | 0.937 | 0.986 | Better threshold behavior than the uncalibrated linear model |
+| Random forest | 96.95% | 0.905 | 0.994 | Strong tabular nonlinear baseline |
+| Calibrated random forest | 96.01% | 0.900 | 0.991 | Calibration improves probability quality more than thresholded accuracy |
+| XGBoost | 98.83% | 0.955 | 0.991 | Strongest tabular benchmark by balanced accuracy |
+| Calibrated XGBoost | 97.18% | 0.907 | 0.985 | Calibration trades recall and specificity differently |
+| LightGBM | 98.59% | 0.927 | 0.993 | Strong boosted-tree baseline with one false positive |
+| Calibrated LightGBM | **99.06%** | **0.956** | 0.991 | Best tabular operating point in the current benchmark table |
+| MLP | 98.36% | 0.926 | 0.971 | Competitive non-graph neural baseline |
+| Adaptive BioGCN | 96.71% | 0.943 | 0.983 | Reproducibility-oriented benchmark model |
+| Adaptive BioGCN robustness | 95.49% ± 0.97% | not reported | not reported | Fixed-split repeated-seed benchmark |
+| **ResidualClinicalGCN** | **98.8%** | **0.942** | **0.978** | Best graph operating-point model |
 
-![Figure 2. Held-out biomedical evaluation with confusion matrix, ROC analysis, and train-validation trajectory.](../notebooks/figures/bio_demo_heldout_evaluation.png)
+The expanded table changes the interpretation of the biomedical branch in an important way. The graph models are still competitive and clinically interpretable, but they are no longer the only strong models in the benchmark. In particular, uncalibrated XGBoost reaches **98.83% accuracy** and **0.955 balanced accuracy**, while calibrated LightGBM reaches **99.06% accuracy**, **0.956 balanced accuracy**, and detects **32 of 35** pathologic exams with **1 false positive**. The strongest graph claim is therefore more specific: **ResidualClinicalGCN remains a strong graph-based operating-point model, but the current best tabular baselines are at least as strong and in some threshold settings stronger**. This is a healthier and more defensible result than a weaker benchmark table would have been.
 
-*Figure 2. Held-out evaluation for the biomedical benchmark. The figure combines the confusion structure at the selected threshold, a ROC view for pathologic detection, and the train-versus-validation learning trajectory used to assess optimization stability.*
+### 6.3 Interpretation Across Branches
 
-![Figure 3. Adaptive BioGCN robustness across repeated fixed-split runs.](../notebooks/figures/bio_demo_aligned_biogcn_robustness.png)
+The quantum and biomedical branches should be read together through one lens. In the QAOA branch, graph conditioning reduces the search burden while preserving quality. In the biomedical branch, graph conditioning improves how the model behaves at clinically meaningful thresholds. The shared contribution is therefore not a single benchmark win, but a demonstration that graph-conditioned learning can mediate downstream decisions in very different domains.
 
-*Figure 3. Fixed-split robustness analysis for Adaptive BioGCN. This figure supports the benchmark role of the model by showing that performance remains stable across repeated training runs rather than depending on one favorable seed.*
+---
 
-### 6.3 ResidualClinicalGCN Operating-Point Results
+## 7. Figures
 
-ResidualClinicalGCN produces the strongest held-out biomedical operating point in the study, reaching 98.8% accuracy, 0.942 balanced accuracy, and 0.978 ROC AUC. At the reported operating point, the model detects 31 of 35 pathologic exams while producing one false positive.
+![QAOA Benchmark Overview](../notebooks/figures/qaoa_demo_benchmark_overview.png)
 
-This result matters because it is decision-facing rather than purely aggregate. The model is not only accurate on average; it also supports a clinically meaningful balance between sensitivity and over-triage. Threshold analysis, calibration analysis, and saliency views help interpret whether this behavior is plausible for retrospective screening, in line with broader recommendations that high-stakes medical models be evaluated beyond accuracy alone [43-57].
+*Figure 1. Held-out transcriptomic QAOA quality and latency overview.*
 
-![Figure 4. ResidualClinicalGCN operating-point analysis across thresholds.](../notebooks/figures/bio_demo_operating_point_analysis.png)
+![QAOA Ablation and Convergence](../notebooks/figures/qaoa_demo_graph_conditioned_initialization.png)
 
-*Figure 4. Operating-point analysis for ResidualClinicalGCN. The precision-recall and threshold trade-off views make the screening interpretation explicit by showing how pathologic recall changes relative to false-positive burden across candidate thresholds.*
+*Figure 2. QAOA ablation, runtime, and convergence evidence for graph-conditioned initialization.*
 
-![Figure 5. Calibration and uncertainty analysis for the biomedical classifier.](../notebooks/figures/bio_demo_calibration_uncertainty.png)
+![Biomedical Held-Out Evaluation](../notebooks/figures/bio_demo_heldout_evaluation.png)
 
-*Figure 5. Calibration and uncertainty analysis for the biomedical branch. The reliability curves and uncertainty distributions help determine whether model confidence is aligned with retrospective screening use rather than only with average classification accuracy.*
+*Figure 3. Held-out biomedical evaluation summary.*
 
-![Figure 6. Feature-saliency comparison for pathologic detection.](../notebooks/figures/bio_demo_feature_saliency.png)
+![Biomedical Operating Point](../notebooks/figures/bio_demo_operating_point_analysis.png)
 
-*Figure 6. Feature-saliency comparison between the graph model and a tree-based reference view. The overlap in dominant features helps assess whether the learned pathologic signal is aligned with clinically meaningful covariates rather than arbitrary numerical artifacts.*
+*Figure 4. Threshold-dependent operating behavior in the biomedical branch.*
 
-### 6.4 Integrated Cross-Domain Results
+![Biomedical Robustness](../notebooks/figures/bio_demo_aligned_biogcn_robustness.png)
 
-The combined analysis provides a compact cross-domain view of the study. It reports a representative warm-start speedup of 35,070×, an Adaptive BioGCN benchmark accuracy of 96.71%, and an integrated ResidualClinicalGCN evaluation accuracy of 96.5%. These are not uniformly the strongest numbers from each standalone branch, but they show that the same graph-learning framing can support both optimization and biomedical prediction without collapsing their evaluation criteria.
+*Figure 5. Fixed-split repeated-seed robustness for Adaptive BioGCN.*
 
-### 6.5 Interpretation of the Main Results
+---
 
-The optimization result is strongest when interpreted as a quality-cost trade-off: the difference between 0.868 and 0.869 approximation ratio matters because it is paired with a major reduction in repeated classical search. The biomedical result is strongest when interpreted as a screening result rather than a leaderboard result: the key value lies in pathologic detection and threshold behavior, not only in a single accuracy number. This distinction is consistent with current clinical ML guidance, which emphasizes utility, calibration, and failure analysis rather than isolated predictive performance [39, 43-47, 54-60].
+## 8. Discussion and Limitations
 
-For that reason, the current manuscript should not be read as proving a final unified method. It should be read as showing that the unified framing is plausible, empirically nontrivial, and worth deeper controlled evaluation.
+The paper is stronger after adding the ablation, runtime, convergence, and statistical framing, but several important limitations remain.
 
-## 7. Discussion
+1. The novelty relative to prior GNN-QAOA papers is now stated more carefully, but still requires external head-to-head comparison.
+2. The QAOA branch demonstrates latency improvement and better initialization behavior, but not quantum advantage.
+3. The current runtime evidence is useful, yet it is not a full scaling study over increasing graph size.
+4. The biomedical branch uses retrospective single-cohort data and therefore should be interpreted as a modeling study, not as deployment evidence.
+5. The biomedical baseline suite is stronger than before but still incomplete without boosted-tree and calibrated baselines.
 
-### 7.1 Why the Shared Framework Matters
+The most important interpretive caveat is this: **these results should not be interpreted as evidence of clinical readiness**.
 
-The study shows that graph-conditioned learning can be useful across technically distinct domains when the model is assigned a role that matches the primary information bottleneck of the task. In the optimization branch, the bottleneck is repeated parameter search across related graph instances. In the biomedical branch, the bottleneck is extracting stable signal from a limited cohort in which neighborhood structure may carry useful information. The same message-passing paradigm can therefore be useful in both domains, but for different reasons [17-25, 35-39].
-
-![Figure 7. Graph-structure validation for the biomedical similarity graph.](../notebooks/figures/bio_demo_graph_homophily.png)
-
-*Figure 7. Graph-structure validation for the biomedical branch. The pathologic-neighbor distribution and edge-homophily comparison show that the constructed exam graph contains nontrivial relational signal rather than acting as a purely cosmetic representation.*
-
-### 7.2 Comparative Perspective
-
-The present manuscript now includes explicit internal baseline comparisons for both branches, which makes it substantially more informative than a pure demonstration notebook. A fuller external-comparison study is still necessary before the work can support stronger research claims. In the optimization branch, the most relevant next comparisons are learned warm-start and parameter-transfer methods for variational circuits [7-10]. In the biomedical branch, broader non-graph baselines, calibration-aware tree ensembles, and simpler graph baselines should be reported under identical split-first preprocessing and threshold analysis [43]-[57].
-
-### 7.3 Ablation Agenda
-
-The next ablations follow directly from the current design. For the optimization branch, they include graph construction, node-feature design, adaptation schedule, and graph-family shift sensitivity. For the biomedical branch, they include neighborhood definition, residual depth, class weighting, and threshold policy. This clarity is a strength of the current artifact because it makes the next empirical steps concrete rather than speculative.
-
-## 8. Limitations and Threats to Validity
-
-The optimization branch is limited by exact statevector simulation and therefore by small-graph scale. Strong held-out performance on the current transcriptomic graph family does not guarantee transfer to very different graph distributions. The biomedical branch is retrospective, single-cohort, and dependent on a particular graph-construction choice. These limitations should constrain any broader claims.
-
-Threats to validity therefore differ across branches. In the optimization branch, the central risk is graph-family overfitting. In the biomedical branch, the central risks are cohort shift, graph-construction sensitivity, overconfidence, and optimistic interpretation of retrospective metrics. The current study partially addresses these issues through held-out graph evaluation, split-first preprocessing, fixed-split robustness analysis, and threshold-aware reporting, but it does not eliminate them [24-25, 39, 43-47, 54-60].
-
-An additional limitation is artifact maturity. Much of the strongest evidence remains notebook-driven rather than encoded in a unified experiment pipeline. That affects not only engineering convenience but also how confidently the work can be reproduced, stress-tested, and extended by third parties.
+---
 
 ## 9. Reproducibility and Broader Impact
 
-### 9.1 Reproducibility
+The repository includes notebooks, generated tables, and exported figures that allow the main claims to be inspected directly. The current version still leans on notebook-based execution, so a stronger submission would benefit from more config-driven experiment scripts and cleaner external benchmarking.
 
-All core experiments are organized so that preprocessing, model training, evaluation, and figure generation can be re-run from the accompanying code and notebooks. Raw and processed data artifacts, model code, and exported analysis figures are included with the study. The repository is intentionally structured around one canonical notebook for the full thesis and two supporting branch notebooks for technical detail. This supports traceability from summary claims back to executed experiments, which is particularly important for cross-domain work where qualitative overstatement can otherwise outpace empirical support [39, 43, 58, 59].
+From a broader-impact perspective, we aim for careful positioning rather than inflated claims. The quantum results are about initialization efficiency in a small exact-simulation regime. The biomedical results are about retrospective risk stratification under explicit operating-point analysis. Neither branch should be over-read as production evidence.
 
-Even so, reproducibility currently depends more heavily on notebooks than on a consolidated scriptable experiment framework. A stronger submission would promote the canonical workflows into versioned training and evaluation entry points with explicit configuration, baseline registration, and artifact tracking.
-
-### 9.2 Ethical Considerations
-
-The biomedical results should not be interpreted as deployment-ready clinical recommendations. Any prospective use would require external validation, calibration under distribution shift, subgroup analysis, and workflow-specific error analysis. The optimization results should likewise not be overstated as evidence of hardware-level quantum advantage. They are best interpreted as evidence that graph-conditioned learning can act as a useful warm-start mechanism within exact simulation-based evaluation [1-5, 39-47, 56, 60].
+---
 
 ## 10. Conclusion
 
-This manuscript presents a unified graph-learning research prototype spanning QAOA warm-start prediction and biomedical screening-oriented classification. The main empirical findings are that Adaptive Quantum GCN achieves near-classical held-out quality with substantial inference acceleration on transcriptomic graph families, that Adaptive BioGCN provides a reproducible biomedical benchmark, and that ResidualClinicalGCN reaches the strongest held-out screening operating point in the study.
+We presented a unified graph-learning prototype spanning QAOA initialization and biomedical screening. The strongest manuscript-level claim is now explicit: **graph-conditioned learning can act as a reusable computational interface across structurally distinct domains**. In the QAOA branch, this yields near-classical quality with much lower inference-time cost. In the biomedical branch, it yields strong retrospective operating-point behavior under a clearer benchmarking philosophy that separates reproducibility from best-case performance.
 
-The broader contribution is methodological. Cross-domain graph-learning research becomes more credible when graph construction is explicit, model roles are task-specific, and the strongest claims remain tied to reproducible experiments. Under those conditions, quantum optimization and biomedical prediction can be studied within one coherent research program without erasing the differences that make each domain scientifically distinct.
+The paper is therefore best read as a credible research direction with concrete evidence, clearer limitations, and a sharper path toward a stronger NeurIPS submission.
 
-In its present state, the work is best understood as a promising research prototype with a coherent thesis, encouraging empirical signals, and a clearly identifiable next-stage agenda: tighten novelty, strengthen baselines and ablations, and move the strongest results from notebook-led evidence into a fully reproducible experimental pipeline.
+---
 
 ## References
 

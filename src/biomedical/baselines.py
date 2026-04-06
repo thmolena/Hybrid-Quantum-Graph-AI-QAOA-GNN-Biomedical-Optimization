@@ -5,10 +5,13 @@ import warnings
 
 import numpy as np
 import pandas as pd
+from lightgbm import LGBMClassifier
+from sklearn.calibration import CalibratedClassifierCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, balanced_accuracy_score, confusion_matrix, roc_auc_score
 from sklearn.neural_network import MLPClassifier
+from xgboost import XGBClassifier
 
 from src.common.io import write_records
 
@@ -46,9 +49,10 @@ def _select_threshold(y_true: np.ndarray, probabilities: np.ndarray) -> float:
     return best_threshold
 
 
-def _sanitize_features(frame: pd.DataFrame, feature_columns: list[str]) -> np.ndarray:
-    features = frame[feature_columns].to_numpy(dtype=float)
-    return np.nan_to_num(features, nan=0.0, posinf=0.0, neginf=0.0)
+def _sanitize_features(frame: pd.DataFrame, feature_columns: list[str]) -> pd.DataFrame:
+    features = frame.loc[:, feature_columns].astype(float)
+    sanitized = np.nan_to_num(features.to_numpy(), nan=0.0, posinf=0.0, neginf=0.0)
+    return pd.DataFrame(sanitized, columns=feature_columns, index=frame.index)
 
 
 def _evaluate_classifier(
@@ -107,12 +111,104 @@ def run_biomedical_baselines(
             ),
         ),
         (
+            "calibrated_logistic_regression",
+            CalibratedClassifierCV(
+                estimator=LogisticRegression(
+                    max_iter=1000,
+                    class_weight="balanced",
+                    random_state=seed,
+                    solver="liblinear",
+                ),
+                method="sigmoid",
+                cv=3,
+            ),
+        ),
+        (
             "random_forest",
             RandomForestClassifier(
                 n_estimators=300,
                 class_weight="balanced_subsample",
                 random_state=seed,
                 n_jobs=-1,
+            ),
+        ),
+        (
+            "calibrated_random_forest",
+            CalibratedClassifierCV(
+                estimator=RandomForestClassifier(
+                    n_estimators=300,
+                    class_weight="balanced_subsample",
+                    random_state=seed,
+                    n_jobs=-1,
+                ),
+                method="sigmoid",
+                cv=3,
+            ),
+        ),
+        (
+            "xgboost",
+            XGBClassifier(
+                n_estimators=300,
+                max_depth=4,
+                learning_rate=0.05,
+                subsample=0.9,
+                colsample_bytree=0.9,
+                reg_lambda=1.0,
+                min_child_weight=1.0,
+                random_state=seed,
+                n_jobs=-1,
+                eval_metric="logloss",
+            ),
+        ),
+        (
+            "calibrated_xgboost",
+            CalibratedClassifierCV(
+                estimator=XGBClassifier(
+                    n_estimators=300,
+                    max_depth=4,
+                    learning_rate=0.05,
+                    subsample=0.9,
+                    colsample_bytree=0.9,
+                    reg_lambda=1.0,
+                    min_child_weight=1.0,
+                    random_state=seed,
+                    n_jobs=-1,
+                    eval_metric="logloss",
+                ),
+                method="sigmoid",
+                cv=3,
+            ),
+        ),
+        (
+            "lightgbm",
+            LGBMClassifier(
+                n_estimators=300,
+                learning_rate=0.05,
+                num_leaves=31,
+                subsample=0.9,
+                colsample_bytree=0.9,
+                class_weight="balanced",
+                random_state=seed,
+                n_jobs=-1,
+                verbosity=-1,
+            ),
+        ),
+        (
+            "calibrated_lightgbm",
+            CalibratedClassifierCV(
+                estimator=LGBMClassifier(
+                    n_estimators=300,
+                    learning_rate=0.05,
+                    num_leaves=31,
+                    subsample=0.9,
+                    colsample_bytree=0.9,
+                    class_weight="balanced",
+                    random_state=seed,
+                    n_jobs=-1,
+                    verbosity=-1,
+                ),
+                method="sigmoid",
+                cv=3,
             ),
         ),
         (

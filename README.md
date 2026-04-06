@@ -6,11 +6,11 @@
 
 ## Abstract
 
-This repository presents a hybrid quantum-classical framework for structured optimization and prediction in biomedical domains. We investigate whether graph neural networks (GNNs) can learn structure-aware representations that improve parameter initialization for the Quantum Approximate Optimization Algorithm (QAOA).
+This repository studies whether graph-conditioned learning can serve as a reusable computational interface across two different problems: QAOA parameter initialization on transcriptomic co-expression graphs and graph-based biomedical screening on cardiotocography data.
 
-We evaluate this hypothesis on graph-structured biomedical settings, including transcriptomic co-expression networks and clinical similarity graphs. Results suggest that GNN-informed initialization yields competitive approximation performance relative to classical baselines in small-graph regimes, while the same graph-learning paradigm supports strong predictive performance in biomedical classification tasks.
+On six held-out transcriptomic graphs, the adapted GNN initializer achieves a mean depth-2 QAOA approximation ratio of 0.8682 ± 0.0312, versus 0.8686 ± 0.0308 for direct classical search, while reducing median end-to-end latency from 675.9 ms to 0.256 ms. In the biomedical branch, the strongest graph model reaches 98.8% held-out accuracy and 0.942 balanced accuracy, while the expanded tabular baseline suite now includes calibrated logistic regression, calibrated random forest, XGBoost, and LightGBM variants.
 
-This work is positioned as a research prototype: it demonstrates a unified graph-conditioned learning framework across quantum optimization and biomedical prediction, while clearly delineating current limitations and future scaling challenges. The accompanying manuscript in `paper/research_paper.md` is the NeurIPS-oriented paper version of the project narrative.
+The project is best read as a research study with explicit scope limits: it does not claim quantum advantage, clinical readiness, or head-to-head superiority over the latest learned-QAOA literature. The accompanying manuscript in `paper/research_paper.md` is the paper-form version of this positioning.
 
 ## 1. Motivation
 
@@ -30,7 +30,7 @@ QAOA offers a principled quantum approach to combinatorial optimization, but its
 
 ## 2. Core Hypothesis
 
-Structure-aware embeddings learned by GNNs can improve QAOA parameter initialization, leading to stronger convergence behavior and competitive solution quality on structured graph optimization problems.
+Structure-aware embeddings learned by GNNs can compress graph structure into actionable downstream signals, yielding competitive QAOA warm starts in one branch and clinically meaningful graph-based discrimination in another.
 
 ## 3. Method Overview
 
@@ -62,7 +62,16 @@ Graph Data
 
 This is a unified graph-conditioned learning framework, not a collection of separate pipelines.
 
-## 5. Experimental Design
+## 5. Evidence Snapshot
+
+| Branch | Main result | Interpretation |
+| --- | --- | --- |
+| QAOA | 0.8682 ± 0.0312 vs. 0.8686 ± 0.0308 classical | Quality near parity, value is in the compute-quality tradeoff |
+| QAOA runtime | 0.256 ms median vs. 675.9 ms classical | About 2640x lower median latency |
+| Biomedical graph model | 98.8% accuracy, 0.942 balanced accuracy | Strong graph-based operating point |
+| Biomedical tabular benchmark | 99.06% accuracy, 0.956 balanced accuracy | Calibrated LightGBM is the strongest current tabular baseline |
+
+## 6. Experimental Design
 
 We evaluate three regimes:
 
@@ -74,7 +83,7 @@ We evaluate three regimes:
 
 The strongest narrative is organized around one canonical notebook, supported by branch-specific technical appendices and extracted baseline scripts.
 
-## 6. Evaluation Metrics
+## 7. Evaluation Metrics
 
 ### Optimization (QAOA branch)
 
@@ -88,21 +97,27 @@ The strongest narrative is organized around one canonical notebook, supported by
 * ROC AUC
 * sensitivity at clinically relevant operating points
 
-## 7. Results (Prototype-Scale)
+## 8. Results
 
 | Method | Result | Interpretation |
 | --- | --- | --- |
-| Classical QAOA | ~0.869 approximation ratio | Strong baseline in small graphs |
-| GNN-Informed QAOA | ~0.868 approximation ratio | Competitive warm-start behavior |
-| Biomedical Graph Models | up to 98.8% accuracy | Strong retrospective signal |
+| Classical QAOA | 0.8686 ± 0.0308 | Exact held-out reference |
+| GNN-Informed QAOA | 0.8682 ± 0.0312 | Retains 99.95% of classical quality |
+| Best tabular biomedical baseline | 99.06% accuracy, 0.956 balanced accuracy | Calibrated LightGBM currently leads the non-graph table |
+| Best graph biomedical model | 98.8% accuracy, 0.942 balanced accuracy | Strong graph operating point with 31/35 pathologic cases detected |
 
 ### Key Takeaways
 
-* GNN initialization is competitive, not yet superior
-* performance depends strongly on graph structure and evaluation protocol
-* biomedical results are promising but not yet externally validated
+* GNN initialization is competitive, not superior, and the key benefit is inference efficiency
+* the QAOA claim is strengthened by explicit ablation, runtime, and convergence evidence
+* the biomedical branch is now benchmarked against stronger tabular baselines rather than only lightweight comparators
+* biomedical results remain retrospective and cohort-specific
 
-## 8. Contributions
+## 9. Comparison to Prior Learned-QAOA Work
+
+Recent learned-initialization papers such as Graph Learning for Parameter Prediction of Quantum Approximate Optimization Algorithm, QSeer: A Quantum-Inspired Graph Neural Network for Parameter Initialization in Quantum Approximate Optimization Algorithm Circuits, and Conditional Diffusion-based Parameter Generation for Quantum Approximate Optimization Algorithm push more directly on learned QAOA parameter generation itself. This repository makes a narrower claim. Its distinguishing contribution is the combination of biologically derived graph instances, held-out quality and runtime analysis, explicit ablations, and a shared graph-conditioned framing that also supports biomedical evaluation. A direct experimental comparison to those learned-QAOA methods remains future work.
+
+## 10. Contributions
 
 ### Technical
 
@@ -118,15 +133,17 @@ The strongest narrative is organized around one canonical notebook, supported by
 
 * end-to-end prototype spanning graph learning, quantum simulation, and biomedical evaluation
 
-## 9. Limitations
+## 11. Limitations
 
 * QAOA experiments are limited to small-scale exact simulation
 * no claim of quantum advantage is made
 * results are not hardware-validated
 * biomedical experiments are retrospective and cohort-specific
+* the strongest tabular biomedical baselines are currently as strong as or stronger than the graph models on this dataset
+* direct head-to-head comparison with recent learned-QAOA papers is still missing
 * the pipeline remains partially notebook-driven rather than fully automated
 
-## 10. Future Work
+## 12. Future Work
 
 ### Research
 
@@ -137,12 +154,13 @@ The strongest narrative is organized around one canonical notebook, supported by
 ### Quantum
 
 * integration with hardware backends or realistic noise models
-* benchmarking against stronger classical optimizers
+* benchmarking against recent learned-QAOA initialization methods and stronger classical optimizers
 
 ### Biomedical
 
 * external validation on independent cohorts
 * expansion to molecular and multi-modal graph data
+* calibration-focused comparison between graph and tabular models
 
 ### Engineering
 
@@ -150,7 +168,7 @@ The strongest narrative is organized around one canonical notebook, supported by
 * modular experiment configuration system
 * improved packaging and deployment
 
-## 11. Implementation
+## 13. Implementation
 
 ### Stack
 
@@ -163,7 +181,7 @@ Optional:
 
 * PyTorch Geometric
 
-## 12. Repository Structure
+## 14. Repository Structure
 
 ```text
 notebooks/      # Core experiments and demonstrations
@@ -176,7 +194,7 @@ docs/           # Research analysis and planning
 website/        # Demo site and visualizations
 ```
 
-## 13. Reproducibility
+## 15. Reproducibility
 
 Install:
 

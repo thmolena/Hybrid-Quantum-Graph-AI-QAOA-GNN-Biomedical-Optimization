@@ -7802,49 +7802,20 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Unified-Graph-Learning-for-Optimization-and-Biomedical-Inference">Unified Graph Learning for Optimization and Biomedical Inference<a class="anchor-link" href="#Unified-Graph-Learning-for-Optimization-and-Biomedical-Inference">¶</a></h1><p><strong>A Reproducible Research Notebook Connecting Transcriptomic QAOA Warm Starts with Clinical Graph Classification</strong></p>
+<h1 id="Research-Story:-Hybrid-Quantum-Graph-AI-for-Biomedical-Optimization">Research Story: Hybrid Quantum-Graph AI for Biomedical Optimization<a class="anchor-link" href="#Research-Story:-Hybrid-Quantum-Graph-AI-for-Biomedical-Optimization">¶</a></h1><p><strong>Thesis Notebook for the Repository</strong></p>
 <hr/>
-<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This notebook is the integrative systems presentation for the repository. Its central claim is that <strong>graph structure is the common representation layer</strong> underlying both combinatorial optimization and biomedical risk prediction. The optimization branch now uses a <strong>real transcriptomic graph family</strong> derived from the OpenML <code>prostate</code> cohort, where an <strong>Adaptive Quantum GCN</strong> proposes depth-2 QAOA parameters for biologically grounded co-expression graphs under exact classical audit. The biomedical branch shows that graph learning improves held-out performance on a <strong>real cardiotocography cohort</strong> under clinically meaningful metrics. The notebook is therefore designed for a technical presentation: one executable narrative, two real-data application domains, and explicit limits on what is and is not being claimed.</p>
-<h2 id="Primary-Contribution">Primary Contribution<a class="anchor-link" href="#Primary-Contribution">¶</a></h2><ol>
-<li><strong>Systems contribution:</strong> the notebook unifies transcriptomic QAOA warm-starting and biomedical graph classification under one graph-learning formalism rather than presenting them as unrelated demos.</li>
-<li><strong>Optimization contribution in the integrated notebook:</strong> on held-out transcriptomic graphs, the adapted <strong>Adaptive Quantum GCN</strong> reaches <strong>0.8594</strong> mean approximation ratio versus <strong>0.8686</strong> for direct classical depth-2 QAOA, retaining <strong>98.93%</strong> of classical quality.</li>
-<li><strong>Biomedical contribution in the integrated notebook:</strong> the combined clinical graph model reaches <strong>95.54%</strong> held-out CTG accuracy on the representative run and <strong>96.48% ± 0.45%</strong> fixed-split robustness across training seeds.</li>
-<li><strong>Narrative difference from the earlier combined notebook:</strong> the optimization branch is no longer a small synthetic walk-through. It now uses the same real transcriptomic graph family and domain-adaptation logic that support the stronger standalone QAOA notebook.</li>
-</ol>
-<h2 id="Dataset-and-Real-World-Relevance">Dataset and Real-World Relevance<a class="anchor-link" href="#Dataset-and-Real-World-Relevance">¶</a></h2><table>
-<thead>
-<tr>
-<th>Item</th>
-<th>This notebook</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Real optimization dataset</td>
-<td>OpenML <code>prostate</code> transcriptomic cohort, 102 patients and 12,600 expression features</td>
-</tr>
-<tr>
-<td>Real biomedical dataset</td>
-<td>UCI Cardiotocography cohort, 2,126 exams and 21 physiologic features</td>
-</tr>
-<tr>
-<td>Optimization graph family</td>
-<td>10-gene Pearson co-expression graphs derived from real patient expression data</td>
-</tr>
-<tr>
-<td>Biomedical graph</td>
-<td>Symmetric physiologic similarity graph over real CTG exams</td>
-</tr>
-<tr>
-<td>Why it matters</td>
-<td>The notebook demonstrates that the same graph-learning machinery can support both biologically grounded QAOA parameter amortization and clinically relevant risk screening</td>
-</tr>
-<tr>
-<td>Execution scope</td>
-<td>Exact statevector QAOA remains runnable because the transcriptomic graphs are intentionally kept in the exact small-graph regime, while the CTG branch uses dense local graph operations</td>
-</tr>
-</tbody>
-</table>
+<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This notebook is the main research narrative for the repository. Its job is not to act as a third independent demo. Its job is to state the single thesis that holds the project together: <strong>graph-conditioned learning can serve as a useful computational layer in both QAOA warm-start prediction and biomedical screening-oriented graph classification</strong>. The optimization branch uses real transcriptomic co-expression graphs and exact depth-2 QAOA audit. The biomedical branch uses a real cardiotocography cohort and risk-sensitive graph classification. Read this notebook first if the question is whether the repository contains one coherent idea or just several adjacent experiments.</p>
+<h2 id="Notebook-Role">Notebook Role<a class="anchor-link" href="#Notebook-Role">¶</a></h2><ul>
+<li>This is the repository's <strong>integrated story</strong> notebook.</li>
+<li>It synthesizes the strongest high-level evidence from both branches.</li>
+<li>It focuses on thesis, method role, evidence, and limits rather than on every branch-specific implementation detail.</li>
+</ul>
+<h2 id="What-This-Notebook-Claims">What This Notebook Claims<a class="anchor-link" href="#What-This-Notebook-Claims">¶</a></h2><ul>
+<li>Graph structure is the shared representation layer across both branches.</li>
+<li>A GNN can be used as a warm-start mechanism for small exact-simulation QAOA studies on transcriptomic graph families.</li>
+<li>Graph learning can also support retrospective biomedical screening on a clinically motivated similarity graph.</li>
+<li>The current artifact is a <strong>research prototype</strong> with real empirical content, not a production system and not yet a closed research submission.</li>
+</ul>
 <h2 id="Results-at-a-Glance">Results at a Glance<a class="anchor-link" href="#Results-at-a-Glance">¶</a></h2><table>
 <thead>
 <tr>
@@ -7883,46 +7854,15 @@ a.anchor-link {
 </tr>
 <tr>
 <td>Integrated CTG fixed-split robustness</td>
-<td><strong>96.48% ± 0.45%</strong></td>
+<td><strong>96.48% +/- 0.45%</strong></td>
 </tr>
 </tbody>
 </table>
-<h2 id="Visual-Evidence-Guide">Visual Evidence Guide<a class="anchor-link" href="#Visual-Evidence-Guide">¶</a></h2><ul>
-<li><strong>Parts 1-3</strong> now visualize the real transcriptomic graph family, the representative depth-2 QAOA landscape, and the held-out quality/latency benchmark.</li>
-<li><strong>Part 5</strong> provides the full biomedical evaluation dashboard rather than a single scalar metric.</li>
-<li><strong>Part 6</strong> adds the fixed-split robustness study so the biomedical claim is not just a one-seed anecdote.</li>
-<li>In a technical interview setting, these figures are the evidence path: graph structure, optimization geometry, operating behavior, and stability.</li>
-</ul>
-<h2 id="Reading-Map">Reading Map<a class="anchor-link" href="#Reading-Map">¶</a></h2><table>
-<thead>
-<tr>
-<th>Section</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0. Theoretical foundation</td>
-<td>Shared graph-learning language for QAOA and GCNs</td>
-</tr>
-<tr>
-<td>Parts 1-3</td>
-<td>Real transcriptomic QAOA benchmark, adapted GNN warm-start, and optimization geometry</td>
-</tr>
-<tr>
-<td>Parts 4-6</td>
-<td>Real CTG graph learning, evaluation dashboard, and multi-seed robustness</td>
-</tr>
-<tr>
-<td>Synthesis</td>
-<td>Unified contribution, honest limits, and future extensions</td>
-</tr>
-</tbody>
-</table>
-<h2 id="Reproducibility-Contract">Reproducibility Contract<a class="anchor-link" href="#Reproducibility-Contract">¶</a></h2><ul>
-<li>Execute this notebook only after <code>conda activate qaoa</code>.</li>
-<li>The first executable cell aborts if a different conda environment is active, preventing silent dependency drift between the quantum and biomedical branches.</li>
-<li>The entire presentation remains locally executable by design: transcriptomic QAOA stays in the exact small-graph regime and the CTG branch uses moderate dense graph operations.</li>
+<h2 id="Reading-Contract">Reading Contract<a class="anchor-link" href="#Reading-Contract">¶</a></h2><ul>
+<li>Start here for the unified thesis.</li>
+<li>Use the QAOA notebook for optimization-specific detail and baseline work.</li>
+<li>Use the biomedical notebook for screening-specific detail, calibration, and operating-point analysis.</li>
+<li>Treat the strongest claims here as the best integrated view of an in-progress research program.</li>
 </ul>
 </div>
 </div>
@@ -7934,95 +7874,43 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Project-Summary">Project Summary<a class="anchor-link" href="#Project-Summary">¶</a></h2><p>This notebook is the integrated research presentation for the repository. It is organized around a single claim: <strong>graph structure is the common computational language</strong> connecting transcriptomic QAOA warm starts and biomedical clinical-risk inference. The purpose of the combined notebook is not to dilute the two stories, but to show that the same graph-learning machinery supports both optimization and prediction on real data.</p>
-<h3 id="Headline-contribution">Headline contribution<a class="anchor-link" href="#Headline-contribution">¶</a></h3><ol>
-<li><strong>Unified systems contribution:</strong> a single executable notebook connects graph-conditioned QAOA parameter amortization and transductive clinical graph classification under one representation framework.</li>
-<li><strong>Optimization contribution:</strong> the transcriptomic branch uses a real patient-derived co-expression graph family and evaluates an adapted <strong>Adaptive Quantum GCN</strong> against exact depth-2 classical QAOA on held-out graphs.</li>
-<li><strong>Biomedical contribution:</strong> the CTG branch uses a real fetal-monitoring cohort and shows that the upgraded graph model improves held-out screening quality under class-imbalance-aware metrics.</li>
-<li><strong>Presentation contribution:</strong> the notebook is presentation-scaled, visually evidence-driven, and explicit about differences from the repository’s earlier combined version.</li>
-</ol>
-<h3 id="Difference-from-the-earlier-combined-notebook">Difference from the earlier combined notebook<a class="anchor-link" href="#Difference-from-the-earlier-combined-notebook">¶</a></h3><table>
+<h2 id="How-This-Notebook-Fits-the-Repository">How This Notebook Fits the Repository<a class="anchor-link" href="#How-This-Notebook-Fits-the-Repository">¶</a></h2><p>The repository should now be read through a clear hierarchy rather than as three co-equal demos.</p>
+<table>
 <thead>
 <tr>
-<th>Aspect</th>
-<th>Earlier combined notebook</th>
-<th>This notebook</th>
+<th>Notebook</th>
+<th>Role</th>
+<th>Use it when you want to know...</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Optimization branch</td>
-<td>Small synthetic walk-through</td>
-<td>Real transcriptomic graph family with held-out evaluation</td>
+<td><code>quantum_ai_bio_combined.ipynb</code></td>
+<td><strong>Integrated thesis notebook</strong></td>
+<td>whether the repository has one coherent research story</td>
 </tr>
 <tr>
-<td>Quantum audit</td>
-<td>Simpler optimization story</td>
-<td>Exact depth-2 QAOA with quality-retention analysis</td>
+<td><code>qaoa_demo.ipynb</code></td>
+<td>Optimization technical appendix</td>
+<td>whether the warm-start claim survives detailed inspection</td>
 </tr>
 <tr>
-<td>Biomedical branch</td>
-<td>Strong but less fully defended</td>
-<td>Adds evaluation dashboard and fixed-split robustness evidence</td>
-</tr>
-<tr>
-<td>Unifying claim</td>
-<td>Conceptual bridge</td>
-<td>Executable shared graph-learning formalism across two real-data domains</td>
+<td><code>bio_demo.ipynb</code></td>
+<td>Biomedical technical appendix</td>
+<td>whether the screening claim survives detailed inspection</td>
 </tr>
 </tbody>
 </table>
-<h3 id="What-enters-the-notebook">What enters the notebook<a class="anchor-link" href="#What-enters-the-notebook">¶</a></h3><table>
-<thead>
-<tr>
-<th>Branch</th>
-<th>Input data</th>
-<th>Learned object</th>
-<th>Reference standard</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Optimization</td>
-<td>OpenML <code>prostate</code> transcriptomic cohort</td>
-<td>Adaptive Quantum GCN warm-start model</td>
-<td>Exact MaxCut and classical depth-2 QAOA</td>
-</tr>
-<tr>
-<td>Biomedical</td>
-<td>UCI Cardiotocography cohort</td>
-<td>Residual-style clinical graph classifier</td>
-<td>Held-out screening metrics on a stratified split</td>
-</tr>
-</tbody>
-</table>
-<h3 id="What-leaves-the-notebook">What leaves the notebook<a class="anchor-link" href="#What-leaves-the-notebook">¶</a></h3><table>
-<thead>
-<tr>
-<th>Output</th>
-<th>Why it matters</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Transcriptomic graph and landscape figures</td>
-<td>Shows where the learned QAOA proposal sits relative to the classical basin</td>
-</tr>
-<tr>
-<td>Held-out quality and latency summaries</td>
-<td>Quantifies how much optimization quality is retained under amortized inference</td>
-</tr>
-<tr>
-<td>CTG evaluation dashboard</td>
-<td>Shows that the biomedical result is stronger than a single scalar accuracy claim</td>
-</tr>
-<tr>
-<td>Fixed-split robustness study</td>
-<td>Demonstrates the clinical branch is stable across training seeds</td>
-</tr>
-</tbody>
-</table>
-<h3 id="Why-the-integrated-notebook-matters">Why the integrated notebook matters<a class="anchor-link" href="#Why-the-integrated-notebook-matters">¶</a></h3><p>A strict technical audience will reasonably ask whether the repository contains one coherent idea or two unrelated demos. This notebook answers that directly: both branches consume graphs, both branches rely on adjacency-aware message passing, and both branches are evaluated against task-appropriate references that remain fully auditable. The unification is therefore architectural and methodological rather than rhetorical.</p>
+<h3 id="What-is-different-about-this-notebook">What is different about this notebook<a class="anchor-link" href="#What-is-different-about-this-notebook">¶</a></h3><ul>
+<li>It prioritizes the shared thesis over branch-local implementation detail.</li>
+<li>It presents only enough technical depth from each branch to defend the integrated story.</li>
+<li>It should be the notebook used in portfolio review, project overview, and high-level technical discussion.</li>
+</ul>
+<h3 id="What-this-notebook-does-not-try-to-do">What this notebook does not try to do<a class="anchor-link" href="#What-this-notebook-does-not-try-to-do">¶</a></h3><ul>
+<li>It does not replace the branch notebooks as the source of branch-specific evidence.</li>
+<li>It does not claim a finished production system.</li>
+<li>It does not claim a closed research case with every baseline and ablation already resolved.</li>
+</ul>
 </div>
 </div>
 </div>
@@ -8319,7 +8207,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Part-1-%E2%80%94-Real-Transcriptomic-QAOA-Benchmark:-Graph-Construction-and-Exact-Classical-Audit-">Part 1 — Real Transcriptomic QAOA Benchmark: Graph Construction and Exact Classical Audit <a name="part1"></a><a class="anchor-link" href="#Part-1-%E2%80%94-Real-Transcriptomic-QAOA-Benchmark:-Graph-Construction-and-Exact-Classical-Audit-">¶</a></h2><h3 id="1.1-The-Optimization-Instances">1.1 The Optimization Instances<a class="anchor-link" href="#1.1-The-Optimization-Instances">¶</a></h3><p>The optimization branch now uses the <strong>OpenML <code>prostate</code> transcriptomic cohort</strong> rather than a synthetic Erdős–Rényi graph. The workflow selects the 10 highest-variance genes, builds a full-cohort Pearson co-expression graph, and then derives additional <strong>patient-resampled transcriptomic graphs</strong> for adaptation and held-out evaluation.</p>
+<h2 id="Part-2-%E2%80%94-Real-Transcriptomic-Optimization-Setting-">Part 2 — Real Transcriptomic Optimization Setting <a name="part2"></a><a class="anchor-link" href="#Part-2-%E2%80%94-Real-Transcriptomic-Optimization-Setting-">¶</a></h2><h3 id="1.1-Why-the-Optimization-Branch-Was-Rebuilt">1.1 Why the Optimization Branch Was Rebuilt<a class="anchor-link" href="#1.1-Why-the-Optimization-Branch-Was-Rebuilt">¶</a></h3><p>The optimization branch now uses the <strong>OpenML <code>prostate</code> transcriptomic cohort</strong> rather than a synthetic Erdős–Rényi graph. The workflow selects the 10 highest-variance genes, builds a full-cohort Pearson co-expression graph, and then derives additional <strong>patient-resampled transcriptomic graphs</strong> for adaptation and held-out evaluation.</p>
 <h3 id="1.2-Why-This-Is-a-Stronger-Optimization-Setting">1.2 Why This Is a Stronger Optimization Setting<a class="anchor-link" href="#1.2-Why-This-Is-a-Stronger-Optimization-Setting">¶</a></h3><p>The previous combined notebook was useful as a live walk-through, but it did not support a strong real-data claim. This refactored branch now does four things that materially raise the evidence standard:</p>
 <ol>
 <li>uses <strong>real transcriptomic measurements</strong> rather than a synthetic graph family,</li>
@@ -8327,14 +8215,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 <li>trains the graph model on <strong>separate transcriptomic resamples</strong> rather than relying on out-of-domain transfer,</li>
 <li>evaluates on <strong>held-out real-data graphs</strong> with exact MaxCut references.</li>
 </ol>
-<h3 id="1.3-What-the-Next-Code-Cell-Does">1.3 What the Next Code Cell Does<a class="anchor-link" href="#1.3-What-the-Next-Code-Cell-Does">¶</a></h3><p>The next cell initializes the transcriptomic benchmark end to end:</p>
-<ul>
-<li>defines the exact MaxCut and exact depth-2 QAOA utilities,</li>
-<li>loads the cached reduced prostate panel or fetches it if needed,</li>
-<li>constructs the representative full-cohort graph plus adaptation and benchmark graph families,</li>
-<li>initializes the legacy checkpoint for contrast when available,</li>
-<li>and computes the representative depth-2 classical reference that the learned model will be judged against.</li>
-</ul>
+<h3 id="1.3-Optimization-Protocol">1.3 Optimization Protocol<a class="anchor-link" href="#1.3-Optimization-Protocol">¶</a></h3><p>This stage establishes the transcriptomic benchmark end to end: exact depth-2 MaxCut references are computed, the reduced prostate panel is loaded from cache or fetched on demand, representative and resampled graph families are constructed, the legacy checkpoint is retained for contrast when available, and the representative full-cohort graph is paired with its exact classical reference.</p>
 <h3 id="1.4-Why-the-Small-Graph-Regime-Is-Still-Legitimate">1.4 Why the Small-Graph Regime Is Still Legitimate<a class="anchor-link" href="#1.4-Why-the-Small-Graph-Regime-Is-Still-Legitimate">¶</a></h3><p>Exact statevector QAOA is exponential in the number of qubits. The notebook therefore keeps the transcriptomic graph at <strong>10 genes / 10 qubits</strong> so every claim remains fully auditable against exact MaxCut and exact expected cut. The scientific point is not large-scale hardware advantage; it is whether a learned graph model can recover near-classical optimization quality on <strong>real biological graphs</strong>.</p>
 </div>
 </div>
@@ -8826,15 +8707,10 @@ Gene panel: 1008_f_at, 1894_f_at, 1804_at, AFFX-hum_alu_at, 40794_at, 37407_s_at
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Part-2-%E2%80%94-Transcriptomic-Domain-Adaptation:-Adaptive-Quantum-GCN-Warm-Starts-">Part 2 — Transcriptomic Domain Adaptation: Adaptive Quantum GCN Warm Starts <a name="part2"></a><a class="anchor-link" href="#Part-2-%E2%80%94-Transcriptomic-Domain-Adaptation:-Adaptive-Quantum-GCN-Warm-Starts-">¶</a></h2><h3 id="2.1-Amortized-Parameter-Inference-on-Real-Graph-Families">2.1 Amortized Parameter Inference on Real Graph Families<a class="anchor-link" href="#2.1-Amortized-Parameter-Inference-on-Real-Graph-Families">¶</a></h3><p>After the exact representative-graph baseline is fixed, the next task is to replace per-instance classical search with a learned graph-conditioned proposal model. The question is no longer whether a GNN can produce any QAOA angles, but whether it can produce angles that remain competitive on <strong>held-out transcriptomic graphs</strong>.</p>
-<h3 id="2.2-Adaptive-Quantum-GCN-in-This-Notebook">2.2 Adaptive Quantum GCN in This Notebook<a class="anchor-link" href="#2.2-Adaptive-Quantum-GCN-in-This-Notebook">¶</a></h3><p>The learned model is the repository's <code>SimpleGCN</code>, presented here as <strong>Adaptive Quantum GCN</strong> after transcriptomic domain adaptation. It takes a graph-level summary derived from the co-expression network and outputs four depth-2 QAOA angles.</p>
-<h3 id="2.3-What-the-Next-Code-Cell-Does">2.3 What the Next Code Cell Does<a class="anchor-link" href="#2.3-What-the-Next-Code-Cell-Does">¶</a></h3><p>The next code cell:</p>
-<ul>
-<li>generates exact depth-2 classical targets on the adaptation graph family,</li>
-<li>fits the Adaptive Quantum GCN on those transcriptomic resamples,</li>
-<li>evaluates the adapted model on the representative graph,</li>
-<li>and reports the representative quality-retention and speedup story before the held-out benchmark is computed.</li>
-</ul>
+<h3 id="2.1-Adaptation-Objective">2.1 Adaptation Objective<a class="anchor-link" href="#2.1-Adaptation-Objective">¶</a></h3><p>The representative full-cohort graph provides the strongest single exact reference, but a learned model that only succeeds on one graph would not support a general claim. The adaptation stage therefore uses additional <strong>patient-resampled transcriptomic graphs</strong> drawn from the same biological source distribution.</p>
+<p>This is the key methodological change relative to the earlier notebook: the graph model is no longer asked to transfer from a synthetic training family. It is adapted on in-domain transcriptomic structure before held-out evaluation is considered.</p>
+<h3 id="2.2-Why-the-Learned-Model-Matters">2.2 Why the Learned Model Matters<a class="anchor-link" href="#2.2-Why-the-Learned-Model-Matters">¶</a></h3><p>The learned model is the repository's <code>SimpleGCN</code>, presented here as <strong>Adaptive Quantum GCN</strong> after transcriptomic domain adaptation. It takes a graph-level summary derived from the co-expression network and outputs four depth-2 QAOA angles.</p>
+<h3 id="2.3-Adaptation-and-Representative-Evaluation">2.3 Adaptation and Representative Evaluation<a class="anchor-link" href="#2.3-Adaptation-and-Representative-Evaluation">¶</a></h3><p>The adaptation stage generates exact depth-2 classical targets on the transcriptomic resample family, fits the Adaptive Quantum GCN to those in-domain supervision signals, evaluates the adapted model on the representative graph, and reports the resulting quality-retention and latency profile before the held-out benchmark is summarized.</p>
 <h3 id="2.4-What-Counts-as-Success">2.4 What Counts as Success<a class="anchor-link" href="#2.4-What-Counts-as-Success">¶</a></h3><p>A strong result here is not merely fast inference. A strong result is a learned model that:</p>
 <ul>
 <li>recovers nearly all of the representative classical quality,</li>
@@ -9352,14 +9228,14 @@ Saved figure assets -&gt; /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docume
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p><strong>Interpreting the optimization figures and benchmark output.</strong></p>
-<p>The optimization branch should now support three claims directly:</p>
+<h3 id="3.1-How-to-Read-the-Benchmark">3.1 How to Read the Benchmark<a class="anchor-link" href="#3.1-How-to-Read-the-Benchmark">¶</a></h3><p>The optimization branch should now support three claims directly:</p>
 <ul>
 <li><strong>Representative-graph geometry:</strong> the learned model is evaluated on the same biology-derived graph that anchors the strongest exact depth-2 reference.</li>
 <li><strong>Held-out evidence:</strong> the patient-resampled benchmark makes the quality-retention claim about a graph family, not a single instance.</li>
 <li><strong>Practical value:</strong> the latency comparison shows that the learned model remains an amortized warm-start rather than just a slower surrogate.</li>
 </ul>
 <p>For presentation purposes, the benchmark-level statistic that matters most is the mean held-out retention of the adapted model relative to classical depth-2 QAOA. That is the quantitative bridge from optimization theory to deployable inference efficiency.</p>
+<h3 id="3.2-Joint-Benchmark-Evidence">3.2 Joint Benchmark Evidence<a class="anchor-link" href="#3.2-Joint-Benchmark-Evidence">¶</a></h3><p>The benchmark summary integrates two evidence layers simultaneously: accuracy relative to exact depth-2 classical references across the held-out graph family, and inference latency relative to repeated classical optimization. Together they quantify the central tradeoff of the optimization branch: how much exact quality is preserved once optimization is amortized into learned inference.</p>
 </div>
 </div>
 </div>
