@@ -815,7 +815,7 @@
     <div class="hero-inner">
       <div class="hero-badge">Research Manuscript · Graph-Conditioned Parameterization</div>
       <h1>Graph-Conditioned Parameterization as a Task-Agnostic Interface</h1>
-      <p class="hero-sub"><strong>Bridging combinatorial optimization and clinical prediction.</strong> This repository presents graph-conditioned parameterization as a reusable interface in which graph neural networks act as structure-aware parameter generators whose outputs are consumed by downstream solvers or decision rules.</p>
+      <p class="hero-sub"><strong>Bridging combinatorial optimization and clinical prediction.</strong> This work studies graph-conditioned parameterization as a reusable interface in which graph neural networks act as structure-aware parameter generators whose outputs are consumed by downstream solvers or decision rules.</p>
       <div class="hero-pills">
         <span class="pill">QAOA</span>
         <span class="pill">GNN / GCN</span>
@@ -864,20 +864,20 @@
       <div class="card-header">
         <div class="card-icon">▣</div>
         <div>
-          <h2>Interface Overview</h2>
-          <p class="card-desc">Read the repository as one manuscript-scale interface claim: integrated overview first, then the QAOA and biomedical technical appendices.</p>
+          <h2>Research Overview</h2>
+          <p class="card-desc">The central theme is graph-conditioned parameterization across transcriptomic optimization and clinical prediction.</p>
         </div>
       </div>
 
-      <p class="section-intro">This root landing page is the single public overview. The combined notebook carries the main narrative, the two branch notebooks provide the benchmark evidence, and the `website/` directory only serves the exported assets behind this page.</p>
+      <p class="section-intro">The four panels below highlight the common analytical thread, the transcriptomic QAOA experiments, and the CTG screening experiments through the strongest quantitative findings and visual evidence.</p>
 
       <div class="impact-grid">
         <article class="impact-card">
-          <span class="impact-eyebrow">Canonical notebook</span>
-          <h3>Integrated Interface Overview</h3>
-          <p>This notebook introduces graph-conditioned parameterization as the paper's central technical object and shows how the optimization and biomedical branches instantiate the same structure-to-parameter template.</p>
+          <span class="impact-eyebrow">Integrated analysis</span>
+          <h3>Cross-domain graph-conditioned parameterization</h3>
+          <p>This analysis places transcriptomic QAOA angle generation and CTG risk scoring under the same graph-to-parameterization template and compares where that common framing is informative.</p>
 
-          <div class="impact-note">Use this notebook first if you want the thesis-level walkthrough before inspecting either branch in technical detail.</div>
+          <div class="impact-note">The emphasis is on the shared computational pattern, the headline numerical results, and the limits of the common interpretation.</div>
 
           <div class="impact-links">
             <a class="impact-link" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank" rel="noreferrer">Open notebook</a>
@@ -885,11 +885,11 @@
         </article>
 
         <article class="impact-card">
-          <span class="impact-eyebrow">QAOA appendix</span>
-          <h3>QAOA Parameterization Appendix</h3>
+          <span class="impact-eyebrow">Transcriptomic optimization</span>
+          <h3>Depth-2 QAOA on co-expression graphs</h3>
           <p>This notebook starts from transcriptomic data, builds co-expression graphs, and asks whether graph structure can predict useful depth-2 QAOA parameters for MaxCut while preserving held-out quality and reducing search cost.</p>
 
-          <div class="impact-note">Use this notebook when the main question is optimization methodology, warm-start quality, or the held-out transcriptomic benchmark.</div>
+          <div class="impact-note">The main evidence is held-out approximation quality, learned-initializer comparison, runtime reduction, and diagnostic analysis of the optimization landscape.</div>
 
           <div class="impact-links">
             <a class="impact-link" href="website/notebooks_html/qaoa_demo.html" target="_blank" rel="noreferrer">Open notebook</a>
@@ -897,11 +897,11 @@
         </article>
 
         <article class="impact-card">
-          <span class="impact-eyebrow">Biomedical appendix</span>
-          <h3>Clinical Risk Parameterization Appendix</h3>
+          <span class="impact-eyebrow">Clinical prediction</span>
+          <h3>Risk-sensitive CTG graph modeling</h3>
           <p>This notebook turns cardiotocography exams into a physiologic similarity graph and asks whether graph-based learning can produce useful pathologic-risk scores under threshold-aware evaluation, calibration analysis, and stronger tabular benchmarking.</p>
 
-          <div class="impact-note">Use this notebook when the main question is biomedical validation, screening behavior, or the distinction between the benchmark and strongest operating-point models.</div>
+          <div class="impact-note">The main evidence is held-out operating-point behavior, benchmark comparison, calibration, uncertainty, and fixed-split robustness analysis.</div>
 
           <div class="impact-links">
             <a class="impact-link" href="website/notebooks_html/bio_demo.html" target="_blank" rel="noreferrer">Open notebook</a>
@@ -1214,8 +1214,8 @@
       <div class="card-header">
         <div class="card-icon">📓</div>
         <div>
-          <h2>Notebook Guide</h2>
-          <p class="card-desc">Use this section as a concise index to the integrated overview and the two technical appendices.</p>
+          <h2>Experimental Notebooks</h2>
+          <p class="card-desc">The notebooks below provide the detailed derivations, computations, figures, and result tables underlying the main findings.</p>
         </div>
       </div>
 
@@ -1223,11 +1223,11 @@
         <a class="nb-card" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank" rel="noreferrer">
           <div class="nb-icon">🔬</div>
           <div class="nb-body">
-            <h3>Integrated Overview Notebook</h3>
-            <p>Start here for the paper-scale walkthrough that introduces graph-conditioned parameterization and shows how both empirical branches support the same interface claim.</p>
+            <h3>Integrated Analysis Notebook</h3>
+            <p>This notebook develops the shared graph-conditioned perspective and brings the optimization and clinical results into a single comparative analysis.</p>
             <div class="nb-tags">
-              <span class="nb-tag">Overview</span>
-              <span class="nb-tag">Interface Framing</span>
+              <span class="nb-tag">Integrated Analysis</span>
+              <span class="nb-tag">Comparative View</span>
               <span class="nb-tag">QAOA + Clinical</span>
             </div>
           </div>
@@ -1237,7 +1237,7 @@
         <a class="nb-card" href="website/notebooks_html/qaoa_demo.html" target="_blank" rel="noreferrer">
           <div class="nb-icon">⚛</div>
           <div class="nb-body">
-            <h3>QAOA Technical Appendix</h3>
+            <h3>Transcriptomic QAOA Notebook</h3>
             <p>Use this notebook for the transcriptomic graph pipeline, the exact-statevector benchmark, and the learned warm-start model that predicts useful QAOA angles from graph structure.</p>
             <div class="nb-tags">
               <span class="nb-tag">Exact Statevector</span>
@@ -1252,7 +1252,7 @@
         <a class="nb-card" href="website/notebooks_html/bio_demo.html" target="_blank" rel="noreferrer">
           <div class="nb-icon">🧬</div>
           <div class="nb-body">
-            <h3>Biomedical Technical Appendix</h3>
+            <h3>CTG Screening Notebook</h3>
             <p>Use this notebook for the CTG similarity graph, the threshold-aware clinical evaluation workflow, and the graph-versus-tabular interpretation of the current screening results.</p>
             <div class="nb-tags">
               <span class="nb-tag">ResidualClinicalGCN</span>
@@ -1267,35 +1267,35 @@
 
       <div class="notebook-summary-grid" aria-label="Notebook result summaries">
         <article class="notebook-summary-card">
-          <span class="impact-eyebrow">Overview</span>
+          <span class="impact-eyebrow">Integrated analysis</span>
           <h3>One interface, two empirical settings</h3>
-          <p>The integrated notebook states the common template once and keeps the paper's scope explicit: structured graph input, learned parameterization, downstream objective.</p>
+          <p>The integrated notebook states the common template once and relates transcriptomic optimization and clinical prediction through the same graph-to-parameterization map.</p>
           <ul class="notebook-summary-list">
             <li>Defines the reusable graph-conditioned parameterization view</li>
-            <li>Connects the QAOA and clinical branches without claiming cross-domain transfer</li>
-            <li><a class="impact-link" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank" rel="noreferrer">Open overview notebook</a></li>
+            <li>Separates shared structure from domain-specific objectives and limits</li>
+            <li><a class="impact-link" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank" rel="noreferrer">View integrated notebook</a></li>
           </ul>
         </article>
 
         <article class="notebook-summary-card">
-          <span class="impact-eyebrow">Optimization evidence</span>
+          <span class="impact-eyebrow">Transcriptomic optimization</span>
           <h3>Near-parity quality with a strong latency advantage</h3>
-          <p>The QAOA appendix is where the core optimization claim is defended with held-out evaluation, learned-baseline comparison, runtime measurements, and diagnostic plots.</p>
+          <p>The transcriptomic notebook develops the QAOA results through held-out evaluation, learned-initializer comparison, runtime measurements, and diagnostic plots.</p>
           <ul class="notebook-summary-list">
             <li>0.8682 mean held-out ratio versus 0.8686 for direct classical search</li>
             <li>2640x lower median latency: 0.256 ms versus 675.9 ms</li>
-            <li><a class="impact-link" href="website/notebooks_html/qaoa_demo.html" target="_blank" rel="noreferrer">Open QAOA appendix</a></li>
+            <li><a class="impact-link" href="website/notebooks_html/qaoa_demo.html" target="_blank" rel="noreferrer">View transcriptomic notebook</a></li>
           </ul>
         </article>
 
         <article class="notebook-summary-card">
-          <span class="impact-eyebrow">Clinical evidence</span>
+          <span class="impact-eyebrow">Clinical prediction</span>
           <h3>Threshold-aware screening behavior on CTG</h3>
-          <p>The biomedical appendix is where the screening claim is made concrete through held-out metrics, operating-point analysis, calibration, and comparison against stronger tabular baselines.</p>
+          <p>The CTG notebook develops the screening results through held-out metrics, operating-point analysis, calibration, and comparison against stronger tabular baselines.</p>
           <ul class="notebook-summary-list">
             <li>98.8% accuracy, 0.942 balanced accuracy, and 0.978 ROC AUC</li>
             <li>31 of 35 pathologic cases detected with one false positive</li>
-            <li><a class="impact-link" href="website/notebooks_html/bio_demo.html" target="_blank" rel="noreferrer">Open biomedical appendix</a></li>
+            <li><a class="impact-link" href="website/notebooks_html/bio_demo.html" target="_blank" rel="noreferrer">View CTG notebook</a></li>
           </ul>
         </article>
       </div>

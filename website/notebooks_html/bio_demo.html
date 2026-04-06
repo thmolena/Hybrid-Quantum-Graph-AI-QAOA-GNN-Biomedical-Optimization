@@ -7802,19 +7802,13 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Technical-Appendix:-Graph-Conditioned-Parameterization-for-Risk-Sensitive-CTG-Screening">Technical Appendix: Graph-Conditioned Parameterization for Risk-Sensitive CTG Screening<a class="anchor-link" href="#Technical-Appendix:-Graph-Conditioned-Parameterization-for-Risk-Sensitive-CTG-Screening">¶</a></h1><p><strong>NeurIPS Submission Supplement: Biomedical Branch</strong></p>
+<h1 id="Graph-Conditioned-Parameterization-for-Risk-Sensitive-CTG-Screening">Graph-Conditioned Parameterization for Risk-Sensitive CTG Screening<a class="anchor-link" href="#Graph-Conditioned-Parameterization-for-Risk-Sensitive-CTG-Screening">¶</a></h1><p><strong>Graph-Based Clinical Risk Modeling on Cardiotocography</strong></p>
 <hr/>
-<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This notebook is the biomedical-specific technical appendix for the submission. It should be read as the detailed support for the clinical branch rather than as an unrelated demo. The central question is whether graph-based relational learning improves retrospective <strong>pathologic fetal-state screening</strong> on the cardiotocography cohort under risk-sensitive evaluation. The notebook therefore emphasizes cohort audit, graph validity, operating-point behavior, calibration, uncertainty, and benchmark comparison.</p>
-<h2 id="Notebook-Role">Notebook Role<a class="anchor-link" href="#Notebook-Role">¶</a></h2><ul>
-<li>This is the submission's <strong>biomedical branch notebook</strong>.</li>
-<li>It contains the screening-specific evaluation details that would overload the overview notebook.</li>
-<li>It is the correct place to inspect whether the clinical graph story is technically serious rather than cosmetically attached.</li>
-</ul>
-<h2 id="What-This-Notebook-Adds">What This Notebook Adds<a class="anchor-link" href="#What-This-Notebook-Adds">¶</a></h2><ul>
-<li>Cohort-specific preprocessing and graph-construction detail.</li>
-<li>Separate benchmark and stronger operating-point models.</li>
-<li>Threshold analysis, calibration, uncertainty, homophily validation, and saliency.</li>
-<li>A biomedical evaluation story that goes beyond one held-out accuracy number.</li>
+<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This analysis studies graph-conditioned parameterization in retrospective CTG screening, where graph-based models produce pathologic-risk scores on a patient-similarity graph. The emphasis is on cohort structure, held-out evaluation, threshold selection, calibration, uncertainty, and comparison against strong tabular baselines.</p>
+<h2 id="Experimental-Scope">Experimental Scope<a class="anchor-link" href="#Experimental-Scope">¶</a></h2><ul>
+<li>Split-first CTG preprocessing and patient-similarity graph construction.</li>
+<li>Graph-based risk modeling for pathologic fetal-state screening.</li>
+<li>Comparisons against logistic regression, random forest, MLP, XGBoost, LightGBM, and calibrated variants.</li>
 </ul>
 <h2 id="Results-at-a-Glance">Results at a Glance<a class="anchor-link" href="#Results-at-a-Glance">¶</a></h2><table>
 <thead>
@@ -7854,10 +7848,11 @@ a.anchor-link {
 </tr>
 </tbody>
 </table>
-<h2 id="Reading-Contract">Reading Contract<a class="anchor-link" href="#Reading-Contract">¶</a></h2><ul>
-<li>Read the overview notebook first if you want the full paper thesis.</li>
-<li>Read this notebook when the question is whether the biomedical branch is rigorous enough to defend on its own.</li>
-<li>Interpret the scope honestly: retrospective single-cohort screening research, not clinical deployment.</li>
+<h2 id="Experimental-Questions">Experimental Questions<a class="anchor-link" href="#Experimental-Questions">¶</a></h2><ul>
+<li>How strong is the held-out graph operating point under threshold-aware evaluation?</li>
+<li>How do graph-based results compare with modern tabular baselines on the same split?</li>
+<li>What do calibration, uncertainty, homophily, and saliency reveal about the learned risk scores?</li>
+<li>How stable is the benchmark graph model across repeated seeded runs?</li>
 </ul>
 </div>
 </div>
@@ -7887,43 +7882,38 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="How-This-Notebook-Fits-the-Repository">How This Notebook Fits the Repository<a class="anchor-link" href="#How-This-Notebook-Fits-the-Repository">¶</a></h2><p>This notebook is one branch of a larger research story, not a standalone portfolio project competing with the other notebooks.</p>
+<h2 id="Experimental-Roadmap">Experimental Roadmap<a class="anchor-link" href="#Experimental-Roadmap">¶</a></h2><p>The analysis proceeds from cohort audit and graph construction to held-out benchmark comparison and then to operating-point, calibration, uncertainty, robustness, and saliency analyses.</p>
 <table>
 <thead>
 <tr>
-<th>Notebook</th>
-<th>Role</th>
-<th>Use it when you want to know...</th>
+<th>Part</th>
+<th>Focus</th>
+<th>Main outputs</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>quantum_ai_bio_combined.ipynb</code></td>
-<td><strong>Canonical thesis notebook</strong></td>
-<td>how the optimization and biomedical branches fit together</td>
+<td>I</td>
+<td>Cohort audit and graph construction</td>
+<td>preprocessing summary, cohort geometry, graph statistics</td>
 </tr>
 <tr>
-<td><code>qaoa_demo.ipynb</code></td>
-<td>Optimization appendix</td>
-<td>how the transcriptomic warm-start claim is evaluated</td>
+<td>II</td>
+<td>Held-out benchmark comparison</td>
+<td>graph and tabular metrics, confusion matrix, ROC and PR curves</td>
 </tr>
 <tr>
-<td><code>bio_demo.ipynb</code></td>
-<td><strong>This notebook</strong>: biomedical appendix</td>
-<td>whether the screening and calibration story is technically credible</td>
+<td>III</td>
+<td>Operating-point and calibration analysis</td>
+<td>threshold sweeps, recalibration, uncertainty summaries</td>
+</tr>
+<tr>
+<td>IV</td>
+<td>Structural and interpretive analysis</td>
+<td>homophily validation, feature saliency, robustness study</td>
 </tr>
 </tbody>
 </table>
-<h3 id="What-this-notebook-is-responsible-for">What this notebook is responsible for<a class="anchor-link" href="#What-this-notebook-is-responsible-for">¶</a></h3><ul>
-<li>Defending the biomedical graph-learning claim at technical depth.</li>
-<li>Showing that the evaluation is operating-point-aware rather than accuracy-only.</li>
-<li>Making the cohort and deployment limits explicit.</li>
-</ul>
-<h3 id="What-this-notebook-is-not-responsible-for">What this notebook is not responsible for<a class="anchor-link" href="#What-this-notebook-is-not-responsible-for">¶</a></h3><ul>
-<li>Carrying the full cross-domain thesis by itself.</li>
-<li>Acting as the optimization notebook.</li>
-<li>Implying a deployment-ready clinical system.</li>
-</ul>
 </div>
 </div>
 </div>
@@ -7934,7 +7924,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="0.-Foundations-and-Notebook-Roadmap">0. Foundations and Notebook Roadmap<a class="anchor-link" href="#0.-Foundations-and-Notebook-Roadmap">¶</a></h2><p>This notebook studies a <strong>retrospective fetal-risk detection problem on a real obstetric cohort</strong> using graph-based learning. Each exam becomes a node, physiologic similarity defines the edges, and the model must detect the rare but consequential <strong>pathologic</strong> class under substantial class imbalance.</p>
+<h2 id="0.-Foundations-and-Experimental-Roadmap">0. Foundations and Experimental Roadmap<a class="anchor-link" href="#0.-Foundations-and-Experimental-Roadmap">¶</a></h2><p>This study examines a <strong>retrospective fetal-risk detection problem on a real obstetric cohort</strong> using graph-based learning. Each exam becomes a node, physiologic similarity defines the edges, and the model must detect the rare but consequential <strong>pathologic</strong> class under substantial class imbalance.</p>
 <h3 id="Problem-setup-in-one-view">Problem setup in one view<a class="anchor-link" href="#Problem-setup-in-one-view">¶</a></h3><ul>
 <li><strong>$n = 2{,}126$ nodes</strong> — each node $v_i$ is one CTG exam with feature vector $\mathbf{x}_i \in \mathbb{R}^{21}$ representing physiologic summary statistics.</li>
 <li><strong>Edges</strong> $(i,j) \in \mathcal{E}$ iff $j \in \mathcal{N}_k(i)$ or $i \in \mathcal{N}_k(j)$: undirected symmetric $k$-NN similarity graph, with <strong>$k = 10$</strong> in the final model.</li>
@@ -8038,13 +8028,11 @@ a.anchor-link {
 </tbody>
 </table>
 <hr/>
-<h3 id="What-This-Notebook-Demonstrates">What This Notebook Demonstrates<a class="anchor-link" href="#What-This-Notebook-Demonstrates">¶</a></h3><ol>
-<li>A <strong>leakage-free</strong> graph ML pipeline on a real clinical cohort — not a synthetic or toy benchmark.</li>
-<li>A <strong>higher-performing residual graph model</strong> that materially improves held-out accuracy and false-positive control over the earlier plain-GCN configuration.</li>
-<li><strong>Quantitative validation of the graph inductive bias</strong> via edge homophily $h$ and neighbourhood enrichment (Section 6D) — the assumption that graph structure helps is tested, not asserted.</li>
-<li><strong>Validation-calibrated threshold analysis</strong> appropriate for imbalanced screening (Section 6C).</li>
-<li><strong>Calibration and uncertainty quantification</strong>: Brier score, ECE, reliability diagram, and MC Dropout per-exam uncertainty estimates (Section 6E).</li>
-<li><strong>GNN gradient saliency</strong> vs. Random Forest Gini importance — agreement/disagreement reveals features that are uniquely discriminative through neighbourhood aggregation (Section 6F).</li>
+<h3 id="Experimental-Deliverables">Experimental Deliverables<a class="anchor-link" href="#Experimental-Deliverables">¶</a></h3><ol>
+<li>Build a <strong>leakage-free</strong> graph-learning pipeline on a real clinical cohort rather than a synthetic benchmark.</li>
+<li>Measure whether the <strong>ResidualClinicalGCN</strong> operating point improves held-out accuracy and false-positive control over the earlier plain-GCN configuration.</li>
+<li>Test whether the graph inductive bias is supported by edge homophily $h$ and neighborhood enrichment rather than assumed.</li>
+<li>Report threshold analysis, calibration, uncertainty, and saliency so the operating point is interpretable rather than accuracy-only.</li>
 </ol>
 <h3 id="Known-Scope-Limitations">Known Scope Limitations<a class="anchor-link" href="#Known-Scope-Limitations">¶</a></h3><table>
 <thead>
@@ -8086,14 +8074,14 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="1.-Background-&amp;-Motivation-">1. Background &amp; Motivation <a name="background"></a><a class="anchor-link" href="#1.-Background-&amp;-Motivation-">¶</a></h2><h3 id="The-Diagnostic-Task-and-Dataset-Provenance">The Diagnostic Task and Dataset Provenance<a class="anchor-link" href="#The-Diagnostic-Task-and-Dataset-Provenance">¶</a></h3><p>This notebook uses the <strong>UCI Cardiotocography (CTG)</strong> dataset, a real biomedical monitoring benchmark derived from <strong>fetal heart rate</strong> and <strong>uterine contraction</strong> recordings. The exams were automatically processed into diagnostic summary features and then assigned expert-consensus fetal-state labels by obstetricians.</p>
+<h2 id="1.-Background-&amp;-Motivation-">1. Background &amp; Motivation <a name="background"></a><a class="anchor-link" href="#1.-Background-&amp;-Motivation-">¶</a></h2><h3 id="The-Diagnostic-Task-and-Dataset-Provenance">The Diagnostic Task and Dataset Provenance<a class="anchor-link" href="#The-Diagnostic-Task-and-Dataset-Provenance">¶</a></h3><p>This analysis uses the <strong>UCI Cardiotocography (CTG)</strong> dataset, a real biomedical monitoring benchmark derived from <strong>fetal heart rate</strong> and <strong>uterine contraction</strong> recordings. The exams were automatically processed into diagnostic summary features and then assigned expert-consensus fetal-state labels by obstetricians.</p>
 <p>The cohort contains <strong>2126 exams</strong> with <strong>21 measured features</strong> and three original fetal-state labels:</p>
 <ul>
 <li><strong>1655 normal</strong> cases</li>
 <li><strong>295 suspect</strong> cases</li>
 <li><strong>176 pathologic</strong> cases</li>
 </ul>
-<p>For this notebook, we preserve the original 3-class label in the audit tables but convert the learning objective into a <strong>binary high-risk screening task</strong>:</p>
+<p>For this analysis, the original 3-class label is preserved in the audit tables but the learning objective is converted into a <strong>binary high-risk screening task</strong>:</p>
 <ul>
 <li><strong>pathologic</strong> remains the positive class</li>
 <li><strong>normal + suspect</strong> are grouped into <strong>non-pathologic</strong></li>
@@ -8134,59 +8122,21 @@ a.anchor-link {
 </tr>
 </tbody>
 </table>
-<h3 id="Why-this-is-more-realistic-than-a-small-convenience-benchmark">Why this is more realistic than a small convenience benchmark<a class="anchor-link" href="#Why-this-is-more-realistic-than-a-small-convenience-benchmark">¶</a></h3><p>This dataset makes the tutorial feel closer to a real applied screening problem because it brings:</p>
+<h3 id="Why-this-cohort-is-a-meaningful-screening-testbed">Why this cohort is a meaningful screening testbed<a class="anchor-link" href="#Why-this-cohort-is-a-meaningful-screening-testbed">¶</a></h3><p>This cohort provides a useful stress test for graph-based screening because it combines:</p>
 <ul>
 <li>a <strong>larger cohort</strong> with 2126 exams rather than a few hundred samples</li>
 <li><strong>severe class imbalance</strong> in the high-risk pathologic class</li>
 <li><strong>clinically meaningful physiologic features</strong> tied to obstetric monitoring</li>
 <li>an expert-labeled task where missed positives are clearly more costly than extra alerts</li>
 </ul>
-<h3 id="What-this-notebook-does-and-does-not-claim">What this notebook does and does not claim<a class="anchor-link" href="#What-this-notebook-does-and-does-not-claim">¶</a></h3><p>This notebook is realistic in a <strong>research</strong> sense, not a labour-and-delivery deployment sense.</p>
-<p>It does show:</p>
-<ul>
-<li>how to work with a larger real clinical cohort rather than a tiny benchmark</li>
-<li>how to formalize an obstetric screening problem as graph learning</li>
-<li>how to avoid basic leakage mistakes in preprocessing</li>
-<li>how to evaluate the model in a clinically aware way when the risky class is rare</li>
-<li>how to audit calibration and uncertainty after training</li>
-</ul>
-<p>It does <strong>not</strong> show:</p>
+<h3 id="Interpretive-boundaries">Interpretive boundaries<a class="anchor-link" href="#Interpretive-boundaries">¶</a></h3><p>The workflow is meant to answer a narrower research question: can graph structure improve retrospective screening behavior on this cohort under leakage-safe evaluation and threshold-aware reporting?</p>
+<p>The current experiment does <strong>not</strong> address:</p>
 <ul>
 <li>prospective validation in a hospital workflow</li>
 <li>temporal waveform modeling of raw CTG traces</li>
 <li>fairness review or deployment governance needed for clinical use</li>
 </ul>
-<p>That distinction matters because strong technical work is not only about high accuracy. It is also about being precise about what the experiment really demonstrates.</p>
-<h3 id="Why-Graph-Neural-Networks?">Why Graph Neural Networks?<a class="anchor-link" href="#Why-Graph-Neural-Networks?">¶</a></h3><p>Classical ML treats every exam independently. A GNN encodes the observation that <em>physiologically similar monitoring exams often share similar risk patterns</em>. In graph terms, it learns both from the exam's own measurements and from the local neighborhood formed by similar CTG cases.</p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Inter-sample structure</th>
-<th>Irregular topology</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>MLP</td>
-<td>x</td>
-<td>-</td>
-</tr>
-<tr>
-<td>SVM</td>
-<td>x (kernel similarity only)</td>
-<td>-</td>
-</tr>
-<tr>
-<td>GNN</td>
-<td>yes, through message passing</td>
-<td>yes</td>
-</tr>
-</tbody>
-</table>
-<h3 id="Standardisation-Pre-processing">Standardisation Pre-processing<a class="anchor-link" href="#Standardisation-Pre-processing">¶</a></h3><p>Before computing pairwise distances, features are <strong>z-score standardised</strong>:</p>
-<p>$$\tilde{x}_{id} = \frac{x_{id} - \mu_d}{\sigma_d}$$</p>
-<p>where $\mu_d$ and $\sigma_d$ are estimated from the <strong>training partition only</strong>. This point matters: fitting the scaler on all exams before the split would leak held-out information into the pipeline and make the evaluation look better than it really is.</p>
+<h3 id="Why-Graph-Neural-Networks?">Why Graph Neural Networks?<a class="anchor-link" href="#Why-Graph-Neural-Networks?">¶</a></h3><p>A graph formulation is attractive here because each CTG exam is not only a feature vector but also part of a broader cohort geometry. If physiologically similar exams cluster together, then neighbourhood aggregation can help the model borrow signal from local context rather than relying only on each exam in isolation.</p>
 </div>
 </div>
 </div>
@@ -8394,7 +8344,7 @@ $$\mathbf{Z} = \mathrm{MLP}\big([\mathbf{H}^{(0)} \;\|\; \mathbf{H}^{(*)} \;\|\;
 <tr>
 <th>Package</th>
 <th>Version constraint</th>
-<th>Role in this notebook</th>
+<th>Role in this analysis</th>
 </tr>
 </thead>
 <tbody>
@@ -9705,7 +9655,7 @@ Held-out ROC AUC            : 0.9780
 <p>The <strong>ResidualClinicalGCN prediction panel</strong> uses those same PCA coordinates, so the reader can compare the model's decisions against the cohort geometry directly. The black-outlined points mark the held-out test exams. Because those circled points appear across both dense low-risk regions and the overlapping frontier, the evaluation is not restricted to only easy cases.</p>
 <h3 id="Meaning-of-the-feature-shift-panel">Meaning of the feature-shift panel<a class="anchor-link" href="#Meaning-of-the-feature-shift-panel">¶</a></h3><p>The bar chart asks a descriptive question: <strong>which physiologic measurements differ most between pathologic and non-pathologic exams in the training cohort after standardization?</strong></p>
 <p>The strongest positive shift is <strong><code>DP</code> (prolonged decelerations)</strong>, followed by <strong><code>Variance</code></strong> and <strong><code>ASTV</code></strong>. Those are features that increase in the pathologic group. The strongest negative shifts are <strong><code>Mean</code></strong>, <strong><code>Mode</code></strong>, <strong><code>Median</code></strong>, <strong><code>MLTV</code></strong>, and <strong><code>AC</code></strong>, which are lower in the pathologic group. Read clinically, the pathologic exams in this cohort tend to show more concerning deceleration and variability patterns along with lower central heart-rate summary measures. That is a descriptive cohort pattern, not a causal claim.</p>
-<h3 id="Interview-level-interpretation">Interview-level interpretation<a class="anchor-link" href="#Interview-level-interpretation">¶</a></h3><p>This first output cell already supports the central contribution claim of the notebook: <strong>a graph-aware residual classifier with explicit multi-view fusion can convert physiologic neighbourhood structure into materially higher held-out biomedical accuracy while preserving auditability and class-imbalance discipline.</strong></p>
+<h3 id="Interpretation">Interpretation<a class="anchor-link" href="#Interpretation">¶</a></h3><p>This first output cell already supports the central contribution claim of the analysis: <strong>a graph-aware residual classifier with explicit multi-view fusion can convert physiologic neighbourhood structure into materially higher held-out biomedical accuracy while preserving auditability and class-imbalance discipline.</strong></p>
 </div>
 </div>
 </div>
@@ -9717,7 +9667,7 @@ Held-out ROC AUC            : 0.9780
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="5.-PCA-Visualisation---Deep-Dive">5. PCA Visualisation - Deep Dive<a class="anchor-link" href="#5.-PCA-Visualisation---Deep-Dive">¶</a></h2><h3 id="High-level-summary">High-level summary<a class="anchor-link" href="#High-level-summary">¶</a></h3><p>PCA is a tool for turning high-dimensional data into a 2D picture.</p>
-<p>In this notebook, each CTG exam has 21 features, which is still too many dimensions to draw directly. PCA compresses those 21 numbers into two new coordinates that preserve as much variation as possible. That gives us a plot that humans can inspect.</p>
+<p>In this analysis, each CTG exam has 21 features, which is still too many dimensions to draw directly. PCA compresses those 21 numbers into two new coordinates that preserve as much variation as possible. That gives us a plot that humans can inspect.</p>
 <p>Important limitation: PCA is mainly for <strong>visual understanding</strong> here. The GCN itself still learns from the full feature set, not just the 2D projection.</p>
 <h3 id="Principal-Component-Analysis-(PCA)-Theory">Principal Component Analysis (PCA) Theory<a class="anchor-link" href="#Principal-Component-Analysis-(PCA)-Theory">¶</a></h3><p>PCA finds the orthonormal directions of maximum variance in the data. Given a centred data matrix $\bar{\mathbf{X}} \in \mathbb{R}^{n \times d}$:</p>
 <ol>
@@ -9766,7 +9716,7 @@ Held-out ROC AUC            : 0.9780
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="6.-Detailed-Evaluation-%E2%80%94-Confusion-Matrix,-ROC,-and-Clinical-Trade-offs-">6. Detailed Evaluation — Confusion Matrix, ROC, and Clinical Trade-offs <a name="evaluation"></a><a class="anchor-link" href="#6.-Detailed-Evaluation-%E2%80%94-Confusion-Matrix,-ROC,-and-Clinical-Trade-offs-">¶</a></h2><p>The final code cell measures how strong the model is on <strong>held-out CTG exams</strong>. The most important framing choice in this notebook is that we treat <strong>pathologic detection</strong> as the clinically important positive class when we compute recall, ROC, and related summary statistics.</p>
+<h2 id="6.-Detailed-Evaluation-%E2%80%94-Confusion-Matrix,-ROC,-and-Clinical-Trade-offs-">6. Detailed Evaluation — Confusion Matrix, ROC, and Clinical Trade-offs <a name="evaluation"></a><a class="anchor-link" href="#6.-Detailed-Evaluation-%E2%80%94-Confusion-Matrix,-ROC,-and-Clinical-Trade-offs-">¶</a></h2><p>The final code cell measures how strong the model is on <strong>held-out CTG exams</strong>. The most important framing choice here is that we treat <strong>pathologic detection</strong> as the clinically important positive class when we compute recall, ROC, and related summary statistics.</p>
 <p>The cell below computes:</p>
 <ul>
 <li>a <strong>confusion matrix</strong> to show exactly where predictions are correct or wrong</li>
@@ -9797,7 +9747,7 @@ Held-out ROC AUC            : 0.9780
 </tr>
 </tbody>
 </table>
-<p>For that reason, this notebook emphasizes <strong>pathologic recall</strong> and <strong>pathologic ROC behavior</strong>, not only overall accuracy.</p>
+<p>For that reason, this analysis emphasizes <strong>pathologic recall</strong> and <strong>pathologic ROC behavior</strong>, not only overall accuracy.</p>
 <h3 id="Methodological-emphasis">Methodological emphasis<a class="anchor-link" href="#Methodological-emphasis">¶</a></h3><ul>
 <li>The test split is untouched during training and model selection.</li>
 <li>The ROC curve is based on the pathologic-class probability, which aligns the metric with the stated clinical objective.</li>
@@ -9814,7 +9764,7 @@ Held-out ROC AUC            : 0.9780
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="6A.-Evaluation-Primer-and-Reading-Guide">6A. Evaluation Primer and Reading Guide<a class="anchor-link" href="#6A.-Evaluation-Primer-and-Reading-Guide">¶</a></h2><p>The final code cell is the notebook's quality-control stage. At this point, the model has already been trained. The remaining question is narrower and more consequential: <strong>how does that trained model behave on CTG exams whose labels were hidden throughout model fitting and checkpoint selection?</strong></p>
+<h2 id="6A.-Evaluation-Primer-and-Reading-Guide">6A. Evaluation Primer and Reading Guide<a class="anchor-link" href="#6A.-Evaluation-Primer-and-Reading-Guide">¶</a></h2><p>The final code cell is the analysis quality-control stage. At this point, the model has already been trained. The remaining question is narrower and more consequential: <strong>how does that trained model behave on CTG exams whose labels were hidden throughout model fitting and checkpoint selection?</strong></p>
 <h3 id="Inputs-entering-the-evaluation-cell">Inputs entering the evaluation cell<a class="anchor-link" href="#Inputs-entering-the-evaluation-cell">¶</a></h3><table>
 <thead>
 <tr>
@@ -9879,7 +9829,7 @@ Held-out ROC AUC            : 0.9780
 </tr>
 </tbody>
 </table>
-<p>For this notebook, we treat <strong>pathologic</strong> as the positive class because that is the clinically riskier condition to miss.</p>
+<p>Here, <strong>pathologic</strong> is treated as the positive class because that is the clinically riskier condition to miss.</p>
 <h3 id="How-to-read-the-common-metrics">How to read the common metrics<a class="anchor-link" href="#How-to-read-the-common-metrics">¶</a></h3><table>
 <thead>
 <tr>
@@ -10269,7 +10219,7 @@ Summary metrics (pathologic treated as positive class)
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Reading-the-Final-Evaluation-Outputs">Reading the Final Evaluation Outputs<a class="anchor-link" href="#Reading-the-Final-Evaluation-Outputs">¶</a></h3><p>The final evaluation cell answers the notebook's central practical question: <strong>does the tuned graph model remain clinically useful on held-out CTG exams that it never used for learning, threshold selection, or checkpoint selection?</strong> The saved outputs show that the answer is yes, and more strongly than in the earlier notebook revision.</p>
+<h3 id="Reading-the-Final-Evaluation-Outputs">Reading the Final Evaluation Outputs<a class="anchor-link" href="#Reading-the-Final-Evaluation-Outputs">¶</a></h3><p>The final evaluation cell answers the central practical question: <strong>does the tuned graph model remain clinically useful on held-out CTG exams that it never used for learning, threshold selection, or checkpoint selection?</strong> The saved outputs show that the answer is yes, and more strongly than in the earlier revision.</p>
 <h3 id="What-the-confusion-matrix-means">What the confusion matrix means<a class="anchor-link" href="#What-the-confusion-matrix-means">¶</a></h3><p>On the <strong>426 held-out test exams</strong>, the updated model records:</p>
 <ul>
 <li><p><strong>31 true positives</strong>: pathologic exams correctly identified as pathologic</p>
@@ -10299,7 +10249,7 @@ Summary metrics (pathologic treated as positive class)
 <li><p><strong>ROC AUC for pathologic detection:</strong> 0.978</p>
 </li>
 </ul>
-<p>The critical interview-level point is not merely that accuracy increased. It is <strong>how</strong> it increased. The tuned residual architecture reduces total test-set mistakes to <strong>5 cases</strong> while preserving strong pathologic sensitivity and pushing specificity essentially to saturation.</p>
+<p>The critical point is not merely that accuracy increased. It is <strong>how</strong> it increased. The tuned residual architecture reduces total test-set mistakes to <strong>5 cases</strong> while preserving strong pathologic sensitivity and pushing specificity essentially to saturation.</p>
 <h3 id="Meaning-of-the-ROC-curve">Meaning of the ROC curve<a class="anchor-link" href="#Meaning-of-the-ROC-curve">¶</a></h3><p>The ROC curve stays well above the random diagonal and achieves an <strong>AUC of about 0.978</strong>, which indicates that the pathologic probability scores rank exams well across a wide range of thresholds. This matters because the final operating point at <strong>$\tau = 0.56$</strong> was selected on the validation set rather than tuned on the test set.</p>
 <h3 id="Meaning-of-the-training-dynamics-panel">Meaning of the training-dynamics panel<a class="anchor-link" href="#Meaning-of-the-training-dynamics-panel">¶</a></h3><p>The training-dynamics panel should be read as a stability check. The important technical result is that the strongest checkpoint is recovered by early stopping from a sustained validation optimum rather than from a noisy late-epoch spike. That makes the gain in held-out accuracy much easier to defend in an interview or review setting.</p>
 <h3 id="Overall-interpretation">Overall interpretation<a class="anchor-link" href="#Overall-interpretation">¶</a></h3><p>The final figure therefore supports three conclusions at once:</p>
@@ -10624,7 +10574,7 @@ Saved figure assets -&gt; /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docume
 <li><strong>The tabular benchmark is now genuinely strong as well</strong>: calibrated LightGBM and XGBoost slightly exceed the graph model on this split, which makes the benchmark story more defensible rather than weaker.</li>
 <li><strong>This changes the claim</strong> from "the GNN beats simple baselines" to a more rigorous statement: the graph model remains competitive and operationally interpretable even when benchmarked against modern boosted and calibrated tabular models.</li>
 </ul>
-<h3 id="Interview-level-takeaway">Interview-level takeaway<a class="anchor-link" href="#Interview-level-takeaway">¶</a></h3><p>The stronger table supports a more credible conclusion than a blanket "graph models win" claim. The notebook can now say something narrower and technically safer: <strong>ResidualClinicalGCN is a strong graph-based screening model on this split, but the current best tabular baselines are at least as strong and in some threshold settings slightly stronger.</strong> That is reviewer-facing evidence, not marketing language.</p>
+<h3 id="Takeaway">Takeaway<a class="anchor-link" href="#Takeaway">¶</a></h3><p>The stronger table supports a more credible conclusion than a blanket "graph models win" claim. The analysis can now say something narrower and technically safer: <strong>ResidualClinicalGCN is a strong graph-based screening model on this split, but the current best tabular baselines are at least as strong and in some threshold settings slightly stronger.</strong> That is reviewer-facing evidence, not marketing language.</p>
 </div>
 </div>
 </div>
@@ -10965,7 +10915,7 @@ current best calibrated / boosted tabular baselines are now visible in the same 
 </li>
 </ul>
 <h3 id="Reading-the-Precision%E2%80%93Recall-curve">Reading the Precision–Recall curve<a class="anchor-link" href="#Reading-the-Precision%E2%80%93Recall-curve">¶</a></h3><p>For imbalanced datasets (prevalence = 8.2%), the <strong>PR curve is more informative than the ROC</strong>. A model with no discriminative power produces a horizontal line at the prevalence level (0.082). Area under the PR curve (Average Precision) captures this directly.</p>
-<h3 id="Contribution-of-this-section">Contribution of this section<a class="anchor-link" href="#Contribution-of-this-section">¶</a></h3><p>This section is not a cosmetic add-on. It is part of the notebook's contribution claim: <strong>the final reported accuracy is tied to an explicit, validation-selected operating policy, not to a casually inherited threshold convention.</strong></p>
+<h3 id="Contribution-of-this-section">Contribution of this section<a class="anchor-link" href="#Contribution-of-this-section">¶</a></h3><p>This section is not a cosmetic add-on. It is part of the main contribution claim: <strong>the final reported accuracy is tied to an explicit, validation-selected operating policy, not to a casually inherited threshold convention.</strong></p>
 </div>
 </div>
 </div>
@@ -11613,7 +11563,7 @@ Saved figure assets -&gt; /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docume
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="6E.-Post-hoc-Calibration-&amp;-Uncertainty-Quantification-">6E. Post-hoc Calibration &amp; Uncertainty Quantification <a name="calibration"></a><a class="anchor-link" href="#6E.-Post-hoc-Calibration-&amp;-Uncertainty-Quantification-">¶</a></h2><p>The previous sections answer <em>what</em> the model predicts and <em>where</em> to set the threshold. This section asks the more deployment-critical question: <strong>can the model's probability scores be trusted, and can we improve them without sacrificing the operating point that already achieved 98.8% test accuracy?</strong></p>
 <h3 id="Why-post-hoc-calibration-matters-here">Why post-hoc calibration matters here<a class="anchor-link" href="#Why-post-hoc-calibration-matters-here">¶</a></h3><p>The tuned ResidualClinicalGCN is already strong as a classifier, but raw softmax confidence is not automatically a clinically meaningful risk score. Threshold selection, downstream ranking, and escalation review all assume that a predicted probability of, say, <code>0.70</code> means something stable and interpretable.</p>
-<h3 id="Calibration-strategy-used-in-this-notebook">Calibration strategy used in this notebook<a class="anchor-link" href="#Calibration-strategy-used-in-this-notebook">¶</a></h3><p>All calibrators are fit on the <strong>validation split only</strong>, leaving the test split untouched until final comparison. The notebook now evaluates four probability layers on the same trained model:</p>
+<h3 id="Calibration-strategy-used-here">Calibration strategy used here<a class="anchor-link" href="#Calibration-strategy-used-here">¶</a></h3><p>All calibrators are fit on the <strong>validation split only</strong>, leaving the test split untouched until final comparison. The analysis now evaluates four probability layers on the same trained model:</p>
 <ul>
 <li><p><strong>Raw softmax probabilities</strong> from the tuned ResidualClinicalGCN</p>
 </li>
@@ -11625,7 +11575,7 @@ Saved figure assets -&gt; /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docume
 </li>
 </ul>
 <p>This is stricter than recalibrating on the test set and more realistic than reporting uncalibrated confidence values by default.</p>
-<h3 id="What-counts-as-success">What counts as success<a class="anchor-link" href="#What-counts-as-success">¶</a></h3><p>A useful calibrator should improve reliability metrics such as <strong>ECE</strong> and <strong>Brier score</strong> while preserving, or at least not materially degrading, the notebook's deployed decision profile:</p>
+<h3 id="What-counts-as-success">What counts as success<a class="anchor-link" href="#What-counts-as-success">¶</a></h3><p>A useful calibrator should improve reliability metrics such as <strong>ECE</strong> and <strong>Brier score</strong> while preserving, or at least not materially degrading, the deployed decision profile:</p>
 <ul>
 <li><p>test accuracy near the current <strong>98.8%</strong> level</p>
 </li>
@@ -13118,162 +13068,6 @@ Conclusion: none of the searched configurations kept FP &lt;= 1 consistently acr
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f765b0b0">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="6H.-Export-for-Presentation-Delivery-">6H. Export for Presentation Delivery <a name="export"></a><a class="anchor-link" href="#6H.-Export-for-Presentation-Delivery-">¶</a></h2><p>A presentation-ready notebook is more useful if it can be rendered into a standalone artifact. The following cell exports the current notebook to HTML so the final narrative, tables, and figures can be reviewed without opening Jupyter.</p>
-<p>The export target is the repository's existing presentation directory:</p>
-<ul>
-<li><code>website/notebooks_html/bio_demo.html</code></li>
-</ul>
-<p>That keeps the interview-ready artifact colocated with the existing published notebook renders.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=f505bb4f">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [18]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── Section 6H: Export the executed notebook to HTML ──────────────────────────</span>
-
-
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">shlex</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
-
-
-
-<span class="n">notebook_path</span> <span class="o">=</span> <span class="n">proj_root</span> <span class="o">/</span> <span class="s2">"notebooks"</span> <span class="o">/</span> <span class="s2">"bio_demo.ipynb"</span>
-
-<span class="n">html_output_dir</span> <span class="o">=</span> <span class="n">proj_root</span> <span class="o">/</span> <span class="s2">"website"</span> <span class="o">/</span> <span class="s2">"notebooks_html"</span>
-
-<span class="n">html_output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="n">html_output_path</span> <span class="o">=</span> <span class="n">html_output_dir</span> <span class="o">/</span> <span class="s2">"bio_demo.html"</span>
-
-
-
-<span class="n">nbconvert_cmd</span> <span class="o">=</span> <span class="p">[</span>
-
-    <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
-
-    <span class="s2">"-m"</span><span class="p">,</span>
-
-    <span class="s2">"jupyter"</span><span class="p">,</span>
-
-    <span class="s2">"nbconvert"</span><span class="p">,</span>
-
-    <span class="s2">"--to"</span><span class="p">,</span>
-
-    <span class="s2">"html"</span><span class="p">,</span>
-
-    <span class="nb">str</span><span class="p">(</span><span class="n">notebook_path</span><span class="p">),</span>
-
-    <span class="s2">"--output"</span><span class="p">,</span>
-
-    <span class="n">html_output_path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-
-    <span class="s2">"--output-dir"</span><span class="p">,</span>
-
-    <span class="nb">str</span><span class="p">(</span><span class="n">html_output_dir</span><span class="p">),</span>
-
-<span class="p">]</span>
-
-
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Executing export command:"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"  "</span> <span class="o">+</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">nbconvert_cmd</span><span class="p">))</span>
-
-
-
-<span class="n">completed</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">nbconvert_cmd</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Exit code: </span><span class="si">{</span><span class="n">completed</span><span class="o">.</span><span class="n">returncode</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="n">completed</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">nbconvert stdout:</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">completed</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-
-<span class="k">if</span> <span class="n">completed</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">nbconvert stderr:</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">completed</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-
-
-
-<span class="k">if</span> <span class="n">completed</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-
-    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Notebook HTML export failed."</span><span class="p">)</span>
-
-
-
-<span class="c1"># nbconvert still preserves stale embedded base64 images from earlier notebook</span>
-
-<span class="c1"># outputs even after the figure sections were moved to explicit markdown images.</span>
-
-<span class="c1"># Remove only those placeholder-alt duplicates so the HTML keeps the deliberate</span>
-
-<span class="c1"># markdown figures with explicit alternative text.</span>
-
-<span class="n">html_text</span> <span class="o">=</span> <span class="n">html_output_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
-
-<span class="n">duplicate_image_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-
-    <span class="sa">r</span><span class="s1">'&lt;img alt="No description has been provided for this image" class="" src="data:image/png;base64,[^"]+"\s*/&gt;'</span><span class="p">,</span>
-
-    <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">,</span>
-
-<span class="p">)</span>
-
-<span class="n">html_text</span><span class="p">,</span> <span class="n">duplicate_count</span> <span class="o">=</span> <span class="n">duplicate_image_pattern</span><span class="o">.</span><span class="n">subn</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="n">html_text</span><span class="p">)</span>
-
-<span class="n">html_output_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">html_text</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
-
-
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Removed duplicated embedded placeholder images: </span><span class="si">{</span><span class="n">duplicate_count</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Exported HTML artifact → </span><span class="si">{</span><span class="n">html_output_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Executing export command:
-  /Users/mohuyn/miniforge3/envs/qaoa/bin/python -m jupyter nbconvert --to html /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/notebooks/bio_demo.ipynb --output bio_demo.html --output-dir /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html
-Exit code: 0
-
-nbconvert stderr:
-[NbConvertApp] Converting notebook /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/notebooks/bio_demo.ipynb to html
-[NbConvertApp] Writing 868722 bytes to /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html/bio_demo.html
-
-Removed duplicated embedded placeholder images: 0
-Exported HTML artifact → /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html/bio_demo.html
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b03379ab">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -13291,7 +13085,7 @@ Exported HTML artifact → /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docum
 </ul>
 <h4 id="D.-Cancer-Genomics-Sub-type-Discovery">D. Cancer Genomics Sub-type Discovery<a class="anchor-link" href="#D.-Cancer-Genomics-Sub-type-Discovery">¶</a></h4><p>Train GCN on TCGA gene expression data with protein interaction network as graph topology to identify novel molecular subtypes for precision oncology.</p>
 <hr/>
-<h3 id="Extending-This-Demo">Extending This Demo<a class="anchor-link" href="#Extending-This-Demo">¶</a></h3><h4 id="1.-Preserve-the-Full-3-Class-CTG-Objective">1. Preserve the Full 3-Class CTG Objective<a class="anchor-link" href="#1.-Preserve-the-Full-3-Class-CTG-Objective">¶</a></h4><p>The source dataset is naturally <strong>normal / suspect / pathologic</strong>. A direct extension is to keep the full 3-class label rather than collapsing to binary screening. That would turn the notebook from high-risk detection into richer clinical-state stratification.</p>
+<h3 id="Extension-Paths">Extension Paths<a class="anchor-link" href="#Extension-Paths">¶</a></h3><h4 id="1.-Preserve-the-Full-3-Class-CTG-Objective">1. Preserve the Full 3-Class CTG Objective<a class="anchor-link" href="#1.-Preserve-the-Full-3-Class-CTG-Objective">¶</a></h4><p>The source dataset is naturally <strong>normal / suspect / pathologic</strong>. A direct extension is to keep the full 3-class label rather than collapsing to binary screening. That would turn the current setup from high-risk detection into richer clinical-state stratification.</p>
 <h4 id="2.-Feature-Level-Attention-(GAT)">2. Feature-Level Attention (GAT)<a class="anchor-link" href="#2.-Feature-Level-Attention-(GAT)">¶</a></h4><p>Replace uniform aggregation $\frac{1}{d_i}$ with <strong>learned attention weights</strong>:</p>
 <p>$$\alpha_{ij} = \frac{\exp(\text{LeakyReLU}(\mathbf{a}^\top[\mathbf{W}\mathbf{h}_i \| \mathbf{W}\mathbf{h}_j]))}{\sum_{k \in \mathcal{N}(i)}\exp(\text{LeakyReLU}(\mathbf{a}^\top[\mathbf{W}\mathbf{h}_i \| \mathbf{W}\mathbf{h}_k]))}$$</p>
 <p>The attention weight $\alpha_{ij}$ learns which neighbours are most informative.</p>
@@ -13367,153 +13161,40 @@ Exported HTML artifact → /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docum
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="6H.-Export-for-Presentation-Delivery-">6H. Export for Presentation Delivery <a name="export"></a><a class="anchor-link" href="#6H.-Export-for-Presentation-Delivery-">¶</a></h2><p>A presentation-ready notebook is more useful when it can be rendered as a standalone artifact. The executed narrative, tables, and figures are therefore exported to HTML so the full result can be reviewed without opening Jupyter.</p>
-<p>The export target is the repository's existing presentation directory:</p>
-<ul>
-<li><code>website/notebooks_html/bio_demo.html</code></li>
-</ul>
-<p>This keeps the interview-ready artifact colocated with the existing published notebook renders.</p>
+<h2 id="6H.-HTML-Export-">6H. HTML Export <a name="export"></a><a class="anchor-link" href="#6H.-HTML-Export-">¶</a></h2><p>The following cell writes the executed notebook, including figures and tables, to an HTML file for external viewing.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=1d314fd5">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=1d314fd5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [19]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">72</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.notebook_export</span><span class="w"> </span><span class="kn">import</span> <span class="n">export_notebook_html</span>
 
+<span class="n">exported_html</span> <span class="o">=</span> <span class="n">export_notebook_html</span><span class="p">(</span>
+    <span class="n">notebook_path</span><span class="o">=</span><span class="n">proj_root</span> <span class="o">/</span> <span class="s2">"notebooks"</span> <span class="o">/</span> <span class="s2">"bio_demo.ipynb"</span><span class="p">,</span>
+    <span class="n">output_name</span><span class="o">=</span><span class="s2">"bio_demo.html"</span><span class="p">,</span>
+    <span class="n">output_dir</span><span class="o">=</span><span class="n">proj_root</span> <span class="o">/</span> <span class="s2">"website"</span> <span class="o">/</span> <span class="s2">"notebooks_html"</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">72</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"bio_demo.ipynb — session complete"</span><span class="p">)</span>
-
 <span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">72</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Artifacts written:"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"  outputs/ctg_raw.csv                — full cohort with 3-class and binary labels"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"  outputs/ctg_processed.csv          — standardised features with split annotations"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"  website/notebooks_html/bio_demo.html — presentation-ready executed HTML export"</span><span class="p">)</span>
-
 <span class="nb">print</span><span class="p">()</span>
-
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Files written:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"  outputs/ctg_raw.csv"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"  outputs/ctg_processed.csv"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">exported_html</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">proj_root</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Key results (ResidualClinicalGCN, held-out test set n=426, 35 pathologic):"</span><span class="p">)</span>
-
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Accuracy         </span><span class="si">{</span><span class="n">test_accuracy</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">:</span><span class="s2">5.1f</span><span class="si">}</span><span class="s2">%   |  Balanced Acc  </span><span class="si">{</span><span class="n">test_balanced_accuracy</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Pathol. Recall   </span><span class="si">{</span><span class="n">pathologic_recall</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">:</span><span class="s2">5.1f</span><span class="si">}</span><span class="s2">%   |  Precision      </span><span class="si">{</span><span class="n">pathologic_precision</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">:</span><span class="s2">5.1f</span><span class="si">}</span><span class="s2">%   |  ROC AUC  </span><span class="si">{</span><span class="n">roc_auc</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Threshold τ     </span><span class="si">{</span><span class="n">decision_threshold</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">    |  TP=</span><span class="si">{</span><span class="n">tp</span><span class="si">}</span><span class="s2">  FN=</span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">  FP=</span><span class="si">{</span><span class="n">fp</span><span class="si">}</span><span class="s2">  TN=</span><span class="si">{</span><span class="n">tn</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">()</span>
-
-<span class="n">best_tabular_summary</span> <span class="o">=</span> <span class="n">comparison_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">comparison_df</span><span class="p">[</span><span class="s2">"Uses graph"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"No"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Expanded baseline benchmark:"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Best tabular model  </span><span class="si">{</span><span class="n">best_tabular_summary</span><span class="p">[</span><span class="s1">'Model'</span><span class="p">]</span><span class="si">}</span><span class="s2">   |  Accuracy  </span><span class="si">{</span><span class="n">best_tabular_summary</span><span class="p">[</span><span class="s1">'Accuracy'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">   |  Bal. Acc.  </span><span class="si">{</span><span class="n">best_tabular_summary</span><span class="p">[</span><span class="s1">'Bal. Acc.'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"  The graph model remains clinically interpretable, but the strongest boosted tabular"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"  baselines are now at least as strong on this split."</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Calibration follow-up:"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Selected method  </span><span class="si">{</span><span class="n">calibrated_method</span><span class="si">}</span><span class="s2">   |  ECE  </span><span class="si">{</span><span class="n">calibrated_row</span><span class="p">[</span><span class="s1">'ECE'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  (raw </span><span class="si">{</span><span class="n">raw_row</span><span class="p">[</span><span class="s1">'ECE'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Brier score      </span><span class="si">{</span><span class="n">calibrated_row</span><span class="p">[</span><span class="s1">'Brier'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  (raw </span><span class="si">{</span><span class="n">raw_row</span><span class="p">[</span><span class="s1">'Brier'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Temperature T    </span><span class="si">{</span><span class="n">temperature_scale</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Expanded robustness appendix:"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Repeated split seeds: </span><span class="si">{</span><span class="n">split_seeds</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Configurations searched: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">search_configs</span><span class="p">)</span><span class="si">}</span><span class="s2">  |  Total runs: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">search_df</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Runs with FP &lt;= 1: </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">search_df</span><span class="p">[</span><span class="s1">'meets_fp_constraint'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"  No searched candidate exceeded the deployed 98.8% model while keeping FP &lt;= 1."</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"  No searched configuration kept FP &lt;= 1 across all repeated splits."</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Section 6B  — comparison_df      : ResidualClinicalGCN plus calibrated / boosted tabular baselines"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Section 6C  — threshold_df       : recall / precision / FP-rate at each threshold τ"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Section 6D  — graph homophily    : edge homophily h vs. random baseline"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Section 6E  — calibration_df     : raw vs Platt vs isotonic vs temperature reliability metrics"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Section 6F  — saliency           : GNN gradient saliency vs. RF Gini importance"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Section 6G  — search_summary_df  : repeated-split constrained search robustness summary"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Section 6H  — HTML export        : standalone presentation artifact"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"See qaoa_demo.ipynb for the companion quantum-optimisation workflow."</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">72</span><span class="p">)</span>
 </pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>========================================================================
-bio_demo.ipynb — session complete
-========================================================================
-Artifacts written:
-  outputs/ctg_raw.csv                — full cohort with 3-class and binary labels
-  outputs/ctg_processed.csv          — standardised features with split annotations
-  website/notebooks_html/bio_demo.html — presentation-ready executed HTML export
-
-Key results (ResidualClinicalGCN, held-out test set n=426, 35 pathologic):
-  Accuracy          98.8%   |  Balanced Acc  0.942
-  Pathol. Recall    88.6%   |  Precision       96.9%   |  ROC AUC  0.978
-  Threshold τ     0.56    |  TP=31  FN=4  FP=1  TN=390
-
-Expanded baseline benchmark:
-  Best tabular model  Calibrated LightGBM   |  Accuracy  0.9906   |  Bal. Acc.  0.9559
-  The graph model remains clinically interpretable, but the strongest boosted tabular
-  baselines are now at least as strong on this split.
-
-Calibration follow-up:
-  Selected method  Temperature scaling   |  ECE  0.0139  (raw 0.1043)
-  Brier score      0.0138  (raw 0.0250)
-  Temperature T    0.1857
-
-Expanded robustness appendix:
-  Repeated split seeds: [5, 11, 17, 23, 31, 37, 43, 59]
-  Configurations searched: 12  |  Total runs: 96
-  Runs with FP &lt;= 1: 16
-  No searched candidate exceeded the deployed 98.8% model while keeping FP &lt;= 1.
-  No searched configuration kept FP &lt;= 1 across all repeated splits.
-
-Section 6B  — comparison_df      : ResidualClinicalGCN plus calibrated / boosted tabular baselines
-Section 6C  — threshold_df       : recall / precision / FP-rate at each threshold τ
-Section 6D  — graph homophily    : edge homophily h vs. random baseline
-Section 6E  — calibration_df     : raw vs Platt vs isotonic vs temperature reliability metrics
-Section 6F  — saliency           : GNN gradient saliency vs. RF Gini importance
-Section 6G  — search_summary_df  : repeated-split constrained search robustness summary
-Section 6H  — HTML export        : standalone presentation artifact
-
-See qaoa_demo.ipynb for the companion quantum-optimisation workflow.
-========================================================================
-</pre>
 </div>
 </div>
 </div>

@@ -7802,21 +7802,13 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Graph-Conditioned-Parameterization-as-a-Task-Agnostic-Interface">Graph-Conditioned Parameterization as a Task-Agnostic Interface<a class="anchor-link" href="#Graph-Conditioned-Parameterization-as-a-Task-Agnostic-Interface">¶</a></h1><p><strong>NeurIPS Submission Overview: Bridging Combinatorial Optimization and Clinical Prediction</strong></p>
+<h1 id="Graph-Conditioned-Parameterization-as-a-Task-Agnostic-Interface">Graph-Conditioned Parameterization as a Task-Agnostic Interface<a class="anchor-link" href="#Graph-Conditioned-Parameterization-as-a-Task-Agnostic-Interface">¶</a></h1><p><strong>Integrated Analysis Across Combinatorial Optimization and Clinical Prediction</strong></p>
 <hr/>
-<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This notebook is the overview companion to the submission. It introduces <strong>graph-conditioned parameterization (GCP)</strong> as a reusable interface for mapping structured graphs to task-specific decision variables, with graph neural networks serving as <strong>structure-aware parameter generators</strong> whose outputs are consumed by downstream solvers or decision rules. The notebook instantiates that perspective in two settings: QAOA warm-start parameter generation on transcriptomic co-expression graphs and risk scoring for graph-based clinical prediction on cardiotocography.</p>
-<h2 id="Notebook-Role">Notebook Role<a class="anchor-link" href="#Notebook-Role">¶</a></h2><ul>
-<li>This is the submission's <strong>integrated overview notebook</strong>.</li>
-<li>It presents the paper's central technical object: a graph model used as a <strong>structure-to-parameter interface</strong> rather than only as an end-task predictor.</li>
-<li>It synthesizes the strongest evidence from both empirical settings while keeping branch-specific implementation detail in the appendix notebooks.</li>
-<li>It is the right entry point when the question is whether the two domains support one coherent interface claim rather than two loosely connected demonstrations.</li>
-</ul>
-<h2 id="What-This-Notebook-Claims">What This Notebook Claims<a class="anchor-link" href="#What-This-Notebook-Claims">¶</a></h2><ul>
-<li>Many graph-learning problems can be written in the common form <strong>graph -&gt; parameterization -&gt; downstream objective</strong>.</li>
-<li>In this submission, that interface is instantiated for <strong>QAOA angle generation</strong> and <strong>clinical risk scoring</strong>.</li>
-<li>In the QAOA branch, the adapted GNN preserves near-parity with direct classical depth-2 search while maintaining a strong latency advantage on held-out transcriptomic graphs.</li>
-<li>In the biomedical branch, graph-conditioned risk scores remain competitive under threshold-aware reporting, calibration analysis, and stronger tabular benchmarking.</li>
-<li>The contribution is the reusable interface framing and its empirical instantiation across two settings, not a claim of quantum advantage, clinical readiness, or demonstrated cross-domain transfer.</li>
+<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This notebook studies graph-conditioned parameterization as a common framework for mapping structured graphs to task-specific decision variables. The analysis brings together two empirical settings: depth-2 QAOA angle generation on transcriptomic co-expression graphs and pathologic-risk scoring on cardiotocography similarity graphs.</p>
+<h2 id="Central-Questions">Central Questions<a class="anchor-link" href="#Central-Questions">¶</a></h2><ul>
+<li>Can the same graph-to-parameterization template describe both quantum angle generation and clinical risk scoring?</li>
+<li>What empirical evidence supports that interpretation in each setting?</li>
+<li>Where do the limits of the shared framing appear with respect to transfer, scaling, and deployment?</li>
 </ul>
 <h2 id="Results-at-a-Glance">Results at a Glance<a class="anchor-link" href="#Results-at-a-Glance">¶</a></h2><table>
 <thead>
@@ -7860,11 +7852,10 @@ a.anchor-link {
 </tr>
 </tbody>
 </table>
-<h2 id="Reading-Contract">Reading Contract<a class="anchor-link" href="#Reading-Contract">¶</a></h2><ul>
-<li>Start here for the unified thesis.</li>
-<li>Use the QAOA notebook for optimization-specific detail and baseline work.</li>
-<li>Use the biomedical notebook for screening-specific detail, calibration, and operating-point analysis.</li>
-<li>Treat the claims here as the best overview of the current empirical submission scope.</li>
+<h2 id="Analytical-Outline">Analytical Outline<a class="anchor-link" href="#Analytical-Outline">¶</a></h2><ul>
+<li>Transcriptomic QAOA experiments: held-out quality, learned-initializer comparison, runtime, and geometry.</li>
+<li>CTG screening experiments: held-out evaluation, operating points, calibration, and robustness.</li>
+<li>Cross-setting interpretation: common interface, distinct objectives, and the limits of shared framing.</li>
 </ul>
 </div>
 </div>
@@ -7876,43 +7867,35 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="How-This-Notebook-Fits-the-Repository">How This Notebook Fits the Repository<a class="anchor-link" href="#How-This-Notebook-Fits-the-Repository">¶</a></h2><p>The repository should now be read through a clear hierarchy rather than as three co-equal demos.</p>
+<h2 id="Comparative-View">Comparative View<a class="anchor-link" href="#Comparative-View">¶</a></h2><p>The two empirical settings differ in objective, supervision, and downstream evaluation, but they share the same graph-to-parameterization pattern.</p>
 <table>
 <thead>
 <tr>
-<th>Notebook</th>
-<th>Role</th>
-<th>Use it when you want to know...</th>
+<th>Setting</th>
+<th>Input graph</th>
+<th>Parameterization</th>
+<th>Downstream objective</th>
+<th>Main metrics</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>quantum_ai_bio_combined.ipynb</code></td>
-<td><strong>Integrated thesis notebook</strong></td>
-<td>whether the repository has one coherent research story</td>
+<td>Transcriptomic QAOA</td>
+<td>gene co-expression graph</td>
+<td>depth-2 angle vector $(\gamma_1, \gamma_2, \beta_1, \beta_2)$</td>
+<td>expected MaxCut value</td>
+<td>approximation ratio, runtime, regret</td>
 </tr>
 <tr>
-<td><code>qaoa_demo.ipynb</code></td>
-<td>Optimization technical appendix</td>
-<td>whether the warm-start claim survives detailed inspection</td>
-</tr>
-<tr>
-<td><code>bio_demo.ipynb</code></td>
-<td>Biomedical technical appendix</td>
-<td>whether the screening claim survives detailed inspection</td>
+<td>CTG screening</td>
+<td>patient-similarity graph</td>
+<td>node-level pathologic-risk scores</td>
+<td>thresholded screening behavior</td>
+<td>accuracy, balanced accuracy, ROC AUC, operating point</td>
 </tr>
 </tbody>
 </table>
-<h3 id="What-is-different-about-this-notebook">What is different about this notebook<a class="anchor-link" href="#What-is-different-about-this-notebook">¶</a></h3><ul>
-<li>It prioritizes the shared thesis over branch-local implementation detail.</li>
-<li>It presents only enough technical depth from each branch to defend the integrated story.</li>
-<li>It should be the notebook used in portfolio review, project overview, and high-level technical discussion.</li>
-</ul>
-<h3 id="What-this-notebook-does-not-try-to-do">What this notebook does not try to do<a class="anchor-link" href="#What-this-notebook-does-not-try-to-do">¶</a></h3><ul>
-<li>It does not replace the branch notebooks as the source of branch-specific evidence.</li>
-<li>It does not claim a finished production system.</li>
-<li>It does not claim a closed research case with every baseline and ablation already resolved.</li>
-</ul>
+<p>The notebook uses this comparison to separate what is genuinely shared from what remains domain-specific.</p>
 </div>
 </div>
 </div>
@@ -8024,7 +8007,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=23c1a7ee">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=23c1a7ee">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8138,7 +8121,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
         <span class="n">output_name</span><span class="o">=</span><span class="n">output_name</span><span class="p">,</span>
         <span class="n">output_dir</span><span class="o">=</span><span class="n">html_output_dir</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Exported HTML artifact -&gt; </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Exported HTML: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">output_path</span>
 
 <span class="c1"># ── Hardware audit ────────────────────────────────────────────────────────────</span>
@@ -8157,36 +8140,6 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  PyTorch          : </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s1">  (</span><span class="si">{</span><span class="n">device_str</span><span class="si">}</span><span class="s1">)'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  NetworkX         : </span><span class="si">{</span><span class="n">nx</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 </pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>========================================================================
-  Hybrid Quantum-Classical Pipeline — Execution Audit
-========================================================================
-  Project root     : /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization
-  Conda env        : qaoa
-  Global seed      : 42
-  Python           : 3.11.15
-  NumPy            : 2.4.2
-  PyTorch          : 2.10.0
-  NetworkX         : 3.6.1
-  Matplotlib       : 3.10.8
-  PyG available    : False  (dense-adj fallback used if False)
-  Outputs dir      : /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/outputs
-  Notebook figures : /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/notebooks/figures
-  Website figures  : /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html/figures
-  HTML export dir  : /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html
-  /src reachable   : True
-========================================================================
-</pre>
 </div>
 </div>
 </div>
@@ -8978,7 +8931,7 @@ Saved figure assets -&gt; /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docume
 <li>How much residual regret remains on the held-out benchmark?</li>
 <li>How much latency advantage survives after upgrading the model to a stronger real-data setting?</li>
 </ul>
-<p>Those three questions are what distinguish a research-grade warm-start study from a simple demo.</p>
+<p>Those three questions are what distinguish a research-grade warm-start study from a simple illustration.</p>
 </div>
 </div>
 </div>
@@ -10234,7 +10187,7 @@ Summary metrics (active held-out operating point)
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Part-6-%E2%80%94-Multi-Seed-Robustness-of-the-Integrated-Clinical-Graph-Model-">Part 6 — Multi-Seed Robustness of the Integrated Clinical Graph Model <a name="part6"></a><a class="anchor-link" href="#Part-6-%E2%80%94-Multi-Seed-Robustness-of-the-Integrated-Clinical-Graph-Model-">¶</a></h2><p>A single integrated biomedical run is still not enough for a strict technical presentation. This section therefore fixes the <strong>data split</strong> used in the representative CTG run and varies only the <strong>training seed</strong> of the combined notebook's clinical graph model.</p>
+<h2 id="Part-6-%E2%80%94-Multi-Seed-Robustness-of-the-Integrated-Clinical-Graph-Model-">Part 6 — Multi-Seed Robustness of the Integrated Clinical Graph Model <a name="part6"></a><a class="anchor-link" href="#Part-6-%E2%80%94-Multi-Seed-Robustness-of-the-Integrated-Clinical-Graph-Model-">¶</a></h2><p>A single integrated biomedical run is still not enough for a strict technical assessment. This section therefore fixes the <strong>data split</strong> used in the representative CTG run and varies only the <strong>training seed</strong> of the combined study's clinical graph model.</p>
 <p>That design isolates optimization randomness from split randomness. The question here is precise: <strong>if the cohort partition is frozen, how much do the final CTG metrics move because of initialization and training dynamics alone?</strong></p>
 <h3 id="Robustness-protocol">Robustness protocol<a class="anchor-link" href="#Robustness-protocol">¶</a></h3><ul>
 <li><strong>Fixed split seed:</strong> 42</li>
@@ -10762,7 +10715,7 @@ Shows whether the validation optimum was stable and whether the improved test re
 Shows the raw cohort geometry in feature space.</p>
 <p><strong>Panel F — PCA projection, predictions + discordances.</strong><br/>
 Shows where the model disagrees with ground truth and whether those errors cluster in the ambiguous overlap region, which is the technically plausible place for residual mistakes.</p>
-<h3 id="Interview-level-takeaway">Interview-level takeaway<a class="anchor-link" href="#Interview-level-takeaway">¶</a></h3><p>The dashboard should be read as evidence that the higher held-out accuracy is not cosmetic. The upgraded model improves the <strong>error profile</strong>, not just the headline number: stronger pathologic recovery, near-saturated specificity, and a cleaner false-positive burden at a validation-selected threshold.</p>
+<h3 id="Takeaway">Takeaway<a class="anchor-link" href="#Takeaway">¶</a></h3><p>The dashboard should be read as evidence that the higher held-out accuracy is not cosmetic. The upgraded model improves the <strong>error profile</strong>, not just the headline number: stronger pathologic recovery, near-saturated specificity, and a cleaner false-positive burden at a validation-selected threshold.</p>
 </div>
 </div>
 </div>
@@ -10773,16 +10726,16 @@ Shows where the model disagrees with ground truth and whether those errors clust
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="8.-Export-for-Website-Delivery">8. Export for Website Delivery<a class="anchor-link" href="#8.-Export-for-Website-Delivery">¶</a></h2><p>The final step emits a refreshed standalone HTML artifact so the integrated notebook can be embedded directly into the project website with its saved figure gallery intact.</p>
+<h2 id="HTML-Export">HTML Export<a class="anchor-link" href="#HTML-Export">¶</a></h2><p>The following cell writes the current notebook, including figures and tables, to an HTML file for external viewing.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=14491f77">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=14491f77">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [19]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">exported_html</span> <span class="o">=</span> <span class="n">export_notebook_html</span><span class="p">(</span><span class="s2">"quantum_ai_bio_combined.html"</span><span class="p">)</span>
@@ -10790,28 +10743,6 @@ Shows where the model disagrees with ground truth and whether those errors clust
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Notebook figure directory: </span><span class="si">{</span><span class="n">notebook_figure_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Website figure directory : </span><span class="si">{</span><span class="n">html_figure_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>nbconvert command:
-  /Users/mohuyn/miniforge3/envs/qaoa/bin/python -m jupyter nbconvert --to html /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/notebooks/quantum_ai_bio_combined.ipynb --output quantum_ai_bio_combined.html --output-dir /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html
-nbconvert stderr:
-[NbConvertApp] Converting notebook /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/notebooks/quantum_ai_bio_combined.ipynb to html
-[NbConvertApp] WARNING | Alternative text is missing on 4 image(s).
-[NbConvertApp] Writing 1888673 bytes to /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html/quantum_ai_bio_combined.html
-Exported HTML artifact -&gt; /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html/quantum_ai_bio_combined.html
-Exported HTML: /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html/quantum_ai_bio_combined.html
-Notebook figure directory: /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/notebooks/figures
-Website figure directory : /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html/figures
-</pre>
 </div>
 </div>
 </div>

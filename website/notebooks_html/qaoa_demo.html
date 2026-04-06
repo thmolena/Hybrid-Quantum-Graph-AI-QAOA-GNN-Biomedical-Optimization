@@ -7802,19 +7802,13 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Technical-Appendix:-Graph-Conditioned-Parameterization-for-QAOA-on-Transcriptomic-Graphs">Technical Appendix: Graph-Conditioned Parameterization for QAOA on Transcriptomic Graphs<a class="anchor-link" href="#Technical-Appendix:-Graph-Conditioned-Parameterization-for-QAOA-on-Transcriptomic-Graphs">¶</a></h1><p><strong>NeurIPS Submission Supplement: Optimization Branch</strong></p>
+<h1 id="Graph-Conditioned-Parameterization-for-QAOA-on-Transcriptomic-Graphs">Graph-Conditioned Parameterization for QAOA on Transcriptomic Graphs<a class="anchor-link" href="#Graph-Conditioned-Parameterization-for-QAOA-on-Transcriptomic-Graphs">¶</a></h1><p><strong>Depth-2 QAOA Experiments on Transcriptomic Co-Expression Graphs</strong></p>
 <hr/>
-<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This notebook is the optimization-specific technical appendix for the submission. It should be read as the detailed support for the graph-conditioned parameterization results rather than as a standalone project narrative. The central question is whether a graph neural model can reduce the parameter-search burden of depth-2 QAOA on <strong>real transcriptomic co-expression graphs</strong> while staying near a strong exact classical reference. The notebook therefore emphasizes optimization quality, regret, landscape geometry, and latency rather than broad cross-domain framing.</p>
-<h2 id="Notebook-Role">Notebook Role<a class="anchor-link" href="#Notebook-Role">¶</a></h2><ul>
-<li>This is the submission's <strong>QAOA branch notebook</strong>.</li>
-<li>It contains the optimization-specific setup, figures, and diagnostics that would be too detailed for the overview notebook.</li>
-<li>It is the correct place to inspect the warm-start claim at technical depth.</li>
-</ul>
-<h2 id="What-This-Notebook-Adds">What This Notebook Adds<a class="anchor-link" href="#What-This-Notebook-Adds">¶</a></h2><ul>
-<li>Exact depth-2 QAOA audit on real transcriptomic graph instances.</li>
-<li>Transcriptomic adaptation logic for the warm-start model.</li>
-<li>Held-out benchmark analysis, residual-regret inspection, and optimization geometry figures.</li>
-<li>A narrowly scoped empirical claim aligned with the paper's stated limits.</li>
+<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This analysis studies whether graph-conditioned parameterization can predict depth-2 QAOA angles for real transcriptomic co-expression graphs while preserving approximation quality relative to direct classical search. The emphasis is on held-out approximation ratio, learned-initializer comparisons, optimization geometry, and runtime.</p>
+<h2 id="Experimental-Scope">Experimental Scope<a class="anchor-link" href="#Experimental-Scope">¶</a></h2><ul>
+<li>Real transcriptomic co-expression graphs derived from prostate expression data.</li>
+<li>Exact depth-2 statevector simulation for MaxCut.</li>
+<li>Comparisons against direct classical search, heuristic initialization, graph-ablated variants, and a prior-style learned regressor.</li>
 </ul>
 <h2 id="Results-at-a-Glance">Results at a Glance<a class="anchor-link" href="#Results-at-a-Glance">¶</a></h2><table>
 <thead>
@@ -7854,10 +7848,11 @@ a.anchor-link {
 </tr>
 </tbody>
 </table>
-<h2 id="Reading-Contract">Reading Contract<a class="anchor-link" href="#Reading-Contract">¶</a></h2><ul>
-<li>Read the overview notebook first if you want the full paper thesis.</li>
-<li>Read this notebook when the question is whether the optimization branch is technically credible on its own.</li>
-<li>Interpret the scope honestly: exact small-graph simulation, real-data graph family, and warm-start study rather than hardware-scale quantum advantage.</li>
+<h2 id="Experimental-Questions">Experimental Questions<a class="anchor-link" href="#Experimental-Questions">¶</a></h2><ul>
+<li>How closely can learned graph-conditioned angles match direct classical depth-2 search on held-out graphs?</li>
+<li>How much of the performance depends on graph edges, node features, and transcriptomic adaptation?</li>
+<li>What latency reduction is obtained relative to direct search?</li>
+<li>What do the landscape and state-concentration diagnostics reveal about the learned proposals?</li>
 </ul>
 </div>
 </div>
@@ -7869,43 +7864,38 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="How-This-Notebook-Fits-the-Repository">How This Notebook Fits the Repository<a class="anchor-link" href="#How-This-Notebook-Fits-the-Repository">¶</a></h2><p>This notebook is one branch of a larger research story, not a standalone portfolio project competing with the other notebooks.</p>
+<h2 id="Experimental-Roadmap">Experimental Roadmap<a class="anchor-link" href="#Experimental-Roadmap">¶</a></h2><p>The analysis proceeds from graph construction and representative-problem setup to held-out evaluation, initializer comparison, and diagnostic analysis.</p>
 <table>
 <thead>
 <tr>
-<th>Notebook</th>
-<th>Role</th>
-<th>Use it when you want to know...</th>
+<th>Part</th>
+<th>Focus</th>
+<th>Main outputs</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>quantum_ai_bio_combined.ipynb</code></td>
-<td><strong>Canonical thesis notebook</strong></td>
-<td>how the optimization and biomedical branches fit together</td>
+<td>I</td>
+<td>Transcriptomic graph construction and representative setup</td>
+<td>graph statistics, representative instance, target parameters</td>
 </tr>
 <tr>
-<td><code>qaoa_demo.ipynb</code></td>
-<td><strong>This notebook</strong>: optimization appendix</td>
-<td>whether the transcriptomic warm-start claim is technically credible</td>
+<td>II</td>
+<td>Held-out benchmark against direct classical search</td>
+<td>approximation ratios, retention, runtime summary</td>
 </tr>
 <tr>
-<td><code>bio_demo.ipynb</code></td>
-<td>Biomedical appendix</td>
-<td>how the risk-sensitive clinical graph branch is evaluated</td>
+<td>III</td>
+<td>Learned-initializer comparison and ablations</td>
+<td>prior-style baseline, graph ablations, convergence behavior</td>
+</tr>
+<tr>
+<td>IV</td>
+<td>Diagnostic analysis</td>
+<td>landscape geometry, state concentration, residual regret</td>
 </tr>
 </tbody>
 </table>
-<h3 id="What-this-notebook-is-responsible-for">What this notebook is responsible for<a class="anchor-link" href="#What-this-notebook-is-responsible-for">¶</a></h3><ul>
-<li>Defending the QAOA warm-start claim at technical depth.</li>
-<li>Showing the quality-cost trade-off on real transcriptomic graphs.</li>
-<li>Making the optimization limits explicit, especially the exact small-graph simulation regime.</li>
-</ul>
-<h3 id="What-this-notebook-is-not-responsible-for">What this notebook is not responsible for<a class="anchor-link" href="#What-this-notebook-is-not-responsible-for">¶</a></h3><ul>
-<li>Carrying the full cross-domain thesis by itself.</li>
-<li>Acting as the biomedical evaluation notebook.</li>
-<li>Implying a hardware-scale quantum-advantage claim.</li>
-</ul>
 </div>
 </div>
 </div>
@@ -7932,7 +7922,7 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="0.-Introduction">0. Introduction<a class="anchor-link" href="#0.-Introduction">¶</a></h2><p><a name="intro"></a></p>
-<h3 id="Problem-Formulation">Problem Formulation<a class="anchor-link" href="#Problem-Formulation">¶</a></h3><p>This notebook presents a stronger end-to-end demonstration of the repository's hybrid mechanism: use a graph neural network (GNN) to propose high-quality variational quantum circuit parameters for MaxCut on real transcriptomic graphs, then test those proposals against an exact classical reference.</p>
+<h3 id="Problem-Formulation">Problem Formulation<a class="anchor-link" href="#Problem-Formulation">¶</a></h3><p>This experiment asks whether a graph neural network can map transcriptomic co-expression structure to useful depth-2 QAOA angles for MaxCut. The workflow is explicit: construct a real-data graph family, solve representative and held-out instances with direct classical search, train a learned parameter generator on resampled graphs, and compare approximation quality and latency on held-out graphs.</p>
 <p>The MaxCut problem asks: given a weighted graph $G = (V, E, w)$, find a partition $(S, \bar{S})$ of $V$ that maximises the total weight of edges crossing the cut,</p>
 <p>$$
 \text{MaxCut}(G) = \max_{S \subseteq V} \sum_{(u,v)\in E} w_{uv} \cdot \mathbf{1}\bigl[(u \in S) \oplus (v \in S)\bigr].
@@ -7942,12 +7932,11 @@ $$</p>
 <h3 id="Biological-Context">Biological Context<a class="anchor-link" href="#Biological-Context">¶</a></h3><p>The graph is derived from the <strong>OpenML <code>prostate</code> transcriptomic dataset</strong> (102 patients × 12,600 RNA expression features). The pipeline selects the 10 highest-variance genes and encodes pairwise Pearson correlations as edge weights, yielding a biologically grounded co-expression structure.</p>
 <p><strong>Why MaxCut on co-expression graphs?</strong> A cut on a co-expression graph separates genes whose coordinated activity is strongest across the cohort. Even though this is not itself a clinical endpoint, it is a technically meaningful stress test for whether a learned graph model can map biologically derived structure into useful QAOA angle proposals.</p>
 <hr/>
-<h3 id="What-Is-New-in-This-Version-of-the-Notebook">What Is New in This Version of the Notebook<a class="anchor-link" href="#What-Is-New-in-This-Version-of-the-Notebook">¶</a></h3><p>The original notebook showed a depth-1 transfer result: a GNN trained on synthetic graphs was applied directly to transcriptomic graphs, producing a clear quality gap.</p>
-<p>This upgraded notebook makes two deliberate changes.</p>
+<h3 id="Experimental-Shift-Relative-to-the-Earlier-Depth-1-Study">Experimental Shift Relative to the Earlier Depth-1 Study<a class="anchor-link" href="#Experimental-Shift-Relative-to-the-Earlier-Depth-1-Study">¶</a></h3><p>The present workflow changes the earlier setup in two concrete ways.</p>
 <table>
 <thead>
 <tr>
-<th>Upgrade</th>
+<th>Change in protocol</th>
 <th>Why it matters</th>
 </tr>
 </thead>
@@ -7962,7 +7951,7 @@ $$</p>
 </tr>
 </tbody>
 </table>
-<p>The combination changes the result qualitatively. Instead of demonstrating only speed with a noticeable accuracy penalty, the notebook now demonstrates that a learned graph model can recover <strong>nearly all of the depth-2 classical quality on held-out real-data graphs</strong>.</p>
+<p>The resulting comparison is narrower and more useful: the question is no longer whether a learned initializer is merely fast, but whether it can retain nearly all of the depth-2 classical quality on held-out real-data graphs.</p>
 <hr/>
 <h3 id="Scope-and-Limitations-(Up-Front)">Scope and Limitations (Up Front)<a class="anchor-link" href="#Scope-and-Limitations-(Up-Front)">¶</a></h3><ul>
 <li><strong>Statevector simulation</strong> is exact but scales as $O(2^n)$; here $n = 10$ is intentionally small enough to keep the benchmark fully auditable.</li>
@@ -8364,12 +8353,12 @@ Independent rotations $R_X(2\beta)$ on each qubit — $O(n)$ operations.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d1cebf98">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=d1cebf98">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># -----------------------------------------------------------------------------</span>
@@ -8465,7 +8454,7 @@ Independent rotations $R_X(2\beta)$ on each qubit — $O(n)$ operations.</p>
         <span class="n">output_name</span><span class="o">=</span><span class="n">output_name</span><span class="p">,</span>
         <span class="n">output_dir</span><span class="o">=</span><span class="n">html_output_dir</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Exported HTML artifact -&gt; </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Exported HTML: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">output_path</span>
 
 
@@ -8487,36 +8476,6 @@ Independent rotations $R_X(2\beta)$ on each qubit — $O(n)$ operations.</p>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"  2. transcriptomic domain adaptation of a graph model,"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"  3. held-out evaluation against exact MaxCut-derived references."</span><span class="p">)</span>
 </pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>==============================================================================
-Depth-2 Hybrid Quantum-Classical MaxCut Demo on Real Genomics Data
-==============================================================================
-Project root        : /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization
-Environment         : conda:qaoa
-Python executable   : /Users/mohuyn/miniforge3/envs/qaoa/bin/python3.11
-NumPy               : 2.4.2
-PyTorch             : 2.10.0
-NetworkX            : 3.6.1
-Matplotlib          : 3.10.8
-Notebook figures    : /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/notebooks/figures
-Website figures     : /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html/figures
-HTML export dir     : /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html
-
-This notebook now evaluates a stronger protocol:
-  1. exact depth-2 QAOA on transcriptomic co-expression graphs,
-  2. transcriptomic domain adaptation of a graph model,
-  3. held-out evaluation against exact MaxCut-derived references.
-</pre>
 </div>
 </div>
 </div>
@@ -10898,7 +10857,7 @@ Interpretation
 <li>the <strong>adapted depth-2 GNN</strong>,</li>
 <li>the <strong>old legacy transfer baseline</strong>.</li>
 </ul>
-<p>That third bar set is important: it makes the notebook's improvement claim explicit instead of merely implied.</p>
+<p>That third bar set is important: it makes the improvement claim explicit instead of merely implied.</p>
 <h3 id="The-combined-message-of-the-final-figure-set">The combined message of the final figure set<a class="anchor-link" href="#The-combined-message-of-the-final-figure-set">¶</a></h3><p>By the end of this section, readers should be able to answer three questions clearly:</p>
 <ol>
 <li>Did the upgraded model preserve the classical depth-2 quality on held-out graphs?</li>
@@ -12246,142 +12205,7 @@ Interpretation
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="9.-Closing-Summary">9. Closing Summary<a class="anchor-link" href="#9.-Closing-Summary">¶</a></h2><p><a name="summary"></a></p>
-<hr/>
-<h3 id="Experimental-Results">Experimental Results<a class="anchor-link" href="#Experimental-Results">¶</a></h3><table>
-<thead>
-<tr>
-<th>Metric</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Dataset</td>
-<td>OpenML <code>prostate</code> — 102 patients × 12,600 expression features</td>
-</tr>
-<tr>
-<td>Graph construction</td>
-<td>Top-10 variance genes → Pearson co-expression (10 nodes, 18 edges)</td>
-</tr>
-<tr>
-<td>QAOA depth</td>
-<td><code>p = 2</code>, exact statevector (<code>2^{10} = 1,024</code> amplitudes)</td>
-</tr>
-<tr>
-<td>Exact reference</td>
-<td>Brute-force MaxCut for every graph</td>
-</tr>
-<tr>
-<td>Classical baseline</td>
-<td>Multi-start Nelder-Mead over 4 QAOA angles</td>
-</tr>
-<tr>
-<td>Learned model</td>
-<td><strong>Adaptive Quantum GCN</strong> (<code>SimpleGCN</code>) adapted on 24 transcriptomic resampled graphs</td>
-</tr>
-<tr>
-<td>External learned comparator</td>
-<td>Prior-style graph-feature angle regressor inspired by <em>Graph Learning for Parameter Prediction of Quantum Approximate Optimization Algorithm</em></td>
-</tr>
-<tr>
-<td><strong>Representative classical ratio</strong></td>
-<td><strong>0.8976</strong></td>
-</tr>
-<tr>
-<td><strong>Representative adapted GNN ratio</strong></td>
-<td><strong>0.8975</strong></td>
-</tr>
-<tr>
-<td><strong>Held-out mean classical ratio</strong></td>
-<td><strong>0.8686</strong></td>
-</tr>
-<tr>
-<td><strong>Held-out mean adapted GNN ratio</strong></td>
-<td><strong>0.8682</strong></td>
-</tr>
-<tr>
-<td><strong>Held-out mean prior-style comparator ratio</strong></td>
-<td><strong>0.8210</strong></td>
-</tr>
-<tr>
-<td><strong>Held-out mean quality retention</strong></td>
-<td><strong>0.9995</strong></td>
-</tr>
-<tr>
-<td><strong>Old transfer baseline (for contrast)</strong></td>
-<td><strong>0.5725 mean ratio</strong></td>
-</tr>
-<tr>
-<td><strong>Absolute lift over transfer</strong></td>
-<td><strong>0.2957</strong></td>
-</tr>
-<tr>
-<td><strong>Relative lift over transfer</strong></td>
-<td><strong>51.6%</strong></td>
-</tr>
-<tr>
-<td><strong>Median inference speedup</strong></td>
-<td><strong>~1.41 × 10^4x on this machine</strong></td>
-</tr>
-</tbody>
-</table>
-<hr/>
-<h3 id="What-This-Notebook-Demonstrates">What This Notebook Demonstrates<a class="anchor-link" href="#What-This-Notebook-Demonstrates">¶</a></h3><ol>
-<li><strong>Depth-2 QAOA materially improves the real-data benchmark.</strong> On the held-out transcriptomic graph family, the stronger classical baseline rises to a mean approximation ratio of about <code>0.869</code>, substantially above the original depth-1 transfer setting.</li>
-<li><strong>Transcriptomic domain adaptation essentially closes the learned-classical gap.</strong> The adapted <strong>Adaptive Quantum GCN</strong> retains <code>99.95%</code> of the depth-2 classical quality on held-out graphs while preserving single-pass inference.</li>
-<li><strong>The reviewer-facing comparison is now stronger.</strong> The notebook no longer compares only against the old transfer checkpoint; it also includes a compact prior-style learned angle regressor, which reaches about <code>0.821</code> mean held-out ratio versus <code>0.868</code> for the full graph model.</li>
-<li><strong>The tuned model now improves both the representative case and the benchmark.</strong> The learned mean ratio rises from about <code>0.573</code> to about <code>0.868</code>, a <code>0.2957</code> absolute gain and about a <code>51.6%</code> relative gain over the original transfer baseline.</li>
-<li><strong>The representative graph is now almost exactly matched.</strong> On the full-cohort graph, the tuned learned ratio is <code>0.8975</code> against a classical <code>0.8976</code>, effectively eliminating the visible gap in the headline example.</li>
-<li><strong>The optimized quantum state is structured rather than diffuse.</strong> On the representative graph, the depth-2 optimum yields Spearman $\rho = 0.7152$ between cut value and measurement probability, a top-quintile concentration ratio of <code>3.67x</code>, and <code>0.2132</code> total probability mass on exact-MaxCut bitstrings.</li>
-<li><strong>The benchmark remains exact and auditable.</strong> Every claim is measured against exact MaxCut on small graphs, not against another heuristic.</li>
-<li><strong>The notebook is now safer to re-run and export.</strong> After the first successful fetch, the reduced transcriptomic panel is cached locally so later <code>Run All</code> executions can rebuild the same figures and HTML without depending on another network call.</li>
-</ol>
-<hr/>
-<h3 id="Known-Limitations">Known Limitations<a class="anchor-link" href="#Known-Limitations">¶</a></h3><table>
-<thead>
-<tr>
-<th>#</th>
-<th>Limitation</th>
-<th>Consequence</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><strong>Small exact regime</strong> — the notebook stays at <code>n = 10</code> nodes so every graph remains exactly solvable</td>
-<td>The result is precise and auditable, but not yet a large-scale quantum-hardware claim</td>
-</tr>
-<tr>
-<td>2</td>
-<td><strong>Low-depth ansatz</strong> — <code>p = 2</code> is much stronger than <code>p = 1</code>, but still a shallow circuit</td>
-<td>Further gains may exist at higher depth, with higher search cost</td>
-</tr>
-<tr>
-<td>3</td>
-<td><strong>Single-cohort adaptation</strong> — adaptation and benchmark graphs come from one prostate cohort family</td>
-<td>External-cohort generalization is still untested</td>
-</tr>
-<tr>
-<td>4</td>
-<td><strong>Variance-ranked genes</strong> — feature selection is statistical rather than pathway-aware</td>
-<td>The graph is biologically motivated, not fully biology-curated</td>
-</tr>
-<tr>
-<td>5</td>
-<td><strong>Unweighted MaxCut evaluation</strong> — edge presence comes from weighted correlations, but the objective counts cut edges</td>
-<td>Some biological signal in edge magnitude is not exploited</td>
-</tr>
-<tr>
-<td>6</td>
-<td><strong>Notebook-local adaptation</strong> — training is done inside the notebook for transparency</td>
-<td>This is excellent for auditability, but not yet a production training pipeline</td>
-</tr>
-</tbody>
-</table>
-<hr/>
-<h3 id="Relationship-to-the-Broader-Repository">Relationship to the Broader Repository<a class="anchor-link" href="#Relationship-to-the-Broader-Repository">¶</a></h3><p>This notebook now isolates a stronger and more credible version of the repository's hybrid mechanism: given a real transcriptomic graph, use the <strong>Adaptive Quantum GCN</strong> to propose depth-2 QAOA parameters that are nearly indistinguishable from direct classical optimization, and compare that result not only to the legacy transfer checkpoint but also to a compact prior-style learned initializer.</p>
-<p>Proceed to <code>quantum_ai_bio_combined.ipynb</code> for the full pipeline context, where this parameter-proposal mechanism is only one component of the broader hybrid system.</p>
+<h3 id="Concluding-Interpretation">Concluding Interpretation<a class="anchor-link" href="#Concluding-Interpretation">¶</a></h3><p>These results show that graph-conditioned parameterization can produce depth-2 QAOA angles for transcriptomic graphs that remain close to direct classical search on held-out instances while preserving a substantial runtime advantage. The learned model also improves clearly over the prior-style graph-feature regressor and over graph-ablated variants, which supports the claim that graph structure materially improves the proposed parameterization.</p>
 </div>
 </div>
 </div>
@@ -12392,47 +12216,23 @@ Interpretation
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="10.-Export-for-Website-Delivery">10. Export for Website Delivery<a class="anchor-link" href="#10.-Export-for-Website-Delivery">¶</a></h2><p>This closing stage refreshes the standalone HTML artifact used by the project website and interview-facing presentation workflow. Because figure assets are written into both notebook-local and website-local <code>figures</code> directories, the exported HTML references the same static gallery assets used throughout the notebook.</p>
+<h2 id="10.-HTML-Export">10. HTML Export<a class="anchor-link" href="#10.-HTML-Export">¶</a></h2><p>The following cell writes the current notebook, including figures and tables, to an HTML file for external viewing.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=00d2a67f">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=00d2a67f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">html_output_path</span> <span class="o">=</span> <span class="n">export_notebook_html</span><span class="p">(</span><span class="s2">"qaoa_demo.html"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Notebook figure directory -&gt; </span><span class="si">{</span><span class="n">notebook_figure_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Website figure directory  -&gt; </span><span class="si">{</span><span class="n">html_figure_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Exported HTML artifact    -&gt; </span><span class="si">{</span><span class="n">html_output_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Notebook figure directory: </span><span class="si">{</span><span class="n">notebook_figure_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Website figure directory : </span><span class="si">{</span><span class="n">html_figure_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Exported HTML: </span><span class="si">{</span><span class="n">html_output_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>export helper:
-  /Users/mohuyn/miniforge3/envs/qaoa/bin/python /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/scripts/export_notebook_html.py /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/notebooks/qaoa_demo.ipynb --output qaoa_demo.html --output-dir /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Exported HTML artifact -&gt; /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html/qaoa_demo.html
-Notebook figure directory -&gt; /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/notebooks/figures
-Website figure directory  -&gt; /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html/figures
-Exported HTML artifact    -&gt; /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/website/notebooks_html/qaoa_demo.html
-</pre>
 </div>
 </div>
 </div>

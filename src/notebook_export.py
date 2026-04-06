@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import re
 from pathlib import Path
 from typing import Any
@@ -17,6 +18,11 @@ from nbformat import NotebookNode
 PLACEHOLDER_ALT = "No description has been provided for this image"
 INLINE_IMAGE_PATTERN = re.compile(r"^data:(image/[^;]+);base64,(.+)$", re.DOTALL)
 SUPPORTED_MIME_TYPES = ("image/png", "image/jpeg", "image/jpg")
+EXPORT_HELPER_PATTERNS = (
+    "export_notebook_html(",
+    "export_notebook_html_artifact(",
+    "nbconvert",
+)
 
 
 def _normalize_base64(payload: Any) -> str:
@@ -53,6 +59,19 @@ def _lookup_inline_alt(src: str, alt_map: dict[tuple[str, str], str]) -> str | N
         return None
     mime_type, payload = match.groups()
     return alt_map.get((mime_type, _normalize_base64(payload)))
+
+
+def _strip_export_helper_outputs(nb: NotebookNode) -> NotebookNode:
+    sanitized_nb = copy.deepcopy(nb)
+    for cell in sanitized_nb.cells:
+        if cell.get("cell_type") != "code":
+            continue
+        source_text = "".join(cell.get("source", []))
+        if not any(pattern in source_text for pattern in EXPORT_HELPER_PATTERNS):
+            continue
+        cell["outputs"] = []
+        cell["execution_count"] = None
+    return sanitized_nb
 
 
 class MetadataAwareHTMLExporter(HTMLExporter):
@@ -108,10 +127,11 @@ def export_notebook_html(
 
     with notebook_path.open("r", encoding="utf-8") as handle:
         nb = nbformat.read(handle, as_version=4)
+    export_nb = _strip_export_helper_outputs(nb)
 
     exporter = MetadataAwareHTMLExporter()
     body, resources = exporter.from_notebook_node(
-        nb,
+        export_nb,
         resources={
             "metadata": {
                 "name": notebook_path.stem,

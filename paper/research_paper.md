@@ -4,8 +4,7 @@
 
 <div align="center">
 
-**Molena Huynh<sup>*</sup>**  
-<sup>*</sup>Correspondence author
+**Molena Huynh**
 
 </div>
 
@@ -46,7 +45,7 @@ That does **not** mean we have shown cross-domain transfer. We have not. There i
 
 **Novelty statement.** Prior work has already explored warm-start QAOA, parameter transfer, and learned QAOA initialization. We therefore do **not** claim that "GNN predicts QAOA parameters" is novel in isolation. Our novelty claim is narrower: **we formalize graph-conditioned parameterization as a reusable interface, instantiate it in both QAOA and biomedical prediction, and evaluate that interface on biologically grounded graphs with explicit runtime, ablation, calibration, and operating-point evidence.**
 
-Empirically, the QAOA branch achieves near-parity with direct classical depth-2 search at much lower inference-time cost, and the biomedical branch shows that graph-conditioned risk scoring remains competitive under stronger tabular benchmarking. The paper is therefore best read as a **technical research prototype with a sharpened interface claim**, not as a completed state-of-the-art submission.
+Empirically, the QAOA branch achieves near-parity with direct classical depth-2 search at much lower inference-time cost, and the biomedical branch shows that graph-conditioned risk scoring remains competitive under stronger tabular benchmarking. The resulting evidence supports a narrow interface claim rather than a broad state-of-the-art claim.
 
 ### Contributions
 
@@ -278,6 +277,8 @@ The most important change in interpretation is that the graph model is no longer
 
 This makes the biomedical claim narrower but stronger: **ResidualClinicalGCN remains a competitive graph-based operating-point model with explicit structural interpretation and threshold-aware analysis, but it is not the top benchmark winner on this split.** For a NeurIPS-style paper, that honesty is an asset rather than a weakness.
 
+For clarity, the strongest graph operating-point numbers in the paper come from **ResidualClinicalGCN** on the held-out split, whereas the repeated-seed robustness reporting is attached to **Adaptive BioGCN** as a reproducibility-oriented benchmark model. The strongest non-graph comparison comes from **calibrated LightGBM**, which is therefore the correct tabular reference when interpreting the graph results.
+
 ### 6.3 Interpretation Across Branches
 
 The two branches should be read through the same computational lens. In the QAOA branch, graph-conditioned parameterization emits a compact control vector for a downstream optimizer. In the biomedical branch, graph-conditioned parameterization emits node-level risk scores consumed by thresholding and calibration. The shared contribution is therefore not a single benchmark win, but a demonstration that **the same interface pattern can mediate downstream computation in very different domains**.
@@ -331,7 +332,7 @@ The most important interpretive caveat is therefore unchanged: **these results s
 
 ## 9. Reproducibility and Broader Impact
 
-The repository includes notebooks, generated tables, and exported figures that make the main claims inspectable. The strongest current evidence comes from executed notebook artifacts plus extracted experiment tables. A stronger conference submission would still benefit from more config-driven benchmarking and more explicit external baselines.
+The accompanying notebooks, generated tables, and exported figures make the main claims inspectable. The strongest current evidence comes from executed experimental notebooks plus extracted result tables. A stronger conference version would still benefit from more config-driven benchmarking and more explicit external baselines.
 
 From a broader-impact perspective, the paper aims for careful scoping rather than maximal claims. The quantum results concern initialization efficiency in a small exact-simulation regime. The biomedical results concern retrospective risk stratification under explicit operating-point analysis. Neither result should be over-read as production readiness.
 

@@ -4,11 +4,11 @@
 
 [![Project Website](https://img.shields.io/badge/Project_Website-Open-0f766e?style=for-the-badge)](https://thmolena.github.io/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/)
 
-The GitHub Pages root landing page is the single public overview for this repository. The `website/` directory exists to hold the static assets and exported notebook HTML that power that landing page.
+Interactive figures, notebook renders, and supplementary material are available on the project website.
 
 ## Abstract
 
-This repository studies whether graph-conditioned learning can serve as a reusable computational interface across two different problems: QAOA parameter initialization on transcriptomic co-expression graphs and graph-based biomedical screening on cardiotocography data.
+This work studies whether graph-conditioned learning can serve as a reusable computational interface across two different problems: QAOA parameter initialization on transcriptomic co-expression graphs and graph-based biomedical screening on cardiotocography data.
 
 On six held-out transcriptomic graphs, the adapted GNN initializer achieves a mean depth-2 QAOA approximation ratio of 0.8682 ± 0.0312, versus 0.8686 ± 0.0308 for direct classical search, while reducing median end-to-end latency from 675.9 ms to 0.256 ms. In the biomedical branch, the strongest graph model reaches 98.8% held-out accuracy and 0.942 balanced accuracy, while the expanded tabular baseline suite now includes calibrated logistic regression, calibrated random forest, XGBoost, and LightGBM variants.
 
@@ -28,7 +28,7 @@ These problems exhibit:
 * non-convex combinatorial objectives
 * sensitivity to initialization and inductive bias
 
-QAOA offers a principled quantum approach to combinatorial optimization, but its performance is highly dependent on parameter initialization. This repository explores whether learned graph representations can provide meaningful inductive bias for QAOA parameterization.
+QAOA offers a principled quantum approach to combinatorial optimization, but its performance is highly dependent on parameter initialization. This work explores whether learned graph representations can provide meaningful inductive bias for QAOA parameterization.
 
 ## 2. Core Hypothesis
 
@@ -117,7 +117,7 @@ The strongest narrative is organized around one canonical notebook, supported by
 
 ## 9. Comparison to Prior Learned-QAOA Work
 
-Recent learned-initialization papers such as Graph Learning for Parameter Prediction of Quantum Approximate Optimization Algorithm, QSeer: A Quantum-Inspired Graph Neural Network for Parameter Initialization in Quantum Approximate Optimization Algorithm Circuits, and Conditional Diffusion-based Parameter Generation for Quantum Approximate Optimization Algorithm push more directly on learned QAOA parameter generation itself. This repository makes a narrower claim. Its distinguishing contribution is the combination of biologically derived graph instances, held-out quality and runtime analysis, explicit ablations, and a shared graph-conditioned framing that also supports biomedical evaluation. A direct experimental comparison to those learned-QAOA methods remains future work.
+Recent learned-initialization papers such as Graph Learning for Parameter Prediction of Quantum Approximate Optimization Algorithm, QSeer: A Quantum-Inspired Graph Neural Network for Parameter Initialization in Quantum Approximate Optimization Algorithm Circuits, and Conditional Diffusion-based Parameter Generation for Quantum Approximate Optimization Algorithm push more directly on learned QAOA parameter generation itself. This study makes a narrower claim. Its distinguishing contribution is the combination of biologically derived graph instances, held-out quality and runtime analysis, explicit ablations, and a shared graph-conditioned framing that also supports biomedical evaluation. A direct experimental comparison to those learned-QAOA methods remains future work.
 
 ## 10. Contributions
 
@@ -183,7 +183,7 @@ Optional:
 
 * PyTorch Geometric
 
-## 14. Repository Structure
+## 14. Project Structure
 
 ```text
 notebooks/      # Core experiments and demonstrations
