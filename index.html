@@ -659,7 +659,7 @@
 
     .figure-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 1rem;
       align-items: stretch;
     }
@@ -700,8 +700,9 @@
     .figure-card img {
       display: block;
       width: 100%;
-      aspect-ratio: 4 / 3;
-      object-fit: cover;
+      height: clamp(180px, 20vw, 255px);
+      object-fit: contain;
+      padding: 0.75rem;
       border-bottom: 1px solid #d7e3f3;
       background: #eef5ff;
     }
@@ -925,7 +926,7 @@
         </div>
       </div>
 
-      <p class="section-intro">The gallery foregrounds the strongest result in each visualization, so the page reads as evidence rather than decoration.</p>
+      <p class="section-intro">The gallery highlights the strongest quantitative takeaway in each visualization, so the page reads as evidence rather than decoration.</p>
 
       <div class="figure-grid">
         <a class="figure-link" href="website/notebooks_html/qaoa_demo.html" target="_blank" rel="noreferrer">
