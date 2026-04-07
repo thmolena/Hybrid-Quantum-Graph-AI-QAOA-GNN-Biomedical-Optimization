@@ -7802,9 +7802,9 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Graph-Conditioned-Parameterization:-Clinical-Branch">Graph-Conditioned Parameterization: Clinical Branch<a class="anchor-link" href="#Graph-Conditioned-Parameterization:-Clinical-Branch">¶</a></h1><p><strong>CTG Similarity-Graph Risk Modeling</strong></p>
+<h1 id="Graph-Conditioned-Parameterization:-Clinical-Branch">Graph-Conditioned Parameterization: Clinical Branch<a class="anchor-link" href="#Graph-Conditioned-Parameterization:-Clinical-Branch">¶</a></h1><p><strong>Cardiotocography (CTG) Similarity-Graph Risk Modeling</strong></p>
 <hr/>
-<h2 id="Scope">Scope<a class="anchor-link" href="#Scope">¶</a></h2><p>This notebook evaluates node-level pathologic-risk scoring on a CTG patient-similarity graph. The analysis treats the emitted risk surface as the primary object and measures held-out discrimination, threshold behavior, calibration, robustness, and comparison against strong tabular baselines.</p>
+<h2 id="Scope">Scope<a class="anchor-link" href="#Scope">¶</a></h2><p>This notebook evaluates node-level pathologic-risk scoring on a cardiotocography (CTG) patient-similarity graph. The analysis treats the emitted risk surface as the primary object and measures held-out discrimination, threshold behavior, calibration, robustness, and comparison against strong tabular baselines.</p>
 <h2 id="System-View">System View<a class="anchor-link" href="#System-View">¶</a></h2><table>
 <thead>
 <tr>
@@ -7815,7 +7815,7 @@ a.anchor-link {
 <tbody>
 <tr>
 <td>Input graph</td>
-<td>CTG patient-similarity graph built from split-safe standardized features</td>
+<td>Cardiotocography (CTG) patient-similarity graph built from split-safe standardized features</td>
 </tr>
 <tr>
 <td>Learned parameterization</td>
@@ -7840,23 +7840,23 @@ a.anchor-link {
 </thead>
 <tbody>
 <tr>
-<td>Adaptive BioGCN representative accuracy</td>
+<td>Adaptive Bio Graph Convolutional Network (Adaptive BioGCN) representative accuracy</td>
 <td><strong>96.71%</strong></td>
 </tr>
 <tr>
-<td>Adaptive BioGCN robustness</td>
+<td>Adaptive Bio Graph Convolutional Network (Adaptive BioGCN) robustness</td>
 <td><strong>95.49% +/- 0.97%</strong></td>
 </tr>
 <tr>
-<td>ResidualClinicalGCN held-out accuracy</td>
+<td>Residual Clinical Graph Convolutional Network (ResidualClinicalGCN) held-out accuracy</td>
 <td><strong>98.8%</strong></td>
 </tr>
 <tr>
-<td>ResidualClinicalGCN balanced accuracy</td>
+<td>Residual Clinical Graph Convolutional Network (ResidualClinicalGCN) balanced accuracy</td>
 <td><strong>0.942</strong></td>
 </tr>
 <tr>
-<td>ResidualClinicalGCN ROC AUC</td>
+<td>Residual Clinical Graph Convolutional Network (ResidualClinicalGCN) receiver operating characteristic area under the curve (ROC AUC)</td>
 <td><strong>0.978</strong></td>
 </tr>
 <tr>
@@ -7885,11 +7885,11 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="Signal-Gallery">Signal Gallery<a class="anchor-link" href="#Signal-Gallery">¶</a></h2><p>These figures summarize the main empirical evidence before the implementation cells. Later sections reproduce the same analyses from executable code.</p>
-<h3 id="Cohort-Geometry-and-Feature-Shift-Audit">Cohort Geometry and Feature-Shift Audit<a class="anchor-link" href="#Cohort-Geometry-and-Feature-Shift-Audit">¶</a></h3><p><img alt="Three-panel CTG cohort audit showing PCA by true labels, PCA by ResidualClinicalGCN predictions with held-out test exams circled, and the largest standardized feature shifts between pathologic and non-pathologic training cases." src="figures/bio_demo_pca_audit.png"/></p>
-<h3 id="Held-Out-Evaluation-Dashboard">Held-Out Evaluation Dashboard<a class="anchor-link" href="#Held-Out-Evaluation-Dashboard">¶</a></h3><p><img alt="Held-out evaluation dashboard summarizing confusion matrix, ROC, precision-recall behavior, training dynamics, and PCA-space error localization for the strongest residual clinical model." src="figures/bio_demo_heldout_evaluation.png"/></p>
+<h3 id="Cohort-Geometry-and-Feature-Shift-Audit">Cohort Geometry and Feature-Shift Audit<a class="anchor-link" href="#Cohort-Geometry-and-Feature-Shift-Audit">¶</a></h3><p><img alt="Three-panel cardiotocography (CTG) cohort audit showing principal component analysis (PCA) by true labels, principal component analysis (PCA) by ResidualClinicalGCN predictions with held-out test exams circled, and the largest standardized feature shifts between pathologic and non-pathologic training cases." src="figures/bio_demo_pca_audit.png"/></p>
+<h3 id="Held-Out-Evaluation-Dashboard">Held-Out Evaluation Dashboard<a class="anchor-link" href="#Held-Out-Evaluation-Dashboard">¶</a></h3><p><img alt="Held-out evaluation dashboard summarizing confusion matrix, receiver operating characteristic (ROC), precision-recall (PR) behavior, training dynamics, and principal component analysis (PCA)-space error localization for the strongest residual clinical model." src="figures/bio_demo_heldout_evaluation.png"/></p>
 <h3 id="Operating-Point-Analysis">Operating-Point Analysis<a class="anchor-link" href="#Operating-Point-Analysis">¶</a></h3><p><img alt="Threshold-sensitivity analysis showing how recall, precision, false positives, and balanced accuracy move as the decision threshold changes." src="figures/bio_demo_operating_point_analysis.png"/></p>
-<h3 id="Adaptive-BioGCN-Robustness-Benchmark">Adaptive BioGCN Robustness Benchmark<a class="anchor-link" href="#Adaptive-BioGCN-Robustness-Benchmark">¶</a></h3><p><img alt="Fixed-split repeated-seed robustness study for Adaptive BioGCN, including per-seed metric traces and mean-plus-minus-standard-deviation summary bars." src="figures/bio_demo_aligned_biogcn_robustness.png"/></p>
-<h3 id="Graph-Homophily-Validation">Graph-Homophily Validation<a class="anchor-link" href="#Graph-Homophily-Validation">¶</a></h3><p><img alt="Graph homophily and neighborhood enrichment analysis validating that the CTG similarity graph encodes clinically meaningful local structure." src="figures/bio_demo_graph_homophily.png"/></p>
+<h3 id="Adaptive-Bio-Graph-Convolutional-Network-(Adaptive-BioGCN)-Robustness-Benchmark">Adaptive Bio Graph Convolutional Network (Adaptive BioGCN) Robustness Benchmark<a class="anchor-link" href="#Adaptive-Bio-Graph-Convolutional-Network-(Adaptive-BioGCN)-Robustness-Benchmark">¶</a></h3><p><img alt="Fixed-split repeated-seed robustness study for Adaptive Bio Graph Convolutional Network (Adaptive BioGCN), including per-seed metric traces and mean-plus-minus-standard-deviation summary bars." src="figures/bio_demo_aligned_biogcn_robustness.png"/></p>
+<h3 id="Graph-Homophily-Validation">Graph-Homophily Validation<a class="anchor-link" href="#Graph-Homophily-Validation">¶</a></h3><p><img alt="Graph homophily and neighborhood enrichment analysis validating that the cardiotocography (CTG) similarity graph encodes clinically meaningful local structure." src="figures/bio_demo_graph_homophily.png"/></p>
 <h3 id="Calibration-and-Uncertainty-Audit">Calibration and Uncertainty Audit<a class="anchor-link" href="#Calibration-and-Uncertainty-Audit">¶</a></h3><p><img alt="Calibration and uncertainty analysis comparing raw and recalibrated probability estimates for the clinical graph model." src="figures/bio_demo_calibration_uncertainty.png"/></p>
 <h3 id="Gradient-Saliency">Gradient Saliency<a class="anchor-link" href="#Gradient-Saliency">¶</a></h3><p><img alt="Gradient-based saliency analysis highlighting which physiologic variables most strongly influence the graph model's pathologic-risk predictions." src="figures/bio_demo_feature_saliency.png"/></p>
 </div>
@@ -7947,56 +7947,16 @@ a.anchor-link {
 <h2 id="0.-Foundations-and-Experimental-Roadmap">0. Foundations and Experimental Roadmap<a class="anchor-link" href="#0.-Foundations-and-Experimental-Roadmap">¶</a></h2><p>This notebook studies a <strong>retrospective fetal-risk detection problem on a real obstetric cohort</strong> using graph-based learning. Each exam becomes a node, physiologic similarity defines the edges, and the model must detect the rare but consequential <strong>pathologic</strong> class under substantial class imbalance.</p>
 <h3 id="Problem-setup-in-one-view">Problem setup in one view<a class="anchor-link" href="#Problem-setup-in-one-view">¶</a></h3><ul>
 <li><strong>$n = 2{,}126$ nodes</strong> — each node $v_i$ is one CTG exam with feature vector $\mathbf{x}_i \in \mathbb{R}^{21}$ representing physiologic summary statistics.</li>
-<li><strong>Edges</strong> $(i,j) \in \mathcal{E}$ iff $j \in \mathcal{N}_k(i)$ or $i \in \mathcal{N}_k(j)$: undirected symmetric $k$-NN similarity graph, with <strong>$k = 10$</strong> in the final model.</li>
+<li><strong>Symmetric $k$-nearest-neighbor ($k$-NN) graph</strong> — edges connect locally similar exams after split-safe preprocessing and standardization.</li>
 <li><strong>Binary label</strong> $y_i = \mathbf{1}[\text{NSP}_i = \text{pathologic}]$. Prevalence $p = 8.3\%$ (176 positives / 1,950 non-pathologic exams). The original 3-class label is preserved in audit tables.</li>
 </ul>
-<p>The learning objective is <strong>risk-asymmetric</strong>: a false negative (missed pathologic case) carries far greater clinical cost than a false positive. Every design choice — class-weighted loss, threshold analysis, PR curve inspection, calibration study, and graph validation — follows from that asymmetry.</p>
-<hr/>
-<h3 id="Core-Notation">Core Notation<a class="anchor-link" href="#Core-Notation">¶</a></h3><table>
+<p>The learning objective is <strong>risk-asymmetric</strong>: a false negative (missed pathologic case) carries far greater clinical cost than a false positive. Every design choice — class-weighted loss, threshold analysis, precision-recall behavior, calibration study, and graph validation — follows from that asymmetry.</p>
+<h3 id="Experimental-design-choices">Experimental design choices<a class="anchor-link" href="#Experimental-design-choices">¶</a></h3><table>
 <thead>
 <tr>
-<th>Symbol</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>$n, d$</td>
-<td>Nodes (exams), features per node</td>
-</tr>
-<tr>
-<td>$\mathbf{X} \in \mathbb{R}^{n \times d}$</td>
-<td>Feature matrix, z-score standardised on training partition only</td>
-</tr>
-<tr>
-<td>$\hat{A} = A + I_n$</td>
-<td>Binary adjacency with self-loops</td>
-</tr>
-<tr>
-<td>$\tilde{A} = D^{-1/2}\hat{A}D^{-1/2}$</td>
-<td>Symmetrically normalised adjacency used in graph propagation</td>
-</tr>
-<tr>
-<td>$\mathbf{H}^{(l)}$</td>
-<td>Node embeddings at layer $l$</td>
-</tr>
-<tr>
-<td>$\mathbf{W}^{(l)}$</td>
-<td>Learnable weight matrix at layer $l$</td>
-</tr>
-<tr>
-<td>$\tau$</td>
-<td>Decision threshold applied to the pathologic probability</td>
-</tr>
-</tbody>
-</table>
-<hr/>
-<h3 id="Design-Decisions-and-Rationale">Design Decisions and Rationale<a class="anchor-link" href="#Design-Decisions-and-Rationale">¶</a></h3><table>
-<thead>
-<tr>
-<th>Stage</th>
-<th>Choice</th>
-<th>Justification</th>
+<th>Design choice</th>
+<th>Instantiation</th>
+<th>Why it matters</th>
 </tr>
 </thead>
 <tbody>
@@ -8007,13 +7967,13 @@ a.anchor-link {
 </tr>
 <tr>
 <td>Graph topology</td>
-<td>Symmetric $k$-NN, <strong>$k{=}10$</strong></td>
+<td>Symmetric $k$-nearest-neighbor ($k$-NN), <strong>$k{=}10$</strong></td>
 <td>Preserves local physiological neighborhoods while still giving the model broader local context</td>
 </tr>
 <tr>
-<td>Self-loops</td>
-<td>$\hat{A} = A + I$</td>
-<td>Ensures each node retains direct access to its own features during aggregation</td>
+<td>Edge weights</td>
+<td>Binary adjacency after symmetric neighbor union</td>
+<td>Keeps graph semantics interpretable and avoids tuning a kernel bandwidth</td>
 </tr>
 <tr>
 <td>Normalisation</td>
@@ -8026,64 +7986,45 @@ a.anchor-link {
 <td>Residual feature carry-through and three-view fusion reduce over-smoothing while retaining local signal</td>
 </tr>
 <tr>
-<td>Loss function</td>
-<td>Cross-entropy with inverse-frequency class weights</td>
-<td>Corrects for the severe class imbalance using <strong>training data only</strong></td>
-</tr>
-<tr>
-<td>Checkpoint selection</td>
-<td>Best validation operating point, patience = 30</td>
-<td>Decouples model selection from the held-out test split while respecting the thresholded deployment objective</td>
-</tr>
-<tr>
-<td>Threshold selection</td>
-<td><strong>Validation-selected threshold + full sweep</strong></td>
-<td>Replaces the arbitrary $\tau = 0.50$ convention with an explicit held-out policy choice</td>
-</tr>
-<tr>
 <td>Primary metrics</td>
 <td>Accuracy, balanced accuracy, recall, precision, ROC-AUC</td>
 <td>Reflect both headline performance and clinical class asymmetry</td>
 </tr>
 </tbody>
 </table>
-<hr/>
-<h3 id="Experimental-Deliverables">Experimental Deliverables<a class="anchor-link" href="#Experimental-Deliverables">¶</a></h3><ol>
-<li>Build a <strong>leakage-free</strong> graph-learning pipeline on a real clinical cohort rather than a synthetic benchmark.</li>
-<li>Measure whether the <strong>ResidualClinicalGCN</strong> operating point improves held-out accuracy and false-positive control over the earlier plain-GCN configuration.</li>
-<li>Test whether the graph inductive bias is supported by edge homophily $h$ and neighborhood enrichment rather than assumed.</li>
+<h3 id="Core-research-questions">Core research questions<a class="anchor-link" href="#Core-research-questions">¶</a></h3><ol>
+<li>Does the graph formulation produce clinically meaningful local structure rather than arbitrary geometric adjacency?</li>
+<li>Measure whether the <strong>ResidualClinicalGCN</strong> operating point improves held-out accuracy and false-positive control over the earlier plain graph convolutional network (GCN) configuration.</li>
+<li>Compare the strongest graph model against stronger tabular baselines on the same split rather than only against weaker neural baselines.</li>
 <li>Report threshold analysis, calibration, uncertainty, and saliency so the operating point is interpretable rather than accuracy-only.</li>
 </ol>
-<h3 id="Known-Scope-Limitations">Known Scope Limitations<a class="anchor-link" href="#Known-Scope-Limitations">¶</a></h3><table>
+<h3 id="Boundaries-of-the-claim">Boundaries of the claim<a class="anchor-link" href="#Boundaries-of-the-claim">¶</a></h3><table>
 <thead>
 <tr>
-<th>Limitation</th>
-<th>Mitigation Path</th>
+<th>Present study answers</th>
+<th>Future work would be needed for</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Transductive graph model</strong> — cannot embed unseen nodes without recomputing the full graph</td>
-<td>GraphSAGE or other inductive GNNs for production</td>
+<td><strong>Retrospective graph-based screening</strong> on one public cohort</td>
+<td>Prospective clinical validation and workflow integration</td>
 </tr>
 <tr>
-<td><strong>Single-cohort evaluation</strong> — no multi-centre or temporal validation</td>
-<td>Prospective holdout on future exams; population/device generalisation study</td>
+<td><strong>Held-out operating-point analysis</strong> on a fixed split</td>
+<td>Multi-site calibration stability and transportability</td>
 </tr>
 <tr>
-<td><strong>No exhaustive hyperparameter optimisation</strong></td>
-<td>Bayesian or grid search over $k$, hidden size, dropout, and threshold objective</td>
+<td><strong>Mechanistic evidence for graph usefulness</strong> through homophily and neighborhood analysis</td>
+<td>Causal attribution and bedside interpretability</td>
 </tr>
 <tr>
-<td><strong>MC Dropout ≠ true Bayesian inference</strong></td>
-<td>SWA/SWAG or variational GNN for more principled uncertainty estimates</td>
-</tr>
-<tr>
-<td><strong>Gradient saliency ≠ causal attribution</strong></td>
-<td>Integrated Gradients or GNNExplainer for more robust attribution</td>
+<td><strong>Graph-versus-tabular comparison</strong> under the same preprocessing discipline</td>
+<td>Large-scale deployment economics and device heterogeneity</td>
 </tr>
 </tbody>
 </table>
+<p>The notebook is therefore positioned as a <strong>research evaluation surface</strong>, not as a clinically validated deployment pipeline.</p>
 </div>
 </div>
 </div>

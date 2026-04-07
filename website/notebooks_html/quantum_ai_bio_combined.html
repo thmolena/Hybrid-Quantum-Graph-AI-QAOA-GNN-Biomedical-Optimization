@@ -7804,7 +7804,7 @@ a.anchor-link {
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h1 id="Graph-Conditioned-Parameterization">Graph-Conditioned Parameterization<a class="anchor-link" href="#Graph-Conditioned-Parameterization">¶</a></h1><p><strong>Integrated Transcriptomic and Clinical Evaluation</strong></p>
 <hr/>
-<h2 id="Scope">Scope<a class="anchor-link" href="#Scope">¶</a></h2><p>This notebook places two empirical settings under the same interface: transcriptomic co-expression graphs mapped to depth-2 QAOA angle vectors, and CTG patient-similarity graphs mapped to pathologic-risk scores. The comparison is organized around the emitted parameterization and its downstream evaluation rather than around a shared loss or shared model family.</p>
+<h2 id="Scope">Scope<a class="anchor-link" href="#Scope">¶</a></h2><p>This notebook places two empirical settings under the same interface: transcriptomic co-expression graphs mapped to depth-2 Quantum Approximate Optimization Algorithm (QAOA) angle vectors, and cardiotocography (CTG) patient-similarity graphs mapped to pathologic-risk scores. The comparison is organized around the emitted parameterization and its downstream evaluation rather than around a shared loss or shared model family.</p>
 <h2 id="System-View">System View<a class="anchor-link" href="#System-View">¶</a></h2><table>
 <thead>
 <tr>
@@ -7816,13 +7816,13 @@ a.anchor-link {
 </thead>
 <tbody>
 <tr>
-<td>Transcriptomic QAOA</td>
+<td>Transcriptomic Quantum Approximate Optimization Algorithm (QAOA)</td>
 <td>gene co-expression graph</td>
 <td>depth-2 angle vector $(\gamma_1, \gamma_2, \beta_1, \beta_2)$</td>
-<td>expected MaxCut value</td>
+<td>expected maximum cut (MaxCut) value</td>
 </tr>
 <tr>
-<td>CTG screening</td>
+<td>Cardiotocography (CTG) screening</td>
 <td>patient-similarity graph</td>
 <td>node-level pathologic-risk scores</td>
 <td>thresholded screening behavior</td>
@@ -7899,18 +7899,18 @@ a.anchor-link {
 </thead>
 <tbody>
 <tr>
-<td>Transcriptomic QAOA</td>
+<td>Transcriptomic Quantum Approximate Optimization Algorithm (QAOA)</td>
 <td>gene co-expression graph</td>
 <td>depth-2 angle vector $(\gamma_1, \gamma_2, \beta_1, \beta_2)$</td>
-<td>expected MaxCut value</td>
+<td>expected maximum cut (MaxCut) value</td>
 <td>approximation ratio, runtime, regret</td>
 </tr>
 <tr>
-<td>CTG screening</td>
+<td>Cardiotocography (CTG) screening</td>
 <td>patient-similarity graph</td>
 <td>node-level pathologic-risk scores</td>
 <td>thresholded screening behavior</td>
-<td>accuracy, balanced accuracy, ROC AUC, operating point</td>
+<td>accuracy, balanced accuracy, receiver operating characteristic area under the curve (ROC AUC), operating point</td>
 </tr>
 </tbody>
 </table>
@@ -7926,10 +7926,10 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="Signal-Gallery">Signal Gallery<a class="anchor-link" href="#Signal-Gallery">¶</a></h2><p>These figures summarize the main evidence before the implementation cells. Later sections reconstruct the same outputs from executable code for each branch.</p>
-<h3 id="Transcriptomic-Adaptation-and-Benchmark">Transcriptomic Adaptation and Benchmark<a class="anchor-link" href="#Transcriptomic-Adaptation-and-Benchmark">¶</a></h3><p><img alt="Two-panel transcriptomic gallery: the adaptation loss curve showing convergence of the Adaptive Quantum GCN on transcriptomic resamples and the benchmark figure summarizing the representative graph geometry plus held-out quality retention across real-data graphs." src="figures/combined_transcriptomic_adaptation.png"/></p>
+<h3 id="Transcriptomic-Adaptation-and-Benchmark">Transcriptomic Adaptation and Benchmark<a class="anchor-link" href="#Transcriptomic-Adaptation-and-Benchmark">¶</a></h3><p><img alt="Two-panel transcriptomic gallery: the adaptation loss curve showing convergence of the Adaptive Quantum Graph Convolutional Network (GCN) on transcriptomic resamples and the benchmark figure summarizing the representative graph geometry plus held-out quality retention across real-data graphs." src="figures/combined_transcriptomic_adaptation.png"/></p>
 <p><img alt="Four-panel transcriptomic benchmark figure showing the representative transcriptomic graph, the interpolation path from the learned prediction to the classical optimum, the visible depth-2 landscape slice, and the held-out quality comparison over benchmark graphs." src="figures/combined_transcriptomic_benchmark.png"/></p>
-<h3 id="Integrated-Biomedical-Evaluation">Integrated Biomedical Evaluation<a class="anchor-link" href="#Integrated-Biomedical-Evaluation">¶</a></h3><p><img alt="Six-panel biomedical evaluation dashboard showing confusion matrix, ROC, precision-recall behavior, training dynamics, and PCA-space localization of true labels and prediction discordances for the integrated residual clinical model." src="figures/combined_ctg_evaluation_dashboard.png"/></p>
-<h3 id="Fixed-Split-Robustness">Fixed-Split Robustness<a class="anchor-link" href="#Fixed-Split-Robustness">¶</a></h3><p><img alt="Two-panel robustness figure showing per-seed stability and mean-plus-minus-standard-deviation summaries for the integrated clinical graph model on the fixed CTG split." src="figures/combined_ctg_robustness.png"/></p>
+<h3 id="Integrated-Biomedical-Evaluation">Integrated Biomedical Evaluation<a class="anchor-link" href="#Integrated-Biomedical-Evaluation">¶</a></h3><p><img alt="Six-panel biomedical evaluation dashboard showing confusion matrix, receiver operating characteristic (ROC), precision-recall (PR) behavior, training dynamics, and principal component analysis (PCA)-space localization of true labels and prediction discordances for the integrated residual clinical model." src="figures/combined_ctg_evaluation_dashboard.png"/></p>
+<h3 id="Fixed-Split-Robustness">Fixed-Split Robustness<a class="anchor-link" href="#Fixed-Split-Robustness">¶</a></h3><p><img alt="Two-panel robustness figure showing per-seed stability and mean-plus-minus-standard-deviation summaries for the integrated clinical graph model on the fixed cardiotocography (CTG) split." src="figures/combined_ctg_robustness.png"/></p>
 </div>
 </div>
 </div>
@@ -7940,7 +7940,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="0.-Theoretical-Foundation-">0. Theoretical Foundation <a name="hybrid-theory"></a><a class="anchor-link" href="#0.-Theoretical-Foundation-">¶</a></h2><h3 id="0.1-QAOA:-Formalism-and-Guarantees">0.1 QAOA: Formalism and Guarantees<a class="anchor-link" href="#0.1-QAOA:-Formalism-and-Guarantees">¶</a></h3><p><strong>Problem statement.</strong> MaxCut on graph $G=(V,E)$ asks for a bipartition $(S, \bar S)$ maximizing $\lvert\{(u,v)\in E : u\in S, v\notin S\}\rvert$. It is NP-hard in general; the best classical polynomial-time approximation guarantee is $0.878$ (Goemans–Williamson, 1995).</p>
+<h2 id="0.-Theoretical-Foundation-">0. Theoretical Foundation <a name="hybrid-theory"></a><a class="anchor-link" href="#0.-Theoretical-Foundation-">¶</a></h2><h3 id="0.1-Quantum-Approximate-Optimization-Algorithm-(QAOA):-Formalism-and-Guarantees">0.1 Quantum Approximate Optimization Algorithm (QAOA): Formalism and Guarantees<a class="anchor-link" href="#0.1-Quantum-Approximate-Optimization-Algorithm-(QAOA):-Formalism-and-Guarantees">¶</a></h3><p><strong>Problem statement.</strong> Maximum cut (MaxCut) on graph $G=(V,E)$ asks for a bipartition $(S, \bar S)$ maximizing $\lvert\{(u,v)\in E : u\in S, v\notin S\}\rvert$. It is NP-hard in general; the best classical polynomial-time approximation guarantee is $0.878$ (Goemans–Williamson, 1995).</p>
 <p><strong>Cost Hamiltonian.</strong> Encode the cut value as the diagonal operator</p>
 <p>$$\hat{C} = \frac{1}{2}\sum_{(u,v)\in E}\!\left(I - Z_u \otimes Z_v\right),$$</p>
 <p>where $Z_i = \sigma_z$ acts on qubit $i$. For a computational basis state $|x\rangle$ encoding partition $x\in\{0,1\}^n$, $\hat{C}|x\rangle = c(x)|x\rangle$ where $c(x)$ counts edges crossing the cut.</p>
@@ -7957,7 +7957,7 @@ a.anchor-link {
 <p>$$r = \frac{\mathcal{F}(\gamma^*, \beta^*)}{C^*} \in [0, 1],$$</p>
 <p>where $C^* = \max_x c(x)$ is the exact MaxCut value. Farhi et al. (2014) show that even $p=1$ QAOA achieves $r \ge 0.6924$ on 3-regular graphs; practical ratios on random instances are typically higher.</p>
 <hr/>
-<h3 id="0.2-GCN:-Message-Passing-and-Spectral-Motivation">0.2 GCN: Message Passing and Spectral Motivation<a class="anchor-link" href="#0.2-GCN:-Message-Passing-and-Spectral-Motivation">¶</a></h3><p><strong>Kipf–Welling GCN (2017).</strong> Given augmented adjacency $\hat{A} = A + I_n$ and degree matrix $\hat{D}_{ii} = \sum_j \hat{A}_{ij}$, the propagation rule is</p>
+<h3 id="0.2-Graph-Convolutional-Network-(GCN):-Message-Passing-and-Spectral-Motivation">0.2 Graph Convolutional Network (GCN): Message Passing and Spectral Motivation<a class="anchor-link" href="#0.2-Graph-Convolutional-Network-(GCN):-Message-Passing-and-Spectral-Motivation">¶</a></h3><p><strong>Kipf–Welling Graph Convolutional Network (GCN) (2017).</strong> Given augmented adjacency $\hat{A} = A + I_n$ and degree matrix $\hat{D}_{ii} = \sum_j \hat{A}_{ij}$, the propagation rule is</p>
 <p>$$H^{(l+1)} = \sigma\!\left(\hat{D}^{-1/2}\hat{A}\hat{D}^{-1/2}\,H^{(l)}\,W^{(l)}\right).$$</p>
 <p>Spectral motivation: $\hat{D}^{-1/2}\hat{A}\hat{D}^{-1/2}$ is the normalized Laplacian smoother; it implements a first-order Chebyshev approximation to spectral convolution on the graph.</p>
 <p><strong>Global graph representation.</strong> After $L$ layers, aggregate node embeddings to a single graph-level vector via mean-pooling:</p>
@@ -7968,40 +7968,30 @@ a.anchor-link {
 <h3 id="0.3-Hybrid-Loop:-Classical-Orchestration-+-Quantum-Style-Evaluation">0.3 Hybrid Loop: Classical Orchestration + Quantum-Style Evaluation<a class="anchor-link" href="#0.3-Hybrid-Loop:-Classical-Orchestration-+-Quantum-Style-Evaluation">¶</a></h3><pre><code>┌──────────────────────────────────────────────────────────────────┐
 │  Graph G = (V, E)                                                │
 │  ┌───────────────┐         ┌──────────────────────────────────┐  │
-│  │  GNN warm-    │  (γ̂,β̂)  │  QAOA (depth p=1)               │  │
-│  │  start (O(1)) │──────►  │  e^{-iγC} e^{-iβB} |+⟩^⊗n      │  │
-│  └───────────────┘         │  → compute ⟨C⟩                    │  │
-│                             └────────────────┬─────────────────┘  │
-│                                              │                    │
-│  ┌──────────────────────────────────────┐    │ score             │
-│  │  Classical optimizer (Nelder–Mead)  │◄───┘                    │
-│  │  update (γ,β) to improve ⟨C⟩        │                         │
-│  └──────────────────────────────────────┘                         │
+│  │  Graph neural │  (γ̂,β̂)  │  QAOA (depth p=1)               │  │
+│  │  network      │──────►  │  e^{-iγC} e^{-iβB} |+⟩^⊗n      │  │
+│  │  (GNN) warm   │         │  → compute ⟨C⟩                    │  │
+│  │  start (O(1)) │         └────────────────┬─────────────────┘  │
+│  └───────────────┘                          │                    │
+│                                             │ score              │
+│  ┌──────────────────────────────────────┐   │                    │
+│  │  Classical optimizer (Nelder–Mead)  │◄──┘                    │
+│  │  update (γ,β) to improve ⟨C⟩        │                        │
+│  └──────────────────────────────────────┘                        │
 └──────────────────────────────────────────────────────────────────┘
 </code></pre>
-<p>The GNN provides a <strong>warm start</strong> that initializes the classical optimizer closer to the optimum, potentially reducing the number of function evaluations. This is the core practical claim of the quantum branch.</p>
+<p>The graph neural network (GNN) provides a <strong>warm start</strong> that initializes the classical optimizer closer to the optimum, potentially reducing the number of function evaluations. This is the core practical claim of the quantum branch.</p>
 <hr/>
 <h3 id="0.4-Transductive-Graph-Classification-(Biomedical-Branch)">0.4 Transductive Graph Classification (Biomedical Branch)<a class="anchor-link" href="#0.4-Transductive-Graph-Classification-(Biomedical-Branch)">¶</a></h3><p>The biomedical branch uses the same GCN backbone in a different regime:</p>
 <ul>
 <li><strong>Setting:</strong> transductive — all nodes present at training time, only labels differ.</li>
-<li><strong>Graph construction:</strong> symmetric $k$-NN graph over standardized features, $k=10$.</li>
+<li><strong>Graph construction:</strong> symmetric $k$-nearest-neighbor ($k$-NN) graph over standardized features, $k=10$.</li>
 <li><strong>Loss:</strong> class-weighted cross-entropy to compensate for class imbalance ($\approx$ 9.6% pathologic).</li>
 <li><strong>Normalization:</strong> $\hat{A}_\text{norm} = \tilde{D}^{-1/2}\tilde{A}\tilde{D}^{-1/2}$ applied at inference.</li>
 </ul>
 <p>The key distinction from i.i.d. classification: the prediction for exam $i$ depends on the features and labels of neighboring exams, respecting physiological similarity structure.</p>
 <hr/>
-<h3 id="0.5-Execution-Environment">0.5 Execution Environment<a class="anchor-link" href="#0.5-Execution-Environment">¶</a></h3><p>Use a single audited environment for the entire notebook:</p>
-<div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>qaoa
-jupyter<span class="w"> </span>lab
-</pre></div>
-<p>All repository dependencies should be installed inside the same <code>qaoa</code> environment. Do not mix <code>base</code>, notebook-local installs, and branch-specific Python environments when running the combined presentation.</p>
-<p>If the environment needs to be refreshed, do so inside <code>qaoa</code> with the repository requirements file:</p>
-<div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>qaoa
-pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
-</pre></div>
-<blockquote>
-<p><strong>Note:</strong> <code>torch_geometric</code> is optional. This notebook uses a dense adjacency fallback within <code>SimpleGCN</code>, so <code>torch_geometric</code> is <strong>not required</strong> for the QAOA branch.</p>
-</blockquote>
+<h3 id="0.5-Execution-Environment">0.5 Execution Environment<a class="anchor-link" href="#0.5-Execution-Environment">¶</a></h3>
 </div>
 </div>
 </div>

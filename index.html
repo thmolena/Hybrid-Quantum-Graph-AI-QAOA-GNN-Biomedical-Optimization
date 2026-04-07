@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Graph-Conditioned Parameterization for Optimization and Clinical Risk Scoring</title>
-  <meta name="description" content="Transcriptomic QAOA initialization and CTG similarity-graph risk modeling under a shared graph-conditioned parameterization framework.">
+  <meta name="description" content="Transcriptomic Quantum Approximate Optimization Algorithm (QAOA) initialization and cardiotocography (CTG) similarity-graph risk modeling under a shared graph-conditioned parameterization framework.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Graph-Conditioned Parameterization for Optimization and Clinical Risk Scoring">
-  <meta property="og:description" content="Transcriptomic QAOA initialization and CTG similarity-graph risk modeling under a shared graph-conditioned parameterization framework.">
+  <meta property="og:description" content="Transcriptomic Quantum Approximate Optimization Algorithm (QAOA) initialization and cardiotocography (CTG) similarity-graph risk modeling under a shared graph-conditioned parameterization framework.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Graph-Conditioned Parameterization for Optimization and Clinical Risk Scoring">
-  <meta name="twitter:description" content="Transcriptomic QAOA initialization and CTG similarity-graph risk modeling under a shared graph-conditioned parameterization framework.">
+  <meta name="twitter:description" content="Transcriptomic Quantum Approximate Optimization Algorithm (QAOA) initialization and cardiotocography (CTG) similarity-graph risk modeling under a shared graph-conditioned parameterization framework.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -28,21 +28,22 @@
     .hero {
       background: linear-gradient(180deg, #f9fbff 0%, #edf3ff 100%);
       border-bottom: 1px solid #d7e3f3;
-      padding: 3.1rem 2rem 2.35rem;
+      padding: 3.1rem 1.5rem 2.35rem;
       text-align: left;
     }
 
     .hero-inner {
-      max-width: 1180px;
+      max-width: 992px;
       margin: 0 auto;
       text-align: left;
     }
 
-    .hero-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
-      gap: 1.4rem;
-      align-items: start;
+    .hero-frame {
+      padding: 1.75rem 2rem;
+      border: 1px solid #d6e4f4;
+      border-radius: 1.2rem;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(246, 250, 255, 0.98) 100%);
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
     }
 
     .hero-copy {
@@ -66,7 +67,7 @@
     .hero-sub {
       color: #374151;
       margin-bottom: 1rem;
-      max-width: 760px;
+      max-width: none;
     }
 
     .hero-sub strong {
@@ -146,100 +147,6 @@
       background: #1f2937;
       border-color: #1f2937;
       color: #ffffff;
-    }
-
-    .hero-stage {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
-      gap: 0.85rem;
-      min-width: 0;
-    }
-
-    .hero-stage-main {
-      grid-row: 1 / span 2;
-      min-height: 100%;
-    }
-
-    .hero-stage-panel {
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-      overflow: hidden;
-      border: 1px solid #d6e4f4;
-      border-radius: 1.1rem;
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(246, 250, 255, 0.98) 100%);
-      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
-      text-decoration: none;
-      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-    }
-
-    .hero-stage-panel:hover {
-      transform: translateY(-2px);
-      border-color: #aac5ec;
-      box-shadow: 0 20px 48px rgba(37, 99, 235, 0.12);
-    }
-
-    .hero-stage-panel:focus-visible {
-      outline: 3px solid rgba(37, 99, 235, 0.16);
-      outline-offset: 2px;
-    }
-
-    .hero-stage-panel img {
-      display: block;
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      object-fit: cover;
-      background: #edf4ff;
-    }
-
-    .hero-stage-body {
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-      gap: 0.45rem;
-      padding: 0.9rem 0.95rem 1rem;
-    }
-
-    .hero-stage-label {
-      display: inline-flex;
-      width: fit-content;
-      padding: 0.28rem 0.5rem;
-      border-radius: 999px;
-      background: #edf4ff;
-      color: #1e3a8a;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-    }
-
-    .hero-stage-panel h2 {
-      margin: 0;
-      color: #0f172a;
-      font-size: 1rem;
-      line-height: 1.28;
-    }
-
-    .hero-stage-panel p {
-      margin: 0;
-      color: #475569;
-      font-size: 0.84rem;
-      line-height: 1.55;
-    }
-
-    .hero-stage-metric {
-      margin-top: auto;
-      padding-top: 0.55rem;
-      border-top: 1px solid #e2ebf7;
-      color: #0f172a;
-      font-size: 0.78rem;
-      font-weight: 600;
-    }
-
-    .hero-stage-metric strong {
-      color: #047857;
-      font-size: 0.95rem;
-      font-weight: 700;
     }
 
     .card {
@@ -353,8 +260,25 @@
     }
 
     .nb-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.95rem;
+      height: 100%;
       cursor: pointer;
       transition: border-color .2s, background .2s, transform .15s, box-shadow .2s;
+    }
+
+    .nb-card-head {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .nb-body {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
     }
 
     .nb-card:hover {
@@ -374,6 +298,58 @@
       background: #eef5ff;
       color: #1e3a8a;
       border-color: #bfd3ff;
+    }
+
+    .nb-detail {
+      margin-top: 0.95rem;
+      padding-top: 0.95rem;
+      border-top: 1px solid #dbe7f5;
+    }
+
+    .nb-detail h4 {
+      margin: 0;
+      color: #0f172a;
+      font-size: 0.98rem;
+      line-height: 1.35;
+    }
+
+    .nb-detail p {
+      margin: 0.62rem 0 0.8rem;
+      color: #475569;
+      font-size: 0.86rem;
+      line-height: 1.6;
+    }
+
+    .nb-detail-list {
+      margin: 0;
+      padding-left: 1rem;
+      color: #334155;
+      font-size: 0.84rem;
+      line-height: 1.55;
+    }
+
+    .nb-detail-list li + li {
+      margin-top: 0.35rem;
+    }
+
+    .nb-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 0.85rem;
+      padding: 0.42rem 0.72rem;
+      border: 1px solid #c9d8ef;
+      border-radius: 999px;
+      background: #f8fbff;
+      color: #1d4ed8;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-decoration: none;
+      width: fit-content;
+    }
+
+    .nb-link:hover {
+      background: #eef5ff;
     }
 
     .summary-cols h4 {
@@ -681,52 +657,17 @@
       background: #eef5ff;
     }
 
-    .notebook-summary-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-
-    .notebook-summary-card {
-      padding: 1rem 1rem 1.05rem;
-      border: 1px solid #d7e3f3;
-      border-radius: 1rem;
-      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-    }
-
-    .notebook-summary-card h3 {
-      margin: 0;
-      font-size: 1rem;
-      color: #0f172a;
-    }
-
-    .notebook-summary-card p {
-      margin: 0.68rem 0 0.85rem;
-      color: #475569;
-      font-size: 0.88rem;
-      line-height: 1.62;
-    }
-
-    .notebook-summary-list {
-      margin: 0;
-      padding-left: 1rem;
-      color: #334155;
-      font-size: 0.84rem;
-      line-height: 1.55;
-    }
-
-    .notebook-summary-list li + li {
-      margin-top: 0.35rem;
-    }
-
     .figure-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 1rem;
+      align-items: stretch;
     }
 
     .figure-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
       overflow: hidden;
       border: 1px solid #d7e3f3;
       border-radius: 1rem;
@@ -735,6 +676,7 @@
 
     .figure-link {
       display: block;
+      height: 100%;
       color: inherit;
       text-decoration: none;
       cursor: pointer;
@@ -769,6 +711,9 @@
     }
 
     .figure-body {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
       padding: 0.95rem 1rem 1rem;
     }
 
@@ -803,7 +748,7 @@
     }
 
     .figure-ribbon {
-      margin: 0.4rem 0 1.2rem;
+      margin: auto 0 1.2rem;
     }
 
     .figure-ribbon .notebook-ribbon-item {
@@ -900,17 +845,14 @@
     }
 
     @media (max-width: 760px) {
-      .hero-grid,
-      .hero-stage,
       .impact-grid,
-      .notebook-summary-grid,
       .figure-grid,
       .demo-explainer {
         grid-template-columns: 1fr;
       }
 
-      .hero-stage-main {
-        grid-row: auto;
+      .hero-frame {
+        padding: 1.2rem;
       }
     }
 
@@ -924,11 +866,11 @@
   <!-- Hero -->
   <header class="hero">
     <div class="hero-inner">
-      <div class="hero-grid">
+      <div class="hero-frame">
         <div class="hero-copy">
           <div class="hero-badge">Graph-Conditioned Parameterization</div>
           <h1>Graph-Conditioned Parameterization for Optimization and Clinical Risk Scoring</h1>
-          <p class="hero-sub"><strong>Transcriptomic QAOA initialization and CTG similarity-graph risk modeling under a shared graph-to-parameterization formulation.</strong> Figures, notebooks, and the manuscript emphasize downstream evaluation of graph-generated decision variables rather than task-level prediction alone.</p>
+          <p class="hero-sub"><strong>Transcriptomic Quantum Approximate Optimization Algorithm (QAOA) initialization for maximum cut (MaxCut) and cardiotocography (CTG) similarity-graph risk modeling under a shared graph-to-parameterization formulation.</strong> Figures, notebooks, and the manuscript emphasize downstream evaluation of graph-generated decision variables rather than task-level prediction alone.</p>
           <div class="hero-pills">
             <span class="pill">QAOA</span>
             <span class="pill">Graph Learning</span>
@@ -942,12 +884,12 @@
             <div class="notebook-ribbon-item">
               <div class="notebook-ribbon-label">CTG held-out operating point</div>
               <div class="notebook-ribbon-value">98.8%</div>
-              <div class="notebook-ribbon-note">ResidualClinicalGCN held-out accuracy</div>
+              <div class="notebook-ribbon-note">ResidualClinicalGCN residual clinical graph convolutional network (GCN) held-out accuracy</div>
             </div>
             <div class="notebook-ribbon-item">
               <div class="notebook-ribbon-label">QAOA held-out mean ratio</div>
               <div class="notebook-ribbon-value">0.8682</div>
-              <div class="notebook-ribbon-note">Adapted GNN mean ratio versus 0.8686 for direct classical search</div>
+              <div class="notebook-ribbon-note">Adapted graph neural network (GNN) mean ratio versus 0.8686 for direct classical search</div>
             </div>
             <div class="notebook-ribbon-item">
               <div class="notebook-ribbon-label">Median end-to-end latency</div>
@@ -961,7 +903,7 @@
             </div>
           </div>
           <div class="notebook-jump-nav hero-nav" aria-label="Jump to landing page sections">
-            <a class="notebook-jump-link" href="#impact-section">Story</a>
+            <a class="notebook-jump-link" href="#notebooks-section">Research Story</a>
             <a class="notebook-jump-link" href="#figures-section">Figures</a>
             <a class="notebook-jump-link" href="#demo-section">Demo</a>
             <a class="notebook-jump-link" href="#notebooks-section">Notebooks</a>
@@ -969,94 +911,11 @@
             <a class="notebook-jump-link repo-link" href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank" rel="noreferrer">Repository</a>
           </div>
         </div>
-
-        <div class="hero-stage" aria-label="Project previews">
-          <a class="hero-stage-panel hero-stage-main" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank" rel="noreferrer">
-            <img src="website/notebooks_html/figures/combined_transcriptomic_benchmark.png" alt="Integrated graph-conditioned evidence preview" loading="eager">
-            <div class="hero-stage-body">
-              <span class="hero-stage-label">Integrated view</span>
-              <h2>Shared graph-to-parameterization formulation</h2>
-              <p>The combined notebook presents transcriptomic optimization and CTG screening as two instances of the same graph-conditioned pipeline.</p>
-              <div class="hero-stage-metric"><strong>1</strong> interface, <strong>2</strong> domains, distinct downstream objectives</div>
-            </div>
-          </a>
-
-          <a class="hero-stage-panel" href="website/notebooks_html/qaoa_demo.html" target="_blank" rel="noreferrer">
-            <img src="website/notebooks_html/figures/qaoa_demo_benchmark_overview.png" alt="Transcriptomic QAOA preview" loading="eager">
-            <div class="hero-stage-body">
-              <span class="hero-stage-label">Transcriptomic QAOA</span>
-              <h2>Held-out quality near direct search</h2>
-              <p>The adapted graph model preserves near-classical depth-2 performance on real-data graphs while sharply reducing inference cost.</p>
-              <div class="hero-stage-metric"><strong>0.8682</strong> held-out mean ratio</div>
-            </div>
-          </a>
-
-          <a class="hero-stage-panel" href="website/notebooks_html/bio_demo.html" target="_blank" rel="noreferrer">
-            <img src="website/notebooks_html/figures/bio_demo_heldout_evaluation.png" alt="Clinical CTG preview" loading="eager">
-            <div class="hero-stage-body">
-              <span class="hero-stage-label">Clinical screening</span>
-              <h2>Threshold-aware graph operating point</h2>
-              <p>The clinical branch emphasizes held-out discrimination, operating-point behavior, calibration, and benchmarking against strong tabular baselines.</p>
-              <div class="hero-stage-metric"><strong>98.8%</strong> held-out accuracy</div>
-            </div>
-          </a>
-        </div>
       </div>
     </div>
   </header>
 
   <main class="container">
-
-    <section class="card" id="impact-section">
-      <div class="card-header">
-        <div class="card-icon">▣</div>
-        <div>
-          <h2>Technical Overview</h2>
-          <p class="card-desc">The repository is organized around a shared graph-conditioned formulation across the manuscript, executed notebooks, and figure gallery.</p>
-        </div>
-      </div>
-
-      <p class="section-intro">These panels summarize the common formulation and then separate the two empirical branches so the optimization and biomedical results remain technically legible on their own terms.</p>
-
-      <div class="impact-grid">
-        <article class="impact-card">
-          <span class="impact-eyebrow">Integrated analysis</span>
-          <h3>Cross-domain graph-conditioned parameterization</h3>
-          <p>The integrated analysis places transcriptomic QAOA angle generation and CTG risk scoring under the same graph-to-parameterization template.</p>
-
-          <div class="impact-note">The emphasis is on the shared computational pattern, the headline numerical results, and the limits of the common interpretation.</div>
-
-          <div class="impact-links">
-            <a class="impact-link" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank" rel="noreferrer">Open notebook</a>
-          </div>
-        </article>
-
-        <article class="impact-card">
-          <span class="impact-eyebrow">Transcriptomic optimization</span>
-          <h3>Depth-2 QAOA on co-expression graphs</h3>
-          <p>This notebook starts from transcriptomic data, builds co-expression graphs, and asks whether graph structure can predict useful depth-2 QAOA parameters for MaxCut while preserving held-out quality and reducing search cost.</p>
-
-          <div class="impact-note">The main evidence is held-out approximation quality, learned-initializer comparison, runtime reduction, and diagnostic analysis of the optimization landscape.</div>
-
-          <div class="impact-links">
-            <a class="impact-link" href="website/notebooks_html/qaoa_demo.html" target="_blank" rel="noreferrer">Open notebook</a>
-          </div>
-        </article>
-
-        <article class="impact-card">
-          <span class="impact-eyebrow">Clinical prediction</span>
-          <h3>Risk-sensitive CTG graph modeling</h3>
-          <p>This notebook turns cardiotocography exams into a physiologic similarity graph and asks whether graph-based learning can produce useful pathologic-risk scores under threshold-aware evaluation, calibration analysis, and stronger tabular benchmarking.</p>
-
-          <div class="impact-note">The main evidence is held-out operating-point behavior, benchmark comparison, calibration, uncertainty, and fixed-split robustness analysis.</div>
-
-          <div class="impact-links">
-            <a class="impact-link" href="website/notebooks_html/bio_demo.html" target="_blank" rel="noreferrer">Open notebook</a>
-          </div>
-        </article>
-      </div>
-    </section>
-
     <section class="card" id="figures-section">
       <div class="card-header">
         <div class="card-icon">◫</div>
@@ -1066,7 +925,7 @@
         </div>
       </div>
 
-      <p class="section-intro">Each card highlights the result that matters most in that visualization, so the gallery reads as evidence rather than decoration.</p>
+      <p class="section-intro">The gallery foregrounds the strongest result in each visualization, so the page reads as evidence rather than decoration.</p>
 
       <div class="figure-grid">
         <a class="figure-link" href="website/notebooks_html/qaoa_demo.html" target="_blank" rel="noreferrer">
@@ -1075,7 +934,7 @@
             <div class="figure-body">
               <span class="figure-label">Held-out QAOA benchmark</span>
               <h3>0.8682 mean ratio on transcriptomic test graphs</h3>
-              <p>The adapted GNN nearly matches direct classical search at 0.8686 and retains 99.95% of the held-out reference quality across the six-graph evaluation set.</p>
+              <p>The adapted graph neural network (GNN) nearly matches direct classical search at 0.8686 and retains 99.95% of the held-out reference quality across the six-graph evaluation set.</p>
               <div class="notebook-ribbon figure-ribbon" aria-label="Held-out QAOA results">
                 <div class="notebook-ribbon-item">
                   <div class="notebook-ribbon-label">Adapted GNN</div>
@@ -1125,7 +984,7 @@
             <div class="figure-body">
               <span class="figure-label">Clinical evaluation</span>
               <h3>98.8% held-out accuracy at the strongest graph operating point</h3>
-              <p>ResidualClinicalGCN reaches 0.942 balanced accuracy and 0.978 ROC AUC on the CTG test split, keeping the graph model competitive under the stricter manuscript framing.</p>
+              <p>ResidualClinicalGCN, a residual clinical graph convolutional network (GCN), reaches 0.942 balanced accuracy and 0.978 receiver operating characteristic area under the curve (ROC AUC) on the cardiotocography (CTG) test split, keeping the graph model competitive under the stricter manuscript framing.</p>
               <div class="notebook-ribbon figure-ribbon" aria-label="Held-out clinical results">
                 <div class="notebook-ribbon-item">
                   <div class="notebook-ribbon-label">Accuracy</div>
@@ -1368,83 +1227,84 @@
 
       <div class="notebook-grid">
         <a class="nb-card" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank" rel="noreferrer">
-          <div class="nb-icon">🔬</div>
-          <div class="nb-body">
-            <h3>Integrated Analysis Notebook</h3>
-            <p>This notebook develops the shared graph-conditioned perspective and brings the optimization and clinical results into a single comparative analysis.</p>
-            <div class="nb-tags">
-              <span class="nb-tag">Integrated Analysis</span>
-              <span class="nb-tag">Comparative View</span>
-              <span class="nb-tag">QAOA + Clinical</span>
+          <div class="nb-card-head">
+            <div class="nb-icon">🔬</div>
+            <div class="nb-body">
+              <h3>Integrated Analysis Notebook</h3>
+              <p>This notebook develops the shared graph-conditioned perspective and brings the optimization and clinical results into a single comparative analysis.</p>
+              <div class="nb-tags">
+                <span class="nb-tag">Integrated Analysis</span>
+                <span class="nb-tag">Comparative View</span>
+                <span class="nb-tag">QAOA + Clinical</span>
+              </div>
             </div>
+            <div class="nb-arrow">▶</div>
           </div>
-          <div class="nb-arrow">▶</div>
+          <div class="nb-detail">
+            <span class="impact-eyebrow">Integrated analysis</span>
+            <h4>One interface, two empirical settings</h4>
+            <p>The integrated notebook states the common template once and relates transcriptomic optimization and clinical prediction through the same graph-to-parameterization map.</p>
+            <ul class="nb-detail-list">
+              <li>Defines the reusable graph-conditioned parameterization view</li>
+              <li>Separates shared structure from domain-specific objectives and limits</li>
+            </ul>
+            <span class="nb-link">View integrated notebook</span>
+          </div>
         </a>
 
         <a class="nb-card" href="website/notebooks_html/qaoa_demo.html" target="_blank" rel="noreferrer">
-          <div class="nb-icon">⚛</div>
-          <div class="nb-body">
-            <h3>Transcriptomic QAOA Notebook</h3>
-            <p>Use this notebook for the transcriptomic graph pipeline, the exact-statevector benchmark, and the learned warm-start model that predicts useful QAOA angles from graph structure.</p>
-            <div class="nb-tags">
-              <span class="nb-tag">Exact Statevector</span>
-              <span class="nb-tag">Held-Out Benchmark</span>
-              <span class="nb-tag">Runtime + Ablation</span>
-              <span class="nb-tag">MaxCut</span>
+          <div class="nb-card-head">
+            <div class="nb-icon">⚛</div>
+            <div class="nb-body">
+              <h3>Transcriptomic QAOA Notebook</h3>
+              <p>Use this notebook for the transcriptomic graph pipeline, the exact-statevector benchmark, and the learned warm-start model that predicts useful QAOA angles from graph structure.</p>
+              <div class="nb-tags">
+                <span class="nb-tag">Exact Statevector</span>
+                <span class="nb-tag">Held-Out Benchmark</span>
+                <span class="nb-tag">Runtime + Ablation</span>
+                <span class="nb-tag">MaxCut</span>
+              </div>
             </div>
+            <div class="nb-arrow">▶</div>
           </div>
-          <div class="nb-arrow">▶</div>
+          <div class="nb-detail">
+            <span class="impact-eyebrow">Transcriptomic optimization</span>
+            <h4>Near-parity quality with a strong latency advantage</h4>
+            <p>The transcriptomic notebook develops the QAOA results through held-out evaluation, learned-initializer comparison, runtime measurements, and diagnostic plots.</p>
+            <ul class="nb-detail-list">
+              <li>0.8682 mean held-out ratio versus 0.8686 for direct classical search</li>
+              <li>2640x lower median latency: 0.256 ms versus 675.9 ms</li>
+            </ul>
+            <span class="nb-link">View transcriptomic notebook</span>
+          </div>
         </a>
 
         <a class="nb-card" href="website/notebooks_html/bio_demo.html" target="_blank" rel="noreferrer">
-          <div class="nb-icon">🧬</div>
-          <div class="nb-body">
-            <h3>CTG Screening Notebook</h3>
-            <p>Use this notebook for the CTG similarity graph, the threshold-aware clinical evaluation workflow, and the graph-versus-tabular interpretation of the current screening results.</p>
-            <div class="nb-tags">
-              <span class="nb-tag">ResidualClinicalGCN</span>
-              <span class="nb-tag">Operating Point</span>
-              <span class="nb-tag">Calibration</span>
-              <span class="nb-tag">Tabular Baselines</span>
+          <div class="nb-card-head">
+            <div class="nb-icon">🧬</div>
+            <div class="nb-body">
+              <h3>CTG Screening Notebook</h3>
+              <p>Use this notebook for the CTG similarity graph, the threshold-aware clinical evaluation workflow, and the graph-versus-tabular interpretation of the current screening results.</p>
+              <div class="nb-tags">
+                <span class="nb-tag">ResidualClinicalGCN</span>
+                <span class="nb-tag">Operating Point</span>
+                <span class="nb-tag">Calibration</span>
+                <span class="nb-tag">Tabular Baselines</span>
+              </div>
             </div>
+            <div class="nb-arrow">▶</div>
           </div>
-          <div class="nb-arrow">▶</div>
+          <div class="nb-detail">
+            <span class="impact-eyebrow">Clinical prediction</span>
+            <h4>Threshold-aware screening behavior on CTG</h4>
+            <p>The CTG notebook develops the screening results through held-out metrics, operating-point analysis, calibration, and comparison against stronger tabular baselines.</p>
+            <ul class="nb-detail-list">
+              <li>98.8% accuracy, 0.942 balanced accuracy, and 0.978 ROC AUC</li>
+              <li>31 of 35 pathologic cases detected with one false positive</li>
+            </ul>
+            <span class="nb-link">View CTG notebook</span>
+          </div>
         </a>
-      </div>
-
-      <div class="notebook-summary-grid" aria-label="Notebook result summaries">
-        <article class="notebook-summary-card">
-          <span class="impact-eyebrow">Integrated analysis</span>
-          <h3>One interface, two empirical settings</h3>
-          <p>The integrated notebook states the common template once and relates transcriptomic optimization and clinical prediction through the same graph-to-parameterization map.</p>
-          <ul class="notebook-summary-list">
-            <li>Defines the reusable graph-conditioned parameterization view</li>
-            <li>Separates shared structure from domain-specific objectives and limits</li>
-            <li><a class="impact-link" href="website/notebooks_html/quantum_ai_bio_combined.html" target="_blank" rel="noreferrer">View integrated notebook</a></li>
-          </ul>
-        </article>
-
-        <article class="notebook-summary-card">
-          <span class="impact-eyebrow">Transcriptomic optimization</span>
-          <h3>Near-parity quality with a strong latency advantage</h3>
-          <p>The transcriptomic notebook develops the QAOA results through held-out evaluation, learned-initializer comparison, runtime measurements, and diagnostic plots.</p>
-          <ul class="notebook-summary-list">
-            <li>0.8682 mean held-out ratio versus 0.8686 for direct classical search</li>
-            <li>2640x lower median latency: 0.256 ms versus 675.9 ms</li>
-            <li><a class="impact-link" href="website/notebooks_html/qaoa_demo.html" target="_blank" rel="noreferrer">View transcriptomic notebook</a></li>
-          </ul>
-        </article>
-
-        <article class="notebook-summary-card">
-          <span class="impact-eyebrow">Clinical prediction</span>
-          <h3>Threshold-aware screening behavior on CTG</h3>
-          <p>The CTG notebook develops the screening results through held-out metrics, operating-point analysis, calibration, and comparison against stronger tabular baselines.</p>
-          <ul class="notebook-summary-list">
-            <li>98.8% accuracy, 0.942 balanced accuracy, and 0.978 ROC AUC</li>
-            <li>31 of 35 pathologic cases detected with one false positive</li>
-            <li><a class="impact-link" href="website/notebooks_html/bio_demo.html" target="_blank" rel="noreferrer">View CTG notebook</a></li>
-          </ul>
-        </article>
       </div>
     </section>
 

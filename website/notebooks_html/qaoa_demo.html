@@ -7802,9 +7802,9 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Graph-Conditioned-Parameterization:-Optimization-Branch">Graph-Conditioned Parameterization: Optimization Branch<a class="anchor-link" href="#Graph-Conditioned-Parameterization:-Optimization-Branch">¶</a></h1><p><strong>Depth-2 QAOA on Transcriptomic Co-Expression Graphs</strong></p>
+<h1 id="Graph-Conditioned-Parameterization:-Optimization-Branch">Graph-Conditioned Parameterization: Optimization Branch<a class="anchor-link" href="#Graph-Conditioned-Parameterization:-Optimization-Branch">¶</a></h1><p><strong>Depth-2 Quantum Approximate Optimization Algorithm (QAOA) on Transcriptomic Co-Expression Graphs</strong></p>
 <hr/>
-<h2 id="Scope">Scope<a class="anchor-link" href="#Scope">¶</a></h2><p>This notebook evaluates graph-conditioned prediction of depth-2 QAOA parameters on transcriptomic co-expression graphs. The main outputs are the emitted angle vectors and their downstream quality under exact MaxCut simulation, runtime comparison, ablations, and diagnostic analysis.</p>
+<h2 id="Scope">Scope<a class="anchor-link" href="#Scope">¶</a></h2><p>This notebook evaluates graph-conditioned prediction of depth-2 Quantum Approximate Optimization Algorithm (QAOA) parameters on transcriptomic co-expression graphs. The main outputs are the emitted angle vectors and their downstream quality under exact maximum cut (MaxCut) simulation, runtime comparison, ablations, and diagnostic analysis.</p>
 <h2 id="System-View">System View<a class="anchor-link" href="#System-View">¶</a></h2><table>
 <thead>
 <tr>
@@ -7823,7 +7823,7 @@ a.anchor-link {
 </tr>
 <tr>
 <td>Downstream objective</td>
-<td>Expected MaxCut value under exact simulation</td>
+<td>Expected maximum cut (MaxCut) value under exact simulation</td>
 </tr>
 <tr>
 <td>Main evidence</td>
@@ -7844,7 +7844,7 @@ a.anchor-link {
 <td><strong>0.8976</strong></td>
 </tr>
 <tr>
-<td>Representative adapted GNN ratio</td>
+<td>Representative adapted graph neural network (GNN) ratio</td>
 <td><strong>0.8975</strong></td>
 </tr>
 <tr>
@@ -7852,7 +7852,7 @@ a.anchor-link {
 <td><strong>0.8686</strong></td>
 </tr>
 <tr>
-<td>Mean held-out adapted GNN ratio</td>
+<td>Mean held-out adapted graph neural network (GNN) ratio</td>
 <td><strong>0.8682</strong></td>
 </tr>
 <tr>
@@ -7942,17 +7942,15 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="0.-Introduction">0. Introduction<a class="anchor-link" href="#0.-Introduction">¶</a></h2><p><a name="intro"></a></p>
-<h3 id="Problem-Formulation">Problem Formulation<a class="anchor-link" href="#Problem-Formulation">¶</a></h3><p>This experiment asks whether a graph neural network can map transcriptomic co-expression structure to useful depth-2 QAOA angles for MaxCut. The workflow is explicit: construct a real-data graph family, solve representative and held-out instances with direct classical search, train a learned parameter generator on resampled graphs, and compare approximation quality and latency on held-out graphs.</p>
+<h3 id="Problem-Formulation">Problem Formulation<a class="anchor-link" href="#Problem-Formulation">¶</a></h3><p>This experiment asks whether a graph neural network (GNN) can map transcriptomic co-expression structure to useful depth-2 Quantum Approximate Optimization Algorithm (QAOA) angles for maximum cut (MaxCut). The workflow is explicit: construct a real-data graph family, solve representative and held-out instances with direct classical search, train a learned parameter generator on resampled graphs, and compare approximation quality and latency on held-out graphs.</p>
 <p>The MaxCut problem asks: given a weighted graph $G = (V, E, w)$, find a partition $(S, \bar{S})$ of $V$ that maximises the total weight of edges crossing the cut,</p>
 <p>$$
 \text{MaxCut}(G) = \max_{S \subseteq V} \sum_{(u,v)\in E} w_{uv} \cdot \mathbf{1}\bigl[(u \in S) \oplus (v \in S)\bigr].
 $$</p>
 <p>MaxCut is NP-hard in general. The Goemans-Williamson SDP achieves an approximation ratio of $\alpha_{GW} \approx 0.878$. The Quantum Approximate Optimization Algorithm (QAOA) of depth $p$ provides a parameterised quantum circuit whose expected cut value approaches MaxCut as $p \to \infty$.</p>
-<hr/>
-<h3 id="Biological-Context">Biological Context<a class="anchor-link" href="#Biological-Context">¶</a></h3><p>The graph is derived from the <strong>OpenML <code>prostate</code> transcriptomic dataset</strong> (102 patients × 12,600 RNA expression features). The pipeline selects the 10 highest-variance genes and encodes pairwise Pearson correlations as edge weights, yielding a biologically grounded co-expression structure.</p>
+<p>The graph is derived from the <strong>OpenML <code>prostate</code> transcriptomic dataset</strong> (102 patients × 12,600 RNA expression features). The pipeline selects the 10 highest-variance genes and encodes pairwise Pearson correlations as edge weights, yielding a biologically grounded co-expression structure.</p>
 <p><strong>Why MaxCut on co-expression graphs?</strong> A cut on a co-expression graph separates genes whose coordinated activity is strongest across the cohort. Even though this is not itself a clinical endpoint, it is a technically meaningful stress test for whether a learned graph model can map biologically derived structure into useful QAOA angle proposals.</p>
-<hr/>
-<h3 id="Experimental-Shift-Relative-to-the-Earlier-Depth-1-Study">Experimental Shift Relative to the Earlier Depth-1 Study<a class="anchor-link" href="#Experimental-Shift-Relative-to-the-Earlier-Depth-1-Study">¶</a></h3><p>The present workflow changes the earlier setup in two concrete ways.</p>
+<h3 id="What-has-changed-relative-to-the-earlier-version?">What has changed relative to the earlier version?<a class="anchor-link" href="#What-has-changed-relative-to-the-earlier-version?">¶</a></h3><p>The present workflow changes the earlier setup in two concrete ways.</p>
 <table>
 <thead>
 <tr>
@@ -7966,18 +7964,15 @@ $$</p>
 <td>Raises the quality ceiling on these transcriptomic MaxCut instances</td>
 </tr>
 <tr>
-<td><strong>Transcriptomic domain adaptation on separate resampled graphs</strong></td>
-<td>Replaces out-of-domain transfer with a graph family that matches the benchmark distribution</td>
+<td><strong>Transcriptomic graphs instead of synthetic random graphs</strong></td>
+<td>Forces the learned initializer to adapt to real-data structure rather than toy graph distributions</td>
 </tr>
 </tbody>
 </table>
-<p>The resulting comparison is narrower and more useful: the question is no longer whether a learned initializer is merely fast, but whether it can retain nearly all of the depth-2 classical quality on held-out real-data graphs.</p>
-<hr/>
-<h3 id="Scope-and-Limitations-(Up-Front)">Scope and Limitations (Up Front)<a class="anchor-link" href="#Scope-and-Limitations-(Up-Front)">¶</a></h3><ul>
-<li><strong>Statevector simulation</strong> is exact but scales as $O(2^n)$; here $n = 10$ is intentionally small enough to keep the benchmark fully auditable.</li>
+<h3 id="What-this-notebook-claims-%E2%80%94-and-does-not-claim">What this notebook claims — and does not claim<a class="anchor-link" href="#What-this-notebook-claims-%E2%80%94-and-does-not-claim">¶</a></h3><ul>
+<li><strong>This is a learned warm-start study</strong>, not a claim of fault-tolerant quantum advantage.</li>
 <li><strong>Depth $p = 2$</strong> is stronger than the previous $p = 1$ setup, but it is still a low-depth ansatz rather than an asymptotic quantum-advantage claim.</li>
-<li><strong>Domain adaptation is still small-data supervision</strong>: the adapted graph model is trained on transcriptomic resamples from the same cohort family, not on independent external cohorts.</li>
-<li><strong>Gene selection is variance-based</strong> rather than pathway-aware, so the derived graph remains algorithmically motivated more than biologically curated.</li>
+<li><strong>The model is evaluated on held-out real-data graphs</strong>, so the reported quality reflects out-of-sample behavior rather than only representative-instance fitting.</li>
 <li><strong>The benchmark is intentionally strict</strong>: exact MaxCut is computed for every graph, so all quality claims are measured against ground truth rather than against another heuristic.</li>
 </ul>
 </div>
