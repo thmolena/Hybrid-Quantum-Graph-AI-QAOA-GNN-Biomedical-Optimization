@@ -50,17 +50,17 @@ This repository studies graph-conditioned parameterization in two settings:
 
 [notebooks/quantum_ai_bio_combined.ipynb](notebooks/quantum_ai_bio_combined.ipynb)
 
-Integrated technical view of both branches.
+Joint analysis of both branches.
 
 - shared graph-to-parameterization formulation
-- transcriptomic optimization and CTG screening in one workflow
-- branch-specific evaluation retained inside a common interface
+- transcriptomic optimization and CTG screening in one analysis surface
+- branch-specific evaluation retained under a common interface
 
 ### 2. Transcriptomic QAOA notebook
 
 [notebooks/qaoa_demo.ipynb](notebooks/qaoa_demo.ipynb)
 
-Technical notebook for the optimization branch.
+Optimization branch analysis notebook.
 
 - transcriptomic co-expression graphs
 - exact depth-2 statevector simulation
@@ -70,7 +70,7 @@ Technical notebook for the optimization branch.
 
 [notebooks/bio_demo.ipynb](notebooks/bio_demo.ipynb)
 
-Technical notebook for the biomedical branch.
+Biomedical branch analysis notebook.
 
 - split-first preprocessing and k-NN graph construction
 - threshold-aware evaluation and calibration analysis
@@ -80,11 +80,11 @@ Technical notebook for the biomedical branch.
 
 | Result | Value | Interpretation |
 | --- | --- | --- |
-| QAOA held-out mean ratio | 0.8682 | Near-parity with 0.8686 for direct classical search |
-| QAOA median latency | 0.256 ms | About 2640x lower than direct classical search |
-| Prior-style learned QAOA baseline | 0.8208 | Faster than search but weaker than the graph-conditioned model |
-| CTG graph operating point | 98.8% accuracy, 0.942 balanced accuracy | Strong graph-based screening behavior |
-| Strongest tabular CTG baseline | 99.06% accuracy, 0.956 balanced accuracy | Calibrated LightGBM remains slightly stronger on this split |
+| QAOA held-out mean ratio | 0.8682 | Versus 0.8686 for direct classical search |
+| QAOA median latency | 0.256 ms | Versus 675.9 ms for direct classical search |
+| Prior-style learned QAOA baseline | 0.8208 | Lower than the graph-conditioned model |
+| CTG graph operating point | 98.8% accuracy, 0.942 balanced accuracy | ResidualClinicalGCN operating point |
+| Strongest tabular CTG baseline | 99.06% accuracy, 0.956 balanced accuracy | Calibrated LightGBM on the same split |
 
 ## Artifacts
 
@@ -102,7 +102,7 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-Run the main notebooks:
+Open the notebooks:
 
 ```bash
 jupyter notebook notebooks/quantum_ai_bio_combined.ipynb
@@ -110,7 +110,7 @@ jupyter notebook notebooks/qaoa_demo.ipynb
 jupyter notebook notebooks/bio_demo.ipynb
 ```
 
-Run the baseline scripts:
+Run the extracted baseline scripts:
 
 ```bash
 python experiments/qaoa/run_qaoa_baselines.py

@@ -7802,9 +7802,9 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Graph-Conditioned-Parameterization-Atlas:-Optimization-Branch">Graph-Conditioned Parameterization Atlas: Optimization Branch<a class="anchor-link" href="#Graph-Conditioned-Parameterization-Atlas:-Optimization-Branch">¶</a></h1><p><strong>Depth-2 QAOA on Transcriptomic Co-Expression Graphs</strong></p>
+<h1 id="Graph-Conditioned-Parameterization:-Optimization-Branch">Graph-Conditioned Parameterization: Optimization Branch<a class="anchor-link" href="#Graph-Conditioned-Parameterization:-Optimization-Branch">¶</a></h1><p><strong>Depth-2 QAOA on Transcriptomic Co-Expression Graphs</strong></p>
 <hr/>
-<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This notebook presents the optimization branch of the graph-conditioned parameterization atlas. Transcriptomic co-expression graphs are mapped to depth-2 QAOA angle vectors, and those learned proposals are evaluated through held-out approximation quality, runtime, ablations, and optimization diagnostics.</p>
+<h2 id="Scope">Scope<a class="anchor-link" href="#Scope">¶</a></h2><p>This notebook evaluates graph-conditioned prediction of depth-2 QAOA parameters on transcriptomic co-expression graphs. The main outputs are the emitted angle vectors and their downstream quality under exact MaxCut simulation, runtime comparison, ablations, and diagnostic analysis.</p>
 <h2 id="System-View">System View<a class="anchor-link" href="#System-View">¶</a></h2><table>
 <thead>
 <tr>
@@ -7831,7 +7831,7 @@ a.anchor-link {
 </tr>
 </tbody>
 </table>
-<h2 id="Results-at-a-Glance">Results at a Glance<a class="anchor-link" href="#Results-at-a-Glance">¶</a></h2><table>
+<h2 id="Key-Results">Key Results<a class="anchor-link" href="#Key-Results">¶</a></h2><table>
 <thead>
 <tr>
 <th>Metric</th>
@@ -7869,10 +7869,10 @@ a.anchor-link {
 </tr>
 </tbody>
 </table>
-<h2 id="Reading-Path">Reading Path<a class="anchor-link" href="#Reading-Path">¶</a></h2><ul>
-<li>Start with the signal gallery to inspect the benchmark figures before stepping into the implementation cells.</li>
-<li>Use the roadmap to move from graph construction and representative setup to held-out comparison and then to diagnostics.</li>
-<li>Interpret runtime and quality together; the main claim is the tradeoff, not unconditional superiority.</li>
+<h2 id="Navigation">Navigation<a class="anchor-link" href="#Navigation">¶</a></h2><ul>
+<li>Inspect the stored benchmark figures first.</li>
+<li>Then move from graph construction to held-out comparison.</li>
+<li>Read ablations and diagnostics as tests of the emitted parameterization rather than as standalone model scores.</li>
 </ul>
 </div>
 </div>
@@ -7884,7 +7884,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Reading-Map">Reading Map<a class="anchor-link" href="#Reading-Map">¶</a></h2><p>The notebook proceeds from transcriptomic graph construction and representative-problem setup to held-out evaluation, initializer comparison, and diagnostic analysis.</p>
+<h2 id="Reading-Map">Reading Map<a class="anchor-link" href="#Reading-Map">¶</a></h2><p>The notebook proceeds from transcriptomic graph construction and representative-instance setup to held-out evaluation, initializer comparison, and diagnostic analysis.</p>
 <table>
 <thead>
 <tr>
@@ -7926,7 +7926,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Signal-Gallery">Signal Gallery<a class="anchor-link" href="#Signal-Gallery">¶</a></h2><p>These saved figures surface the strongest evidence immediately, matching the repository landing page and manuscript draft. The later result sections reproduce the same visuals from executable analysis cells, but the gallery makes the opening screen evidence-first rather than code-first.</p>
+<h2 id="Signal-Gallery">Signal Gallery<a class="anchor-link" href="#Signal-Gallery">¶</a></h2><p>These figures summarize the main empirical results before the implementation cells. Later sections regenerate the same outputs from executable analysis code.</p>
 <h3 id="Held-Out-Benchmark-Overview">Held-Out Benchmark Overview<a class="anchor-link" href="#Held-Out-Benchmark-Overview">¶</a></h3><p><img alt="Three-panel benchmark figure summarizing median latency across held-out transcriptomic graphs, the representative depth-2 output-state concentration, and per-graph approximation-ratio comparisons between classical search, the adapted GNN, and the legacy transfer baseline." src="figures/qaoa_demo_benchmark_overview.png"/></p>
 <h3 id="Landscape-Geometry">Landscape Geometry<a class="anchor-link" href="#Landscape-Geometry">¶</a></h3><p><img alt="Two-panel landscape-geometry figure showing the distribution of values in the representative depth-2 slice and the fraction of slice grid points that remain near the optimum." src="figures/qaoa_demo_landscape_geometry.png"/></p>
 <h3 id="Quantum-State-Concentration">Quantum State Concentration<a class="anchor-link" href="#Quantum-State-Concentration">¶</a></h3><p><img alt="Two-panel state-concentration figure comparing cut value against QAOA measurement probability and showing the cumulative concentration of probability mass on high-quality bitstrings versus a uniform baseline." src="figures/qaoa_demo_state_concentration.png"/></p>

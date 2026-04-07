@@ -7802,9 +7802,9 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Graph-Conditioned-Parameterization-Atlas">Graph-Conditioned Parameterization Atlas<a class="anchor-link" href="#Graph-Conditioned-Parameterization-Atlas">¶</a></h1><p><strong>Integrated Analysis Across Transcriptomic Optimization and Clinical Screening</strong></p>
+<h1 id="Graph-Conditioned-Parameterization">Graph-Conditioned Parameterization<a class="anchor-link" href="#Graph-Conditioned-Parameterization">¶</a></h1><p><strong>Integrated Transcriptomic and Clinical Evaluation</strong></p>
 <hr/>
-<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This notebook is the integrated view of the graph-conditioned parameterization atlas. It places two empirical settings under one interface statement: transcriptomic co-expression graphs mapped to depth-2 QAOA angle vectors, and CTG similarity graphs mapped to pathologic-risk scores for thresholded screening analysis.</p>
+<h2 id="Scope">Scope<a class="anchor-link" href="#Scope">¶</a></h2><p>This notebook places two empirical settings under the same interface: transcriptomic co-expression graphs mapped to depth-2 QAOA angle vectors, and CTG patient-similarity graphs mapped to pathologic-risk scores. The comparison is organized around the emitted parameterization and its downstream evaluation rather than around a shared loss or shared model family.</p>
 <h2 id="System-View">System View<a class="anchor-link" href="#System-View">¶</a></h2><table>
 <thead>
 <tr>
@@ -7829,7 +7829,7 @@ a.anchor-link {
 </tr>
 </tbody>
 </table>
-<h2 id="Results-at-a-Glance">Results at a Glance<a class="anchor-link" href="#Results-at-a-Glance">¶</a></h2><table>
+<h2 id="Key-Results">Key Results<a class="anchor-link" href="#Key-Results">¶</a></h2><table>
 <thead>
 <tr>
 <th>Metric</th>
@@ -7871,10 +7871,10 @@ a.anchor-link {
 </tr>
 </tbody>
 </table>
-<h2 id="Reading-Path">Reading Path<a class="anchor-link" href="#Reading-Path">¶</a></h2><ul>
-<li>Start with the signal gallery to see how the two branches are presented side by side.</li>
-<li>Use the comparative view to separate what is shared from what remains domain-specific.</li>
-<li>Treat the notebook as an interface study, not as a claim of transfer or deployment readiness.</li>
+<h2 id="Navigation">Navigation<a class="anchor-link" href="#Navigation">¶</a></h2><ul>
+<li>Start with the integrated figure gallery.</li>
+<li>Then use the comparative table to separate shared structure from domain-specific evaluation.</li>
+<li>Read the notebook as an interface study spanning two downstream objectives.</li>
 </ul>
 </div>
 </div>
@@ -7886,7 +7886,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Comparative-View">Comparative View<a class="anchor-link" href="#Comparative-View">¶</a></h2><p>The two empirical settings differ in objective, supervision, and evaluation, but they share the same graph-to-parameterization pattern. This table is the bridge between the repository landing page, the manuscript draft, and the notebook evidence below.</p>
+<h2 id="Comparative-View">Comparative View<a class="anchor-link" href="#Comparative-View">¶</a></h2><p>The two settings differ in objective, supervision, and evaluation, but they share the same graph-to-parameterization pattern. The table below is the organizing comparison used throughout the manuscript, landing page, and notebook.</p>
 <table>
 <thead>
 <tr>
@@ -7914,7 +7914,7 @@ a.anchor-link {
 </tr>
 </tbody>
 </table>
-<p>The notebook uses this comparison to keep the shared interface claim clear without erasing the fact that the two branches solve different problems.</p>
+<p>The comparison isolates the shared interface claim without obscuring that the two branches solve different tasks.</p>
 </div>
 </div>
 </div>
@@ -7925,7 +7925,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Signal-Gallery">Signal Gallery<a class="anchor-link" href="#Signal-Gallery">¶</a></h2><p>These saved figures expose the main evidence before the implementation details, keeping the integrated notebook aligned with the repository landing page and the manuscript draft. The optimization and biomedical halves both contribute reusable figure assets so the opening view reads as a coherent atlas rather than two disconnected analyses.</p>
+<h2 id="Signal-Gallery">Signal Gallery<a class="anchor-link" href="#Signal-Gallery">¶</a></h2><p>These figures summarize the main evidence before the implementation cells. Later sections reconstruct the same outputs from executable code for each branch.</p>
 <h3 id="Transcriptomic-Adaptation-and-Benchmark">Transcriptomic Adaptation and Benchmark<a class="anchor-link" href="#Transcriptomic-Adaptation-and-Benchmark">¶</a></h3><p><img alt="Two-panel transcriptomic gallery: the adaptation loss curve showing convergence of the Adaptive Quantum GCN on transcriptomic resamples and the benchmark figure summarizing the representative graph geometry plus held-out quality retention across real-data graphs." src="figures/combined_transcriptomic_adaptation.png"/></p>
 <p><img alt="Four-panel transcriptomic benchmark figure showing the representative transcriptomic graph, the interpolation path from the learned prediction to the classical optimum, the visible depth-2 landscape slice, and the held-out quality comparison over benchmark graphs." src="figures/combined_transcriptomic_benchmark.png"/></p>
 <h3 id="Integrated-Biomedical-Evaluation">Integrated Biomedical Evaluation<a class="anchor-link" href="#Integrated-Biomedical-Evaluation">¶</a></h3><p><img alt="Six-panel biomedical evaluation dashboard showing confusion matrix, ROC, precision-recall behavior, training dynamics, and PCA-space localization of true labels and prediction discordances for the integrated residual clinical model." src="figures/combined_ctg_evaluation_dashboard.png"/></p>
@@ -9204,12 +9204,15 @@ Saved figure assets -&gt; /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Docume
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 id="3.1-How-to-Read-the-Benchmark">3.1 How to Read the Benchmark<a class="anchor-link" href="#3.1-How-to-Read-the-Benchmark">¶</a></h3><p>The optimization branch should now support three claims directly:</p>
 <ul>
-<li><strong>Representative-graph geometry:</strong> the learned model is evaluated on the same biology-derived graph that anchors the strongest exact depth-2 reference.</li>
-<li><strong>Held-out evidence:</strong> the patient-resampled benchmark makes the quality-retention claim about a graph family, not a single instance.</li>
-<li><strong>Practical value:</strong> the latency comparison shows that the learned model remains an amortized warm-start rather than just a slower surrogate.</li>
+<li><p><strong>Representative-graph geometry:</strong> the learned model is evaluated on the same biology-derived graph that anchors the strongest exact depth-2 reference.</p>
+</li>
+<li><p><strong>Held-out evidence:</strong> the patient-resampled benchmark makes the quality-retention claim about a graph family, not a single instance.</p>
+</li>
+<li><p><strong>Practical value:</strong> the latency comparison shows that the learned model remains a learned warm-start rather than just a slower surrogate.</p>
+</li>
 </ul>
 <p>For presentation purposes, the benchmark-level statistic that matters most is the mean held-out retention of the adapted model relative to classical depth-2 QAOA. That is the quantitative bridge from optimization theory to deployable inference efficiency.</p>
-<h3 id="3.2-Joint-Benchmark-Evidence">3.2 Joint Benchmark Evidence<a class="anchor-link" href="#3.2-Joint-Benchmark-Evidence">¶</a></h3><p>The benchmark summary integrates two evidence layers simultaneously: accuracy relative to exact depth-2 classical references across the held-out graph family, and inference latency relative to repeated classical optimization. Together they quantify the central tradeoff of the optimization branch: how much exact quality is preserved once optimization is amortized into learned inference.</p>
+<h3 id="3.2-Joint-Benchmark-Evidence">3.2 Joint Benchmark Evidence<a class="anchor-link" href="#3.2-Joint-Benchmark-Evidence">¶</a></h3><p>The benchmark summary integrates two evidence layers simultaneously: accuracy relative to exact depth-2 classical references across the held-out graph family, and inference latency relative to repeated classical optimization. Together they quantify the central tradeoff of the optimization branch: how much exact quality is preserved once repeated search is shifted into learned inference.</p>
 </div>
 </div>
 </div>

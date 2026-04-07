@@ -7802,9 +7802,9 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Graph-Conditioned-Parameterization-Atlas:-Clinical-Branch">Graph-Conditioned Parameterization Atlas: Clinical Branch<a class="anchor-link" href="#Graph-Conditioned-Parameterization-Atlas:-Clinical-Branch">¶</a></h1><p><strong>Risk-Sensitive CTG Screening on a Patient-Similarity Graph</strong></p>
+<h1 id="Graph-Conditioned-Parameterization:-Clinical-Branch">Graph-Conditioned Parameterization: Clinical Branch<a class="anchor-link" href="#Graph-Conditioned-Parameterization:-Clinical-Branch">¶</a></h1><p><strong>CTG Similarity-Graph Risk Modeling</strong></p>
 <hr/>
-<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>This notebook presents the clinical branch of the graph-conditioned parameterization atlas. Each CTG exam is embedded in a patient-similarity graph, the graph model emits pathologic-risk scores, and those scores are evaluated through held-out operating points, calibration, robustness, and comparison against strong tabular baselines.</p>
+<h2 id="Scope">Scope<a class="anchor-link" href="#Scope">¶</a></h2><p>This notebook evaluates node-level pathologic-risk scoring on a CTG patient-similarity graph. The analysis treats the emitted risk surface as the primary object and measures held-out discrimination, threshold behavior, calibration, robustness, and comparison against strong tabular baselines.</p>
 <h2 id="System-View">System View<a class="anchor-link" href="#System-View">¶</a></h2><table>
 <thead>
 <tr>
@@ -7831,7 +7831,7 @@ a.anchor-link {
 </tr>
 </tbody>
 </table>
-<h2 id="Results-at-a-Glance">Results at a Glance<a class="anchor-link" href="#Results-at-a-Glance">¶</a></h2><table>
+<h2 id="Key-Results">Key Results<a class="anchor-link" href="#Key-Results">¶</a></h2><table>
 <thead>
 <tr>
 <th>Metric</th>
@@ -7869,10 +7869,10 @@ a.anchor-link {
 </tr>
 </tbody>
 </table>
-<h2 id="Reading-Path">Reading Path<a class="anchor-link" href="#Reading-Path">¶</a></h2><ul>
-<li>Start with the signal gallery to inspect the main figures before the implementation details.</li>
-<li>Use the roadmap to move from cohort structure to held-out benchmarking and then to calibration, robustness, and saliency.</li>
-<li>Read the graph results alongside the tabular baselines rather than in isolation.</li>
+<h2 id="Navigation">Navigation<a class="anchor-link" href="#Navigation">¶</a></h2><ul>
+<li>Inspect the stored figures first.</li>
+<li>Then move from cohort construction to held-out benchmarking.</li>
+<li>Read operating-point, calibration, and robustness sections as properties of the emitted risk scores.</li>
 </ul>
 </div>
 </div>
@@ -7884,7 +7884,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Signal-Gallery">Signal Gallery<a class="anchor-link" href="#Signal-Gallery">¶</a></h2><p>These stored figures sit near the top so the notebook opens on the strongest evidence, consistent with the repository landing page and manuscript draft. The executable sections later in the notebook reproduce the same analysis path in full detail.</p>
+<h2 id="Signal-Gallery">Signal Gallery<a class="anchor-link" href="#Signal-Gallery">¶</a></h2><p>These figures summarize the main empirical evidence before the implementation cells. Later sections reproduce the same analyses from executable code.</p>
 <h3 id="Cohort-Geometry-and-Feature-Shift-Audit">Cohort Geometry and Feature-Shift Audit<a class="anchor-link" href="#Cohort-Geometry-and-Feature-Shift-Audit">¶</a></h3><p><img alt="Three-panel CTG cohort audit showing PCA by true labels, PCA by ResidualClinicalGCN predictions with held-out test exams circled, and the largest standardized feature shifts between pathologic and non-pathologic training cases." src="figures/bio_demo_pca_audit.png"/></p>
 <h3 id="Held-Out-Evaluation-Dashboard">Held-Out Evaluation Dashboard<a class="anchor-link" href="#Held-Out-Evaluation-Dashboard">¶</a></h3><p><img alt="Held-out evaluation dashboard summarizing confusion matrix, ROC, precision-recall behavior, training dynamics, and PCA-space error localization for the strongest residual clinical model." src="figures/bio_demo_heldout_evaluation.png"/></p>
 <h3 id="Operating-Point-Analysis">Operating-Point Analysis<a class="anchor-link" href="#Operating-Point-Analysis">¶</a></h3><p><img alt="Threshold-sensitivity analysis showing how recall, precision, false positives, and balanced accuracy move as the decision threshold changes." src="figures/bio_demo_operating_point_analysis.png"/></p>
@@ -7902,7 +7902,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Reading-Map">Reading Map<a class="anchor-link" href="#Reading-Map">¶</a></h2><p>The notebook moves from cohort geometry and graph construction to benchmark comparison and then to operating-point, calibration, uncertainty, robustness, and saliency analysis.</p>
+<h2 id="Reading-Map">Reading Map<a class="anchor-link" href="#Reading-Map">¶</a></h2><p>The notebook proceeds from cohort audit and graph construction to held-out comparison, then to operating-point, calibration, uncertainty, robustness, and saliency analysis.</p>
 <table>
 <thead>
 <tr>

@@ -1,69 +1,55 @@
-# Graph-Conditioned Parameterization for Optimization and Clinical Risk Scoring
+# Graph-Conditioned Parameterization for QAOA Initialization and Clinical Risk Modeling
 
-### Transcriptomic QAOA Initialization and Clinical Similarity-Based Risk Modeling
-
-<div align="center">
+### Transcriptomic Co-Expression Graphs and CTG Similarity Graphs
 
 **Molena Huynh**
-
-</div>
 
 ---
 
 ## Abstract
 
-Many graph-learning systems do not terminate in a graph label. Instead, they emit a smaller set of variables that a downstream optimizer, simulator, or decision rule consumes. We study this setting through **graph-conditioned parameterization (GCP)**, in which a graph model maps structured input graphs to task-specific decision variables. The claim is deliberately narrow: the shared object across domains is the interface, not a common supervision signal or shared representation space.
+Many graph-learning pipelines terminate in decision variables rather than labels. We study this regime through **graph-conditioned parameterization (GCP)**, in which a graph model maps structured input graphs to task-specific variables evaluated by downstream objectives. The common object across domains is therefore the interface rather than a shared supervision signal or representation space.
 
-We instantiate GCP in two settings. First, a graph neural network predicts depth-2 QAOA parameters for transcriptomic co-expression graphs derived from prostate expression data. On six held-out graphs, the adapted model achieves a mean approximation ratio of **0.8682 ± 0.0312**, compared with **0.8686 ± 0.0308** for direct classical search, while reducing median end-to-end latency from **675.9 ms** to **0.256 ms**. Second, a graph model emits node-level pathologic-risk scores on a cardiotocography similarity graph. The strongest graph operating point reaches **98.8%** held-out accuracy and **0.942** balanced accuracy, while the strongest tabular baseline, calibrated LightGBM, attains **99.06%** accuracy and **0.956** balanced accuracy.
+We instantiate GCP in two settings. First, a graph neural network predicts depth-2 QAOA parameters for transcriptomic co-expression graphs derived from prostate expression data. On six held-out graphs, the adapted model achieves a mean approximation ratio of **0.8682 ± 0.0312**, compared with **0.8686 ± 0.0308** for direct classical search, while reducing median end-to-end latency from **675.9 ms** to **0.256 ms**. Second, a graph model emits node-level pathologic-risk scores on a cardiotocography similarity graph. The strongest graph operating point reaches **98.8%** held-out accuracy and **0.942** balanced accuracy, while the strongest tabular baseline, calibrated LightGBM, reaches **99.06%** accuracy and **0.956** balanced accuracy.
 
-Our contribution is therefore not a broad claim of superiority, but a reusable computational template,
-
-$$
-\text{graph} \rightarrow \text{parameterization} \rightarrow \text{downstream objective},
-$$
-
-and empirical evidence that this template remains effective in two materially different settings. Taken together, the results identify GCP as a compact formulation for graph models whose outputs parameterize downstream computation.
+The contribution is a reusable graph-to-parameterization-to-downstream-objective template and empirical evidence that it remains informative in two materially different settings. Taken together, the results establish GCP as a compact formulation for graph models whose outputs parameterize downstream computation.
 
 ---
 
 ## 1. Introduction
 
-Many graph-learning problems are only the first stage of a larger computational pipeline. Rather than producing a final label, the model emits a smaller set of quantities that steer downstream computation: optimizer controls, risk scores, thresholds, or structured coefficients. Despite how common this pattern is in practice, it is often described only indirectly, as if the graph model itself were the endpoint of interest. This paper studies that setting directly.
+Many graph-learning systems are deployed upstream of another computation rather than as standalone predictors. In these settings, the model emits a compact set of variables that steers a downstream optimizer, simulator, or decision rule. Typical examples include optimizer controls, risk scores, thresholds, or structured coefficients. Despite the prevalence of this pattern, evaluation is still often framed as though the graph model itself were the endpoint. This paper studies the upstream role directly.
 
 We refer to this role as **graph-conditioned parameterization**. Given an input graph $G$, a graph model produces a task-specific parameterization $\theta_T$ whose quality is determined by a downstream objective. Under this view, the model is best understood as a **structure-aware parameter generator** rather than only as an end-task predictor. That distinction matters whenever the utility of the model depends less on pointwise predictive error than on the behavior of a downstream system that consumes its output.
 
 This perspective is relevant to both branches studied here. In the optimization branch, a graph encoder predicts depth-2 QAOA angles for transcriptomic MaxCut instances. In the biomedical branch, a graph encoder predicts node-level pathologic-risk scores for cardiotocography screening. The tasks differ in semantics, supervision, and evaluation, but they share the same computational role: graph structure is compressed into a downstream-actionable object.
 
-Making that object explicit sharpens evaluation and clarifies comparison. Once the intermediate parameterization is treated as a first-class artifact, runtime, robustness, threshold sensitivity, and calibration become primary rather than auxiliary. A QAOA initializer and a clinical risk surface are not the same scientific object, but both instantiate the pipeline
-
-$$
-	ext{graph} \rightarrow \text{parameterization} \rightarrow \text{downstream objective}.
-$$
+Making that object explicit sharpens evaluation and clarifies comparison. Once the intermediate parameterization is treated as a first-class artifact, runtime, robustness, threshold sensitivity, and calibration become primary rather than auxiliary. A QAOA initializer and a clinical risk surface are not the same scientific object, but both instantiate the same graph-to-parameterization-to-downstream-objective pipeline.
 
 This common structure motivates a single interface formulation across distinct downstream objectives. The contribution is the formulation itself together with two biologically grounded instantiations, explicit runtime accounting in the QAOA branch, and threshold-aware evaluation in the biomedical branch.
 
 ### Contributions
 
-1. We define **graph-conditioned parameterization** as a role for graph models that map graph structure to decision-relevant variables consumed by downstream computation.
-2. We instantiate that role in two settings: transcriptomic QAOA parameter generation and CTG pathologic-risk scoring.
-3. We show that the QAOA instantiation reaches near-parity with direct classical depth-2 search while preserving a strong latency advantage and improving on weaker learned initializers.
-4. We show that the biomedical instantiation remains competitive under stronger tabular benchmarking and threshold-aware evaluation, even though the best tabular model is slightly stronger on this split.
+1. **Interface formulation.** We define **graph-conditioned parameterization** as a regime in which a graph model maps graph structure to decision variables consumed by downstream computation.
+2. **Two-domain instantiation.** We instantiate that regime in two settings with different objectives and supervision: transcriptomic depth-2 QAOA parameter prediction and CTG pathologic-risk scoring.
+3. **Optimization result.** We show that the QAOA instantiation reaches near-parity with direct classical depth-2 search while preserving a large latency advantage and outperforming weaker learned initializers.
+4. **Clinical result.** We show that the biomedical instantiation remains competitive under stronger tabular benchmarking and threshold-aware evaluation, even though the strongest tabular model is slightly better on this split.
 
 ---
 
 ## 2. Related Work
 
-### 2.1 Learned QAOA Initialization
+### 2.1 Learned QAOA Parameter Prediction
 
-Learned QAOA initialization is an active direction spanning initialization schemes, parameter concentration, parameter transfer, and graph-informed parameter prediction. Within that literature, the present work contributes a biologically grounded transcriptomic graph family, exact held-out depth-2 evaluation, explicit runtime accounting, and graph-specific ablations under a common graph-conditioned formulation.
+Learned QAOA parameter prediction spans initialization heuristics, parameter concentration, transfer schemes, and graph-informed inference. Relative to that literature, the present work contributes a biologically grounded transcriptomic graph family, exact held-out depth-2 evaluation, explicit runtime accounting, and graph-specific ablations under a common graph-conditioned formulation.
 
-### 2.2 Graph Learning in Biomedicine
+### 2.2 Clinical Graph Modeling and Evaluation
 
-Graph neural networks are already established in biomedical and clinical prediction tasks, especially where patient similarity, relational structure, or multimodal biological context is informative. The biomedical branch therefore focuses on evaluation protocol rather than architectural novelty: split-first preprocessing, threshold-aware reporting, calibration-sensitive interpretation, and benchmarking against strong tabular baselines.
+Graph neural networks are already established in biomedical and clinical prediction settings where patient similarity or relational structure is informative. The biomedical branch therefore emphasizes evaluation protocol rather than architectural novelty: split-first preprocessing, threshold-aware reporting, calibration-sensitive interpretation, and benchmarking against strong tabular baselines.
 
-### 2.3 Interface Positioning
+### 2.3 Interface-Level Positioning
 
-The paper's organizing claim is that both branches instantiate the same graph-to-parameterization-to-objective pipeline. This places the work between application-specific benchmarking and broader methodological framing: the contribution is a reusable interface perspective supported by two materially different case studies.
+The paper's organizing claim is that both branches instantiate the same graph-to-parameterization-to-objective pipeline. This positions the work between application-specific benchmarking and methodological framing: the contribution is a reusable interface perspective supported by two materially different case studies.
 
 ---
 
@@ -158,7 +144,7 @@ This side-by-side view is intentionally simple, but it serves an important metho
 
 ### 5.1 QAOA: Near-Classical Quality at Much Lower Inference Cost
 
-The QAOA branch is best interpreted as a compute-quality tradeoff rather than a claim of superiority over direct search. Across six held-out transcriptomic graphs, the adapted GNN nearly matches classical depth-2 search while remaining much faster.
+Across six held-out transcriptomic graphs, the adapted GNN nearly matches direct depth-2 classical search while operating at substantially lower inference cost.
 
 | Method | Held-out mean ratio | Std. dev. | Median runtime (ms) |
 |---|---:|---:|---:|
@@ -167,13 +153,11 @@ The QAOA branch is best interpreted as a compute-quality tradeoff rather than a 
 | Prior-style graph-feature regressor | 0.8208 | 0.0678 | 0.5905 |
 | Legacy transfer baseline | 0.5725 | not reported | not reported |
 
-The adapted initializer retains **99.95%** of classical held-out quality while reducing median latency by roughly **2640x**. The learned-comparator result is also informative: a lightweight graph-feature regressor is fast, but the full graph-conditioned model gives materially better initializer quality.
+The adapted initializer retains **99.95%** of classical held-out quality while reducing median latency by roughly **2640x**. Relative to the lightweight graph-feature regressor, the full graph-conditioned model improves mean held-out ratio from **0.8208** to **0.8682**, indicating that explicit relational processing improves parameter quality rather than only runtime.
 
-This result is most persuasive when read as an inference-efficiency result. If a workflow requires many repeated evaluations across related graphs, the difference between sub-millisecond prediction and repeated multistart search becomes meaningful even when the approximation-ratio gap is small. The graph-conditioned model therefore functions as an instance-conditioned initializer: expensive reference optimization is incurred during target generation and model fitting, while test-time inference remains cheap.
+The result is therefore a quality-latency tradeoff: expensive search is shifted to offline target generation and fitting, whereas test-time prediction is sub-millisecond. This regime is relevant when many related graphs must be evaluated and repeated multistart search is the dominant bottleneck.
 
-The ablations indicate that both message passing and node features matter. Removing graph edges lowers the mean ratio to **0.7086**, and removing node features lowers it to **0.6535**. The strongest claim from this branch is therefore specific: **graph-conditioned structure improves the quality of emitted QAOA parameters relative to weaker learned initializers and graph-ablated variants.**
-
-Equally important, the ablations show that the model is not merely memorizing a global angle prior. If it were, graph destruction and feature removal would not degrade quality as sharply. Instead, the observed drops suggest that the emitted parameters depend materially on the relational and attributed structure of each instance. That behavior is consistent with the interpretation of the model as a structure-conditioned generator rather than a static heuristic.
+The ablations reinforce that claim. Removing graph edges lowers the mean ratio to **0.7086**, and removing node features lowers it to **0.6535**. The emitted angles therefore depend materially on both topology and attributes rather than collapsing to a global angle prior.
 
 ![QAOA Benchmark Overview](../notebooks/figures/qaoa_demo_benchmark_overview.png)
 
@@ -185,7 +169,7 @@ Equally important, the ablations show that the model is not merely memorizing a 
 
 ### 5.2 Biomedical: Competitive Graph Operating Point Under Stronger Benchmarking
 
-The biomedical branch is intentionally evaluated against stronger tabular baselines than in earlier versions. This changes the interpretation in a useful way: the graph model remains competitive, but it is no longer presented as the undisputed winner.
+The biomedical branch is benchmarked against stronger tabular baselines than earlier versions of the project, which makes the comparison stricter and the interpretation narrower.
 
 | Model | Accuracy | Balanced accuracy | ROC AUC | Role in analysis |
 |---|---:|---:|---:|---|
@@ -195,11 +179,9 @@ The biomedical branch is intentionally evaluated against stronger tabular baseli
 | Adaptive BioGCN | 96.71% | 0.943 | 0.983 | Reproducibility-oriented graph benchmark |
 | ResidualClinicalGCN | 98.8% | 0.942 | 0.978 | Strongest graph operating point |
 
-ResidualClinicalGCN detects **31 of 35** pathologic cases with **1 false positive** at its selected threshold. That is a strong operating point, but calibrated LightGBM remains slightly better in the benchmark table. This narrower interpretation is important: **the graph model is credible and empirically strong, but not the top benchmark winner on this split.**
+ResidualClinicalGCN detects **31 of 35** pathologic cases with **1 false positive** at its selected threshold. This is a strong operating point, but calibrated LightGBM remains slightly better in the summary table. The biomedical evidence therefore supports competitiveness and threshold control rather than benchmark dominance.
 
-The practical implication is that graph conditioning remains defensible even in a regime where a strong tabular baseline is hard to surpass. The graph model organizes patient relationships explicitly and produces an operating point with attractive error tradeoffs, but the benchmark table prevents overclaiming. In other words, the biomedical branch supports the interface thesis without requiring the graph model to dominate every comparator.
-
-The calibration-sensitive interpretation matters here. In many screening contexts, the question is not simply which model has the highest aggregate score, but which model yields a controllable tradeoff under a clinically meaningful threshold. The graph model's value is therefore partly tied to how its score surface behaves when translated into a decision rule. That consideration fits naturally with the GCP perspective because the emitted probabilities are intermediate decision variables rather than an endpoint in themselves.
+The key point is operational. In screening settings, probabilities become clinically useful only after thresholding, recalibration, and error-tradeoff inspection. Framing the graph output as an intermediate decision variable makes those operating characteristics central rather than secondary, which is exactly the evaluation shift targeted by GCP.
 
 ![Biomedical Held-Out Evaluation](../notebooks/figures/bio_demo_heldout_evaluation.png)
 
@@ -207,15 +189,13 @@ The calibration-sensitive interpretation matters here. In many screening context
 
 ### 5.3 Cross-Branch Interpretation
 
-The two branches support the same interface claim from different directions. In the QAOA branch, graph-conditioned parameterization emits a compact control vector for a downstream optimizer. In the biomedical branch, it emits risk scores for downstream thresholding and calibration. The contribution is therefore not a shared benchmark win, but a shared **graph-to-parameterization-to-objective** pattern that remains meaningful across domains with different losses and evaluation criteria.
-
-Seen together, the studies suggest a modest design principle. When a graph model is deployed upstream of a consequential computation stage, it can be valuable to evaluate the model as a parameter generator rather than only as a predictor. That shift encourages reporting on downstream sensitivity, decision latency, and operating behavior, which are often what matter most once the model is embedded in a larger system.
+The two branches instantiate the same interface at different downstream layers. In the QAOA branch, the graph model emits a compact control vector for a simulator and optimizer. In the biomedical branch, it emits risk scores that must later be thresholded and calibrated. The shared contribution is therefore the **graph-to-parameterization-to-objective** formulation, together with evidence that this formulation remains informative even when losses, supervision, and evaluation metrics differ.
 
 ---
 
 ## 6. Discussion and Limitations
 
-The manuscript is best interpreted as a conference-style interface paper. It shows that a graph model can be evaluated as a structure-aware parameter generator in two domains where downstream computation matters as much as upstream representation.
+The manuscript is an interface study: it evaluates graph models as structure-aware parameter generators in two domains where downstream computation is part of the scientific object.
 
 Several limits remain:
 
@@ -223,13 +203,11 @@ Several limits remain:
 2. The biomedical study is retrospective, cohort-specific, and not a deployment study.
 3. The shared framing does not yet imply cross-domain transfer or shared representation learning.
 
-These limitations narrow the claim, but they do not remove its value. The experiments still show that graph-conditioned parameterization is a useful lens for designing and evaluating graph models whose outputs are consumed by downstream solvers or decision policies.
+These limits narrow the claim, but the empirical picture remains consistent: in both branches, the emitted variables are more informative when treated as downstream-facing artifacts rather than as ordinary predictions.
 
-An additional limitation is that the two branches are aligned conceptually rather than through a single shared training framework. We do not present a multi-task model, a common latent space, or an explicit transfer study. That absence is intentional, but it means the paper should be read as an interface formulation supported by two case studies rather than as evidence for universal graph-task coupling.
+The two case studies are aligned conceptually rather than through a shared training framework. We do not present multi-task coupling, a common latent space, or explicit transfer. The paper should therefore be read as evidence for a reusable evaluation interface, not as evidence that a single graph learner spans both domains.
 
-Future work could extend the framing in at least three directions. First, larger QAOA benchmarks could test whether the quality-latency tradeoff persists under broader graph families and deeper circuits. Second, prospective or multi-site biomedical evaluation could determine whether graph-conditioned risk surfaces remain stable under distribution shift. Third, one could study whether uncertainty estimates over emitted parameterizations improve downstream decision control in both domains.
-
-Another useful extension would be a more explicit study of failure modes. In the optimization branch, this would include identifying graph regimes in which learned initializers collapse toward weak generic initializers. In the biomedical branch, it would include examining whether neighborhood construction amplifies spurious similarity structure or degrades minority-class sensitivity under cohort shift. These questions are downstream-interface questions as much as they are modeling questions, which further motivates the framing adopted here.
+The most direct extensions are larger learned-QAOA benchmarks, prospective or multi-site biomedical validation, and uncertainty-aware control over emitted parameterizations. A complementary direction is failure analysis: identifying graph regimes where initializer quality collapses or where similarity construction degrades minority-class behavior would test the limits of the interface more sharply.
 
 ---
 
