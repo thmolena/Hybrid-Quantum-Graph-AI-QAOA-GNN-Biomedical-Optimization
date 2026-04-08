@@ -1,13 +1,17 @@
-# Graph-Conditioned Parameterization for Optimization and Clinical Risk Scoring
+# Graph Neural Networks for the Quantum Approximate Optimization Algorithm (QAOA)
 
-### Transcriptomic Quantum Approximate Optimization Algorithm (QAOA) Initialization and Cardiotocography (CTG) Similarity-Graph Risk Modeling
+### GNN-Based Parameter Prediction, Learned Warm-Start Initialization, and Convergence Analysis — with Applications to Network-Based Biomedical Systems
 
 [![Project Website](https://img.shields.io/badge/Project_Website-Open-0f766e?style=for-the-badge)](https://thmolena.github.io/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/)
 [![Paper Draft](https://img.shields.io/badge/Paper-Research_Draft-1d4ed8?style=for-the-badge)](paper/research_paper.md)
 
-This repository studies graph-conditioned parameterization in two settings:
+This repository develops **Graph Neural Network (GNN) methods to improve the performance, parameter selection, and scalability of the Quantum Approximate Optimization Algorithm (QAOA)** — a leading hybrid quantum-classical algorithm for combinatorial optimization. Many optimization problems addressed by QAOA are naturally represented as graphs, making graph-based learning a principled framework for improving its performance.
 
-- transcriptomic co-expression graphs used to predict depth-2 Quantum Approximate Optimization Algorithm (QAOA) parameters for maximum cut (MaxCut)
+Datasets of structured graph optimization problems — including weighted instances derived from transcriptomic co-expression data — are encoded into graph-learning pipelines. GNN models are trained to predict QAOA parameterizations, approximation ratios, and convergence behavior, incorporating graph topology, Hamiltonian structure, and symmetry properties into the model design. Performance is evaluated through held-out benchmarking, transferability testing across graph families, and robustness analysis.
+
+This work addresses a major limitation of QAOA: the difficulty of classical parameter optimization, which requires statistical learning across structured instances, uncertainty-aware prediction, and generalization under limited data. Improving QAOA directly supports the development of practical quantum applications and strengthens computational tools relevant to artificial intelligence and network-based biomedical systems:
+
+- transcriptomic co-expression graphs used to predict depth-2 QAOA parameters for maximum cut (MaxCut)
 - cardiotocography similarity graphs used to predict node-level pathologic-risk scores
 - an integrated notebook and manuscript that place both tasks in the same graph-to-parameterization formulation
 

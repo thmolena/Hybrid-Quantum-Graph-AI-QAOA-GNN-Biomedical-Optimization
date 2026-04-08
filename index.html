@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Graph-Conditioned Parameterization for Optimization and Clinical Risk Scoring</title>
-  <meta name="description" content="Transcriptomic Quantum Approximate Optimization Algorithm (QAOA) initialization and cardiotocography (CTG) similarity-graph risk modeling under a shared graph-conditioned parameterization framework.">
+  <title>Graph Neural Networks for the Quantum Approximate Optimization Algorithm (QAOA)</title>
+  <meta name="description" content="GNN methods for improving QAOA performance, parameter selection, and scalability — learned warm-start initialization across structured graph families, with applications to network-based biomedical systems.">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Graph-Conditioned Parameterization for Optimization and Clinical Risk Scoring">
-  <meta property="og:description" content="Transcriptomic Quantum Approximate Optimization Algorithm (QAOA) initialization and cardiotocography (CTG) similarity-graph risk modeling under a shared graph-conditioned parameterization framework.">
+  <meta property="og:title" content="Graph Neural Networks for the Quantum Approximate Optimization Algorithm (QAOA)">
+  <meta property="og:description" content="GNN methods for improving QAOA performance, parameter selection, and scalability — learned warm-start initialization across structured graph families, with applications to network-based biomedical systems.">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Graph-Conditioned Parameterization for Optimization and Clinical Risk Scoring">
-  <meta name="twitter:description" content="Transcriptomic Quantum Approximate Optimization Algorithm (QAOA) initialization and cardiotocography (CTG) similarity-graph risk modeling under a shared graph-conditioned parameterization framework.">
+  <meta name="twitter:title" content="Graph Neural Networks for the Quantum Approximate Optimization Algorithm (QAOA)">
+  <meta name="twitter:description" content="GNN methods for improving QAOA performance, parameter selection, and scalability — learned warm-start initialization across structured graph families, with applications to network-based biomedical systems.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -860,18 +860,105 @@
     .footer {
       border-top-color: #d9e2ec;
     }
+
+    /* ── Sticky top navigation ── */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: #111827;
+      border-bottom: 1px solid #1f2937;
+      padding: 0 1.5rem;
+    }
+
+    .site-nav-inner {
+      max-width: 992px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 3rem;
+      gap: 1rem;
+    }
+
+    .site-nav-brand {
+      color: #f9fafb;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+
+    .site-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.1rem;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .site-nav-links a {
+      color: #9ca3af;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 0.38rem 0.75rem;
+      border-radius: 0.45rem;
+      transition: background .15s, color .15s;
+      white-space: nowrap;
+    }
+
+    .site-nav-links a:hover {
+      color: #f9fafb;
+      background: #1f2937;
+    }
+
+    .site-nav-links a.nav-github {
+      color: #f9fafb;
+      background: #1e3a8a;
+      border: 1px solid #2563eb;
+      margin-left: 0.5rem;
+      font-weight: 600;
+    }
+
+    .site-nav-links a.nav-github:hover {
+      background: #1d4ed8;
+      border-color: #3b82f6;
+    }
+
+    @media (max-width: 640px) {
+      .site-nav-brand { display: none; }
+      .site-nav-links { gap: 0; }
+      .site-nav-links a { padding: 0.35rem 0.55rem; font-size: 0.76rem; }
+    }
   </style>
 </head>
 <body>
+
+  <!-- Sticky top nav -->
+  <nav class="site-nav" aria-label="Site navigation">
+    <div class="site-nav-inner">
+      <span class="site-nav-brand">GNN &middot; QAOA</span>
+      <div class="site-nav-links">
+        <a href="#results">Results</a>
+        <a href="#demo">Demo</a>
+        <a href="#figures">Figures</a>
+        <a href="#notebooks">Notebook Walkthroughs</a>
+        <a href="#reproduce">Reproducibility</a>
+        <a class="nav-github" href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank" rel="noreferrer">GitHub</a>
+      </div>
+    </div>
+  </nav>
 
   <!-- Hero -->
   <header class="hero">
     <div class="hero-inner">
       <div class="hero-frame">
         <div class="hero-copy">
-          <div class="hero-badge">Graph-Conditioned Parameterization</div>
-          <h1>Graph-Conditioned Parameterization for Optimization and Clinical Risk Scoring</h1>
-          <p class="hero-sub"><strong>Transcriptomic Quantum Approximate Optimization Algorithm (QAOA) initialization for maximum cut (MaxCut) and cardiotocography (CTG) similarity-graph risk modeling under a shared graph-to-parameterization formulation.</strong> Figures, notebooks, and the manuscript emphasize downstream evaluation of graph-generated decision variables rather than task-level prediction alone.</p>
+          <div class="hero-badge">Graph Neural Networks for QAOA</div>
+          <h1>Graph Neural Networks for the Quantum Approximate Optimization Algorithm (QAOA)</h1>
+          <p class="hero-sub"><strong>GNN methods for improving QAOA performance, parameter selection, and scalability across structured graph families — with downstream applications to network-based biomedical systems.</strong> This research addresses the classical parameter optimization bottleneck of QAOA through statistical learning across graph-structured optimization instances, enabling uncertainty-aware prediction and generalization under limited data. Figures, notebooks, and the manuscript emphasize downstream evaluation of graph-generated decision variables and transferability across graph families.</p>
           <div class="hero-pills">
             <span class="pill">QAOA</span>
             <span class="pill">Graph Learning</span>
@@ -904,12 +991,13 @@
             </div>
           </div>
           <div class="notebook-jump-nav hero-nav" aria-label="Jump to landing page sections">
-            <a class="notebook-jump-link" href="#notebooks-section">Research Story</a>
-            <a class="notebook-jump-link" href="#figures-section">Figures</a>
-            <a class="notebook-jump-link" href="#demo-section">Demo</a>
-            <a class="notebook-jump-link" href="#notebooks-section">Notebooks</a>
+            <a class="notebook-jump-link" href="#results">Results</a>
+            <a class="notebook-jump-link" href="#demo">Demo</a>
+            <a class="notebook-jump-link" href="#figures">Figures</a>
+            <a class="notebook-jump-link" href="#notebooks">Notebook Walkthroughs</a>
+            <a class="notebook-jump-link" href="#reproduce">Reproducibility</a>
             <a class="notebook-jump-link paper-link" href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/blob/main/paper/research_paper.md" target="_blank" rel="noreferrer">Paper</a>
-            <a class="notebook-jump-link repo-link" href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank" rel="noreferrer">Repository</a>
+            <a class="notebook-jump-link repo-link" href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank" rel="noreferrer">GitHub</a>
           </div>
         </div>
       </div>
@@ -917,7 +1005,57 @@
   </header>
 
   <main class="container">
-    <section class="card" id="figures-section">
+
+    <!-- Results -->
+    <section class="card" id="results">
+      <div class="card-header">
+        <div class="card-icon">📊</div>
+        <div>
+          <h2>Primary Results</h2>
+          <p class="card-desc">Quantitative evaluation of GNN-based QAOA parameterization on held-out transcriptomic graphs, and GNN-based clinical risk scoring on the CTG patient cohort.</p>
+        </div>
+      </div>
+      <p class="section-intro">The optimization branch evaluates whether a GNN trained on structured graph instances can replace classical parameter search for QAOA with near-parity quality and a strong inference-cost reduction. The biomedical branch demonstrates the generality of the GNN methodology on a clinical node-classification task, consistent with the broader impact on network-based biomedical systems.</p>
+      <div class="summary-layout">
+        <div class="summary-row summary-row-primary">
+          <div class="summary-panel">
+            <h4>QAOA Optimization Branch</h4>
+            <p style="margin:0.35rem 0 0.7rem;color:#475569;font-size:0.86rem;line-height:1.6">GNN-predicted depth-2 angle vectors evaluated against direct classical search and a prior-style learned baseline on held-out transcriptomic co-expression graphs.</p>
+            <table class="summary-results-table">
+              <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+              <tbody>
+                <tr><td>Held-out adapted GNN mean ratio</td><td>0.8682</td></tr>
+                <tr><td>Held-out classical search mean ratio</td><td>0.8686</td></tr>
+                <tr><td>Quality retention</td><td>99.95%</td></tr>
+                <tr><td>Lift over prior-style baseline</td><td>0.8208 &rarr; 0.8682</td></tr>
+                <tr><td>GNN inference median latency</td><td>0.256 ms</td></tr>
+                <tr><td>Classical search median latency</td><td>675.9 ms</td></tr>
+                <tr><td>Median speedup</td><td>2,640&times;</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="summary-panel">
+            <h4>Biomedical Branch &mdash; CTG Risk Scoring</h4>
+            <p style="margin:0.35rem 0 0.7rem;color:#475569;font-size:0.86rem;line-height:1.6">Node-level pathologic-risk scores on a cardiotocography patient-similarity graph, evaluated against strong tabular baselines under class imbalance.</p>
+            <table class="summary-results-table">
+              <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+              <tbody>
+                <tr><td>ResidualClinicalGCN held-out accuracy</td><td>98.8%</td></tr>
+                <tr><td>Balanced accuracy</td><td>0.942</td></tr>
+                <tr><td>ROC AUC</td><td>0.978</td></tr>
+                <tr><td>Pathologic cases detected</td><td>31 / 35</td></tr>
+                <tr><td>False positives at threshold</td><td>1</td></tr>
+                <tr><td>BioGCN robustness (mean &plusmn; std)</td><td>95.49% &plusmn; 0.97%</td></tr>
+                <tr><td>Strongest tabular baseline</td><td>99.06% acc., 0.956 bal. acc.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Figures -->
+    <section class="card" id="figures">
       <div class="card-header">
         <div class="card-icon">◫</div>
         <div>
@@ -1032,7 +1170,7 @@
     </section>
 
     <!-- Interactive demo -->
-    <section class="card" id="demo-section">
+    <section class="card" id="demo">
       <div class="card-header">
         <div class="card-icon">⚛</div>
         <div>
@@ -1217,12 +1355,12 @@
     </section>
 
     <!-- Notebooks -->
-    <section class="card" id="notebooks-section">
+    <section class="card" id="notebooks">
       <div class="card-header">
         <div class="card-icon">📓</div>
         <div>
-          <h2>Experimental Notebooks</h2>
-          <p class="card-desc">The notebooks below provide the detailed derivations, computations, figures, and result tables underlying the main findings.</p>
+          <h2>Notebook Walkthroughs</h2>
+          <p class="card-desc">Step-by-step executed notebooks — each one walks through the full derivation, implementation, and evaluation for one branch of the research. Open any notebook to follow the analysis from data construction through to the final figures and result tables.</p>
         </div>
       </div>
 
@@ -1310,22 +1448,27 @@
     </section>
 
     <!-- Research summary -->
-    <section class="card" id="summary-section">
+    <section class="card" id="reproduce">
       <div class="card-header">
-        <div class="card-icon">📄</div>
+        <div class="card-icon">⚙️</div>
         <div>
-          <h2>Run &amp; Limits</h2>
-          <p class="card-desc">This final section covers local execution and the main constraints for interpreting the results.</p>
+          <h2>Reproducibility Protocol</h2>
+          <p class="card-desc">Local execution commands and the main scope constraints for interpreting the results.</p>
         </div>
       </div>
       <div class="summary-layout">
         <div class="summary-row summary-row-secondary">
           <div class="summary-panel summary-col-quickstart">
             <h4>Quick Start</h4>
-            <pre class="code-block quickstart-terminal">pip install -r requirements.txt
+            <pre class="code-block quickstart-terminal">conda activate qaoa
+pip install -r requirements.txt
+
 jupyter notebook notebooks/quantum_ai_bio_combined.ipynb
-./.venv/bin/python experiments/qaoa/run_qaoa_baselines.py
-./.venv/bin/python experiments/biomedical/run_bio_baselines.py</pre>
+jupyter notebook notebooks/qaoa_demo.ipynb
+jupyter notebook notebooks/bio_demo.ipynb
+
+python experiments/qaoa/run_qaoa_baselines.py
+python experiments/biomedical/run_bio_baselines.py</pre>
           </div>
           <div class="summary-panel">
             <h4>Scope &amp; Limitations</h4>
@@ -1343,7 +1486,7 @@ jupyter notebook notebooks/quantum_ai_bio_combined.ipynb
   </main>
 
   <footer class="footer">
-    <p>Hybrid Quantum–Graph Learning for Structured Biomedical Optimization · GNN-Informed Initialization for QAOA and Graph-Based Clinical Modeling · <a href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank">GitHub</a></p>
+    <p>Graph Neural Networks for the Quantum Approximate Optimization Algorithm (QAOA) · GNN-Based Parameter Prediction, Warm-Start Initialization, and Network-Based Biomedical Applications · <a href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank">GitHub</a></p>
   </footer>
 
   <script src="website/demo.js"></script>
