@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+import time
 from typing import Iterable
 
 import numpy as np
@@ -122,11 +123,12 @@ def evaluate_angle_baseline(
     gammas: np.ndarray,
     betas: np.ndarray,
     exact_cut: float,
+    runtime_ms: float | None = None,
 ) -> dict[str, object]:
     state = qaoa_state_weighted(instance.num_nodes, instance.weighted_edges, gammas, betas)
     expected_cut = expected_weighted_cut(instance.num_nodes, instance.weighted_edges, state)
     approximation_ratio = expected_cut / exact_cut if exact_cut else 0.0
-    return {
+    record = {
         "baseline": name,
         "num_nodes": instance.num_nodes,
         "expected_cut": round(expected_cut, 6),
@@ -135,6 +137,9 @@ def evaluate_angle_baseline(
         "gammas": ";".join(f"{value:.6f}" for value in gammas),
         "betas": ";".join(f"{value:.6f}" for value in betas),
     }
+    if runtime_ms is not None:
+        record["runtime_ms"] = round(runtime_ms, 6)
+    return record
 
 
 def random_search_baseline(
@@ -147,6 +152,7 @@ def random_search_baseline(
     rng = np.random.default_rng(seed)
     best_record = None
     best_value = -np.inf
+    started_at = time.perf_counter()
     for _ in range(num_samples):
         gammas = rng.uniform(0.0, np.pi, size=depth)
         betas = rng.uniform(0.0, np.pi / 2.0, size=depth)
@@ -163,6 +169,7 @@ def random_search_baseline(
             best_record = record
     if best_record is None:
         raise RuntimeError("Random search baseline did not produce a result")
+    best_record["runtime_ms"] = round((time.perf_counter() - started_at) * 1e3, 6)
     return best_record
 
 
@@ -177,21 +184,29 @@ def run_qaoa_baselines(
     gammas, betas = load_reference_angles(angles_path)
     exact_cut = exact_weighted_maxcut(instance.num_nodes, instance.weighted_edges)
 
+    zero_started_at = time.perf_counter()
+    zero_record = evaluate_angle_baseline(
+        name="zero_angles",
+        instance=instance,
+        gammas=np.zeros_like(gammas),
+        betas=np.zeros_like(betas),
+        exact_cut=exact_cut,
+        runtime_ms=(time.perf_counter() - zero_started_at) * 1e3,
+    )
+
+    reference_started_at = time.perf_counter()
+    reference_record = evaluate_angle_baseline(
+        name="reference_classical_angles",
+        instance=instance,
+        gammas=gammas,
+        betas=betas,
+        exact_cut=exact_cut,
+        runtime_ms=(time.perf_counter() - reference_started_at) * 1e3,
+    )
+
     records = [
-        evaluate_angle_baseline(
-            name="zero_angles",
-            instance=instance,
-            gammas=np.zeros_like(gammas),
-            betas=np.zeros_like(betas),
-            exact_cut=exact_cut,
-        ),
-        evaluate_angle_baseline(
-            name="reference_classical_angles",
-            instance=instance,
-            gammas=gammas,
-            betas=betas,
-            exact_cut=exact_cut,
-        ),
+        zero_record,
+        reference_record,
         random_search_baseline(
             instance=instance,
             depth=len(gammas),

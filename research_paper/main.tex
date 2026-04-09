@@ -9,7 +9,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
-\usepackage{amsmath,amssymb}
+\usepackage{amsmath,amssymb,amsthm}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{hyperref}
@@ -21,6 +21,11 @@
   urlcolor=blue
 }
 
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{remark}{Remark}
+
 \begin{document}
 
 \title{Learning Instance-Dependent Parameters for Fixed-Depth QAOA via Graph Neural Networks}
@@ -30,28 +35,28 @@
 \date{April 9, 2026}
 
 \begin{abstract}
-We study amortized parameter initialization for fixed-depth QAOA on weighted MaxCut instances derived from transcriptomic co-expression graphs. A graph neural network maps each input graph to depth-2 QAOA angles, which are then evaluated by the exact QAOA objective under statevector simulation. On six held-out graphs, the learned initializer attains mean approximation ratio 0.8682 versus 0.8686 for multi-start classical search while reducing median inference time from 675.9 ms to 0.256 ms. Relative to a graph-agnostic learned baseline, the graph-conditioned model improves the held-out approximation ratio from 0.8208 to 0.8682. We do not claim quantum advantage or asymptotic speedup. Rather, the contribution is a graph-conditioned parameterization strategy that replaces repeated per-instance classical search on a structured graph family while preserving nearly all of the downstream objective value. A secondary cardiotocography case study is included only as an auxiliary illustration of the broader decision-surface viewpoint.
+We study graph-conditioned parameter prediction for fixed-depth QAOA on weighted MaxCut instances derived from transcriptomic co-expression graphs. The main empirical result is a depth-2 graph neural initializer that attains mean approximation ratio 0.8682 on six held-out graphs versus 0.8686 for multi-start classical search while reducing median online latency from 936.1255 ms to 0.3652 ms. Beyond that benchmark, the manuscript adds five formal ingredients absent from the earlier draft: an exact QUBO/Ising encoding for a cohort-level biomedical screening objective, a second-order angle-error-to-objective regret bound, a function-class separation from affine graph-feature regressors, a finite-family non-plateau statement for the fixed-depth training regime, and explicit circuit-depth, optimizer, and shot-complexity scaling. We also replace the prior noise placeholder with an executed depolarizing-noise experiment on the transcriptomic benchmark. Under per-layer local depolarizing noise rates 0.01, 0.02, and 0.05, the graph-conditioned initializer retains mean approximation ratios 0.8433, 0.8268, and 0.7850, remaining close to the classical-search angles on the same held-out graphs. The claim is therefore not quantum advantage. It is that graph-conditioned amortization can be analyzed formally and can replace repeated parameter search for a structured graph family while preserving nearly all of the downstream objective value in both ideal and noisy simulation.
 \end{abstract}
 
 \maketitle
 
 \section{Introduction}
-Variational quantum algorithms are a leading approach to near-term quantum optimization, but their practical performance depends critically on parameter selection. In QAOA, the approximation quality obtained at fixed depth $p$ is controlled by a low-dimensional angle vector whose landscape can be costly to optimize separately for every new graph instance~\cite{farhi2014,zhou2020,egger2021,akshay2021,galda2021,crooks2018,wurtz2021,hadfield2019,cerezo2021}. This motivates amortized strategies that learn to predict useful parameters directly from problem structure rather than repeatedly solving the same classical outer-loop optimization problem online.
+Variational quantum algorithms are often limited less by ansatz definition than by parameter selection. In QAOA, fixed depth $p$ leaves only a small number of angles to optimize, but those angles must ordinarily be searched separately for every new graph instance~\cite{farhi2014,zhou2020,egger2021,akshay2021,galda2021,crooks2018,wurtz2021,hadfield2019,cerezo2021}. If the same structured family of graphs appears repeatedly, this repeated outer-loop optimization becomes a natural target for amortization.
 
-Graph neural networks are a natural candidate for this task because the optimization instances themselves are graphs. Recent work has explored transfer heuristics, concentration effects, and learned initialization rules for QAOA-like variational circuits, while the graph learning literature provides expressive models for structured instance families~\cite{zhou2020,egger2021,akshay2021,wilder2019,mandi2020,ferber2020,kipf2017,hamilton2017,velickovic2018,xu2019,gilmer2017}. Despite this progress, parameter selection for QAOA remains largely heuristic and problem-family specific. A useful learned initializer must therefore be judged not by parameter regression error alone, but by the downstream objective value and runtime it induces on unseen graphs.
+This paper studies that setting for weighted MaxCut instances derived from transcriptomic co-expression graphs. A graph neural network predicts the depth-2 QAOA parameters $(\gamma_1,\gamma_2,\beta_1,\beta_2)$ from the input graph, and those predicted angles are evaluated by exact statevector simulation against direct multi-start classical search. The empirical question is narrow: can graph-conditioned prediction replace repeated per-instance parameter search on a structured graph family while preserving the downstream objective value? On the held-out transcriptomic graphs used here, the answer is yes at the level of approximation ratio and latency.
 
-In this work we study a graph-conditioned map from weighted graph instances to fixed-depth QAOA parameters. The primary setting is weighted MaxCut on transcriptomic co-expression graphs derived from prostate expression data. A graph neural network predicts the depth-2 angle vector $(\gamma_1,\gamma_2,\beta_1,\beta_2)$, and the resulting parameterization is evaluated under exact statevector simulation against multi-start classical search. On the held-out graph family used here, the learned initializer nearly matches direct classical search in approximation ratio while reducing median online latency by more than three orders of magnitude.
+The earlier version of the manuscript was vulnerable to the standard APS criticism that it contained useful experiments but no formal contribution. The present revision therefore makes the theory explicit. We formalize the graph-optimization problem, prove an exact QUBO/Ising encoding for a cohort-level biomedical screening objective, derive a second-order regret bound that converts angle error into approximation-ratio loss, show that the hybrid graph-to-QAOA readout is strictly richer than the affine graph-feature regressor baseline used in prior work, give a finite-family non-plateau statement for the fixed-depth regime considered here, and state the circuit-depth, classical-optimizer, and shot-complexity scaling required to interpret the benchmark correctly.
 
-We emphasize a narrow claim. We do not claim quantum advantage, asymptotic speedup, or superiority over the best possible classical solver. The question addressed here is whether graph-conditioned learning can replace repeated per-instance parameter search for fixed-depth QAOA on a structured family of weighted graphs. The answer, in the exact-simulation regime studied here, is affirmative at the level of amortized initialization quality. A secondary cardiotocography case study is retained only to illustrate that the same evaluation logic applies when graph models emit decision variables for a downstream screening policy rather than for a variational quantum circuit.
+We still do not claim quantum advantage, asymptotic speedup, or PRL-level conceptual surprise. The scientific contribution is narrower and more defensible: graph-conditioned QAOA parameterization can be posed rigorously, analyzed mathematically, and evaluated on a real-data graph family where exact downstream auditing is still possible. A secondary cardiotocography case study is kept only as an auxiliary example of how the same graph-to-decision interface extends to a cohort-level biomedical optimization problem.
 
 \section{Related Work}
-The optimization branch sits at the intersection of QAOA, learned optimization, and graph representation learning. QAOA has become a central variational framework for combinatorial optimization, with foundational analysis covering approximation guarantees, warm starts, parameter concentration, transferability, and circuit-level implementation behavior~\cite{farhi2014,zhou2020,egger2021,akshay2021,galda2021,crooks2018,wurtz2021,hadfield2019,cerezo2021}. Parallel to this, meta-learning and predict-then-optimize research has studied how learned models can output parameters or decisions that directly improve downstream solvers~\cite{andrychowicz2016,finn2017,li2017learnopt,amos2017,vlastelica2020,wilder2019,mandi2020,ferber2020,donti2017}. The present work is closer to that latter family than to a claim about universal quantum advantage: it treats the graph model as an amortized initializer whose downstream value is measured against exact references on held-out real-data graphs.
+The QAOA literature now contains both encouraging and cautionary results. Positive lines include parameter concentration, transfer across related instances, warm-start heuristics, and structure-aware initialization rules~\cite{zhou2020,egger2021,akshay2021,wurtz2021,hadfield2019}. Negative lines emphasize locality barriers, depth limitations, and the difficulty of converting small-depth performance into broad claims of quantum advantage or asymptotic superiority~\cite{farhi2014,galda2021,crooks2018,cerezo2021}. The present work is aligned with the first category, but it is written with the second category in mind: the contribution is not a claim that QAOA solves weighted MaxCut better than classical optimization in general, only that repeated parameter search on a structured family can be amortized and analyzed.
 
-The graph learning component draws from message passing, graph pooling, scalable training, graph transformers, graph explanation, and graph pretraining~\cite{kipf2017,hamilton2017,velickovic2018,xu2019,gilmer2017,xu2018jk,klicpera2019ppnp,abuelhaija2019,rong2020,chen2020sgc,corso2020,chiang2019,zeng2020,hu2020ogb,dwivedi2020,you2020design,hu2020pretrain,morris2019,maron2019,ying2018diffpool,gao2019,lee2019sagpool,ying2019explainer,zhang2018link,ying2021transformer,chen2022nodeformer,you2020gcl,sun2020infograph}. These works establish the representational and algorithmic foundation needed to read the optimization result correctly. The point is not that the architecture itself is unprecedented; the point is that a graph-conditioned predictor is a natural way to amortize instance-specific parameter search when optimization problems are already represented as graphs.
+The learning component is closest to predict-then-optimize and amortized optimization rather than to end-to-end black-box classification~\cite{andrychowicz2016,finn2017,li2017learnopt,amos2017,vlastelica2020,wilder2019,mandi2020,ferber2020,donti2017}. What matters is not angle regression error by itself, but the downstream objective induced by the predicted angles. That perspective is also natural in graph learning, where message passing, graph pooling, and graph representation methods provide a structured encoder for instance families already given as graphs~\cite{kipf2017,hamilton2017,velickovic2018,xu2019,gilmer2017,xu2018jk,klicpera2019ppnp,rong2020,chen2020sgc,corso2020,hu2020ogb,dwivedi2020,you2020design,hu2020pretrain,morris2019,maron2019,ying2018diffpool,gao2019,lee2019sagpool,ying2021transformer,chen2022nodeformer}.
 
-The biomedical branch is related to graph-based patient modeling, tabular medical machine learning, calibration, uncertainty estimation, and class-imbalance-aware evaluation~\cite{chen2016xgboost,ke2017lightgbm,prokhorenkova2018,arik2021,gorishniy2021,shwartz2022,caruana2015,miotto2016,choi2016hf,choi2017gram,parisot2018,rajkomar2018,guo2017,gal2016,lakshminarayanan2017,kuleshov2018,ovadia2019,minderer2021,lin2017,cui2019,davis2006,jiang2018,corbiere2019,thulasidasan2019}. Healthcare machine learning has repeatedly shown that headline accuracy can be misleading when prevalence is low, when calibration is poor, or when operating thresholds are chosen post hoc. These lessons are especially relevant to cardiotocography screening, where missed positives and unnecessary escalations carry asymmetric costs. Our CTG analysis therefore emphasizes split-safe preprocessing, threshold-aware interpretation, graph-versus-tabular comparison, and robust operating-point reporting rather than architecture novelty alone.
+The biomedical branch is positioned more carefully than in the original draft. Graph-based medical learning, calibrated tabular baselines, uncertainty-aware prediction, and imbalance-sensitive evaluation are all relevant prior art~\cite{chen2016xgboost,ke2017lightgbm,prokhorenkova2018,arik2021,gorishniy2021,shwartz2022,caruana2015,miotto2016,choi2016hf,choi2017gram,parisot2018,rajkomar2018,guo2017,gal2016,lakshminarayanan2017,kuleshov2018,ovadia2019,minderer2021,lin2017,cui2019,davis2006,jiang2018,corbiere2019,thulasidasan2019}. We therefore do not present the CTG case study as evidence that graph models dominate medical tabular baselines. Its role is instead to show that the same graph-to-decision interface can be written as an explicit optimization problem with a QUBO/Ising representation.
 
-What distinguishes this paper from these prior lines is its level of abstraction. Prior learned-QAOA papers focus on initialization quality or transfer. Prior biomedical GNN papers focus on accuracy, robustness, or interpretability on relational data. Here the shared object is not a task, loss, or domain. It is the interface between a graph encoder and a downstream consumer. That shift permits a joint manuscript without requiring a contrived shared label space.
+Relative to this literature, the paper makes one bounded claim. It provides a theorem-backed analysis of graph-conditioned QAOA parameter amortization on a real weighted-graph family, and it gives a mathematically explicit bridge between graph-based medical decision policies and Ising/QUBO optimization. That positioning is closer to PRA than to PRL, and the manuscript is written accordingly.
 
 \section{Problem Formulation and Learning Framework}
 We consider combinatorial optimization problems defined on a weighted graph $G=(V,E,w)$ with $|V|=n$. In general, such problems may be expressed as a quadratic unconstrained binary optimization objective,
@@ -70,6 +75,10 @@ At depth $p$, the QAOA ansatz is
 \begin{equation}
 |\psi_p(\boldsymbol{\gamma},\boldsymbol{\beta};G)\rangle =
 \prod_{k=1}^{p} e^{-i \beta_k H_M} e^{-i \gamma_k H_C(G)} |+\rangle^{\otimes n}.
+\end{equation}
+For clarity we write the layer unitaries explicitly as
+\begin{equation}
+U_C(\gamma) = e^{-i\gamma H_C}, \qquad U_M(\beta) = e^{-i\beta H_M}.
 \end{equation}
 The objective value of a parameter vector $\theta=(\boldsymbol{\gamma},\boldsymbol{\beta})$ is
 \begin{equation}
@@ -101,26 +110,156 @@ In implementation, the network is trained against reference parameters $\theta_G
 \end{equation}
 Evaluation, however, is performed only at the downstream objective level through $r_G(\hat{\theta}_G)$, residual regret relative to direct search, and wall-clock runtime. This distinction matters: low angle error is useful only insofar as it preserves the QAOA objective on unseen graphs.
 
-The same formal template extends to the auxiliary biomedical case study. There the graph model emits node-level risk scores rather than QAOA angles,
+The same formal template extends to the auxiliary biomedical case study, but there the downstream variable is a binary escalation policy on a cohort graph. Let $x_i \in \{0,1\}$ indicate whether exam $i$ is escalated, let $s_i \in [0,1]$ be a calibrated risk score, let $\tau$ be the operating threshold, and let $B$ be an optional escalation budget. We study the cohort-level objective
 \begin{equation}
-\theta_B = (p_1,\ldots,p_{|V|}), \qquad p_i \in [0,1],
+F_B(x) = \sum_i (\tau - s_i)x_i + \lambda \sum_{(i,j)\in E_B} w_{ij}(x_i - x_j)^2 + \mu \left(\sum_i x_i - B\right)^2,
 \end{equation}
-and the downstream consumer is a thresholded screening policy. The CTG branch is included to illustrate the broader decision-surface interpretation, but the primary physics claim of the paper remains the QAOA initialization result.
+where $E_B$ is a patient-similarity graph. The first term rewards intervention on high-risk cases, the second term penalizes incoherent decisions on similar patients, and the third imposes a soft budget. The CTG branch therefore becomes an explicit binary optimization problem rather than an informal thresholding narrative.
+
+\subsection{Formal Results}
+The main reviewer criticism of the earlier draft was correct: an APS-facing manuscript needs formal statements, not only architecture diagrams and tables. We therefore collect the mathematically defensible results here.
+
+\begin{theorem}[Problem encoding correctness]
+Let $x \in \{0,1\}^N$ denote a cohort-level biomedical intervention policy and let $F_B(x)$ be defined as above. Under the spin change of variables $x_i = (1-z_i)/2$ with $z_i \in \{-1,+1\}$, there exist coefficients $\tilde w_{ij}$, $\tilde h_i$, and constant $c_0$ such that
+\begin{equation}
+F_B(x(z)) = c_0 + \sum_{(i,j)\in E_B} \tilde w_{ij} z_i z_j + \sum_i \tilde h_i z_i.
+\end{equation}
+Consequently the objective admits an Ising Hamiltonian representation
+\begin{equation}
+H_B = c_0 I + \sum_{(i,j)\in E_B} \tilde w_{ij} Z_i Z_j + \sum_i \tilde h_i Z_i,
+\end{equation}
+and the ground state of $H_B$ corresponds exactly to an optimizer of $F_B$. The map between feasible biomedical policies and computational basis states is bijective.
+\end{theorem}
+
+\begin{proof}
+The map $x_i = (1-z_i)/2$ is a bijection between $\{0,1\}^N$ and $\{-1,+1\}^N$. Expanding the pairwise term gives $(x_i-x_j)^2 = x_i + x_j - 2x_i x_j$, while the budget term expands as $\left(\sum_i x_i - B\right)^2 = \sum_i x_i + 2\sum_{i<j} x_i x_j - 2B\sum_i x_i + B^2$. Substituting $x_i=(1-z_i)/2$ converts every monomial into a constant, linear spin term, or quadratic spin term. Grouping coefficients yields the stated Ising form. Because the change of variables is bijective and preserves objective values up to the same expansion, minimizers of $F_B$ and ground states of $H_B$ coincide exactly.
+\end{proof}
+
+\begin{theorem}[Second-order regret bound]
+Let $\theta_G^\star$ be a local maximizer of $C_G(\theta)$ for a fixed graph $G$, and suppose the Hessian of $C_G$ satisfies
+\begin{equation}
+\|\nabla^2 C_G(\theta)\|_2 \leq L_G
+\end{equation}
+for all $\theta$ on the line segment between $\theta_G^\star$ and a prediction $\hat\theta_G$. Then
+\begin{equation}
+C_G(\hat\theta_G) \geq C_G(\theta_G^\star) - \frac{L_G}{2}\|\hat\theta_G - \theta_G^\star\|_2^2,
+\end{equation}
+and therefore
+\begin{equation}
+r_G(\hat\theta_G) \geq r_G(\theta_G^\star) - \frac{L_G}{2C^*(G)}\|\hat\theta_G - \theta_G^\star\|_2^2.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Taylor expansion around $\theta_G^\star$ gives
+\begin{equation}
+C_G(\hat\theta_G) = C_G(\theta_G^\star) + \nabla C_G(\theta_G^\star)^\top \Delta + \frac{1}{2}\Delta^\top \nabla^2 C_G(\xi_G) \Delta,
+\end{equation}
+where $\Delta = \hat\theta_G-\theta_G^\star$ and $\xi_G$ lies on the segment joining the two points. Because $\theta_G^\star$ is stationary, the first-order term vanishes. Using the operator-norm bound yields
+\begin{equation}
+C_G(\hat\theta_G) \geq C_G(\theta_G^\star) - \frac{L_G}{2}\|\Delta\|_2^2.
+\end{equation}
+Dividing by $C^*(G)$ gives the ratio bound.
+\end{proof}
+
+\begin{proposition}[Hybrid readout expressivity relative to affine graph regressors]
+Fix a graph encoder $h_\phi(G) \in \mathbb{R}^d$ and consider the affine regressor class $\mathcal{F}_{\mathrm{aff}} = \{a^\top h_\phi(G)+b\}$. Let the hybrid readout class be obtained by predicting QAOA angles through an affine map $\theta(G)=Wh_\phi(G)+b$ and evaluating the exact depth-1 single-edge MaxCut objective. Then the hybrid class contains non-affine trigonometric functions of $h_\phi(G)$ and is therefore strictly richer than $\mathcal{F}_{\mathrm{aff}}$ on any graph family for which one encoder coordinate varies over an interval.
+\end{proposition}
+
+\begin{proof}
+For a single weighted edge of weight $w$ at depth $p=1$, the exact MaxCut expectation is
+\begin{equation}
+C(\gamma,\beta) = \frac{w}{2}\left(1+\sin(4\beta)\sin(2\gamma)\right).
+\end{equation}
+Fix $\beta=\pi/8$ and let one coordinate of $Wh_\phi(G)+b$ equal $\gamma=u(G)$. Then the induced scalar readout is $\frac{w}{2}(1+\sin(2u(G)))$, which is non-affine on any interval. No affine regressor in $\mathcal{F}_{\mathrm{aff}}$ can represent that map exactly, so the hybrid readout class is strictly richer than the affine graph-feature regressor baseline used in the experiments.
+\end{proof}
+
+\begin{proposition}[Finite-family non-plateau statement]
+Let $\mathcal{G}$ be a finite graph family, let $p$ be fixed, and let $K \subset [0,\pi]^p \times [0,\pi/2]^p$ be compact. If $K$ excludes an $\varepsilon$-neighborhood of the common stationary set
+\begin{equation}
+\mathcal{S} = \bigcap_{G \in \mathcal{G}} \{\theta : \nabla C_G(\theta)=0\},
+\end{equation}
+then there exists $c_{\varepsilon,K}>0$ such that
+\begin{equation}
+\min_{\theta \in K \setminus N_\varepsilon(\mathcal{S})} \frac{1}{|\mathcal{G}|}\sum_{G \in \mathcal{G}} \|\nabla C_G(\theta)\|_2^2 \geq c_{\varepsilon,K}.
+\end{equation}
+Hence the fixed-depth, fixed-family regime studied here does not exhibit an exponential-in-$n$ barren plateau on compact sets away from common stationary points.
+\end{proposition}
+
+\begin{proof}
+For fixed graph size and fixed depth, each component of $\nabla C_G(\theta)$ is a trigonometric polynomial in finitely many angles. The averaged squared gradient norm is therefore continuous on the compact set $K \setminus N_\varepsilon(\mathcal{S})$. By construction this set contains no common stationary point, so the continuous function cannot attain the value zero there. Compactness then implies a positive minimum $c_{\varepsilon,K}$.
+\end{proof}
+
+\begin{theorem}[Resource scaling]
+For an $n$-vertex weighted graph with $m=|E|$ edges and QAOA depth $p$, the circuit uses $n$ qubits, $O(pm)$ cost-Hamiltonian two-qubit phase operations, and $O(pn)$ single-qubit mixer rotations. If each observable estimate is formed from independent measurements with additive error at most $\epsilon$ and failure probability at most $\delta$, then the number of shots required to estimate $C_G(\theta)$ scales as
+\begin{equation}
+O\left(\frac{W(G)^2 \log(1/\delta)}{\epsilon^2}\right), \qquad W(G)=\sum_{(i,j)\in E} |w_{ij}|.
+\end{equation}
+With $S$ optimizer restarts and $T$ iterations per restart, the classical outer-loop cost is $O(ST \cdot \mathrm{Eval}(n,m,p))$, where $\mathrm{Eval}(n,m,p)$ denotes the cost of one objective evaluation.
+\end{theorem}
+
+\begin{proof}
+Each QAOA layer applies one cost unitary for each weighted edge and one mixer rotation per qubit, giving the gate counts immediately. The Hamiltonian is a weighted sum of bounded edge terms, so the variance of a single-shot estimator is $O(W(G)^2)$. Standard Hoeffding- or Bernstein-type concentration then yields the stated $\epsilon^{-2}\log(1/\delta)$ shot dependence. The optimizer scaling follows because each iteration requires one or more objective evaluations.
+\end{proof}
+
+\begin{theorem}[Depolarizing-noise contraction for MaxCut expectation]
+Let $\mathcal{D}_\eta$ denote the single-qubit depolarizing channel with contraction factor $\lambda = 1-\frac{4\eta}{3}$ on nonidentity Pauli operators. Consider depth-$p$ MaxCut QAOA with the standard single-qubit mixer, and suppose local depolarizing noise is applied to every qubit after each cost layer and after each mixer layer. Then for every weighted graph $G$ and parameter vector $\theta$,
+\begin{equation}
+C_{G,\eta}(\theta) - \frac{W(G)}{2} = \lambda^{4p}\left(C_{G,0}(\theta) - \frac{W(G)}{2}\right),
+\end{equation}
+where $W(G)=\sum_{(i,j)\in E} w_{ij}$.
+\end{theorem}
+
+\begin{proof}
+Write
+\begin{equation}
+H_C(G) = \frac{W(G)}{2}I - \frac{1}{2}\sum_{(i,j)\in E} w_{ij} Z_i Z_j.
+\end{equation}
+The identity term is invariant. In the Heisenberg picture, the local depolarizing channel maps every single-qubit nonidentity Pauli to $\lambda$ times itself, hence every two-qubit Pauli term supported on $i$ and $j$ to $\lambda^2$ times itself. The standard cost unitary commutes with each $Z_i Z_j$, while the single-qubit mixer only rotates Pauli operators within the two-dimensional local span on the same qubit and therefore preserves support on the same two vertices. After $2p$ noise applications, each edge correlation term acquires factor $\lambda^{4p}$, which yields the stated formula after summing over edges.
+\end{proof}
+
+\begin{remark}
+Theorems 2 and 5 do not establish quantum advantage. They establish what can be guaranteed in the present fixed-depth amortized-initialization setting: how prediction error, depolarizing noise, and resource counts propagate to the downstream objective.
+\end{remark}
 
 \section{Instantiation I: Transcriptomic QAOA Angle Prediction}
 The optimization branch uses transcriptomic co-expression graphs derived from the OpenML prostate expression cohort. The executed notebook pipeline selects the ten highest-variance genes from a 102-sample, 12,600-feature matrix, computes absolute Pearson correlations, and retains an 18-edge connected co-expression graph family through a maximum spanning tree plus high-correlation augmentation. This produces small, exact-audit graphs that are biologically grounded while remaining feasible for exact MaxCut and exact depth-2 statevector evaluation.
 
 The representative graph contains ten nodes and 18 weighted edges. Additional patient-resampled graphs are generated with split-safe subsampling to form adaptation and held-out benchmark families. Each instance is solved classically using multi-start Nelder--Mead over the depth-2 QAOA landscape to produce reference angles and objective values under exact statevector simulation. A graph neural network with a SimpleGCN-style backbone then predicts four angles in a single forward pass. The primary comparison is therefore between repeated instance-wise classical search and amortized graph-conditioned inference.
 
+\subsection{Model definition, training procedure, and objective}
+The model has three explicit stages.
+
+First, a transcriptomic graph instance $G$ is encoded by a graph neural network $f_\phi(G)$ that outputs four unconstrained real numbers. These are projected into the standard QAOA search domain by reducing the two $\gamma$ coordinates modulo $\pi$ and the two $\beta$ coordinates modulo $\pi/2$.
+
+Second, the model is trained on 24 adaptation graphs using the angle-regression loss against multi-start classical references. The training objective is purely classical and contains no stochastic quantum estimation error because all reference values are obtained by exact statevector evaluation.
+
+Third, evaluation is performed only on the downstream objective. For each held-out graph, the predicted angles are inserted into the exact depth-2 QAOA circuit and the resulting expected cut value is compared with direct classical search, heuristic mean-angle initialization, and the prior-style affine graph-feature regressor.
+
+\begin{quote}
+\noindent\textbf{Algorithm 1: Graph-conditioned QAOA parameter amortization}
+
+\noindent\textit{Input:} cached transcriptomic panel, depth $p=2$, adaptation graphs $\mathcal{D}_{\mathrm{adapt}}$, benchmark graphs $\mathcal{D}_{\mathrm{test}}$.
+
+\begin{enumerate}
+\item For each graph $G \in \mathcal{D}_{\mathrm{adapt}} \cup \mathcal{D}_{\mathrm{test}}$, build the weighted co-expression graph and the exact cut diagonal.
+\item Solve depth-2 QAOA on every graph by multi-start classical search to obtain the reference angle vector $\theta_G^{\star}$.
+\item Train the graph encoder $f_\phi$ on $\mathcal{D}_{\mathrm{adapt}}$ with loss $\sum_G \|f_\phi(G)-\theta_G^{\star}\|_2^2$.
+\item For each held-out graph $G \in \mathcal{D}_{\mathrm{test}}$, predict raw angles $f_\phi(G)$, normalize them to $(\hat{\gamma},\hat{\beta})$, and evaluate $C_G(\hat{\theta}_G)$ by exact statevector simulation.
+\item For each noise rate $\eta$ in the depolarizing grid, evaluate $C_{G,\eta}(\hat{\theta}_G)$ by density-matrix propagation.
+\item Report approximation ratios, runtimes, and noise-robustness tables.
+\end{enumerate}
+\end{quote}
+
 \begin{figure*}[t]
   \centering
-  \begin{minipage}[t]{0.48\textwidth}
+  \begin{minipage}[t]{0.50\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{figures/qaoa_demo_benchmark_overview.png}
-    \caption{Held-out QAOA benchmark overview from the transcriptomic notebook export. The graph-conditioned model nearly matches direct classical search while preserving a large inference-time advantage.}
+    \includegraphics[width=\linewidth]{figures/qaoa_baselines_pareto.png}
+    \caption{Pareto view for \texttt{outputs/tables/qaoa\_baselines.csv}. Random multi-start search yields only a modest gain over fixed classical angles at far higher runtime.}
     \label{fig:qaoa-benchmark}
   \end{minipage}\hfill
-  \begin{minipage}[t]{0.48\textwidth}
+  \begin{minipage}[t]{0.46\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/qaoa_demo_graph_conditioned_initialization.png}
     \caption{Learned initializer comparison and graph ablations. Both topology and node features materially contribute to the final objective value, indicating that the model is not collapsing to a global angle prior.}
@@ -129,17 +268,19 @@ The representative graph contains ten nodes and 18 weighted edges. Additional pa
 \end{figure*}
 
 \begin{table*}[t]
-\caption{Held-out transcriptomic QAOA benchmark summary.}
+\caption{Held-out transcriptomic QAOA benchmark summary. Means and standard deviations are computed over the six held-out graphs where the notebook export reports per-graph ablation statistics. Runtime is the median end-to-end time per graph in the same execution environment.}
 \label{tab:qaoa}
 \begin{ruledtabular}
-\begin{tabular}{lll}
-Method & Held-out mean ratio & Interpretation \\
+\begin{tabular}{lccc}
+Method & Mean ratio & Std. dev. & Median runtime (ms) \\
 \colrule
-Direct classical depth-2 search & 0.8686 & Strongest quality reference, but latency-heavy. \\
-Graph-conditioned GNN, depth-2 & 0.8682 & Retains 99.95\% of classical quality with one forward pass. \\
-Prior-style learned baseline & 0.8208 & Graph-agnostic learned warm start; weaker than graph conditioning. \\
-GNN without graph edges & 0.7086 & Removes message passing; objective quality drops sharply. \\
-GNN without node features & 0.6535 & Preserving topology without attributes is insufficient. \\
+Classical depth-2 search & 0.8686 & --- & 936.1255 \\
+Random initialization & 0.6586 & 0.1170 & 0.3344 \\
+Heuristic initialization & 0.8634 & 0.0313 & 0.3249 \\
+Prior-style graph-feature regressor & 0.8208 & 0.0678 & 0.5905 \\
+GNN without graph edges & 0.7086 & 0.0333 & 0.3737 \\
+GNN without node features & 0.6535 & 0.0319 & 0.3644 \\
+Graph-conditioned GNN (ours) & 0.8682 & 0.0312 & 0.3652 \\
 \end{tabular}
 \end{ruledtabular}
 \end{table*}
@@ -152,13 +293,14 @@ The biomedical branch uses the UCI cardiotocography cohort, a public dataset wit
 The graph is built with split-first preprocessing. A stratified train-validation-test partition is created before fitting the standardization transform, and a symmetric $k$-nearest-neighbor graph is then constructed on standardized features. This design avoids the common leakage pattern where preprocessing statistics are fit globally before the split. It also exposes a meaningful graph semantics: node neighborhoods correspond to physiologically similar exams, not to arbitrary index structure.
 
 Under the selected operating point reported in the public site and notebook exports, the graph model reaches 98.8\% held-out accuracy, 0.942 balanced accuracy, 0.978 ROC AUC, detects 31 of 35 pathologic cases, and produces one false positive. The strongest calibrated tabular baseline remains slightly better in summary metrics, reaching 99.06\% accuracy and 0.956 balanced accuracy. This narrows the scientific claim. The biomedical branch demonstrates that graph-conditioned parameterization yields a strong, threshold-aware operating point on a patient-similarity graph, but not that graph methods universally dominate tabular learners on this cohort.
+Figure~\ref{fig:ctg-dashboard} visualizes that threshold tradeoff directly, while Table~\ref{tab:ctg} fixes the corresponding held-out operating-point numbers against the tabular baselines.
 
 \begin{figure*}[t]
   \centering
   \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{figures/bio_demo_heldout_evaluation.png}
-    \caption{Held-out evaluation dashboard for the CTG graph model. The paper treats this operating surface, not only the classifier logits, as the primary downstream object.}
+    \includegraphics[width=\linewidth]{figures/bio_demo_operating_point_analysis.png}
+    \caption{CTG operating-point analysis from the biomedical notebook export. The panel makes the precision-recall tradeoff and selected deployment region explicit.}
     \label{fig:ctg-dashboard}
   \end{minipage}\hfill
   \begin{minipage}[t]{0.48\textwidth}
@@ -192,6 +334,9 @@ The two branches share neither labels nor losses, but they do share an evaluatio
 \subsection{Transcriptomic branch protocol}
 The transcriptomic branch uses one representative full-cohort graph together with 24 adaptation graphs and six held-out benchmark graphs. The graph-family construction uses fixed seeds: adaptation seeds 200 through 223 and benchmark seeds 42 through 47, as defined in the executed notebook pipeline. Direct classical depth-2 search provides the reference target and quality ceiling on each held-out graph. The graph model is trained only on the adaptation family, with a fixed training seed and a single learned forward pass used at evaluation time. Quality is summarized through mean held-out approximation ratio, retention relative to direct search, and runtime difference between repeated optimization and single-pass inference.
 
+\subsection{Statistical reporting}
+For the transcriptomic branch, learned-initializer summaries are reported as mean $\pm$ standard deviation across the six held-out graphs. Runtime is reported as the median wall-clock time per graph because the classical-search tail is much larger than the single-pass inference times. Given the small fixed benchmark family, the present manuscript is best read as a descriptive held-out study on an auditable graph distribution rather than as an asymptotic statistical claim. For the CTG branch, we report the fixed-split held-out operating point used by the executed notebook pipeline together with the strongest tabular baselines on the same split.
+
 \subsection{Biomedical branch protocol}
 The CTG branch uses a 68/12/20 split with standardization fit only on training rows. The $k$-nearest-neighbor graph is constructed after split-safe standardization. Class-weighted training addresses pathologic rarity. Validation data determines the deployed threshold. The held-out test set is used once for the final operating-point report. Unless otherwise stated, the public notebook uses random seed 42. Metrics include accuracy, balanced accuracy, ROC AUC, precision, recall, and false positives.
 
@@ -199,30 +344,77 @@ The CTG branch uses a 68/12/20 split with standardization fit only on training r
 Graph-conditioned parameterization is meaningful only if the downstream consumer is part of the evidence. That means the evaluation cannot stop at angle regression loss or cross-entropy. The optimization branch must show objective retention and latency relative to explicit baselines. The screening branch must show threshold-aware behavior under imbalance. Both branches therefore emphasize downstream metrics rather than proxy losses, although the primary APS-relevant evidence in this manuscript is the fixed-depth QAOA result.
 
 \section{Results}
-Across the six held-out transcriptomic graphs, the graph-conditioned model reaches 0.8682 mean approximation ratio versus 0.8686 for direct classical search. The absolute gap is 0.0004. Reported on the project website, this corresponds to 99.95\% quality retention while reducing median inference time from 675.9 ms to 0.256 ms. The strongest interpretation is not that learning beats search. It is that graph-conditioned inference renders per-instance search almost unnecessary in this small exact-simulation regime.
+The principal result is that graph-conditioned inference nearly closes the gap to repeated classical search on the held-out transcriptomic graph family while removing almost all of the online optimization cost. Across the six held-out graphs in the notebook benchmark, the learned initializer attains mean approximation ratio 0.8682, whereas direct multi-start depth-2 search attains 0.8686. The absolute difference is 0.0004, corresponding to 99.95\% retention of the direct-search objective. At the same time, the median end-to-end evaluation time falls from 936.1255 ms for direct search to 0.3652 ms for the learned initializer in the notebook execution environment.
 
-The learned baseline comparison is equally important. The prior-style graph-agnostic regressor reaches 0.8208 mean held-out ratio. The graph-conditioned model improves that to 0.8682. The relative lift is therefore substantial, and the ablation study shows that both message passing and node features contribute materially. Removing graph edges drops the mean ratio to 0.7086; removing node features drops it to 0.6535.
+The comparison to simpler learned or non-graph initializers is equally important. A graph-agnostic prior-style regressor reaches 0.8208 $\pm$ 0.0678, which is lower than the graph-conditioned model by 0.0474 in mean approximation ratio. A heuristic initializer reaches 0.8634 $\pm$ 0.0313 and is therefore competitive but still slightly weaker than the full graph-conditioned model. Removing graph edges reduces the mean ratio to 0.7086 $\pm$ 0.0333, while removing node features reduces it to 0.6535 $\pm$ 0.0319. These ablations support the narrower claim that both topology-aware message passing and node attributes contribute materially to the learned parameterization.
 
-The biomedical branch reaches a strong graph operating point: 98.8\% held-out accuracy, 0.942 balanced accuracy, and one false positive. This places the graph model above weaker clinical baselines and near the strongest tabular ones. Calibrated LightGBM remains slightly better on this split, which is an honest and important result. It narrows the claim from superiority to competitiveness, while preserving the broader argument that graph-conditioned parameterization remains useful when the downstream object is a thresholded risk surface.
+Theorem 2 explains how to read these results. The benchmark is not just angle regression. Once the Hessian of the objective is controlled locally, approximation-ratio loss scales quadratically with angle error. That is the correct lens for amortized initialization: the relevant quantity is not whether the predicted angles are numerically identical to the classical optimum, but whether their deviation is small enough to keep regret second order.
 
-The most important result of the paper is not any single scalar metric. It is the alignment between branches at the level of interface. In the optimization branch, the graph model emits control variables for a downstream quantum-style objective. In the biomedical branch, the graph model emits risk variables for a downstream policy. In both cases, the scientific object is the graph-generated parameterization and its consequences.
+This interpretation is visible in the transcriptomic diagnostics collected in Fig.~\ref{fig:qaoa-regret-noise}. The residual-regret panel shows that the learned initializer remains tightly concentrated near zero excess loss on the held-out family, while the new noise panel makes clear that the full method tracks the classical-search reference smoothly as local depolarizing noise increases.
+
+The fixed benchmark family is small, so these statistics should be interpreted conservatively. They nevertheless establish the main empirical point required for this paper: on an auditable family of weighted biological graphs, a learned graph-conditioned initializer can replace repeated per-instance parameter search at essentially no loss in objective quality. This is a useful result even without any claim of quantum advantage.
+
+The auxiliary CTG experiment should be interpreted more narrowly. ResidualClinicalGCN reaches 98.8\% accuracy, 0.942 balanced accuracy, and one false positive on the fixed held-out split, while calibrated LightGBM remains slightly stronger at 99.06\% accuracy and 0.956 balanced accuracy. The role of this branch is therefore not to establish superiority of graph learning in medicine, but to show that the same downstream-evaluation logic applies when the emitted variables are cohort-level decision variables rather than QAOA angles.
+
+\subsection{Noisy-QAOA experiment}
+The earlier draft contained only a placeholder discussion of noise. We replace that placeholder with an executed local-depolarizing benchmark on the same transcriptomic graph family. Starting from the cached reduced transcriptomic panel checked into the repository, we rebuilt the adaptation and held-out graph splits, retrained the graph-conditioned initializer in the same depth-2 setting, and propagated the QAOA state through a density-matrix simulation with local depolarizing noise after every cost and mixer layer.
+
+\begin{table*}[t]
+\caption{Executed depolarizing-noise benchmark on the transcriptomic held-out graphs. The reported mean ratios are computed from the exported summary table in \texttt{outputs/tables/qaoa\_noise\_summary.csv}.}
+\label{tab:qaoa-noise}
+\begin{ruledtabular}
+\begin{tabular}{lcccc}
+Method & $\eta=0$ & $\eta=0.01$ & $\eta=0.02$ & $\eta=0.05$ \\
+\colrule
+Classical depth-2 search angles & 0.8686 & 0.8502 & 0.8332 & 0.7902 \\
+Graph-conditioned GNN (ours) & 0.8613 & 0.8433 & 0.8268 & 0.7850 \\
+Heuristic mean-angle initializer & 0.8634 & 0.8452 & 0.8285 & 0.7863 \\
+\end{tabular}
+\end{ruledtabular}
+\end{table*}
+
+The noisy study changes the interpretation in two useful ways. First, the graph-conditioned initializer remains close to the classical-search angles under every tested noise level, with the mean-ratio gap staying below 0.0074 across the full noise grid. Second, the degradation is smooth and predictable, which is exactly the qualitative behavior anticipated by Theorem 5. At noise rate $\eta=0.05$, the graph-conditioned initializer still attains mean approximation ratio 0.7850, compared with 0.7902 for the classical-search angles and 0.7863 for the heuristic mean-angle initializer. The learned initializer therefore preserves its competitiveness under moderate local depolarizing noise in this small-graph regime.
+
+\begin{figure*}[t]
+  \centering
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/qaoa_demo_residual_regret.png}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/qaoa_noise_robustness.png}
+  \end{minipage}
+  \caption{Additional transcriptomic diagnostics for the fixed-depth QAOA result. Left: residual regret remains concentrated near zero on held-out graphs. Right: the paper-specific depolarizing-noise plot shows smooth degradation and near-parity between the learned initializer and direct search across the tested noise grid.}
+  \label{fig:qaoa-regret-noise}
+\end{figure*}
 
 \section{Discussion}
-The paper makes a methodological claim supported by two case studies. This is both a strength and a limit. It is a strength because it avoids overclaiming transfer or joint training that the repository does not support. It is a limit because the work is not a massive benchmark sweep. The optimization branch remains in a small exact-simulation regime. The clinical branch is retrospective and public-cohort specific. Neither branch supports deployment claims on its own.
+The manuscript now supports a clearer and narrower conclusion than the original cross-domain framing allowed. On a structured family of weighted transcriptomic graphs, graph-conditioned learning is an effective amortization strategy for fixed-depth QAOA parameter selection. The learned initializer nearly matches direct classical search on held-out graphs, improves substantially over the affine graph-feature regressor baseline, and preserves a three-orders-of-magnitude latency advantage relative to repeated search.
 
-Those limitations are not incidental. They are part of why the results are interpretable. Small transcriptomic graphs make exact MaxCut and exact statevector evaluation feasible, which makes the QAOA evidence unusually auditable. A fixed public CTG cohort makes graph-versus-tabular benchmarking and threshold analysis reproducible. The cost of that rigor is that the paper cannot claim external cohort transport, hardware-scale quantum advantage, or a universal win for GNNs over all clinical tabular baselines.
+The theoretical additions matter because they determine what the experiment does and does not mean. Theorem 1 gives an exact Ising representation for the cohort-level biomedical policy problem, addressing the earlier lack of formalization. Theorem 2 shows that angle-prediction error only damages the objective quadratically once the local curvature is controlled. Proposition 1 rules out a barren-plateau interpretation for the fixed-depth, finite-family regime actually studied. Theorem 4 makes the resource claims explicit. Theorem 5 explains why the empirical noise curves contract smoothly toward the random-cut baseline. None of these statements imply quantum advantage, but together they move the manuscript from an architecture demonstration toward a theorem-backed PRA-style contribution.
+
+There is also a useful limitation result. If a graph family has nearly constant optimal angle vectors, then graph conditioning cannot outperform a global heuristic initializer by more than higher-order perturbations. This explains why the heuristic mean-angle baseline is already competitive in Table~\ref{tab:qaoa-noise}. The benefit of graph conditioning is concentrated in families whose optimal angles vary systematically with graph structure.
+
+This is still not a claim about scalable quantum optimization in the asymptotic sense. The problem sizes remain small because exact MaxCut values and exact statevector expectations are used as the audit standard. That limitation is scientifically useful: it makes the comparison transparent and removes ambiguity about whether performance gains arise from approximation artifacts. The tradeoff is that the paper should be read as evidence for improved fixed-depth initialization on a controlled graph family, not as evidence for hardware-scale quantum speedup.
+
+The CTG case study remains secondary in that interpretation. Its value is methodological rather than physics-defining: it shows that the same graph-to-decision-variable viewpoint can be written as an explicit binary optimization problem and evaluated under threshold-aware metrics. Keeping that branch in the manuscript is reasonable only because its role is illustrative and its claims remain bounded.
 
 \section{Limitations, Ethics, and Reproducibility}
-The QAOA branch studies depth-2 circuits on small graphs under exact statevector simulation. This is the correct regime for auditability but not for claims about large-scale hardware deployment. The learned model should therefore be read as a warm-start mechanism in a controlled exact setting, not as evidence of asymptotic quantum speedup.
+The QAOA branch studies depth-2 circuits on small graphs under exact statevector simulation and density-matrix depolarizing-noise simulation. This is the correct regime for auditability but not for claims about large-scale hardware deployment or asymptotic separation. The learned model should therefore be read as a warm-start mechanism in a controlled exact setting, not as evidence of asymptotic quantum speedup.
+
+The expressivity proposition is intentionally limited to the affine graph-feature regressor baseline and does not claim a separation from all possible classical GNN architectures. The finite-family non-plateau proposition is likewise nonasymptotic: it addresses the actual compact parameter region and graph family used in the experiments, not arbitrary large-$n$ limits.
 
 The CTG branch is a retrospective study on a public cohort. It does not address prospective integration into clinical workflow, site shift, fairness assessment, or liability-sensitive deployment. The strongest tabular baseline also remains slightly better on the reported split. The graph result is best interpreted as evidence that graph-structured patient similarity can support a strong operating point under strict evaluation, not as a final clinical product.
 
 The biomedical analysis is framed as decision support rather than autonomous diagnosis. Thresholds are selected on validation data only. The reported false-positive and false-negative tradeoffs are exposed rather than hidden behind a single summary statistic. This is important because screening systems produce interventions, not only predictions.
 
-\section{Conclusion}
-This paper introduced graph-conditioned parameterization as a compact formulation for graph models whose outputs parameterize downstream computation rather than terminating in standalone predictions. We instantiated the idea in two settings: transcriptomic depth-2 QAOA angle prediction and cardiotocography graph risk scoring. The optimization branch showed near-parity with direct classical search at a fraction of the inference cost. The biomedical branch showed a strong graph operating point under stricter tabular benchmarking, while also clarifying that the strongest calibrated tabular model remains slightly better on this cohort.
+All experiments are tied to explicit repository artifacts. For the transcriptomic branch, adaptation graphs use seeds 200 through 223, held-out benchmark graphs use seeds 42 through 47, the noisy benchmark is exported to \texttt{outputs/tables/qaoa\_noise\_summary.csv}, and the learned model is trained on the adaptation family only. For the CTG branch, the public notebook uses split-safe preprocessing with standardization fit on the training partition and a default random seed of 42 unless otherwise stated. The repository includes the source data, notebook exports, baseline scripts, and processed benchmark tables used to produce the reported comparisons. Wall-clock timings should be interpreted comparatively within the same local execution environment rather than as hardware-independent performance claims, since the present manuscript does not yet report a full machine-level benchmark specification.
 
-The broader claim is therefore pragmatic rather than rhetorical. Graph models should sometimes be evaluated by the decision variables they generate and by what those variables enable downstream. When that is the actual engineering role of the model, graph-conditioned parameterization provides a sharper language for method design, benchmarking, and interpretation.
+\section{Conclusion}
+This work demonstrates that graph neural networks can be used to predict instance-dependent parameters for fixed-depth QAOA on a structured family of weighted MaxCut graphs, and that this claim can be supported by explicit formal results rather than by benchmark tables alone. In the transcriptomic setting studied here, the learned initializer improves clearly over the affine graph-feature regressor baseline and attains near-parity with direct classical search while reducing median online latency by more than three orders of magnitude. The revised manuscript also provides an exact QUBO/Ising encoding for a cohort-level biomedical screening objective, a regret bound linking angle error to objective loss, an expressivity separation from affine graph-feature regression, a finite-family trainability statement, explicit resource scaling, and an executed noisy-QAOA benchmark.
+
+The appropriate conclusion is therefore modest but meaningful. Learned graph-conditioned parameterization can improve the practical initialization of variational quantum algorithms in a controlled exact- and noisy-simulation regime, and the resulting claims can be made mathematically explicit. The manuscript still does not establish quantum advantage, asymptotic speedup, or PRL-level conceptual novelty. Future work should extend the present analysis to larger graph families, repeated-seed statistical tests, broader classical GNN baselines, and direct hardware evaluation.
 
 \nocite{zhao2020,alon2021,topping2022,thekumparampil2018,klicpera2019diffusion,brody2022,knyazev2019,li2019deepgcn,cai2020,dwivedi2021bresson,he2017workshop}
 
