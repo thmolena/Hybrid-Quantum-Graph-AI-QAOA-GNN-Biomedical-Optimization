@@ -3,7 +3,7 @@
 ### GNN-Based Parameter Prediction, Learned Warm-Start Initialization, and Convergence Analysis — with Applications to Network-Based Biomedical Systems
 
 [![Project Website](https://img.shields.io/badge/Project_Website-Open-0f766e?style=for-the-badge)](https://thmolena.github.io/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/)
-[![Paper Draft](https://img.shields.io/badge/Paper-Research_Draft-1d4ed8?style=for-the-badge)](paper/research_paper.md)
+[![Research Paper](https://img.shields.io/badge/Paper-Research_Paper-1d4ed8?style=for-the-badge)](research_paper.html)
 
 This repository develops **Graph Neural Network (GNN) methods to improve the performance, parameter selection, and scalability of the Quantum Approximate Optimization Algorithm (QAOA)** — a leading hybrid quantum-classical algorithm for combinatorial optimization. Many optimization problems addressed by QAOA are naturally represented as graphs, making graph-based learning a principled framework for improving its performance.
 
@@ -117,7 +117,7 @@ direction of every number is unambiguous.
 
 1. **Graph-aware evidence**: ResidualClinicalGCN operates on a patient-similarity graph. Each patient's prediction is informed by its k-nearest neighbors in the cohort — enabling **neighborhood-level interpretable evidence** (e.g., "this fetus is high-risk because 4 of its 5 most similar patients in history were pathologic"). Tabular models treat each patient independently.
 2. **Cross-seed robustness**: 95.49% ± 0.97% accuracy across random seeds confirms stability is not a lucky initialization artifact — the method is genuinely stable.
-3. **Domain generality**: The identical graph-to-parameterization framework used for QAOA parameter prediction is applied here to clinical risk prediction — demonstrating the method transfers across problem domains. This is the core NeurIPS claim.
+3. **Domain generality**: The identical graph-to-parameterization framework used for QAOA parameter prediction is applied here to clinical risk prediction — demonstrating that the method transfers across materially different downstream problems.
 4. **What the contribution is not**: This work does not claim that GNNs beat the best tabular model on CTG accuracy. It claims that a unified GNN framework — originally motivated by quantum optimization — also works well in a clinical graph setting, opening a path to quantum-enhanced biomedical graph analysis.
 
 ---
@@ -200,7 +200,7 @@ Biomedical branch analysis notebook.
 ## Artifacts
 
 - Website: [index.html](index.html)
-- Paper: [paper/research_paper.md](paper/research_paper.md)
+- Paper: [research_paper.html](research_paper.html)
 - Notebook exports: [website/notebooks_html](website/notebooks_html)
 - QAOA baselines: [experiments/qaoa/run_qaoa_baselines.py](experiments/qaoa/run_qaoa_baselines.py)
 - Biomedical baselines: [experiments/biomedical/run_bio_baselines.py](experiments/biomedical/run_bio_baselines.py)
