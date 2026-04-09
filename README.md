@@ -3,7 +3,7 @@
 ### GNN-Based Parameter Prediction, Learned Warm-Start Initialization, and Convergence Analysis — with Applications to Network-Based Biomedical Systems
 
 [![Project Website](https://img.shields.io/badge/Project_Website-Open-0f766e?style=for-the-badge)](https://thmolena.github.io/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/)
-[![Research Paper](https://img.shields.io/badge/Paper-Research_Paper-1d4ed8?style=for-the-badge)](research_paper.html)
+[![Research Paper PDF](https://img.shields.io/badge/Paper-PDF-1d4ed8?style=for-the-badge)](research_paper/research_paper.pdf)
 
 This repository develops **Graph Neural Network (GNN) methods to improve the performance, parameter selection, and scalability of the Quantum Approximate Optimization Algorithm (QAOA)** — a leading hybrid quantum-classical algorithm for combinatorial optimization. Many optimization problems addressed by QAOA are naturally represented as graphs, making graph-based learning a principled framework for improving its performance.
 
@@ -200,7 +200,7 @@ Biomedical branch analysis notebook.
 ## Artifacts
 
 - Website: [index.html](index.html)
-- Paper: [research_paper.html](research_paper.html)
+- Paper PDF: [research_paper/research_paper.pdf](research_paper/research_paper.pdf)
 - Notebook exports: [website/notebooks_html](website/notebooks_html)
 - QAOA baselines: [experiments/qaoa/run_qaoa_baselines.py](experiments/qaoa/run_qaoa_baselines.py)
 - Biomedical baselines: [experiments/biomedical/run_bio_baselines.py](experiments/biomedical/run_bio_baselines.py)
