@@ -5,144 +5,97 @@
 [![Project Website](https://img.shields.io/badge/Project_Website-Open-0f766e?style=for-the-badge)](https://thmolena.github.io/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/)
 [![Research Paper PDF](https://img.shields.io/badge/Paper-PDF-1d4ed8?style=for-the-badge)](research_paper/research_paper.pdf)
 
-This repository develops **Graph Neural Network (GNN) methods to improve the performance, parameter selection, and scalability of the Quantum Approximate Optimization Algorithm (QAOA)** — a leading hybrid quantum-classical algorithm for combinatorial optimization. Many optimization problems addressed by QAOA are naturally represented as graphs, making graph-based learning a principled framework for improving its performance.
+This repository develops **graph neural network (GNN) methods for graph-conditioned QAOA parameter prediction and graph-based biomedical inference**. The central technical idea is that both settings can be cast as learning on structured graphs: transcriptomic co-expression graphs for depth-2 QAOA MaxCut initialization, and cardiotocography patient-similarity graphs for node-level pathologic-risk prediction.
 
-Datasets of structured graph optimization problems — including weighted instances derived from transcriptomic co-expression data — are encoded into graph-learning pipelines. GNN models are trained to predict QAOA parameterizations, approximation ratios, and convergence behavior, incorporating graph topology, Hamiltonian structure, and symmetry properties into the model design. Performance is evaluated through held-out benchmarking, transferability testing across graph families, and robustness analysis.
+The main result is a unified graph-conditioned learning framework with strong held-out performance in both domains. On transcriptomic MaxCut graphs, the QAOA model reaches near-search approximation quality with a single 0.256 ms forward pass. On cardiotocography, the residual clinical GCN substantially improves simpler graph baselines while remaining competitive with the strongest tabular models. The repository therefore contributes both a practical QAOA initializer and a transferable graph-learning formulation spanning quantum optimization and biomedical decision support.
 
-This work addresses a major limitation of QAOA: the difficulty of classical parameter optimization, which requires statistical learning across structured instances, uncertainty-aware prediction, and generalization under limited data. Improving QAOA directly supports the development of practical quantum applications and strengthens computational tools relevant to artificial intelligence and network-based biomedical systems:
+The practical bottleneck in QAOA is classical parameter search. This repository studies whether graph-conditioned learning can replace repeated per-instance optimization while preserving held-out quality, and whether the same formulation remains useful in a biomedical graph setting. The project is organized around three concrete artifacts:
 
 - transcriptomic co-expression graphs used to predict depth-2 QAOA parameters for maximum cut (MaxCut)
 - cardiotocography similarity graphs used to predict node-level pathologic-risk scores
 - an integrated notebook and manuscript that place both tasks in the same graph-to-parameterization formulation
 
-## What Is New & Better — This Project vs. All Prior Methods
+## Main Contributions and Comparative Results
 
-This section compares every result from this project against every competing approach on
-**identical held-out evaluation splits**. Rows marked **★ This work** are the direct
-contributions of this repository. Read the metric guide below before the tables so the
-direction of every number is unambiguous.
+This repository makes three claims on fixed held-out splits.
 
----
+1. A graph-conditioned GNN predicts depth-2 QAOA parameters for transcriptomic MaxCut graphs with near-search quality at orders-of-magnitude lower cost.
+2. A residual clinical GCN substantially improves over simpler graph baselines for CTG screening and remains competitive with the strongest tabular models.
+3. The same graph-conditioned learning framework transfers across quantum optimization and biomedical risk prediction.
 
-### Metric Guide: What "Going Up" and "Going Down" Means
+### Metric Conventions
 
-> **Approximation Ratio** *(QAOA branch, range 0–1)*  
-> The fraction of the theoretically optimal MaxCut value recovered by a given set of
-> QAOA parameters. **Higher is always better.** A ratio of 0.8682 means the algorithm
-> captures 86.82% of the best possible cut on that graph. Closer to 1.0 = closer to
-> optimal. In the "vs. This Work" column: a **negative value (↓) means that method
-> scores lower than ours — our model wins on solution quality.** A positive value (↑)
-> means that method achieves a higher ratio, but only by spending far more computation
-> (e.g., 256 full circuit evaluations or a full Nelder–Mead search at 675.9 ms vs.
-> our 0.256 ms).
-
-> **Accuracy** *(CTG branch, range 0–100%)*  
-> Proportion of all 426 held-out test patients correctly classified as normal or
-> pathologic. **Higher is always better.** 98.8% means only 5 patients misclassified
-> out of 426.
-
-> **Balanced Accuracy** *(range 0–1)*  
-> Average recall across both classes, correcting for class imbalance (only 35/426 = 8.2%
-> of patients are pathologic). **Higher is always better.** Unlike raw accuracy, this
-> metric cannot be inflated by predicting "normal" for everyone. A score of 0.942 means
-> the model is nearly equally good at catching dangerous cases and at not alarming
-> healthy patients.
-
-> **ROC AUC** *(range 0–1)*  
-> Probability the model ranks a randomly chosen pathologic exam higher than a randomly
-> chosen normal exam. **Higher is always better.** Perfect = 1.0. Our 0.978 means
-> near-perfect risk separation — the model almost always assigns a higher risk score to
-> the genuinely dangerous case.
-
-> **TP / 35 (True Positives out of 35 pathologic cases)**  
-> How many of the 35 genuinely dangerous fetuses the model correctly identifies as
-> high-risk. **Higher is always better.** Each missed case (false negative) is a
-> potentially serious undetected clinical outcome.
-
-> **FP (False Positives)**  
-> Patients incorrectly flagged as pathologic when they are actually normal — causing
-> unnecessary clinical intervention. **Lower is always better.** Our model achieves
-> FP = 1 on the full held-out test set.
-
----
-
-### QAOA Branch — Held-Out Approximation Ratio (higher is better, same 6-graph transcriptomic evaluation set)
-
-| Method | Mean Approx. Ratio | vs. This Work | What this means |
-|---|---|---|---|
-| Zero angles (no optimization) | 0.7224 | **−0.1458 ↓ our model wins** | Trivial lower bound — all parameters set to zero, no tuning. Our GNN beats this by +14.58 pp of the optimal cut. |
-| Prior-style transfer / random-init learned baseline | 0.8208 | **−0.0474 ↓ our model wins** | Learned warm-start without graph conditioning. This is the direct predecessor this work improves upon (+5.77% relative gain). |
-| Direct classical search (Nelder–Mead, full budget) | 0.8686 | +0.0004 ↑ (near-parity; classical uses 675.9 ms) | Best achievable quality per graph via exhaustive local search. Gap to our GNN is only **0.04%** — we match it at 2,640× lower cost. |
-| Random search (best of 256 evaluations) | 0.8954 | +0.0272 ↑ (requires 256 circuit evaluations) | Exhaustive random sampling, not a learned method. Higher ratio only because it evaluates 256 candidates; our GNN uses one forward pass. |
-| Goemans–Williamson SDP (0.878 classical guarantee) | 0.8780 | +0.0098 ↑ (requires SDP solver) | Best known polynomial-time classical algorithm with a 0.878 theoretical guarantee. Our GNN comes within **1.1% of this guarantee** on real graphs. |
-| **★ This work: graph-conditioned GNN, depth-2** | **0.8682** | — | **Single forward pass, 0.256 ms inference, trained once, generalizes to held-out graphs.** |
-
-**Is our model better? Yes — on every metric that matters for practical deployment:**
-
-| What improves | By how much | Why it matters |
+| Metric | Better direction | Interpretation |
 |---|---|---|
-| Quality vs. prior-style learned baseline | **+0.0474 absolute (+5.77% relative)** | Directly quantifies the gain from graph conditioning — adding graph structure to the learned initializer meaningfully improves solution quality |
-| Inference latency vs. classical search | **2,640× faster** (675.9 ms → 0.256 ms) | Makes per-instance QAOA parameter prediction viable on actual quantum hardware at scale |
-| Quality retention vs. classical search | **99.95%** (delta = only 0.0004) | Confirms the massive speedup does not sacrifice solution quality — 99.95% as good as full optimization for free |
-| Quality vs. zero-angles baseline | **+0.1458 absolute (+20.2% relative)** | Confirms the GNN learns genuinely informative parameters rather than trivial defaults |
-| Proximity to GW-SDP guarantee | **Within 1.1%** | Our GNN, with one forward pass, reaches within 1.1% of the best known polynomial-time classical algorithm on biologically derived graphs |
+| Approximation ratio | Higher | Fraction of the optimal MaxCut value recovered; in the delta column, negative means the competing method underperforms this work. |
+| Accuracy | Higher | Fraction of held-out exams classified correctly. |
+| Balanced accuracy | Higher | Mean recall across classes; essential here because only 35 of 426 test cases are pathologic. |
+| ROC AUC | Higher | Probability a pathologic case is ranked above a normal case. |
+| TP / 35 | Higher | Pathologic cases detected on the held-out set. |
+| FP | Lower | Normal cases incorrectly flagged as pathologic. |
 
----
+### QAOA Branch — Held-Out Approximation Ratio
 
-### CTG Biomedical Branch — Held-Out Metrics (n = 426 test exams, same split throughout)
+Same 6-graph transcriptomic evaluation set throughout.
 
-| Method | Accuracy | Balanced Acc. | ROC AUC | TP / 35 ↑ | FP ↓ |
+| Method | Mean approx. ratio | Delta vs. this work | Interpretation |
+|---|---|---|---|
+| Zero angles | 0.7224 | −0.1458 | No optimization; trivial lower bound. |
+| Prior-style learned baseline | 0.8208 | −0.0474 | Learned warm start without graph conditioning. |
+| Direct classical search (Nelder-Mead) | 0.8686 | +0.0004 | Near-identical quality, but 675.9 ms per instance. |
+| Random search (best of 256 evaluations) | 0.8954 | +0.0272 | Higher quality only after 256 circuit evaluations. |
+| Goemans-Williamson SDP | 0.8780 | +0.0098 | Classical polynomial-time reference with 0.878 guarantee. |
+| **★ This work: graph-conditioned GNN** | **0.8682** | — | **Single forward pass; 0.256 ms inference.** |
+
+The central QAOA result is the tradeoff, not the raw table entry: this model improves the prior learned baseline by +0.0474 absolute (+5.77% relative), retains 99.95% of direct-search quality, and reduces median inference time from 675.9 ms to 0.256 ms, a 2640x speedup.
+
+### CTG Biomedical Branch — Held-Out Metrics
+
+Same split throughout; test set size $n = 426$.
+
+| Method | Accuracy | Balanced acc. | ROC AUC | TP / 35 | FP |
 |---|---|---|---|---|---|
 | Logistic Regression | 94.1% | 0.916 | 0.984 | 31 | 21 |
 | Random Forest | 96.9% | 0.905 | 0.994 | 29 | 7 |
-| MLP (tabular neural net) | 98.4% | 0.926 | 0.971 | 30 | 2 |
+| MLP | 98.4% | 0.926 | 0.971 | 30 | 2 |
 | LightGBM | 98.6% | 0.927 | 0.993 | 30 | 1 |
 | XGBoost | 98.8% | 0.955 | 0.992 | 32 | 2 |
-| Calibrated LightGBM (strongest tabular) | **99.1%** | **0.956** | 0.991 | 32 | 1 |
-| AdaptiveBioGCN (graph, this work) | 96.7% ± 0.97% | — | — | — | — |
-| **★ ResidualClinicalGCN (graph, this work)** | **98.8%** | **0.942** | **0.978** | **31** | **1** |
+| Calibrated LightGBM | **99.1%** | **0.956** | 0.991 | 32 | 1 |
+| AdaptiveBioGCN | 96.7% ± 0.97% | — | — | — | — |
+| **★ ResidualClinicalGCN** | **98.8%** | **0.942** | **0.978** | **31** | **1** |
 
-**Is our model better? Yes — in all ways that matter for graph-based medical AI:**
+The biomedical contribution is not a claim that graph learning surpasses the best tabular model on raw accuracy. The contribution is that the graph model improves the simpler graph baseline by +2.1 percentage points in accuracy and +0.057 in balanced accuracy, matches XGBoost on accuracy, matches the best false-positive count, and adds patient-similarity structure that tabular models do not represent.
 
-| Compared against | Accuracy Δ | Balanced Acc. Δ | TP Δ | FP Δ | Verdict |
-|---|---|---|---|---|---|
-| Simple GCN / prior graph baselines | **+2.1 pp ↑** | **+0.057 ↑** | same | lower | Our residual graph architecture is better than vanilla GCN on every metric |
-| Logistic Regression | **+4.7 pp ↑** | **+0.026 ↑** | same | **−20 ↓** | Our model eliminates 20 unnecessary clinical alarms vs. the simplest tabular baseline |
-| Random Forest | **+1.9 pp ↑** | **+0.037 ↑** | **+2 ↑** | **−6 ↓** | Our model catches 2 more pathologic cases and raises 6 fewer false alarms |
-| MLP (tabular neural net) | **+0.4 pp ↑** | **+0.016 ↑** | +1 ↑ | −1 ↓ | Our graph model equals or exceeds a well-tuned tabular neural network |
-| XGBoost | 0 pp (tied) | −0.013 (XGB wins) | −1 (XGB detects 32) | +0 | Tied on accuracy; XGBoost detects 1 more pathologic case; our model provides graph interpretability which XGBoost cannot |
-| Calibrated LightGBM (best tabular) | −0.3 pp (LGB wins) | −0.014 (LGB wins) | −1 (LGB wins) | same | Strongest tabular model wins on raw accuracy by 0.3 pp; our GNN provides the unique contributions below |
+### What Is New Here
 
-**The unique contributions of the graph model — what no tabular baseline can do:**
-
-1. **Graph-aware evidence**: ResidualClinicalGCN operates on a patient-similarity graph. Each patient's prediction is informed by its k-nearest neighbors in the cohort — enabling **neighborhood-level interpretable evidence** (e.g., "this fetus is high-risk because 4 of its 5 most similar patients in history were pathologic"). Tabular models treat each patient independently.
-2. **Cross-seed robustness**: 95.49% ± 0.97% accuracy across random seeds confirms stability is not a lucky initialization artifact — the method is genuinely stable.
-3. **Domain generality**: The identical graph-to-parameterization framework used for QAOA parameter prediction is applied here to clinical risk prediction — demonstrating that the method transfers across materially different downstream problems.
-4. **What the contribution is not**: This work does not claim that GNNs beat the best tabular model on CTG accuracy. It claims that a unified GNN framework — originally motivated by quantum optimization — also works well in a clinical graph setting, opening a path to quantum-enhanced biomedical graph analysis.
+1. **Graph conditioning materially improves learned QAOA initialization.** The gain over the prior learned baseline is large, while the gap to full classical search is negligible.
+2. **The same modeling interface works across both branches.** In one case the output is a QAOA angle vector; in the other it is a node-level clinical risk score.
+3. **The CTG graph model adds structural evidence, not just a score.** Predictions are made on a patient-similarity graph rather than from isolated tabular rows.
+4. **The claims are bounded.** This repository argues for a unified, transferable graph-learning framework with strong empirical performance, not for universal superiority over every classical baseline.
 
 ---
 
-## Results Overview
+## Visual Overview
 
 <table>
   <tr>
     <td width="50%">
       <img src="website/notebooks_html/figures/qaoa_demo_benchmark_overview.png" alt="Held-out QAOA benchmark overview" />
-      <p><strong>Transcriptomic Quantum Approximate Optimization Algorithm (QAOA) benchmark.</strong> Adapted graph neural network (GNN) mean ratio: <strong>0.8682</strong>. Direct classical search: <strong>0.8686</strong>.</p>
+      <p><strong>Held-out QAOA quality.</strong> Graph-conditioned GNN: <strong>0.8682</strong>. Direct classical search: <strong>0.8686</strong>.</p>
     </td>
     <td width="50%">
       <img src="website/notebooks_html/figures/qaoa_demo_graph_conditioned_initialization.png" alt="QAOA speed-quality tradeoff" />
-      <p><strong>Inference cost reduction.</strong> Median latency falls from <strong>675.9 ms</strong> to <strong>0.256 ms</strong>, about <strong>2640x</strong> lower.</p>
+      <p><strong>QAOA cost reduction.</strong> Median latency drops from <strong>675.9 ms</strong> to <strong>0.256 ms</strong>, about <strong>2640x</strong>.</p>
     </td>
   </tr>
   <tr>
     <td width="50%">
       <img src="website/notebooks_html/figures/bio_demo_heldout_evaluation.png" alt="Held-out CTG evaluation" />
-      <p><strong>Clinical operating point.</strong> ResidualClinicalGCN, a residual clinical graph convolutional network (GCN), reaches <strong>98.8%</strong> held-out accuracy and <strong>0.942</strong> balanced accuracy.</p>
+      <p><strong>Held-out CTG operating point.</strong> ResidualClinicalGCN reaches <strong>98.8%</strong> accuracy and <strong>0.942</strong> balanced accuracy.</p>
     </td>
     <td width="50%">
       <img src="website/notebooks_html/figures/combined_transcriptomic_benchmark.png" alt="Integrated benchmark figure" />
-      <p><strong>Integrated formulation.</strong> The combined notebook places both branches inside the same graph-to-parameterization-to-objective pipeline.</p>
+      <p><strong>Shared formulation.</strong> Both branches are cast in one graph-to-parameterization-to-objective pipeline.</p>
     </td>
   </tr>
 </table>
@@ -155,55 +108,36 @@ direction of every number is unambiguous.
 | Biomedical | cardiotocography (CTG) patient-similarity graph | node-level pathologic-risk scores | thresholded screening behavior | accuracy, balanced accuracy, calibration, robustness |
 | Integrated | shared graph-conditioned interface | task-specific decision variables | branch-specific downstream evaluation | comparative framing across both domains |
 
-## Notebooks
+## Analysis Notebooks
 
-### 1. Integrated notebook
-
-[notebooks/quantum_ai_bio_combined.ipynb](notebooks/quantum_ai_bio_combined.ipynb)
-
-Joint analysis of both branches.
-
-- shared graph-to-parameterization formulation
-- transcriptomic optimization and cardiotocography (CTG) screening in one analysis surface
-- branch-specific evaluation retained under a common interface
-
-### 2. Transcriptomic Quantum Approximate Optimization Algorithm (QAOA) notebook
-
-[notebooks/qaoa_demo.ipynb](notebooks/qaoa_demo.ipynb)
-
-Optimization branch analysis notebook.
-
-- transcriptomic co-expression graphs
-- exact depth-2 statevector simulation
-- initializer comparison, ablations, and landscape diagnostics
-
-### 3. Cardiotocography (CTG) screening notebook
-
-[notebooks/bio_demo.ipynb](notebooks/bio_demo.ipynb)
-
-Biomedical branch analysis notebook.
-
-- split-first preprocessing and k-NN graph construction
-- threshold-aware evaluation and calibration analysis
-- graph-versus-tabular benchmarking with robustness and saliency audits
+| Notebook | Role | Contents |
+| --- | --- | --- |
+| [notebooks/quantum_ai_bio_combined.ipynb](notebooks/quantum_ai_bio_combined.ipynb) | Integrated analysis | Shared graph-conditioned formulation spanning both branches |
+| [notebooks/qaoa_demo.ipynb](notebooks/qaoa_demo.ipynb) | QAOA analysis | Transcriptomic graphs, depth-2 statevector simulation, initializer comparison, and ablations |
+| [notebooks/bio_demo.ipynb](notebooks/bio_demo.ipynb) | Biomedical analysis | Split-first preprocessing, k-NN graph construction, and graph-versus-tabular evaluation |
 
 ## Representative Results
 
-| Result | Value | Interpretation |
+This section summarizes the takeaways already established above rather than repeating the full comparisons.
+
+| Branch | Key result | Why it matters |
 | --- | --- | --- |
-| Quantum Approximate Optimization Algorithm (QAOA) held-out mean ratio | 0.8682 | Versus 0.8686 for direct classical search |
-| QAOA median latency | 0.256 ms | Versus 675.9 ms for direct classical search |
-| Prior-style learned QAOA baseline | 0.8208 | Lower than the graph-conditioned model |
-| CTG graph operating point | 98.8% accuracy, 0.942 balanced accuracy, and 0.978 receiver operating characteristic area under the curve (ROC AUC) | ResidualClinicalGCN operating point |
-| Strongest tabular CTG baseline | 99.06% accuracy, 0.956 balanced accuracy | Calibrated LightGBM on the same split |
+| QAOA | Graph-conditioned GNN reaches 0.8682 held-out mean approximation ratio versus 0.8686 for direct classical search | Near-search quality with a single learned forward pass |
+| QAOA | Median inference time falls from 675.9 ms to 0.256 ms | 2640x lower per-instance cost |
+| QAOA | Prior learned baseline reaches 0.8208 | Graph conditioning adds a clear quality gain over earlier learned initialization |
+| CTG | ResidualClinicalGCN reaches 98.8% accuracy, 0.942 balanced accuracy, and 0.978 ROC AUC | Strong graph-model operating point on the held-out clinical split |
+| CTG | Calibrated LightGBM reaches 99.06% accuracy and 0.956 balanced accuracy | Best tabular reference remains slightly stronger on raw discrimination metrics |
+| Integrated | One graph-conditioned framework supports both QAOA angle prediction and clinical risk scoring | Establishes the repository's main methodological contribution |
 
 ## Artifacts
 
-- Website: [index.html](index.html)
-- Paper PDF: [research_paper/research_paper.pdf](research_paper/research_paper.pdf)
-- Notebook exports: [website/notebooks_html](website/notebooks_html)
-- QAOA baselines: [experiments/qaoa/run_qaoa_baselines.py](experiments/qaoa/run_qaoa_baselines.py)
-- Biomedical baselines: [experiments/biomedical/run_bio_baselines.py](experiments/biomedical/run_bio_baselines.py)
+| Artifact | Path | Purpose |
+| --- | --- | --- |
+| Website entry point | [index.html](index.html) | Project landing page |
+| Paper PDF | [research_paper/research_paper.pdf](research_paper/research_paper.pdf) | Manuscript version of the project |
+| Notebook HTML exports | [website/notebooks_html](website/notebooks_html) | Static rendered analyses |
+| QAOA baselines | [experiments/qaoa/run_qaoa_baselines.py](experiments/qaoa/run_qaoa_baselines.py) | Reproduce QAOA comparison runs |
+| Biomedical baselines | [experiments/biomedical/run_bio_baselines.py](experiments/biomedical/run_bio_baselines.py) | Reproduce CTG comparison runs |
 
 ## Reproducibility
 
@@ -236,7 +170,7 @@ experiments/    baseline scripts and extracted evaluations
 src/            models, simulators, utilities, and serving code
 data/           source biomedical and transcriptomic inputs
 outputs/        processed datasets, tables, and generated artifacts
-paper/          manuscript draft
+research_paper/ manuscript draft
 website/        static site and exported notebook HTML
 ```
 

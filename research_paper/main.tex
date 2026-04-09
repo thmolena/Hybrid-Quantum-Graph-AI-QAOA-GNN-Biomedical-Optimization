@@ -23,28 +23,26 @@
 
 \begin{document}
 
-\title{Graph-Conditioned Parameterization for Structured Optimization and Clinical Screening}
+\title{Learning Instance-Dependent Parameters for Fixed-Depth QAOA via Graph Neural Networks}
 
 \author{Molena Huynh}
 
 \date{April 9, 2026}
 
 \begin{abstract}
-Many graph learning systems do not terminate in labels. Instead, they emit decision variables that a downstream module consumes: optimizer settings, risk scores, structured coefficients, or thresholds. This paper studies that interface directly through graph-conditioned parameterization, a formulation in which a graph model maps a structured input graph to task-specific variables whose value is defined by downstream behavior rather than by prediction error alone. We instantiate this view in two settings. In the first, a graph neural network predicts depth-2 QAOA angles for transcriptomic co-expression graphs derived from prostate expression data and achieves a held-out approximation ratio of 0.8682, essentially matching direct classical search at 0.8686 while reducing inference latency from 675.9 ms to 0.256 ms. In the second, a graph model emits node-level pathologic-risk scores on a cardiotocography similarity graph and reaches a 98.8\% held-out operating point with balanced accuracy 0.942, while the strongest calibrated tabular baseline remains slightly higher at 99.06\% accuracy and 0.956 balanced accuracy. The contribution is not a claim that both tasks share labels, supervision, or a joint model. The contribution is a reusable evaluation surface that makes graph-generated decision variables first-class objects of analysis across materially different downstream objectives.
+We study amortized parameter initialization for fixed-depth QAOA on weighted MaxCut instances derived from transcriptomic co-expression graphs. A graph neural network maps each input graph to depth-2 QAOA angles, which are then evaluated by the exact QAOA objective under statevector simulation. On six held-out graphs, the learned initializer attains mean approximation ratio 0.8682 versus 0.8686 for multi-start classical search while reducing median inference time from 675.9 ms to 0.256 ms. Relative to a graph-agnostic learned baseline, the graph-conditioned model improves the held-out approximation ratio from 0.8208 to 0.8682. We do not claim quantum advantage or asymptotic speedup. Rather, the contribution is a graph-conditioned parameterization strategy that replaces repeated per-instance classical search on a structured graph family while preserving nearly all of the downstream objective value. A secondary cardiotocography case study is included only as an auxiliary illustration of the broader decision-surface viewpoint.
 \end{abstract}
 
 \maketitle
 
 \section{Introduction}
-Graph neural networks are usually introduced as predictors: classify a graph, label a node, rank an edge, or estimate a scalar target. In practice, many deployed systems use graph models earlier in the pipeline. The model emits variables that another module consumes, and the real object of interest is the downstream behavior of that larger system. This pattern appears in learned warm starts for combinatorial optimization, routing and scheduling, structured prediction, scientific parameter tuning, and clinical screening systems where scores are only useful after thresholding, calibration, and policy selection~\cite{goemans1995,farhi2014,zhou2020,egger2021,akshay2021,galda2021,crooks2018,wurtz2021,hadfield2019,cerezo2021,wilder2019,mandi2020,ferber2020,donti2017,guo2017,gal2016,lakshminarayanan2017,kuleshov2018,ovadia2019,minderer2021,lin2017,cui2019,davis2006,jiang2018,corbiere2019,thulasidasan2019}.
+Variational quantum algorithms are a leading approach to near-term quantum optimization, but their practical performance depends critically on parameter selection. In QAOA, the approximation quality obtained at fixed depth $p$ is controlled by a low-dimensional angle vector whose landscape can be costly to optimize separately for every new graph instance~\cite{farhi2014,zhou2020,egger2021,akshay2021,galda2021,crooks2018,wurtz2021,hadfield2019,cerezo2021}. This motivates amortized strategies that learn to predict useful parameters directly from problem structure rather than repeatedly solving the same classical outer-loop optimization problem online.
 
-This paper studies that pattern through graph-conditioned parameterization. Given an input graph $G$, a graph model produces task-specific decision variables $\theta$. Those variables are not the final endpoint. Instead, they parameterize a downstream objective such as an optimization routine, a simulator, or a screening policy. The central claim is that evaluating the graph model only as a predictor can miss the real engineering question: whether the emitted variables place the downstream system into a useful operating regime.
+Graph neural networks are a natural candidate for this task because the optimization instances themselves are graphs. Recent work has explored transfer heuristics, concentration effects, and learned initialization rules for QAOA-like variational circuits, while the graph learning literature provides expressive models for structured instance families~\cite{zhou2020,egger2021,akshay2021,wilder2019,mandi2020,ferber2020,kipf2017,hamilton2017,velickovic2018,xu2019,gilmer2017}. Despite this progress, parameter selection for QAOA remains largely heuristic and problem-family specific. A useful learned initializer must therefore be judged not by parameter regression error alone, but by the downstream objective value and runtime it induces on unseen graphs.
 
-We instantiate this interface in two empirical settings built from the repository artifacts and executed notebook exports. The first setting is optimization: transcriptomic co-expression graphs are mapped to depth-2 QAOA angle vectors for MaxCut. The second setting is clinical graph learning: a cardiotocography similarity graph is mapped to node-level pathologic-risk scores for retrospective screening. These tasks differ in semantics, supervision, data modality, loss shape, and evaluation, yet they share the same computational template. In one case the downstream consumer is a depth-2 quantum-inspired objective under exact statevector simulation; in the other it is a thresholded, imbalance-aware screening policy.
+In this work we study a graph-conditioned map from weighted graph instances to fixed-depth QAOA parameters. The primary setting is weighted MaxCut on transcriptomic co-expression graphs derived from prostate expression data. A graph neural network predicts the depth-2 angle vector $(\gamma_1,\gamma_2,\beta_1,\beta_2)$, and the resulting parameterization is evaluated under exact statevector simulation against multi-start classical search. On the held-out graph family used here, the learned initializer nearly matches direct classical search in approximation ratio while reducing median online latency by more than three orders of magnitude.
 
-That shared structure matters for how evidence should be organized. In the QAOA branch, Euclidean angle error is secondary to approximation ratio, residual regret, and runtime. In the biomedical branch, probability estimates are secondary to balanced accuracy, false positives, and threshold stability. Once the graph model is viewed as a parameter generator, objective-aware evaluation becomes primary. This shifts attention from generic predictive metrics toward quality retention, latency, threshold sensitivity, calibration, and robustness under fixed data splits~\cite{kipf2017,hamilton2017,velickovic2018,xu2019,gilmer2017,xu2018jk,klicpera2019ppnp,abuelhaija2019,rong2020,chen2020sgc,corso2020,chiang2019,zeng2020,hu2020ogb,dwivedi2020,you2020design,hu2020pretrain,morris2019,maron2019,ying2018diffpool,gao2019,lee2019sagpool,ying2019explainer,zhang2018link,chen2022nodeformer,you2020gcl,sun2020infograph}.
-
-The project therefore makes a narrower but more defensible claim than many cross-domain narratives. We do not claim quantum advantage. We do not claim a joint graph representation spanning biology and combinatorial optimization. We do not claim that the clinical graph model exceeds the strongest tabular baseline. We claim that the same graph-to-parameterization interface is technically informative in both settings and that the downstream utility of the emitted variables can be assessed under strict, task-appropriate protocols.
+We emphasize a narrow claim. We do not claim quantum advantage, asymptotic speedup, or superiority over the best possible classical solver. The question addressed here is whether graph-conditioned learning can replace repeated per-instance parameter search for fixed-depth QAOA on a structured family of weighted graphs. The answer, in the exact-simulation regime studied here, is affirmative at the level of amortized initialization quality. A secondary cardiotocography case study is retained only to illustrate that the same evaluation logic applies when graph models emit decision variables for a downstream screening policy rather than for a variational quantum circuit.
 
 \section{Related Work}
 The optimization branch sits at the intersection of QAOA, learned optimization, and graph representation learning. QAOA has become a central variational framework for combinatorial optimization, with foundational analysis covering approximation guarantees, warm starts, parameter concentration, transferability, and circuit-level implementation behavior~\cite{farhi2014,zhou2020,egger2021,akshay2021,galda2021,crooks2018,wurtz2021,hadfield2019,cerezo2021}. Parallel to this, meta-learning and predict-then-optimize research has studied how learned models can output parameters or decisions that directly improve downstream solvers~\cite{andrychowicz2016,finn2017,li2017learnopt,amos2017,vlastelica2020,wilder2019,mandi2020,ferber2020,donti2017}. The present work is closer to that latter family than to a claim about universal quantum advantage: it treats the graph model as an amortized initializer whose downstream value is measured against exact references on held-out real-data graphs.
@@ -55,31 +53,64 @@ The biomedical branch is related to graph-based patient modeling, tabular medica
 
 What distinguishes this paper from these prior lines is its level of abstraction. Prior learned-QAOA papers focus on initialization quality or transfer. Prior biomedical GNN papers focus on accuracy, robustness, or interpretability on relational data. Here the shared object is not a task, loss, or domain. It is the interface between a graph encoder and a downstream consumer. That shift permits a joint manuscript without requiring a contrived shared label space.
 
-\section{Graph-Conditioned Parameterization}
-Let $G=(V,E,X)$ denote a graph with node set $V$, edge set $E$, and node features $X$. For a task $T$, graph-conditioned parameterization defines a mapping from graph structure to a task-specific parameterization,
+\section{Problem Formulation and Learning Framework}
+We consider combinatorial optimization problems defined on a weighted graph $G=(V,E,w)$ with $|V|=n$. In general, such problems may be expressed as a quadratic unconstrained binary optimization objective,
 \begin{equation}
-\theta_T = f_{\phi,T}(G).
+C(z) = \sum_{i,j} Q_{ij} z_i z_j + \sum_i h_i z_i,
 \end{equation}
-The downstream objective is then evaluated on $\theta_T$, not directly on the hidden representation of the graph model. In the optimization branch, $\theta_T$ is a vector of QAOA angles. In the biomedical branch, it is a vector of node-level pathologic-risk scores. The abstraction is deliberately small. It does not require multitask learning, shared embeddings, or common loss functions. It only requires that the graph model be judged through the behavior of the emitted variables.
+with binary variables $z_i \in \{0,1\}$. For the primary QAOA setting studied here, the objective is weighted MaxCut. The corresponding cost Hamiltonian is
+\begin{equation}
+H_C(G) = \frac{1}{2} \sum_{(i,j)\in E} w_{ij} (I - Z_i Z_j),
+\end{equation}
+and the standard mixer Hamiltonian is
+\begin{equation}
+H_M = \sum_{i=1}^{n} X_i.
+\end{equation}
+At depth $p$, the QAOA ansatz is
+\begin{equation}
+|\psi_p(\boldsymbol{\gamma},\boldsymbol{\beta};G)\rangle =
+\prod_{k=1}^{p} e^{-i \beta_k H_M} e^{-i \gamma_k H_C(G)} |+\rangle^{\otimes n}.
+\end{equation}
+The objective value of a parameter vector $\theta=(\boldsymbol{\gamma},\boldsymbol{\beta})$ is
+\begin{equation}
+C_G(\theta) = \langle \psi_p(\theta;G) | H_C(G) | \psi_p(\theta;G) \rangle,
+\end{equation}
+and its approximation ratio is
+\begin{equation}
+r_G(\theta) = \frac{C_G(\theta)}{C^*(G)},
+\end{equation}
+where $C^*(G)$ denotes the exact MaxCut value.
 
-For transcriptomic QAOA, the emitted parameterization is
+The learned initializer is a graph-conditioned map
 \begin{equation}
-\theta_Q = (\gamma_1,\gamma_2,\beta_1,\beta_2).
+f_{\phi}: \mathcal{G} \rightarrow \mathbb{R}^{2p}, \qquad
+f_{\phi}(G) = \hat{\theta}_G.
 \end{equation}
-These values parameterize a depth-2 QAOA circuit evaluated under exact statevector simulation. If $C(\theta_Q;G)$ denotes the expected cut value and $C^*(G)$ the exact MaxCut value, we report the approximation ratio
+In the QAOA branch, $p=2$ and
 \begin{equation}
-r(G) = \frac{C(\theta_Q;G)}{C^*(G)}.
+\hat{\theta}_G = (\hat{\gamma}_1,\hat{\gamma}_2,\hat{\beta}_1,\hat{\beta}_2).
 \end{equation}
-For the CTG graph, the emitted parameterization is a node-level risk surface,
+The graph neural network therefore amortizes the classical outer-loop search by predicting instance-dependent variational angles directly from graph structure and node attributes.
+
+In implementation, the network is trained against reference parameters $\theta_G^{\star}$ obtained by multi-start classical optimization on the adaptation graphs. The empirical training objective is the angle-regression loss
 \begin{equation}
-\theta_B = (p_1,\ldots,p_{|V|}), \qquad p_i \in [0,1].
+\mathcal{L}_{\mathrm{train}}(\phi) =
+\frac{1}{|\mathcal{D}_{\mathrm{adapt}}|}
+\sum_{G \in \mathcal{D}_{\mathrm{adapt}}}
+\| f_{\phi}(G) - \theta_G^{\star} \|_2^2.
 \end{equation}
-The downstream system applies thresholds, summarizes false positives and false negatives, and evaluates discrimination under class imbalance. In both cases, the model output is scientifically meaningful only after downstream consumption.
+Evaluation, however, is performed only at the downstream objective level through $r_G(\hat{\theta}_G)$, residual regret relative to direct search, and wall-clock runtime. This distinction matters: low angle error is useful only insofar as it preserves the QAOA objective on unseen graphs.
+
+The same formal template extends to the auxiliary biomedical case study. There the graph model emits node-level risk scores rather than QAOA angles,
+\begin{equation}
+\theta_B = (p_1,\ldots,p_{|V|}), \qquad p_i \in [0,1],
+\end{equation}
+and the downstream consumer is a thresholded screening policy. The CTG branch is included to illustrate the broader decision-surface interpretation, but the primary physics claim of the paper remains the QAOA initialization result.
 
 \section{Instantiation I: Transcriptomic QAOA Angle Prediction}
 The optimization branch uses transcriptomic co-expression graphs derived from the OpenML prostate expression cohort. The executed notebook pipeline selects the ten highest-variance genes from a 102-sample, 12,600-feature matrix, computes absolute Pearson correlations, and retains an 18-edge connected co-expression graph family through a maximum spanning tree plus high-correlation augmentation. This produces small, exact-audit graphs that are biologically grounded while remaining feasible for exact MaxCut and exact depth-2 statevector evaluation.
 
-The representative graph contains ten nodes and 18 weighted edges. Additional patient-resampled graphs are generated with split-safe subsampling to form adaptation and held-out benchmark families. Each instance is solved classically using multi-start Nelder--Mead over the depth-2 QAOA landscape to produce exact or near-exact reference angles and objective values under exact statevector simulation. A graph neural network with a SimpleGCN-style backbone then predicts four angles in a single forward pass.
+The representative graph contains ten nodes and 18 weighted edges. Additional patient-resampled graphs are generated with split-safe subsampling to form adaptation and held-out benchmark families. Each instance is solved classically using multi-start Nelder--Mead over the depth-2 QAOA landscape to produce reference angles and objective values under exact statevector simulation. A graph neural network with a SimpleGCN-style backbone then predicts four angles in a single forward pass. The primary comparison is therefore between repeated instance-wise classical search and amortized graph-conditioned inference.
 
 \begin{figure*}[t]
   \centering
@@ -159,13 +190,13 @@ The graph model is therefore best interpreted as a competitive decision-support 
 The two branches share neither labels nor losses, but they do share an evaluation philosophy. In both cases, the parameterization emitted by the graph model is assessed through a downstream system that is independently meaningful. The QAOA branch uses exact MaxCut and exact statevector evaluation on small graphs so that every quality claim is auditable. The biomedical branch uses split-safe preprocessing, held-out operating-point reporting, and comparison against strong tabular baselines so that every claim is operationally interpretable.
 
 \subsection{Transcriptomic branch protocol}
-The transcriptomic branch uses a representative full-cohort graph together with 24 adaptation graphs and six held-out graphs. Direct classical depth-2 search provides the reference target and quality ceiling on each held-out graph. The graph model is trained only on the adaptation family. Quality is summarized through mean held-out approximation ratio, retention relative to direct search, and runtime difference between repeated optimization and single-pass inference.
+The transcriptomic branch uses one representative full-cohort graph together with 24 adaptation graphs and six held-out benchmark graphs. The graph-family construction uses fixed seeds: adaptation seeds 200 through 223 and benchmark seeds 42 through 47, as defined in the executed notebook pipeline. Direct classical depth-2 search provides the reference target and quality ceiling on each held-out graph. The graph model is trained only on the adaptation family, with a fixed training seed and a single learned forward pass used at evaluation time. Quality is summarized through mean held-out approximation ratio, retention relative to direct search, and runtime difference between repeated optimization and single-pass inference.
 
 \subsection{Biomedical branch protocol}
-The CTG branch uses a 68/12/20 split with standardization fit only on training rows. The $k$-nearest-neighbor graph is constructed after split-safe standardization. Class-weighted training addresses pathologic rarity. Validation data determines the deployed threshold. The held-out test set is used once for the final operating-point report. Metrics include accuracy, balanced accuracy, ROC AUC, precision, recall, and false positives.
+The CTG branch uses a 68/12/20 split with standardization fit only on training rows. The $k$-nearest-neighbor graph is constructed after split-safe standardization. Class-weighted training addresses pathologic rarity. Validation data determines the deployed threshold. The held-out test set is used once for the final operating-point report. Unless otherwise stated, the public notebook uses random seed 42. Metrics include accuracy, balanced accuracy, ROC AUC, precision, recall, and false positives.
 
 \subsection{Why these protocols match the interface claim}
-Graph-conditioned parameterization is meaningful only if the downstream consumer is part of the evidence. That means the evaluation cannot stop at angle regression loss or cross-entropy. The optimization branch must show objective retention and latency. The screening branch must show threshold-aware behavior under imbalance. Both branches therefore emphasize decision-surface metrics rather than proxy losses.
+Graph-conditioned parameterization is meaningful only if the downstream consumer is part of the evidence. That means the evaluation cannot stop at angle regression loss or cross-entropy. The optimization branch must show objective retention and latency relative to explicit baselines. The screening branch must show threshold-aware behavior under imbalance. Both branches therefore emphasize downstream metrics rather than proxy losses, although the primary APS-relevant evidence in this manuscript is the fixed-depth QAOA result.
 
 \section{Results}
 Across the six held-out transcriptomic graphs, the graph-conditioned model reaches 0.8682 mean approximation ratio versus 0.8686 for direct classical search. The absolute gap is 0.0004. Reported on the project website, this corresponds to 99.95\% quality retention while reducing median inference time from 675.9 ms to 0.256 ms. The strongest interpretation is not that learning beats search. It is that graph-conditioned inference renders per-instance search almost unnecessary in this small exact-simulation regime.
