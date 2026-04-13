@@ -247,7 +247,7 @@ function renderGraph(n, edges) {
     line.setAttribute('y1', pos[u].y);
     line.setAttribute('x2', pos[v].x);
     line.setAttribute('y2', pos[v].y);
-    line.setAttribute('stroke', '#3d4170');
+    line.setAttribute('stroke', '#c4d0df');
     line.setAttribute('stroke-width', '1.5');
     edgeGroup.appendChild(line);
   });
@@ -261,8 +261,8 @@ function renderGraph(n, edges) {
     circle.setAttribute('cx', p.x);
     circle.setAttribute('cy', p.y);
     circle.setAttribute('r', 16);
-    circle.setAttribute('fill', '#312e81');
-    circle.setAttribute('stroke', '#6366f1');
+    circle.setAttribute('fill', '#0b1f3a');
+    circle.setAttribute('stroke', '#2f5daa');
     circle.setAttribute('stroke-width', '1.5');
     g.appendChild(circle);
 
@@ -270,9 +270,9 @@ function renderGraph(n, edges) {
     text.setAttribute('x', p.x);
     text.setAttribute('y', p.y + 5);
     text.setAttribute('text-anchor', 'middle');
-    text.setAttribute('fill', '#c7d2fe');
+    text.setAttribute('fill', '#ffffff');
     text.setAttribute('font-size', '12');
-    text.setAttribute('font-family', 'Inter, sans-serif');
+    text.setAttribute('font-family', 'Source Sans 3, sans-serif');
     text.setAttribute('font-weight', '500');
     text.textContent = i;
     g.appendChild(text);
@@ -351,7 +351,7 @@ function highlightCut(n, edges, gammas, betas) {
   const lines = svg.querySelectorAll('line');
   lines.forEach((line, idx) => {
     const isCut = (idx + Math.round(gammas[0] * 10)) % 2 === 0;
-    line.setAttribute('stroke', isCut ? '#6366f1' : '#2d3148');
+    line.setAttribute('stroke', isCut ? '#2f5daa' : '#c4d0df');
     line.setAttribute('stroke-width', isCut ? '2' : '1.5');
   });
 }

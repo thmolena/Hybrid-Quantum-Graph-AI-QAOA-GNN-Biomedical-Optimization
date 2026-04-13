@@ -303,6 +303,185 @@
       margin-top: 18px;
     }
 
+    .demo-layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .demo-panel,
+    .graph-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .demo-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--heading);
+      font-weight: 700;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 4px;
+      border-radius: 999px;
+      background: #cdd7e4;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--link);
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 0 3px rgba(47, 93, 170, 0.16);
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--link);
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 0 3px rgba(47, 93, 170, 0.16);
+      cursor: pointer;
+    }
+
+    .n-badge {
+      min-width: 42px;
+      height: 42px;
+      padding: 0 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      background: rgba(47, 93, 170, 0.08);
+      border: 1px solid rgba(47, 93, 170, 0.16);
+      color: var(--heading);
+      font-weight: 700;
+    }
+
+    .field-note,
+    .graph-hint {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn-group .button {
+      min-width: 160px;
+      cursor: pointer;
+    }
+
+    .result-panel,
+    .error-panel {
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .result-panel {
+      display: grid;
+      gap: 10px;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: baseline;
+      border-bottom: 1px solid #eef2f6;
+      padding-bottom: 8px;
+    }
+
+    .result-row:last-of-type {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .result-label {
+      color: var(--muted);
+    }
+
+    .result-value {
+      color: var(--heading);
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .source-badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: var(--panel);
+    }
+
+    .source-badge.browser {
+      color: #6b4f10;
+      background: #fff8e7;
+      border-color: #eed8a2;
+    }
+
+    .source-badge.api {
+      color: #0f5f57;
+      background: #ecfbf8;
+      border-color: #bfe9e2;
+    }
+
+    .error-panel {
+      color: #8b1e2d;
+      background: #fff5f6;
+      border-color: #f0ccd3;
+    }
+
+    .graph-panel svg {
+      display: block;
+      width: 100%;
+      height: 320px;
+      background: #ffffff;
+      border: 1px solid #e6ebf1;
+    }
+
+    .hidden {
+      display: none;
+    }
+
     figure {
       margin: 0;
       border: 1px solid var(--line);
@@ -356,6 +535,7 @@
       .hero,
       .evidence-grid,
       .impact-grid,
+      .demo-layout,
       .figure-grid,
       .access-grid,
       .summary-grid {
@@ -590,6 +770,62 @@
       </div>
     </section>
 
+    <section class="section" aria-labelledby="demo-title">
+      <div class="section-kicker">Interactive Companion</div>
+      <h2 id="demo-title">QAOA graph demo within the report page</h2>
+      <div class="demo-layout">
+        <article class="demo-panel">
+          <div class="demo-controls">
+            <div>
+              <h3>Generate a graph and request QAOA parameters</h3>
+              <p class="panel-intro">This companion view lets readers inspect a graph instance, request model-predicted QAOA angles, and view the resulting expected cut value. When the local API is unavailable, the page falls back to browser-side exact depth-1 simulation and local refinement.</p>
+            </div>
+
+            <div class="field">
+              <label for="n-range">Number of nodes</label>
+              <div class="slider-row">
+                <input id="n-range" type="range" min="3" max="10" value="6">
+                <span id="n-val" class="n-badge">6</span>
+              </div>
+              <input id="n" type="hidden" value="6">
+              <p class="field-note">The demo uses a compact graph range so the interactive calculations remain transparent and responsive.</p>
+            </div>
+
+            <div class="btn-group">
+              <button class="button" id="random" type="button">Random Graph</button>
+              <button class="button primary" id="predict" type="button">Predict Angles</button>
+            </div>
+
+            <div id="result-panel" class="result-panel hidden" aria-live="polite">
+              <div class="result-row">
+                <span class="result-label">Gamma values</span>
+                <span id="res-gammas" class="result-value">—</span>
+              </div>
+              <div class="result-row">
+                <span class="result-label">Beta values</span>
+                <span id="res-betas" class="result-value">—</span>
+              </div>
+              <div class="result-row">
+                <span class="result-label">Expected cut</span>
+                <span id="res-cut" class="result-value">—</span>
+              </div>
+              <div id="source-badge" class="source-badge hidden"></div>
+            </div>
+
+            <div id="error-panel" class="error-panel hidden" aria-live="polite">
+              <span id="error-msg">Generate a random graph to begin.</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="graph-panel">
+          <h3>Graph view</h3>
+          <svg id="graph-svg" viewBox="0 0 640 320" preserveAspectRatio="xMidYMid meet" aria-label="Interactive graph display"></svg>
+          <p class="graph-hint" id="graph-hint">6 nodes · no edges yet — click Random Graph</p>
+        </article>
+      </div>
+    </section>
+
     <section class="section" aria-labelledby="figures-title">
       <div class="section-kicker">Visual Evidence</div>
       <h2 id="figures-title">Figures aligned with the strongest positive findings</h2>
@@ -663,5 +899,6 @@
       Source metrics were drawn from the held-out benchmark outputs and manuscript tables in this repository. Content on this page is intentionally limited to observed gains over baseline or existing comparison models.
     </footer>
   </div>
+  <script src="website/demo.js"></script>
 </body>
 </html>
