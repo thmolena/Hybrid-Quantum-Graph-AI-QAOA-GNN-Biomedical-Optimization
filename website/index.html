@@ -3,52 +3,516 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hybrid Quantum–Graph Learning for Structured Biomedical Optimization</title>
-  <meta name="description" content="GNN-Informed Initialization for QAOA and Graph-Based Clinical Modeling">
+  <title>Supporting Materials | Hybrid Quantum Graph AI</title>
+  <meta name="description" content="Report-style supporting materials page for notebook exports, figures, and manuscript artifacts.">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Hybrid Quantum–Graph Learning for Structured Biomedical Optimization">
-  <meta property="og:description" content="GNN-Informed Initialization for QAOA and Graph-Based Clinical Modeling">
+  <meta property="og:title" content="Supporting Materials | Hybrid Quantum Graph AI">
+  <meta property="og:description" content="Notebook exports, figures, and manuscript artifacts presented in the same institutional style as the root landing page.">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Hybrid Quantum–Graph Learning for Structured Biomedical Optimization">
-  <meta name="twitter:description" content="GNN-Informed Initialization for QAOA and Graph-Based Clinical Modeling">
-  <link rel="stylesheet" href="style.css">
+  <meta name="twitter:title" content="Supporting Materials | Hybrid Quantum Graph AI">
+  <meta name="twitter:description" content="Notebook exports, figures, and manuscript artifacts presented in the same institutional style as the root landing page.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #ffffff;
+      --ink: #1a1a1a;
+      --heading: #0b1f3a;
+      --link: #2f5daa;
+      --accent: #2ec4b6;
+      --line: #d8dee7;
+      --panel: #f7f9fc;
+      --muted: #4c5868;
+      --shadow: 0 18px 40px rgba(11, 31, 58, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Source Sans 3", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(47, 93, 170, 0.05) 0, rgba(47, 93, 170, 0.02) 180px, transparent 180px),
+        var(--paper);
+      line-height: 1.62;
+    }
+
+    a { color: var(--link); }
+    a:hover { text-decoration-thickness: 2px; }
+
+    .top-rule {
+      height: 8px;
+      background: linear-gradient(90deg, var(--heading) 0%, var(--link) 68%, var(--accent) 100%);
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px 56px;
+    }
+
+    .masthead {
+      padding: 26px 0 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .kicker,
+    .eyebrow {
+      font-size: 0.76rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--heading);
+      font-weight: 700;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 0.94rem;
+      text-align: right;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.9fr);
+      gap: 28px;
+      padding: 30px 0 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      font-family: "Source Serif 4", serif;
+      color: var(--heading);
+      line-height: 1.18;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      margin: 10px 0 16px;
+    }
+
+    h2 {
+      font-size: clamp(1.4rem, 2.1vw, 1.95rem);
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      font-size: 1.18rem;
+      margin-bottom: 10px;
+    }
+
+    p { margin: 0; }
+
+    .lead {
+      font-size: 1.06rem;
+      color: #223046;
+      max-width: 72ch;
+    }
+
+    .actions {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 4px;
+      border: 1px solid var(--link);
+      color: var(--link);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .button.primary {
+      background: var(--heading);
+      border-color: var(--heading);
+      color: #ffffff;
+    }
+
+    .hero-note,
+    .panel,
+    .card,
+    .figure-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-note {
+      padding: 18px 20px;
+      border-top: 4px solid var(--accent);
+    }
+
+    .hero-note ul {
+      margin: 14px 0 0;
+      padding-left: 18px;
+      color: #223046;
+    }
+
+    .hero-note li + li { margin-top: 8px; }
+
+    .section {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .grid-2,
+    .grid-3,
+    .figure-grid,
+    .link-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .figure-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .link-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .panel,
+    .card,
+    .link-card {
+      padding: 22px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 0.97rem;
+    }
+
+    th,
+    td {
+      padding: 11px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--heading);
+      background: rgba(11, 31, 58, 0.04);
+    }
+
+    .gain { color: #0f5f57; font-weight: 700; }
+
+    .callout {
+      margin-top: 16px;
+      padding: 16px 18px;
+      border-left: 4px solid var(--accent);
+      background: #fbfdfd;
+      color: #223046;
+    }
+
+    .figure-card {
+      overflow: hidden;
+    }
+
+    .figure-card img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: contain;
+      background: #f4f7fb;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .figure-card div {
+      padding: 16px 18px 18px;
+      color: var(--muted);
+    }
+
+    .figure-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-family: "Source Serif 4", serif;
+      font-size: 1.05rem;
+      color: var(--heading);
+    }
+
+    .link-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .link-card p {
+      margin-top: 8px;
+      color: var(--muted);
+    }
+
+    .footer {
+      padding-top: 24px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .grid-2,
+      .grid-3,
+      .figure-grid,
+      .link-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .meta {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .shell { padding: 0 16px 44px; }
+      .masthead,
+      .hero,
+      .section { padding-top: 20px; }
+    }
+  </style>
 </head>
 <body>
-  <!-- Redirect users to the full site at the repository root -->
-  <script>
-    // If served standalone (not via root index.html), redirect to parent
-    if (window.location.pathname.endsWith('/website/') || window.location.pathname.endsWith('/website/index.html')) {
-      window.location.replace('../index.html');
-    }
-  </script>
+  <div class="top-rule"></div>
+  <div class="shell">
+    <header class="masthead" aria-label="Supporting materials header">
+      <div>
+        <div class="kicker">Supporting Materials</div>
+        <div style="margin-top: 6px; color: var(--muted);">Hybrid Quantum Graph AI QAOA GNN Biomedical Optimization</div>
+      </div>
+      <div class="meta">
+        Notebook exports and manuscript artifacts<br>
+        Report-style repository companion
+      </div>
+    </header>
 
-  <h1>Hybrid Quantum–Graph Learning for Structured Biomedical Optimization: Website Assets</h1>
-  <p>This directory hosts the static website assets and notebook exports for the manuscript-aligned project view. For the canonical project story, figure gallery, and notebook launcher, use the <a href="../index.html">repository root landing page</a>. For the paper artifact, use <a href="../research_paper/research_paper.pdf">research_paper/research_paper.pdf</a>.</p>
+    <section class="hero" aria-labelledby="materials-title">
+      <div>
+        <div class="kicker">Materials Overview</div>
+        <h1 id="materials-title">Executed notebooks, figures, and manuscript assets aligned with the repository report.</h1>
+        <p class="lead">
+          This page serves as the supporting-materials portal for the repository. It mirrors the institutional visual language of the root landing page and focuses on the same validated findings: improved graph-conditioned QAOA initialization and stronger graph-based CTG screening behavior at the selected operating point.
+        </p>
+        <div class="actions">
+          <a class="button primary" href="../index.html">Open Root Report</a>
+          <a class="button" href="../research_paper/research_paper.pdf">Open Research Paper</a>
+          <a class="button" href="#notebooks">Open Notebook Exports</a>
+        </div>
+      </div>
 
-  <div id="controls">
-    <label for="n">Nodes:</label>
-    <input id="n" type="number" value="6" min="2" max="10">
-    <button id="random">Random Graph</button>
-    <button id="predict">Predict Angles</button>
+      <aside class="hero-note" aria-label="Portal contents">
+        <div class="eyebrow">This Portal Includes</div>
+        <ul>
+          <li>Executed HTML notebook exports for the integrated, QAOA, and biomedical analyses</li>
+          <li>Figure previews tied to the strongest validated positive findings</li>
+          <li>Direct links to the repository report and manuscript PDF</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="section" aria-labelledby="summary-title">
+      <div class="kicker">Validated Summary</div>
+      <h2 id="summary-title">Positive findings carried into the supporting materials</h2>
+      <div class="grid-3">
+        <article class="card">
+          <h3>QAOA improvement</h3>
+          <p class="muted">Graph conditioning improves the learned QAOA baseline from 0.8208 to 0.8682 mean approximation ratio on held-out transcriptomic graphs.</p>
+        </article>
+        <article class="card">
+          <h3>QAOA runtime reduction</h3>
+          <p class="muted">Median runtime falls from 675.9 ms to 0.256 ms, allowing optimization-quality decisions at inference speed.</p>
+        </article>
+        <article class="card">
+          <h3>CTG operating-point gain</h3>
+          <p class="muted">ResidualClinicalGCN improves the prior graph baseline and reduces false alarms across several existing screening baselines.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="notebooks-title" id="notebooks">
+      <div class="kicker">Notebook Exports</div>
+      <h2 id="notebooks-title">Executed analyses organized as report appendices</h2>
+      <div class="grid-3">
+        <article class="panel">
+          <div class="eyebrow">Primary narrative</div>
+          <h3>Integrated notebook</h3>
+          <p class="muted">Combined graph-conditioned research story across transcriptomic QAOA optimization and biomedical screening.</p>
+          <p style="margin-top: 14px;"><a href="notebooks_html/quantum_ai_bio_combined.html">Open combined executed analysis</a></p>
+        </article>
+        <article class="panel">
+          <div class="eyebrow">Technical appendix</div>
+          <h3>QAOA notebook</h3>
+          <p class="muted">Transcriptomic graph construction, depth-2 benchmarking, learned initialization, runtime evidence, and related diagnostics.</p>
+          <p style="margin-top: 14px;"><a href="notebooks_html/qaoa_demo.html">Open transcriptomic optimization notebook</a></p>
+        </article>
+        <article class="panel">
+          <div class="eyebrow">Technical appendix</div>
+          <h3>Biomedical notebook</h3>
+          <p class="muted">CTG similarity-graph modeling, held-out evaluation, operating-point analysis, and robustness reporting.</p>
+          <p style="margin-top: 14px;"><a href="notebooks_html/bio_demo.html">Open biomedical screening notebook</a></p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="evidence-title">
+      <div class="kicker">Evidence Snapshot</div>
+      <h2 id="evidence-title">Supporting-materials view of the validated gains</h2>
+      <div class="grid-2">
+        <article class="panel">
+          <h3>Transcriptomic optimization</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Comparison</th>
+                <th>Existing model</th>
+                <th>This project</th>
+                <th>Gain</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Prior-style learned baseline</td>
+                <td>0.8208</td>
+                <td>0.8682</td>
+                <td class="gain">+0.0474</td>
+              </tr>
+              <tr>
+                <td>Direct classical search runtime</td>
+                <td>675.9 ms</td>
+                <td>0.256 ms</td>
+                <td class="gain">2640x faster</td>
+              </tr>
+              <tr>
+                <td>Objective retention</td>
+                <td>reference</td>
+                <td>99.95%</td>
+                <td class="gain">deployment-grade retention</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout">
+            The appendix material supports a clear workflow conclusion: transcriptomic graph instances can be processed with much lower online optimization cost while preserving useful objective quality.
+          </div>
+        </article>
+
+        <article class="panel">
+          <h3>CTG screening</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Comparison</th>
+                <th>Existing model</th>
+                <th>This project</th>
+                <th>Gain</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>AdaptiveBioGCN</td>
+                <td>96.7% accuracy</td>
+                <td>98.8% accuracy</td>
+                <td class="gain">+2.1 percentage points</td>
+              </tr>
+              <tr>
+                <td>Logistic regression</td>
+                <td>31 TP, 21 FP</td>
+                <td>31 TP, 1 FP</td>
+                <td class="gain">20 fewer false alarms</td>
+              </tr>
+              <tr>
+                <td>Random forest</td>
+                <td>29 TP, 7 FP</td>
+                <td>31 TP, 1 FP</td>
+                <td class="gain">2 more TP, 6 fewer FP</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout">
+            The supporting notebooks make the screening gain operationally legible: fewer unnecessary alerts and stronger recovery of pathologic cases at the selected threshold.
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="figures-title">
+      <div class="kicker">Figure Access</div>
+      <h2 id="figures-title">Figure previews linked to the notebook evidence</h2>
+      <div class="figure-grid">
+        <article class="figure-card">
+          <a href="notebooks_html/qaoa_demo.html"><img src="notebooks_html/figures/qaoa_demo_benchmark_overview.png" alt="Held-out QAOA benchmark overview"></a>
+          <div>
+            <strong>Held-out QAOA benchmark</strong>
+            Improvement over earlier learned initialization and retention of the direct-search objective are visible in the executed optimization appendix.
+          </div>
+        </article>
+        <article class="figure-card">
+          <a href="notebooks_html/qaoa_demo.html"><img src="notebooks_html/figures/qaoa_demo_graph_conditioned_initialization.png" alt="QAOA graph-conditioned initialization"></a>
+          <div>
+            <strong>Optimization runtime reduction</strong>
+            The figure highlights the move from repeated search toward inference-speed parameter prediction.
+          </div>
+        </article>
+        <article class="figure-card">
+          <a href="notebooks_html/bio_demo.html"><img src="notebooks_html/figures/bio_demo_heldout_evaluation.png" alt="Held-out CTG evaluation"></a>
+          <div>
+            <strong>Held-out CTG evaluation</strong>
+            Accuracy, balanced accuracy, and ROC AUC are summarized at the selected operating point for the graph model.
+          </div>
+        </article>
+        <article class="figure-card">
+          <a href="notebooks_html/bio_demo.html"><img src="notebooks_html/figures/bio_demo_operating_point_analysis.png" alt="CTG operating point analysis"></a>
+          <div>
+            <strong>Operating-point behavior</strong>
+            The appendix makes the positive screening behavior explicit with one false positive and strong pathologic-case recovery.
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="links-title">
+      <div class="kicker">Direct Links</div>
+      <h2 id="links-title">Primary navigation for report readers</h2>
+      <div class="link-grid">
+        <article class="link-card">
+          <h3>Root report</h3>
+          <p><a href="../index.html">Institutional landing page</a></p>
+        </article>
+        <article class="link-card">
+          <h3>Paper PDF</h3>
+          <p><a href="../research_paper/research_paper.pdf">Research manuscript</a></p>
+        </article>
+        <article class="link-card">
+          <h3>GitHub</h3>
+          <p><a href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank" rel="noreferrer">Repository source</a></p>
+        </article>
+        <article class="link-card">
+          <h3>Notebook exports</h3>
+          <p><a href="notebooks_html/quantum_ai_bio_combined.html">Start with the combined narrative</a></p>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      This supporting-materials page follows the same gains-only reporting discipline as the root landing page and is intended for direct access to executed repository artifacts.
+    </footer>
   </div>
-  <div id="graph"></div>
-  <div id="result"></div>
-
-  <h2>Notebooks (HTML exports)</h2>
-  <p>The notebook exports below should be read as one canonical narrative notebook plus two supporting technical appendices.</p>
-  <ul>
-    <li><a href="notebooks_html/quantum_ai_bio_combined.html" target="_blank">Canonical Research Story</a> — the main project narrative connecting GNN-informed QAOA and biomedical graph learning inside one manuscript-scale graph-conditioned thesis.</li>
-    <li><a href="notebooks_html/qaoa_demo.html" target="_blank">QAOA Technical Appendix</a> — transcriptomic co-expression graphs, exact depth-2 QAOA benchmarking, learned warm starts, ablations, runtime analysis, and convergence diagnostics.</li>
-    <li><a href="notebooks_html/bio_demo.html" target="_blank">Biomedical Technical Appendix</a> — CTG exam-similarity graph construction, Adaptive BioGCN benchmarking, ResidualClinicalGCN evaluation, robustness analysis, and comparison against stronger tabular baselines.</li>
-  </ul>
-
-  <h2>Navigation</h2>
-  <ul>
-    <li><a href="../index.html">Root landing page</a> — the main guided overview of the repository.</li>
-    <li><a href="../research_paper/research_paper.pdf">Research paper PDF</a> — REVTeX submission artifact.</li>
-    <li><a href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank" rel="noreferrer">GitHub repository</a> — source code, data, and exported assets.</li>
-  </ul>
-
-  <script src="demo.js"></script>
 </body>
 </html>
