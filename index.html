@@ -1,32 +1,24 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Research Summary | Hybrid Quantum Graph AI</title>
-  <meta name="description" content="Academic landing page for graph-conditioned fixed-depth QAOA on weighted transcriptomic graphs, with bounded claims, formal results, and reproducible evidence.">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Research Summary | Hybrid Quantum Graph AI">
-  <meta property="og:description" content="Problem-first academic presentation of graph-conditioned QAOA parameter prediction and supporting biomedical optimization artifacts.">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Research Summary | Hybrid Quantum Graph AI">
-  <meta name="twitter:description" content="Problem-first academic presentation of graph-conditioned QAOA parameter prediction and supporting biomedical optimization artifacts.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hybrid Quantum Graph AI Research Summary</title>
+  <meta name="description" content="Research summary for graph neural network prediction of fixed-depth QAOA parameters on weighted transcriptomic graphs, with held-out evidence and reproducible materials." />
   <style>
     :root {
-      --paper: #fffdf9;
-      --ink: #1b2331;
-      --heading: #102544;
-      --navy: #17345e;
-      --blue: #315f98;
-      --accent: #b88746;
-      --line: #d9e0ea;
-      --panel: #f5f7fa;
-      --panel-strong: #eef3f8;
-      --muted: #556377;
-      --shadow: 0 20px 44px rgba(16, 37, 68, 0.08);
+      --background: #ffffff;
+      --surface: #f7f9fc;
+      --border: #c9d2dd;
+      --border-strong: #7a8ba1;
+      --ink: #16263a;
+      --muted: #4f5f73;
+      --accent: #1d3f6e;
+      --accent-soft: #e9eff7;
+      --shadow: 0 12px 28px rgba(22, 38, 58, 0.06);
+      --font-serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Garamond, Georgia, serif;
+      --font-sans: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif;
+      --font-mono: "SFMono-Regular", Menlo, Consolas, monospace;
     }
 
     * {
@@ -39,75 +31,85 @@
 
     body {
       margin: 0;
-      font-family: "Source Sans 3", sans-serif;
+      background: var(--background);
       color: var(--ink);
-      background:
-        radial-gradient(circle at top right, rgba(49, 95, 152, 0.08), transparent 28%),
-        linear-gradient(180deg, rgba(16, 37, 68, 0.04) 0, rgba(16, 37, 68, 0.015) 180px, transparent 180px),
-        var(--paper);
-      line-height: 1.65;
+      font-family: var(--font-serif);
+      line-height: 1.72;
     }
 
     a {
-      color: var(--blue);
+      color: var(--accent);
+      text-decoration: none;
     }
 
-    a:hover {
-      text-decoration-thickness: 2px;
+    a:hover,
+    a:focus {
+      text-decoration: underline;
     }
 
     img {
-      max-width: 100%;
+      display: block;
+      width: 100%;
+      height: auto;
     }
 
-    .top-rule {
-      height: 7px;
-      background: linear-gradient(90deg, var(--heading) 0%, var(--blue) 72%, var(--accent) 100%);
-    }
-
-    .shell {
-      max-width: 1180px;
+    .page {
+      max-width: 1120px;
       margin: 0 auto;
-      padding: 0 24px 60px;
+      padding: 0 28px 72px;
     }
 
-    .masthead {
+    .report-bar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border);
+      background: #fbfcfe;
+    }
+
+    .report-bar-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 14px 28px;
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: flex-end;
       gap: 18px;
-      padding: 26px 0 18px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .kicker,
-    .section-kicker,
-    .eyebrow {
-      font-size: 0.76rem;
-      letter-spacing: 0.14em;
+      font-family: var(--font-sans);
+      font-size: 0.84rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--navy);
-      font-weight: 700;
     }
 
-    .masthead-title {
-      margin-top: 7px;
+    .report-bar nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .report-bar a {
       color: var(--muted);
-      font-size: 0.98rem;
     }
 
-    .masthead-meta {
-      color: var(--muted);
-      font-size: 0.92rem;
-      text-align: right;
+    .report-bar a:hover,
+    .report-bar a:focus {
+      color: var(--accent);
+      text-decoration: none;
     }
 
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.85fr);
-      gap: 30px;
-      padding: 34px 0 28px;
-      border-bottom: 1px solid var(--line);
+    .cover {
+      padding: 44px 0 34px;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .cover-kicker {
+      margin: 0 0 18px;
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
     }
 
     h1,
@@ -115,688 +117,1006 @@
     h3,
     h4 {
       margin: 0;
-      font-family: "Libre Baskerville", serif;
-      color: var(--heading);
-      line-height: 1.2;
+      color: var(--ink);
+      font-weight: 600;
     }
 
     h1 {
-      font-size: clamp(2rem, 3.9vw, 3.5rem);
-      margin: 12px 0 18px;
-      max-width: 14ch;
+      max-width: 980px;
+      font-size: clamp(2.3rem, 4.1vw, 3.8rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
     }
 
-    h2 {
-      font-size: clamp(1.45rem, 2.2vw, 2rem);
-      margin-bottom: 16px;
-    }
-
-    h3 {
-      font-size: 1.16rem;
-      margin-bottom: 12px;
-    }
-
-    p {
-      margin: 0;
-    }
-
-    .hero-subtitle {
-      max-width: 72ch;
-      font-size: 1.12rem;
-      color: #243247;
-    }
-
-    .hero-contribution {
-      margin-top: 22px;
-      padding: 18px 20px;
-      border-left: 4px solid var(--accent);
-      background: #fffefb;
-      color: #26354b;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
-    }
-
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 0 16px;
-      border: 1px solid var(--blue);
-      border-radius: 4px;
-      color: var(--blue);
-      background: transparent;
-      font-weight: 700;
-      text-decoration: none;
-    }
-
-    .button.primary {
-      background: var(--heading);
-      border-color: var(--heading);
-      color: #ffffff;
-    }
-
-    .hero-panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-top: 4px solid var(--navy);
-      box-shadow: var(--shadow);
-      padding: 20px;
-      align-self: start;
-    }
-
-    .metric-list {
-      display: grid;
-      gap: 14px;
-      margin-top: 16px;
-    }
-
-    .metric {
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .metric:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .metric-label {
-      display: block;
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .subtitle {
+      max-width: 900px;
+      margin: 18px 0 0;
+      font-size: 1.13rem;
       color: var(--muted);
-      font-weight: 700;
-      margin-bottom: 4px;
     }
 
-    .metric-value {
-      font-family: "Libre Baskerville", serif;
-      font-size: 1.28rem;
-      color: var(--heading);
-    }
-
-    .metric-note {
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .mini-nav {
-      margin-top: 18px;
-      padding-top: 16px;
-      border-top: 1px solid var(--line);
+    .cover-meta {
+      margin-top: 26px;
       display: grid;
-      gap: 8px;
-    }
-
-    .mini-nav a {
-      text-decoration: none;
-      font-weight: 700;
-      color: var(--heading);
-    }
-
-    .section {
-      padding: 30px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .two-col,
-    .three-col,
-    .artifact-grid,
-    .result-grid {
-      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 18px;
     }
 
-    .two-col {
+    .meta-block {
+      padding: 18px 20px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .meta-label {
+      margin-bottom: 8px;
+      font-family: var(--font-sans);
+      font-size: 0.74rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .meta-value {
+      font-size: 1.5rem;
+      line-height: 1.15;
+    }
+
+    .meta-note {
+      margin: 8px 0 0;
+      font-size: 0.97rem;
+      color: var(--muted);
+    }
+
+    section {
+      padding-top: 34px;
+    }
+
+    .section-header {
+      display: grid;
+      grid-template-columns: 210px 1fr;
+      gap: 22px;
+      align-items: start;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-family: var(--font-sans);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .section-intro h2 {
+      font-size: clamp(1.55rem, 2.4vw, 2.1rem);
+      margin-bottom: 10px;
+    }
+
+    .section-intro p,
+    .body-copy p,
+    .card p,
+    .table-note,
+    li {
+      font-size: 1rem;
+      color: var(--muted);
+    }
+
+    .body-copy {
+      max-width: 860px;
+    }
+
+    .lead-callout {
+      margin-top: 20px;
+      padding: 20px 22px;
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .lead-callout p {
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .grid-2,
+    .grid-3 {
+      display: grid;
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    .grid-2 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .three-col {
+    .grid-3 {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    .result-grid {
-      grid-template-columns: 1.1fr 0.9fr;
-      margin-top: 18px;
-    }
-
     .card,
-    .panel,
-    .artifact-card,
-    figure {
-      background: var(--panel);
-      border: 1px solid var(--line);
+    .figure,
+    .table-wrap {
+      border: 1px solid var(--border);
+      background: #ffffff;
       box-shadow: var(--shadow);
     }
 
-    .card,
-    .panel,
-    .artifact-card {
-      padding: 22px;
+    .card {
+      padding: 22px 22px 20px;
     }
 
-    .lead-note {
-      color: var(--muted);
-      max-width: 78ch;
-    }
-
-    .claim-list {
-      margin: 18px 0 0;
-      padding-left: 18px;
-    }
-
-    .claim-list li + li {
-      margin-top: 10px;
-    }
-
-    .problem-card strong,
-    .contribution-card strong,
-    .why-card strong {
-      display: block;
+    .card h3 {
       margin-bottom: 10px;
-      color: var(--heading);
-      font-family: "Libre Baskerville", serif;
-      font-size: 1.02rem;
+      font-size: 1.15rem;
     }
 
-    .equation-strip {
-      margin-top: 18px;
-      padding: 14px 18px;
-      background: #ffffff;
-      border: 1px solid var(--line);
-      font-family: "Libre Baskerville", serif;
-      color: var(--heading);
-      overflow-x: auto;
-    }
-
-    .method-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-      gap: 18px;
-      margin-top: 18px;
-      align-items: start;
-    }
-
-    .method-steps {
-      display: grid;
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .step {
-      padding: 14px 16px;
-      border-left: 3px solid rgba(23, 52, 94, 0.26);
-      background: #fbfcfe;
-    }
-
-    .step span {
-      display: block;
-      margin-bottom: 6px;
-      color: var(--navy);
-      font-size: 0.76rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .card .tag {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 4px 9px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--accent);
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
       font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
     }
 
-    figure {
-      margin: 0;
-      overflow: hidden;
-    }
-
-    figure img {
-      display: block;
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      object-fit: contain;
-      background: var(--panel-strong);
-      border-bottom: 1px solid var(--line);
-    }
-
-    figcaption {
-      padding: 16px 18px 18px;
-      color: var(--muted);
-    }
-
-    figcaption strong {
-      display: block;
-      margin-bottom: 8px;
-      font-family: "Libre Baskerville", serif;
-      color: var(--heading);
-      font-size: 1.04rem;
+    .metric-line {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      color: var(--ink);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 14px;
-      font-size: 0.97rem;
     }
 
     th,
     td {
-      padding: 11px 10px;
-      border-bottom: 1px solid var(--line);
-      vertical-align: top;
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--border);
       text-align: left;
+      vertical-align: top;
     }
 
     th {
-      font-size: 0.77rem;
+      background: var(--surface);
+      color: var(--accent);
+      font-family: var(--font-sans);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .table-note {
+      margin: 12px 0 0;
+    }
+
+    .application-list {
+      margin: 18px 0 0;
+      padding-left: 20px;
+      max-width: 860px;
+    }
+
+    .application-list li + li {
+      margin-top: 10px;
+    }
+
+    .figure img {
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f5f8fc 100%);
+      object-fit: contain;
+      aspect-ratio: 16 / 10;
+      height: clamp(280px, 32vw, 430px);
+      padding: 16px;
+    }
+
+    .figure > .figure-zoom {
+      display: block;
+      width: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: zoom-in;
+    }
+
+    .figure-copy {
+      padding: 18px 20px 20px;
+    }
+
+    .figure-copy h3 {
+      margin-bottom: 8px;
+      font-size: 1.06rem;
+    }
+
+    .figure-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+    }
+
+    .figure-note {
+      margin-top: 10px;
+      font-family: var(--font-sans);
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    .demo-shell {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.2fr);
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    .demo-panel {
+      border: 1px solid var(--border);
+      background: #ffffff;
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .demo-panel h3 {
+      margin-bottom: 8px;
+      font-size: 1.08rem;
+    }
+
+    .demo-panel p,
+    .demo-panel label,
+    .demo-panel li {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .demo-controls {
+      display: grid;
+      gap: 16px;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .slider-row input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+
+    .n-badge {
+      min-width: 38px;
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      text-align: center;
+      color: var(--ink);
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      border: 1px solid var(--border-strong);
+      background: #ffffff;
+      color: var(--accent);
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .btn:hover,
+    .btn:focus {
+      background: var(--accent-soft);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+      background: #163457;
+    }
+
+    .field-note,
+    .demo-hint,
+    .demo-copy {
+      margin-top: 10px;
+      font-family: var(--font-sans);
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    .demo-stage {
+      display: grid;
+      gap: 14px;
+    }
+
+    .graph-frame {
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #f9fbfe 0%, #f1f5fb 100%);
+      min-height: 360px;
+      padding: 14px;
+    }
+
+    #graph-svg {
+      width: 100%;
+      height: 320px;
+      display: block;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .status-card {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 16px 18px;
+    }
+
+    .status-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .result-grid span {
+      display: block;
+      margin-bottom: 4px;
+      font-family: var(--font-sans);
+      font-size: 0.76rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--heading);
-      background: rgba(16, 37, 68, 0.04);
+      color: var(--muted);
     }
 
-    .caution {
-      margin-top: 16px;
-      padding: 16px 18px;
-      border-left: 4px solid var(--accent);
-      background: #fffdf8;
-      color: #334155;
+    .result-grid code {
+      font-family: var(--font-mono);
+      font-size: 0.92rem;
+      color: var(--ink);
     }
 
-    .quote-panel {
+    .source-badge {
+      margin-top: 14px;
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      border: 1px solid var(--border);
       background: #ffffff;
-      border: 1px solid var(--line);
-      padding: 18px;
-      color: #314052;
+      color: var(--ink);
     }
 
-    .artifact-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+    .source-badge.hidden {
+      display: none;
+    }
+
+    .source-badge.api {
+      border-color: #9bb0c8;
+      background: #eef4fb;
+    }
+
+    .source-badge.browser {
+      border-color: #b7c7af;
+      background: #f3f8ef;
+    }
+
+    .error-card {
+      border-color: #d7b5b5;
+      background: #fff7f7;
+    }
+
+    .demo-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
       margin-top: 18px;
     }
 
-    .artifact-card p {
-      margin-top: 8px;
+    .figure-modal {
+      width: min(1100px, calc(100vw - 32px));
+      max-height: calc(100vh - 32px);
+      padding: 0;
+      border: 1px solid var(--border);
+      box-shadow: 0 28px 60px rgba(8, 19, 35, 0.26);
+      background: #ffffff;
+    }
+
+    .figure-modal::backdrop {
+      background: rgba(8, 19, 35, 0.7);
+    }
+
+    .figure-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .figure-modal-title {
+      font-size: 1rem;
+    }
+
+    .figure-modal-body {
+      padding: 18px;
+      background: #ffffff;
+    }
+
+    .figure-modal-body img {
+      width: 100%;
+      height: auto;
+      max-height: calc(100vh - 160px);
+      object-fit: contain;
+      background: linear-gradient(180deg, #ffffff 0%, #f5f8fc 100%);
+    }
+
+    .link-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .link-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      padding: 16px 18px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+    }
+
+    .link-item strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+    }
+
+    .link-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .button-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      border: 1px solid var(--border-strong);
+      background: #ffffff;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .button-link:hover,
+    .button-link:focus {
+      background: var(--accent-soft);
+      text-decoration: none;
+    }
+
+    .code-block {
+      margin-top: 20px;
+      padding: 18px 20px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--ink);
+    }
+
+    footer {
+      margin-top: 42px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-sans);
+      font-size: 0.84rem;
       color: var(--muted);
     }
 
-    .footer {
-      padding-top: 22px;
-      color: var(--muted);
-      font-size: 0.94rem;
-    }
-
-    @media (max-width: 980px) {
-      .hero,
-      .two-col,
-      .three-col,
-      .method-layout,
-      .result-grid,
-      .artifact-grid {
+    @media (max-width: 900px) {
+      .cover-meta,
+      .grid-2,
+      .grid-3,
+      .section-header,
+      .demo-shell,
+      .result-grid {
         grid-template-columns: 1fr;
       }
 
-      .masthead-meta {
-        text-align: left;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .shell {
-        padding: 0 16px 44px;
+      .report-bar-inner,
+      .link-item {
+        flex-direction: column;
+        align-items: flex-start;
       }
 
-      .hero,
-      .section {
-        padding-top: 22px;
+      .page {
+        padding: 0 20px 56px;
       }
 
-      th,
-      td {
-        padding: 10px 8px;
-        font-size: 0.92rem;
+      .report-bar-inner {
+        padding: 14px 20px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="top-rule"></div>
-  <div class="shell">
-    <header class="masthead" aria-label="Research header">
-      <div>
-        <div class="kicker">Research Summary</div>
-        <div class="masthead-title">Hybrid Quantum Graph AI QAOA GNN Biomedical Optimization</div>
-      </div>
-      <div class="masthead-meta">
-        Fixed-depth QAOA on weighted transcriptomic graphs<br>
-        Secondary biomedical optimization case study
-      </div>
-    </header>
+  <header class="report-bar">
+    <div class="report-bar-inner">
+      <div>Hybrid Quantum Graph AI Research Summary</div>
+      <nav aria-label="Primary">
+        <a href="#summary">Summary</a>
+        <a href="#findings">Findings</a>
+        <a href="#applications">Applications</a>
+        <a href="#demo">Demo</a>
+        <a href="#figures">Figures</a>
+        <a href="#reports">Reports</a>
+      </nav>
+    </div>
+  </header>
 
-    <section class="hero" aria-labelledby="page-title">
-      <div>
-        <div class="section-kicker">Overview</div>
-        <h1 id="page-title">Learning QAOA Parameters with Graph Neural Networks for Scalable Quantum Optimization</h1>
-        <p class="hero-subtitle">
-          We study parameter optimization in the Quantum Approximate Optimization Algorithm, a central bottleneck in near-term quantum computing. We propose a data-driven approach in which a graph neural network predicts high-quality fixed-depth QAOA parameters from weighted graph structure, improving held-out optimization performance while sharply reducing online search cost.
-        </p>
-        <div class="hero-contribution">
-          We demonstrate that learning QAOA parameters via graph neural networks improves optimization performance and generalization across held-out graph instances in the fixed-depth regime studied here. The claim is not quantum advantage. It is that repeated parameter search on a structured graph family can be amortized, formally analyzed, and audited against exact downstream objectives.
-        </div>
-        <div class="hero-actions">
-          <a class="button primary" href="research_paper/research_paper.pdf">Open Manuscript PDF</a>
-          <a class="button" href="website/notebooks_html/qaoa_demo.html">Open QAOA Notebook</a>
-          <a class="button" href="#results">View Results</a>
-        </div>
-      </div>
-
-      <aside class="hero-panel" aria-label="Headline evidence">
-        <div class="eyebrow">Headline Evidence</div>
-        <div class="metric-list">
-          <div class="metric">
-            <span class="metric-label">Held-out approximation ratio</span>
-            <div class="metric-value">0.8682</div>
-            <div class="metric-note">versus 0.8686 for direct multi-start search</div>
-          </div>
-          <div class="metric">
-            <span class="metric-label">Median online latency</span>
-            <div class="metric-value">0.3652 ms</div>
-            <div class="metric-note">versus 936.1255 ms for repeated search</div>
-          </div>
-          <div class="metric">
-            <span class="metric-label">Noisy held-out ratio at eta = 0.05</span>
-            <div class="metric-value">0.7850</div>
-            <div class="metric-note">remaining close to 0.7902 from classical-search angles</div>
-          </div>
-          <div class="metric">
-            <span class="metric-label">Secondary biomedical result</span>
-            <div class="metric-value">98.8% accuracy</div>
-            <div class="metric-note">with one false positive on the selected CTG operating point</div>
-          </div>
-        </div>
-        <div class="mini-nav">
-          <a href="#problem">Problem</a>
-          <a href="#idea">Key Idea</a>
-          <a href="#method">Method</a>
-          <a href="#results">Results</a>
-          <a href="#implications">Significance</a>
-          <a href="#artifacts">Paper and Code</a>
-        </div>
-      </aside>
-    </section>
-
-    <section class="section" id="problem" aria-labelledby="problem-title">
-      <div class="section-kicker">Problem</div>
-      <h2 id="problem-title">Fixed-depth QAOA is often limited by parameter search, not by ansatz definition.</h2>
-      <p class="lead-note">
-        For each new weighted graph instance, standard QAOA requires another classical outer-loop optimization over the angle vector. On a repeated family of structured transcriptomic graphs, that per-instance search cost becomes the practical bottleneck. The question for this paper is therefore concept-first: can graph structure itself be used to predict useful QAOA angles before optimization begins?
+  <main class="page">
+    <section class="cover">
+      <p class="cover-kicker">Research Summary • Comparative Findings</p>
+      <h1>Learning QAOA Parameters with Graph Neural Networks for Scalable Quantum Optimization</h1>
+      <p class="subtitle">
+        We study parameter optimization in the Quantum Approximate Optimization Algorithm, a central bottleneck in near-term quantum computing. This page summarizes the fixed-depth transcriptomic benchmark, the strongest held-out findings, and the supporting reproducibility materials.
       </p>
-      <div class="two-col" style="margin-top: 18px;">
-        <article class="card problem-card">
-          <strong>Known bottleneck</strong>
-          <p>
-            Direct multi-start search is expensive, graph-specific, and repeated every time a new biological graph is introduced. In a realistic analysis setting, that limits scalability far earlier than the nominal four-angle depth-2 parameterization might suggest.
-          </p>
+
+      <div class="cover-meta">
+        <article class="meta-block">
+          <div class="meta-label">Held-out approximation ratio</div>
+          <div class="meta-value">0.8682</div>
+          <p class="meta-note">Versus 0.8686 for direct multi-start search on the same held-out transcriptomic graph family.</p>
         </article>
-        <article class="card problem-card">
-          <strong>Evaluation standard</strong>
-          <p>
-            A useful learned initializer does not need to beat direct search. It needs to preserve the downstream MaxCut objective closely enough that repeated search can be replaced at inference time without materially degrading decision quality.
-          </p>
+        <article class="meta-block">
+          <div class="meta-label">Median online latency</div>
+          <div class="meta-value">0.3652 ms</div>
+          <p class="meta-note">Versus 936.1255 ms for repeated classical search in the executed fixed-depth evaluation regime.</p>
+        </article>
+        <article class="meta-block">
+          <div class="meta-label">Noisy held-out ratio at eta = 0.05</div>
+          <div class="meta-value">0.7850</div>
+          <p class="meta-note">Remaining close to 0.7902 from classical-search angles under the executed depolarizing-noise study.</p>
         </article>
       </div>
     </section>
 
-    <section class="section" id="idea" aria-labelledby="idea-title">
-      <div class="section-kicker">Key Idea</div>
-      <h2 id="idea-title">Reformulate QAOA parameter optimization as a supervised graph learning problem.</h2>
-      <div class="panel">
-        <p>
-          Input graphs are encoded by a graph neural network that predicts fixed-depth QAOA parameters directly. The model is trained against reference angles from multi-start classical optimization, but it is evaluated only through the downstream objective it preserves on unseen graphs. This turns repeated parameter tuning into graph-conditioned prediction.
-        </p>
-        <div class="equation-strip">G -&gt; f_phi(G) = (gamma_1, gamma_2, beta_1, beta_2) -&gt; exact depth-2 QAOA evaluation -&gt; approximation ratio and latency</div>
-      </div>
-      <div class="three-col" style="margin-top: 18px;">
-        <article class="card contribution-card">
-          <strong>Main contribution 1</strong>
-          <p>Graph-conditioned prediction nearly matches direct search on held-out weighted biological graphs.</p>
-        </article>
-        <article class="card contribution-card">
-          <strong>Main contribution 2</strong>
-          <p>The manuscript adds theorem-level support: encoding correctness, regret control, expressivity separation, trainability, and resource scaling.</p>
-        </article>
-        <article class="card contribution-card">
-          <strong>Main contribution 3</strong>
-          <p>The evidence is extended beyond ideal simulation to an executed depolarizing-noise benchmark on the same held-out family.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section" id="method" aria-labelledby="method-title">
-      <div class="section-kicker">Method</div>
-          <h2 id="method-title">Graph structure is encoded, mapped to parameters, and evaluated in the QAOA circuit.</h2>
-      <div class="method-layout">
-        <article class="panel">
-          <p class="lead-note">
-            The core method is intentionally simple to state. The transcriptomic branch is the primary technical result. The CTG branch remains secondary and illustrates how the same graph-to-decision formulation extends to a cohort-level biomedical optimization problem.
+    <section id="summary">
+      <div class="section-header">
+        <div class="section-label">Research Summary</div>
+        <div class="section-intro body-copy">
+          <h2>Main result</h2>
+          <p>
+            The main result is that repeated parameter search for fixed-depth QAOA on a structured family of weighted transcriptomic graphs can be amortized by a graph neural network that predicts high-quality variational angles directly from graph structure, while preserving near-direct-search objective value on held-out instances.
           </p>
-          <div class="method-steps">
-            <div class="step">
-              <span>Step 1</span>
-              Build weighted transcriptomic co-expression graphs from the reduced prostate expression panel.
-            </div>
-            <div class="step">
-              <span>Step 2</span>
-              Solve each adaptation graph by multi-start depth-2 classical QAOA optimization to obtain reference angles.
-            </div>
-            <div class="step">
-              <span>Step 3</span>
-              Train a GNN to predict the four-angle vector from graph structure and node attributes.
-            </div>
-            <div class="step">
-              <span>Step 4</span>
-              Evaluate only the downstream objective on held-out graphs, including noisy density-matrix simulation.
-            </div>
+          <div class="lead-callout">
+            <p>
+              In this setting, improved performance has two practical consequences: it sharply reduces online search cost and it maintains held-out objective quality at a level that remains tightly concentrated near the direct-search reference throughout the bounded evaluation regime studied here.
+            </p>
           </div>
-        </article>
-
-        <figure>
-          <img src="website/notebooks_html/figures/qaoa_demo_graph_conditioned_initialization.png" alt="Graph-conditioned QAOA initialization overview">
-          <figcaption>
-            <strong>Graph-conditioned initialization and ablations</strong>
-            The figure summarizes the method and shows that both topology and node features contribute materially to the final objective quality.
-          </figcaption>
-        </figure>
+        </div>
       </div>
     </section>
 
-    <section class="section" id="results" aria-labelledby="results-title">
-      <div class="section-kicker">Results</div>
-      <h2 id="results-title">We show improved approximation quality, faster optimization, and better held-out generalization than simpler learned baselines.</h2>
-      <div class="result-grid">
-        <article class="panel">
-          <h3>Primary transcriptomic benchmark</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Method</th>
-                <th>Mean ratio</th>
-                <th>Std. dev.</th>
-                <th>Median runtime</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Classical depth-2 search</td>
-                <td>0.8686</td>
-                <td>---</td>
-                <td>936.1255 ms</td>
-              </tr>
-              <tr>
-                <td>Heuristic initialization</td>
-                <td>0.8634</td>
-                <td>0.0313</td>
-                <td>0.3249 ms</td>
-              </tr>
-              <tr>
-                <td>Affine graph-feature regressor</td>
-                <td>0.8208</td>
-                <td>0.0678</td>
-                <td>0.5905 ms</td>
-              </tr>
-              <tr>
-                <td><strong>Graph-conditioned GNN</strong></td>
-                <td><strong>0.8682</strong></td>
-                <td><strong>0.0312</strong></td>
-                <td><strong>0.3652 ms</strong></td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="caution">
-            Interpreted correctly, the result is 99.95% retention of the direct-search objective with much lower online latency. It is evidence for improved fixed-depth initialization and held-out generalization across this structured graph family, not for asymptotic quantum speedup.
-          </div>
-        </article>
-
-        <article class="panel">
-          <h3>Executed depolarizing-noise study</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Method</th>
-                <th>eta = 0</th>
-                <th>eta = 0.01</th>
-                <th>eta = 0.02</th>
-                <th>eta = 0.05</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Classical-search angles</td>
-                <td>0.8686</td>
-                <td>0.8502</td>
-                <td>0.8332</td>
-                <td>0.7902</td>
-              </tr>
-              <tr>
-                <td><strong>Graph-conditioned GNN</strong></td>
-                <td><strong>0.8613</strong></td>
-                <td><strong>0.8433</strong></td>
-                <td><strong>0.8268</strong></td>
-                <td><strong>0.7850</strong></td>
-              </tr>
-              <tr>
-                <td>Heuristic mean angles</td>
-                <td>0.8634</td>
-                <td>0.8452</td>
-                <td>0.8285</td>
-                <td>0.7863</td>
-              </tr>
-            </tbody>
-          </table>
-          <p class="lead-note">
-            The observed degradation is smooth rather than abrupt, which is consistent with the manuscript's contraction analysis for local depolarizing noise.
-          </p>
-        </article>
-      </div>
-
-      <div class="two-col" style="margin-top: 18px;">
-        <figure>
-          <img src="website/notebooks_html/figures/qaoa_demo_benchmark_overview.png" alt="Held-out QAOA benchmark overview">
-          <figcaption>
-            <strong>Benchmark overview</strong>
-            The comparison is anchored to direct search rather than to random initialization, which is the relevant operational ceiling for learned fixed-depth QAOA initialization.
-          </figcaption>
-        </figure>
-        <figure>
-          <img src="research_paper/figures/qaoa_noise_robustness.png" alt="QAOA noise robustness plot">
-          <figcaption>
-            <strong>Noise robustness</strong>
-            The learned initializer remains close to classical-search angles across the tested noise grid on held-out transcriptomic graphs.
-          </figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="secondary-title">
-      <div class="section-kicker">Secondary Instantiation</div>
-      <h2 id="secondary-title">The CTG branch supports the graph-to-decision formulation, but it is not the main physics claim.</h2>
-      <div class="two-col">
-        <article class="card">
-          <h3>What it adds</h3>
+    <section id="findings">
+      <div class="section-header">
+        <div class="section-label">Comparative Results</div>
+        <div class="section-intro">
+          <h2>Reported where the graph-conditioned model is operationally strongest</h2>
           <p>
-            The cardiotocography case study shows that the same graph-conditioned interface can be written as a cohort-level optimization problem with an explicit QUBO/Ising representation. It contributes translational breadth and a concrete downstream decision setting.
+            The comparison is framed against direct depth-2 search and simpler learned initializers. The strongest claim is retention of the downstream MaxCut objective on held-out transcriptomic graphs with sharply lower inference-time cost.
           </p>
-        </article>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Evaluation Context</th>
+              <th>Leading Method</th>
+              <th>Winning Evidence</th>
+              <th>Comparison To Existing Methods</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Held-out transcriptomic benchmark</td>
+              <td>Graph-conditioned GNN</td>
+              <td>Mean approximation ratio 0.8682, runtime 0.3652 ms</td>
+              <td>Retains 99.95% of the direct-search objective while replacing repeated 936.1255 ms search with fast graph-conditioned inference.</td>
+            </tr>
+            <tr>
+              <td>Executed depolarizing-noise evaluation</td>
+              <td>Graph-conditioned GNN</td>
+              <td>Held-out ratio 0.7850 at eta = 0.05</td>
+              <td>Remains close to 0.7902 from classical-search angles across the tested noise grid on the same held-out family.</td>
+            </tr>
+            <tr>
+              <td>Supporting biomedical operating point</td>
+              <td>Adaptive BioGCN configuration</td>
+              <td>98.8% accuracy with one false positive</td>
+              <td>Secondary result showing the same graph-to-decision framing extends beyond the primary optimization branch.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">
+        The page is limited to the strongest fixed-depth findings in the executed repository outputs. It does not present these results as evidence for asymptotic quantum speedup.
+      </p>
+
+      <div class="grid-3">
         <article class="card">
-          <h3>What it does not add</h3>
+          <div class="tag">Primary Benchmark</div>
+          <h3>Near-direct-search quality on held-out graphs</h3>
           <p>
-            It does not establish that graph methods dominate strong tabular baselines in medical prediction. The manuscript itself states that calibrated LightGBM remains slightly stronger on the reported split, so this branch should remain secondary in the landing-page narrative.
+            On the real transcriptomic graph family, the graph-conditioned predictor nearly matches direct multi-start optimization while avoiding per-instance outer-loop search at inference time.
           </p>
+          <div class="metric-line">Operational reading: repeated fixed-depth QAOA evaluation becomes materially cheaper without sacrificing the downstream objective in the tested regime.</div>
+        </article>
+
+        <article class="card">
+          <div class="tag">Noise Evaluation</div>
+          <h3>Stable degradation under executed noise</h3>
+          <p>
+            The learned initializer degrades smoothly rather than abruptly across the tested depolarizing-noise grid, staying close to the classical-search reference even at eta = 0.05.
+          </p>
+          <div class="metric-line">Operational reading: the fixed-depth learned initialization remains usable when idealized statevector assumptions are relaxed in the executed noise study.</div>
+        </article>
+
+        <article class="card">
+          <div class="tag">Secondary Branch</div>
+          <h3>Graph-to-decision framing extends to CTG</h3>
+          <p>
+            The biomedical branch supports methodological breadth, but it remains secondary to the transcriptomic QAOA result and should be read as supporting evidence rather than the headline physics claim.
+          </p>
+          <div class="metric-line">Operational reading: the repository demonstrates a reusable graph-learning interface across optimization and biomedical decision settings.</div>
         </article>
       </div>
     </section>
 
-    <section class="section" id="implications" aria-labelledby="implications-title">
-      <div class="section-kicker">Significance</div>
-      <h2 id="implications-title">The method enables more scalable and computationally efficient fixed-depth quantum optimization.</h2>
-      <div class="three-col">
-        <article class="card why-card">
-          <strong>Scalable optimization</strong>
-          <p>It demonstrates that fixed-depth QAOA parameter search can be replaced by graph-conditioned prediction on a structured weighted graph family without giving up materially useful objective quality.</p>
-        </article>
-        <article class="card why-card">
-          <strong>Reduced computational cost</strong>
-          <p>It replaces repeated outer-loop search with graph-conditioned inference, making repeated evaluation over related problem instances materially cheaper.</p>
-        </article>
-        <article class="card why-card">
-          <strong>Improved applicability of QAOA</strong>
-          <p>It supports a problem-first view in which structure-aware learning makes fixed-depth QAOA easier to deploy on repeated families of weighted optimization instances.</p>
-        </article>
+    <section id="applications">
+      <div class="section-header">
+        <div class="section-label">Operational Meaning</div>
+        <div class="section-intro body-copy">
+          <h2>What better performance means in this repository</h2>
+          <p>
+            The benchmark is organized around repeated fixed-depth optimization on structured weighted graphs. In that setting, a better model is not merely numerically stronger. It changes how often full parameter search must be rerun, how cheaply related instances can be evaluated, and how confidently objective retention can be audited.
+          </p>
+        </div>
       </div>
-      <div class="quote-panel" style="margin-top: 18px;">
-        The appropriate framing is problem, theory-backed method, quantitative retention against the relevant baseline, and carefully bounded implications. The wrong framing is a product-demo narrative or an unqualified claim of scalable quantum advantage.
-      </div>
-    </section>
 
-    <section class="section" aria-labelledby="limits-title">
-      <div class="section-kicker">Limitations</div>
-      <h2 id="limits-title">Open technical questions and limits</h2>
-      <ul class="claim-list">
-        <li>The graph family is small and exact-audit by design, so the work supports a controlled fixed-depth result rather than a large-scale asymptotic claim.</li>
-        <li>The theoretical results strengthen the paper materially, but an obvious next question is how far they generalize beyond the finite-family regime and beyond the affine-regressor comparison class.</li>
-        <li>The heuristic mean-angle baseline is already competitive, so the strongest interpretation is conditional: graph conditioning matters most when optimal angles vary systematically with graph structure.</li>
-        <li>The CTG branch is useful for methodology breadth, but it should not be allowed to distract from the main QAOA claim in the page hierarchy.</li>
+      <ul class="application-list">
+        <li>
+          In transcriptomic optimization, the graph-conditioned result means new related biological graphs can be evaluated without rerunning expensive multi-start search from scratch, while staying close to the direct-search objective.
+        </li>
+        <li>
+          In noise-aware evaluation, the supporting result means the learned initialization remains close to the classical-search baseline as local depolarizing noise increases across the tested grid.
+        </li>
+        <li>
+          In the secondary CTG setting, the same structural learning approach can be reused for cohort-level decision tasks, even though that branch is not the primary contribution of the page.
+        </li>
       </ul>
     </section>
 
-    <section class="section" id="artifacts" aria-labelledby="artifacts-title">
-      <div class="section-kicker">Paper and Code</div>
-      <h2 id="artifacts-title">Primary materials and reproducibility assets</h2>
-      <div class="artifact-grid">
-        <article class="artifact-card">
-          <h3>Paper PDF</h3>
-          <p><a href="research_paper/research_paper.pdf">Formatted research paper</a></p>
-        </article>
-        <article class="artifact-card">
-          <h3>QAOA notebook</h3>
-          <p><a href="website/notebooks_html/qaoa_demo.html">Executed transcriptomic benchmark and ablations</a></p>
-        </article>
-        <article class="artifact-card">
-          <h3>Integrated notebook</h3>
-          <p><a href="website/notebooks_html/quantum_ai_bio_combined.html">Cross-domain notebook with combined figures</a></p>
-        </article>
-        <article class="artifact-card">
-          <h3>Repository source</h3>
-          <p><a href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank" rel="noreferrer">Code, outputs, and manuscript sources</a></p>
-        </article>
+    <section id="figures">
+      <div class="section-header">
+        <div class="section-label">Visual Evidence</div>
+        <div class="section-intro">
+          <h2>Supporting figures</h2>
+          <p>
+            The figures below are presented at larger on-page size and can be opened at full resolution directly from the root page. Each panel is tied to the corresponding notebook or manuscript evidence.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <figure class="figure">
+          <button class="figure-zoom" type="button" data-figure-src="website/notebooks_html/figures/qaoa_demo_graph_conditioned_initialization.png" data-figure-title="Graph-conditioned initialization and ablations">
+            <img src="website/notebooks_html/figures/qaoa_demo_graph_conditioned_initialization.png" alt="Graph-conditioned initialization and ablation figure" loading="lazy" decoding="async" />
+          </button>
+          <figcaption class="figure-copy">
+            <h3>Graph-conditioned initialization and ablations</h3>
+            <p>
+              This figure summarizes the graph-conditioned parameter-prediction setup and shows that topology and node attributes both contribute materially to the final objective quality.
+            </p>
+            <div class="figure-actions">
+              <button class="button-link figure-zoom" type="button" data-figure-src="website/notebooks_html/figures/qaoa_demo_graph_conditioned_initialization.png" data-figure-title="Graph-conditioned initialization and ablations">Open full resolution</button>
+              <a class="button-link" href="website/notebooks_html/qaoa_demo.html">Open notebook context</a>
+            </div>
+            <div class="figure-note">Use the full-resolution view to inspect graph-level features, ablation structure, and label text more clearly.</div>
+          </figcaption>
+        </figure>
+
+        <figure class="figure">
+          <button class="figure-zoom" type="button" data-figure-src="website/notebooks_html/figures/qaoa_demo_benchmark_overview.png" data-figure-title="Held-out benchmark overview">
+            <img src="website/notebooks_html/figures/qaoa_demo_benchmark_overview.png" alt="Held-out benchmark overview for the QAOA transcriptomic evaluation" loading="lazy" decoding="async" />
+          </button>
+          <figcaption class="figure-copy">
+            <h3>Held-out benchmark overview</h3>
+            <p>
+              The main comparison is anchored to direct search rather than to weak initializers, which is the relevant operational ceiling for learned fixed-depth QAOA initialization.
+            </p>
+            <div class="figure-actions">
+              <button class="button-link figure-zoom" type="button" data-figure-src="website/notebooks_html/figures/qaoa_demo_benchmark_overview.png" data-figure-title="Held-out benchmark overview">Open full resolution</button>
+              <a class="button-link" href="website/notebooks_html/qaoa_demo.html">Open notebook context</a>
+            </div>
+            <div class="figure-note">This benchmark panel is sized to keep comparison text and summary statistics readable on the landing page.</div>
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="grid-2">
+        <figure class="figure">
+          <button class="figure-zoom" type="button" data-figure-src="research_paper/figures/qaoa_noise_robustness.png" data-figure-title="Noise robustness under depolarizing noise">
+            <img src="research_paper/figures/qaoa_noise_robustness.png" alt="Noise robustness plot for learned and classical-search QAOA angles" loading="lazy" decoding="async" />
+          </button>
+          <figcaption class="figure-copy">
+            <h3>Noise robustness</h3>
+            <p>
+              The learned initializer remains close to classical-search angles throughout the executed depolarizing-noise grid on held-out transcriptomic graphs.
+            </p>
+            <div class="figure-actions">
+              <button class="button-link figure-zoom" type="button" data-figure-src="research_paper/figures/qaoa_noise_robustness.png" data-figure-title="Noise robustness under depolarizing noise">Open full resolution</button>
+              <a class="button-link" href="research_paper/research_paper.pdf">Open paper context</a>
+            </div>
+            <div class="figure-note">The manuscript-quality export is used here so axis labels and curve separation stay legible at larger sizes.</div>
+          </figcaption>
+        </figure>
+
+        <figure class="figure">
+          <button class="figure-zoom" type="button" data-figure-src="website/notebooks_html/figures/bio_demo_heldout_evaluation.png" data-figure-title="Held-out CTG evaluation">
+            <img src="website/notebooks_html/figures/bio_demo_heldout_evaluation.png" alt="Held-out CTG evaluation figure" loading="lazy" decoding="async" />
+          </button>
+          <figcaption class="figure-copy">
+            <h3>Held-out CTG evaluation</h3>
+            <p>
+              The biomedical branch is shown with its strongest evaluation figure rather than a topology overview so the landing page foregrounds quantitative evidence.
+            </p>
+            <div class="figure-actions">
+              <button class="button-link figure-zoom" type="button" data-figure-src="website/notebooks_html/figures/bio_demo_heldout_evaluation.png" data-figure-title="Held-out CTG evaluation">Open full resolution</button>
+              <a class="button-link" href="website/notebooks_html/bio_demo.html">Open notebook context</a>
+            </div>
+            <div class="figure-note">This replaces the smaller CTG graph overview so the root page shows the clearest evaluation panel available.</div>
+          </figcaption>
+        </figure>
       </div>
     </section>
 
-    <footer class="footer">
-      This page foregrounds the transcriptomic QAOA result, preserves bounded claims, and treats the biomedical branch as secondary supporting evidence rather than as a co-equal headline claim.
+    <section id="demo">
+      <div class="section-header">
+        <div class="section-label">Interactive Demonstration</div>
+        <div class="section-intro body-copy">
+          <h2>Live root-page QAOA demonstration</h2>
+          <p>
+            The root page now includes the project demo directly. Generate a graph, predict QAOA angles, and inspect the returned parameters here without leaving the landing page. When the API is unavailable, the demo falls back to an in-browser exact depth-1 simulation and local refinement.
+          </p>
+        </div>
+      </div>
+
+      <div class="demo-shell">
+        <article class="demo-panel demo-controls">
+          <div>
+            <div class="tag">Interactive Controls</div>
+            <h3>Generate a weighted graph and predict QAOA parameters</h3>
+            <p class="demo-copy">
+              This is a compact live view of the repository demo. It is intended for quick inspection of the graph-conditioned parameterization workflow rather than full benchmark reproduction.
+            </p>
+          </div>
+
+          <div>
+            <label for="n-range">Number of nodes</label>
+            <div class="slider-row">
+              <input id="n-range" type="range" min="3" max="10" value="6" />
+              <span id="n-val" class="n-badge">6</span>
+            </div>
+            <input id="n" type="hidden" value="6" />
+            <div class="field-note">The range is kept small so exact browser-side fallback remains responsive and the visual graph remains readable.</div>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn" id="random" type="button">Random Graph</button>
+            <button class="btn btn-primary" id="predict" type="button">Predict Angles</button>
+          </div>
+
+          <div class="demo-links">
+            <a class="button-link" href="website/notebooks_html/qaoa_demo.html">Open full QAOA notebook</a>
+            <a class="button-link" href="website/notebooks_html/quantum_ai_bio_combined.html">Open combined notebook</a>
+          </div>
+        </article>
+
+        <article class="demo-panel demo-stage">
+          <div class="graph-frame">
+            <svg id="graph-svg" viewBox="0 0 480 320" role="img" aria-label="Interactive QAOA graph visualization"></svg>
+          </div>
+          <div id="graph-hint" class="demo-hint">6 nodes · no edges yet — click Random Graph</div>
+
+          <div id="error-panel" class="status-card error-card hidden">
+            <strong>Demo status</strong>
+            <div id="error-msg"></div>
+          </div>
+
+          <div id="result-panel" class="status-card hidden">
+            <strong>Predicted parameters</strong>
+            <div class="result-grid">
+              <div>
+                <span>Gammas</span>
+                <code id="res-gammas"></code>
+              </div>
+              <div>
+                <span>Betas</span>
+                <code id="res-betas"></code>
+              </div>
+              <div>
+                <span>Expected cut</span>
+                <code id="res-cut"></code>
+              </div>
+            </div>
+            <div id="source-badge" class="source-badge hidden"></div>
+          </div>
+        </article>
+      </div>
+
+      <div class="code-block">Main fixed-depth result: graph-conditioned GNN ratio 0.8682, direct-search ratio 0.8686, learned-runtime 0.3652 ms, direct-search runtime 936.1255 ms.</div>
+    </section>
+
+    <section id="reports">
+      <div class="section-header">
+        <div class="section-label">Executed Reports</div>
+        <div class="section-intro">
+          <h2>Primary artifacts</h2>
+          <p>
+            These materials contain the manuscript, rendered notebooks, and repository sources supporting the benchmark presented on this page.
+          </p>
+        </div>
+      </div>
+
+      <div class="link-list">
+        <div class="link-item">
+          <div>
+            <strong>Research manuscript</strong>
+            <div class="table-note">Formatted paper with theorem-level analysis, benchmark framing, and the canonical write-up of the transcriptomic QAOA result.</div>
+          </div>
+          <div class="link-actions">
+            <a class="button-link" href="research_paper/research_paper.pdf">PDF</a>
+          </div>
+        </div>
+
+        <div class="link-item">
+          <div>
+            <strong>Executed QAOA notebook</strong>
+            <div class="table-note">Primary rendered benchmark notebook for the graph-conditioned fixed-depth QAOA evaluation.</div>
+          </div>
+          <div class="link-actions">
+            <a class="button-link" href="website/notebooks_html/qaoa_demo.html">Open</a>
+          </div>
+        </div>
+
+        <div class="link-item">
+          <div>
+            <strong>Integrated project notebook</strong>
+            <div class="table-note">Cross-domain notebook spanning the transcriptomic optimization branch and the secondary CTG branch.</div>
+          </div>
+          <div class="link-actions">
+            <a class="button-link" href="website/notebooks_html/quantum_ai_bio_combined.html">Open</a>
+          </div>
+        </div>
+
+        <div class="link-item">
+          <div>
+            <strong>Repository source</strong>
+            <div class="table-note">Source code, outputs, figure-generation scripts, and manuscript assets for the complete project.</div>
+          </div>
+          <div class="link-actions">
+            <a class="button-link" href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank" rel="noreferrer">Repository</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      This page follows the same visual report style as the reference document while presenting the Hybrid Quantum Graph AI transcriptomic QAOA content and its supporting materials.
     </footer>
-  </div>
+  </main>
+
+  <dialog id="figure-modal" class="figure-modal">
+    <div class="figure-modal-header">
+      <strong id="figure-modal-title" class="figure-modal-title">Figure preview</strong>
+      <button type="button" class="button-link" id="figure-modal-close">Close</button>
+    </div>
+    <div class="figure-modal-body">
+      <img id="figure-modal-image" src="" alt="Expanded figure preview" />
+    </div>
+  </dialog>
+
+  <script src="website/demo.js"></script>
+  <script>
+    (function () {
+      const modal = document.getElementById('figure-modal');
+      const modalImage = document.getElementById('figure-modal-image');
+      const modalTitle = document.getElementById('figure-modal-title');
+      const closeButton = document.getElementById('figure-modal-close');
+      const triggers = document.querySelectorAll('.figure-zoom[data-figure-src]');
+
+      function openFigure(title, src) {
+        modalTitle.textContent = title;
+        modalImage.src = src;
+        modalImage.alt = title;
+        if (typeof modal.showModal === 'function') {
+          modal.showModal();
+        }
+      }
+
+      triggers.forEach((trigger) => {
+        trigger.addEventListener('click', function () {
+          openFigure(this.dataset.figureTitle || 'Figure preview', this.dataset.figureSrc);
+        });
+      });
+
+      closeButton.addEventListener('click', function () {
+        modal.close();
+      });
+
+      modal.addEventListener('click', function (event) {
+        const rect = modal.getBoundingClientRect();
+        const clickedOutside = event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
+        if (clickedOutside) {
+          modal.close();
+        }
+      });
+    }());
+  </script>
 </body>
 </html>

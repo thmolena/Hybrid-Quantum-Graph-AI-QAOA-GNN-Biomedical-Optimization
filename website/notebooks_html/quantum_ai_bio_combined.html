@@ -7805,8 +7805,8 @@ a.anchor-link {
 <h1 id="Graph-Neural-Networks-for-the-Quantum-Approximate-Optimization-Algorithm-(QAOA)">Graph Neural Networks for the Quantum Approximate Optimization Algorithm (QAOA)<a class="anchor-link" href="#Graph-Neural-Networks-for-the-Quantum-Approximate-Optimization-Algorithm-(QAOA)">¶</a></h1><p><strong>Integrated Analysis: GNN-Based QAOA Parameter Prediction and Network-Based Biomedical Graph Modeling</strong></p>
 <hr/>
 <h2 id="Research-Overview">Research Overview<a class="anchor-link" href="#Research-Overview">¶</a></h2><p>This notebook presents an integrated view of the <strong>Graph Neural Networks for the Quantum Approximate Optimization Algorithm (QAOA)</strong> research program, placing two empirical applications under a common graph-to-parameterization framework.</p>
-<p>The <strong>primary contribution</strong> is the development of GNN methods to improve the performance, parameter selection, and scalability of QAOA — addressing the central bottleneck of classical parameter optimization in hybrid quantum-classical combinatorial optimization. Structured graph optimization problems are used to train GNN models capable of predicting QAOA parameterizations, approximation ratios, and convergence behavior, incorporating graph topology, Hamiltonian structure, and symmetry properties into the learned pipeline. Performance is evaluated through held-out benchmarking, transferability testing across graph families, and robustness analysis under noise.</p>
-<p>This work directly supports U.S. efforts to develop practical quantum applications and advances hybrid quantum-classical computational tools, in alignment with federal strategy documents that emphasize the importance of near-term quantum technologies. Importantly, improving QAOA also strengthens computational tools relevant to <strong>artificial intelligence and network-based biomedical systems</strong> — demonstrated here through a companion clinical graph application.</p>
+<p>The <strong>primary contribution</strong> is the development of GNN methods to improve the performance, parameter selection, and scalability of QAOA by addressing the central bottleneck of classical parameter optimization in hybrid quantum-classical combinatorial optimization. Structured graph optimization problems are used to train GNN models capable of predicting QAOA parameterizations, approximation ratios, and convergence behavior, incorporating graph topology, Hamiltonian structure, and symmetry properties into the learned pipeline. Performance is evaluated through held-out benchmarking, transferability testing across graph families, and robustness analysis under noise.</p>
+<p>Improving QAOA in this setting also strengthens computational tools relevant to <strong>artificial intelligence and network-based biomedical systems</strong> — demonstrated here through a companion clinical graph application.</p>
 <p>The <strong>companion application</strong> shows that the same GNN methodology extends to cardiotocography patient-similarity graphs, where node-level pathologic-risk scores serve as the learned decision variables. This connection reflects the broader applicability of the research framework.</p>
 <h2 id="Scope">Scope<a class="anchor-link" href="#Scope">¶</a></h2><p>This notebook places two empirical settings under the same interface: transcriptomic co-expression graphs mapped to depth-2 Quantum Approximate Optimization Algorithm (QAOA) angle vectors, and cardiotocography (CTG) patient-similarity graphs mapped to pathologic-risk scores. The comparison is organized around the emitted parameterization and its downstream evaluation rather than around a shared loss or shared model family.</p>
 <h2 id="System-View">System View<a class="anchor-link" href="#System-View">¶</a></h2><table>
@@ -8035,7 +8035,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Comparative-View">Comparative View<a class="anchor-link" href="#Comparative-View">¶</a></h2><p>The two settings differ in objective, supervision, and evaluation, but they share the same graph-to-parameterization pattern. The table below is the organizing comparison used throughout the manuscript, landing page, and notebook.</p>
+<h2 id="Comparative-View">Comparative View<a class="anchor-link" href="#Comparative-View">¶</a></h2><p>The two settings differ in objective, supervision, and evaluation, but they share the same graph-to-parameterization pattern. The table below is the organizing comparison used throughout the project materials.</p>
 <table>
 <thead>
 <tr>
@@ -8320,7 +8320,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Part-2-%E2%80%94-Real-Transcriptomic-Optimization-Setting-">Part 2 — Real Transcriptomic Optimization Setting <a name="part2"></a><a class="anchor-link" href="#Part-2-%E2%80%94-Real-Transcriptomic-Optimization-Setting-">¶</a></h2><h3 id="1.1-Why-the-Optimization-Branch-Was-Rebuilt">1.1 Why the Optimization Branch Was Rebuilt<a class="anchor-link" href="#1.1-Why-the-Optimization-Branch-Was-Rebuilt">¶</a></h3><p>The optimization branch now uses the <strong>OpenML <code>prostate</code> transcriptomic cohort</strong> rather than a synthetic Erdős–Rényi graph. The workflow selects the 10 highest-variance genes, builds a full-cohort Pearson co-expression graph, and then derives additional <strong>patient-resampled transcriptomic graphs</strong> for adaptation and held-out evaluation.</p>
+<h2 id="Part-2-%E2%80%94-Real-Transcriptomic-Optimization-Setting-">Part 2 — Real Transcriptomic Optimization Setting <a name="part2"></a><a class="anchor-link" href="#Part-2-%E2%80%94-Real-Transcriptomic-Optimization-Setting-">¶</a></h2><h3 id="1.1-Why-the-Optimization-Branch-Was-Rebuilt">1.1 Why the Optimization Branch Was Rebuilt<a class="anchor-link" href="#1.1-Why-the-Optimization-Branch-Was-Rebuilt">¶</a></h3><p>The optimization branch now uses the <strong>OpenML <code>prostate</code> transcriptomic cohort</strong> rather than a synthetic Erdős–Rényi graph. The workflow loads a cached <strong>top-32 variance-ranked panel</strong>, builds a full-cohort Pearson co-expression graph from a configurable execution subset, and then derives additional <strong>patient-resampled transcriptomic graphs</strong> for adaptation and held-out evaluation.</p>
 <h3 id="1.2-Why-This-Is-a-Stronger-Optimization-Setting">1.2 Why This Is a Stronger Optimization Setting<a class="anchor-link" href="#1.2-Why-This-Is-a-Stronger-Optimization-Setting">¶</a></h3><p>The previous combined notebook was useful as a live walk-through, but it did not support a strong real-data claim. This refactored branch now does four things that materially raise the evidence standard:</p>
 <ol>
 <li>uses <strong>real transcriptomic measurements</strong> rather than a synthetic graph family,</li>
@@ -8329,7 +8329,8 @@ a.anchor-link {
 <li>evaluates on <strong>held-out real-data graphs</strong> with exact MaxCut references.</li>
 </ol>
 <h3 id="1.3-Optimization-Protocol">1.3 Optimization Protocol<a class="anchor-link" href="#1.3-Optimization-Protocol">¶</a></h3><p>This stage establishes the transcriptomic benchmark end to end: exact depth-2 MaxCut references are computed, the reduced prostate panel is loaded from cache or fetched on demand, representative and resampled graph families are constructed, the legacy checkpoint is retained for contrast when available, and the representative full-cohort graph is paired with its exact classical reference.</p>
-<h3 id="1.4-Why-the-Small-Graph-Regime-Is-Still-Legitimate">1.4 Why the Small-Graph Regime Is Still Legitimate<a class="anchor-link" href="#1.4-Why-the-Small-Graph-Regime-Is-Still-Legitimate">¶</a></h3><p>Exact statevector QAOA is exponential in the number of qubits. The notebook therefore keeps the transcriptomic graph at <strong>10 genes / 10 qubits</strong> so every claim remains fully auditable against exact MaxCut and exact expected cut. The scientific point is not large-scale hardware advantage; it is whether a learned graph model can recover near-classical optimization quality on <strong>real biological graphs</strong>.</p>
+<h3 id="1.4-Why-the-Small-Graph-Regime-Is-Still-Legitimate">1.4 Why the Small-Graph Regime Is Still Legitimate<a class="anchor-link" href="#1.4-Why-the-Small-Graph-Regime-Is-Still-Legitimate">¶</a></h3><p>Exact statevector QAOA is exponential in the number of qubits. The notebook therefore defaults to a <strong>16-gene / 16-qubit execution panel</strong> drawn from a broader cached ranking so every claim remains fully auditable against exact MaxCut and exact expected cut. The scientific point is not large-scale hardware advantage; it is whether a learned graph model can recover near-classical optimization quality on <strong>real biological graphs</strong> in a bounded regime where exact references still exist.</p>
+<p>Empirically, the expanded real-data sweep suggests treating <strong>6 to 14 genes</strong> as the main comparison band for the method claim, while <strong>16 genes</strong> is better interpreted as a stress-test edge case where exact auditing remains possible but both cheap initializers degrade more noticeably.</p>
 </div>
 </div>
 </div>
@@ -8338,10 +8339,14 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ═══════════════════════════════════════════════════════════════════════════════</span>
+<span class="c1"># CELL 2 — Real transcriptomic benchmark setup (OpenML prostate cohort)</span>
+<span class="c1"># ═══════════════════════════════════════════════════════════════════════════════</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
@@ -8352,16 +8357,30 @@ a.anchor-link {
 
 <span class="n">QAOA_DEPTH</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">LEGACY_DEPTH</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">GENE_COUNT</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">GENE_COUNT</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">CACHE_DEFAULT_GENE_COUNT</span> <span class="o">=</span> <span class="mi">32</span>
 <span class="n">TARGET_EDGE_COUNT</span> <span class="o">=</span> <span class="mi">18</span>
 <span class="n">ADAPT_GRAPH_COUNT</span> <span class="o">=</span> <span class="mi">24</span>
 <span class="n">BENCHMARK_GRAPH_COUNT</span> <span class="o">=</span> <span class="mi">6</span>
 <span class="n">SUBSAMPLE_SIZE</span> <span class="o">=</span> <span class="mi">60</span>
 
-<span class="n">CACHE_PANEL_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proj_root</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">,</span> <span class="s2">"prostate_top10_variance_panel.csv.gz"</span><span class="p">)</span>
-<span class="n">CACHE_META_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proj_root</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">,</span> <span class="s2">"prostate_top10_variance_panel_meta.json"</span><span class="p">)</span>
+<span class="n">CACHE_PANEL_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proj_root</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">,</span> <span class="s2">"prostate_top32_variance_panel.csv.gz"</span><span class="p">)</span>
+<span class="n">CACHE_META_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proj_root</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">,</span> <span class="s2">"prostate_top32_variance_panel_meta.json"</span><span class="p">)</span>
+<span class="n">LEGACY_CACHE_PANEL_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proj_root</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">,</span> <span class="s2">"prostate_top10_variance_panel.csv.gz"</span><span class="p">)</span>
+<span class="n">LEGACY_CACHE_META_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proj_root</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">,</span> <span class="s2">"prostate_top10_variance_panel_meta.json"</span><span class="p">)</span>
 <span class="n">OUTPUT_GRAPH_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proj_root</span><span class="p">,</span> <span class="s2">"outputs"</span><span class="p">,</span> <span class="s2">"maxcut_graph.csv"</span><span class="p">)</span>
 <span class="n">OUTPUT_ANGLES_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proj_root</span><span class="p">,</span> <span class="s2">"outputs"</span><span class="p">,</span> <span class="s2">"qaoa_classical_angles.csv"</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve_transcriptomic_cache_paths</span><span class="p">(</span><span class="n">preferred_panel_path</span><span class="o">=</span><span class="n">CACHE_PANEL_PATH</span><span class="p">,</span> <span class="n">preferred_meta_path</span><span class="o">=</span><span class="n">CACHE_META_PATH</span><span class="p">):</span>
+    <span class="n">candidate_pairs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">preferred_panel_path</span><span class="p">,</span> <span class="n">preferred_meta_path</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">preferred_panel_path</span><span class="p">,</span> <span class="n">preferred_meta_path</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="n">LEGACY_CACHE_PANEL_PATH</span><span class="p">,</span> <span class="n">LEGACY_CACHE_META_PATH</span><span class="p">):</span>
+        <span class="n">candidate_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">LEGACY_CACHE_PANEL_PATH</span><span class="p">,</span> <span class="n">LEGACY_CACHE_META_PATH</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">panel_path</span><span class="p">,</span> <span class="n">meta_path</span> <span class="ow">in</span> <span class="n">candidate_pairs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">panel_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">meta_path</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">panel_path</span><span class="p">,</span> <span class="n">meta_path</span>
+    <span class="k">return</span> <span class="n">preferred_panel_path</span><span class="p">,</span> <span class="n">preferred_meta_path</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">build_cut_diagonal</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">edges</span><span class="p">):</span>
@@ -8490,19 +8509,27 @@ a.anchor-link {
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">load_transcriptomic_panel</span><span class="p">(</span><span class="n">cache_panel_path</span><span class="o">=</span><span class="n">CACHE_PANEL_PATH</span><span class="p">,</span> <span class="n">cache_meta_path</span><span class="o">=</span><span class="n">CACHE_META_PATH</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cache_panel_path</span><span class="p">):</span>
-        <span class="n">panel_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">cache_panel_path</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">"gzip"</span><span class="p">)</span>
+    <span class="n">selected_panel_path</span><span class="p">,</span> <span class="n">selected_meta_path</span> <span class="o">=</span> <span class="n">resolve_transcriptomic_cache_paths</span><span class="p">(</span><span class="n">cache_panel_path</span><span class="p">,</span> <span class="n">cache_meta_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">selected_panel_path</span><span class="p">):</span>
+        <span class="n">panel_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">selected_panel_path</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">"gzip"</span><span class="p">)</span>
         <span class="n">meta</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cache_meta_path</span><span class="p">):</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cache_meta_path</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">selected_meta_path</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">selected_meta_path</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
                 <span class="n">meta</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
-        <span class="n">gene_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s2">"gene"</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"gene_table"</span><span class="p">,</span> <span class="p">[])]</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">gene_names</span><span class="p">:</span>
+        <span class="n">gene_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"gene_table"</span><span class="p">,</span> <span class="p">[]))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">gene_table</span><span class="o">.</span><span class="n">empty</span> <span class="ow">and</span> <span class="s2">"rank"</span> <span class="ow">in</span> <span class="n">gene_table</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">gene_table</span> <span class="o">=</span> <span class="n">gene_table</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"rank"</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">gene_table</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">gene_names</span> <span class="o">=</span> <span class="n">gene_table</span><span class="p">[</span><span class="s2">"gene"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[:</span><span class="n">GENE_COUNT</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
             <span class="n">gene_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">column</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">panel_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">column</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"__"</span><span class="p">)][:</span><span class="n">GENE_COUNT</span><span class="p">]</span>
         <span class="n">labels</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">panel_df</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"__target__"</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"label_name"</span><span class="p">,</span> <span class="s2">"class"</span><span class="p">))</span>
         <span class="n">sample_ids</span> <span class="o">=</span> <span class="n">panel_df</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"__sample_id__"</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
         <span class="n">panel_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">sample_ids</span>
         <span class="n">labels</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">sample_ids</span>
+        <span class="n">meta</span><span class="p">[</span><span class="s2">"cache_panel_path"</span><span class="p">]</span> <span class="o">=</span> <span class="n">selected_panel_path</span>
+        <span class="n">meta</span><span class="p">[</span><span class="s2">"cache_meta_path"</span><span class="p">]</span> <span class="o">=</span> <span class="n">selected_meta_path</span>
+        <span class="n">meta</span><span class="p">[</span><span class="s2">"cached_gene_count"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"top_gene_count"</span><span class="p">,</span> <span class="nb">len</span><span class="p">([</span><span class="n">column</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">panel_df</span><span class="o">.</span><span class="n">columns</span><span class="p">])))</span>
         <span class="k">return</span> <span class="n">panel_df</span><span class="p">[</span><span class="n">gene_names</span><span class="p">],</span> <span class="n">labels</span><span class="p">,</span> <span class="n">gene_names</span><span class="p">,</span> <span class="n">meta</span>
 
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">fetch_openml</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"prostate"</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">as_frame</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -8510,9 +8537,15 @@ a.anchor-link {
     <span class="n">expression_frame_full</span> <span class="o">=</span> <span class="n">expression_frame_full</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">expression_frame_full</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)]</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">target_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">dataset</span><span class="o">.</span><span class="n">target_names</span> <span class="k">else</span> <span class="s2">"class"</span><span class="p">)</span>
     <span class="n">variances</span> <span class="o">=</span> <span class="n">expression_frame_full</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">gene_names</span> <span class="o">=</span> <span class="n">variances</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">GENE_COUNT</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">gene_names</span> <span class="o">=</span> <span class="n">variances</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">GENE_COUNT</span><span class="p">,</span> <span class="n">CACHE_DEFAULT_GENE_COUNT</span><span class="p">))</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
     <span class="n">labels</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">expression_frame_full</span><span class="o">.</span><span class="n">index</span>
-    <span class="k">return</span> <span class="n">expression_frame_full</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">gene_names</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">labels</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="n">gene_names</span><span class="p">,</span> <span class="p">{</span><span class="s2">"dataset_name"</span><span class="p">:</span> <span class="s2">"Prostate"</span><span class="p">}</span>
+    <span class="n">panel_meta</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"dataset_name"</span><span class="p">:</span> <span class="s2">"Prostate"</span><span class="p">,</span>
+        <span class="s2">"cached_gene_count"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">gene_names</span><span class="p">),</span>
+        <span class="s2">"cache_panel_path"</span><span class="p">:</span> <span class="s2">"Direct OpenML fetch"</span><span class="p">,</span>
+        <span class="s2">"cache_meta_path"</span><span class="p">:</span> <span class="s2">"Direct OpenML fetch"</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">expression_frame_full</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">gene_names</span><span class="p">[:</span><span class="n">GENE_COUNT</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">labels</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="n">gene_names</span><span class="p">[:</span><span class="n">GENE_COUNT</span><span class="p">],</span> <span class="n">panel_meta</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">build_gene_correlation_graph</span><span class="p">(</span><span class="n">expression_frame</span><span class="p">,</span> <span class="n">gene_names</span><span class="p">,</span> <span class="n">target_edge_count</span><span class="o">=</span><span class="n">TARGET_EDGE_COUNT</span><span class="p">):</span>
@@ -8721,6 +8754,8 @@ a.anchor-link {
 <span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Transcriptomic benchmark initialized."</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Cache source: </span><span class="si">{</span><span class="n">panel_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'cache_panel_path'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Direct OpenML fetch'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Cached ranking size: </span><span class="si">{</span><span class="n">panel_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'cached_gene_count'</span><span class="p">,</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">gene_names</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Gene panel: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gene_names</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">representative_summary</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">legacy_model_loaded</span><span class="p">:</span>
@@ -8742,7 +8777,9 @@ a.anchor-link {
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Transcriptomic benchmark initialized.
-Gene panel: 1008_f_at, 1894_f_at, 1804_at, AFFX-hum_alu_at, 40794_at, 37407_s_at, 31962_at, 1288_s_at, 32466_at, 40887_g_at
+Cache source: /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/data/prostate_top32_variance_panel.csv.gz
+Cached ranking size: 32
+Gene panel: 1008_f_at, 1894_f_at, 1804_at, AFFX-hum_alu_at, 40794_at, 37407_s_at, 31962_at, 1288_s_at, 32466_at, 40887_g_at, 37746_r_at, 1805_g_at, 35905_s_at, 34593_g_at, 32755_at, 36931_at
 </pre>
 </div>
 </div>
@@ -8781,11 +8818,11 @@ Gene panel: 1008_f_at, 1894_f_at, 1804_at, AFFX-hum_alu_at, 40794_at, 37407_s_at
 <th>0</th>
 <td>OpenML prostate transcriptomic cohort</td>
 <td>102</td>
-<td>10</td>
+<td>16</td>
 <td>18</td>
-<td>13</td>
-<td>11.6689</td>
-<td>0.8976</td>
+<td>16</td>
+<td>13.5772</td>
+<td>0.8486</td>
 </tr>
 </tbody>
 </table>
@@ -8795,7 +8832,7 @@ Gene panel: 1008_f_at, 1894_f_at, 1804_at, AFFX-hum_alu_at, 40794_at, 37407_s_at
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Legacy depth-1 checkpoint loaded: representative ratio = 0.5613
+<pre>Legacy depth-1 checkpoint loaded: representative ratio = 0.6349
 </pre>
 </div>
 </div>

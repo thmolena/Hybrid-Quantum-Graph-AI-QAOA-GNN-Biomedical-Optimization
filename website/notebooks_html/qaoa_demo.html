@@ -9242,6 +9242,7 @@ Execution preflight
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 id="Reproducibility-Note-%E2%80%94-Local-Transcriptomic-Cache">Reproducibility Note — Local Transcriptomic Cache<a class="anchor-link" href="#Reproducibility-Note-%E2%80%94-Local-Transcriptomic-Cache">¶</a></h3><p>To make repeated <code>Run All</code> executions dependable in JupyterLab, the notebook caches the <strong>selected reduced transcriptomic panel</strong> locally after the first successful OpenML fetch. Subsequent runs can rebuild the full benchmark, all figures, and the exported HTML <strong>without requiring another network call</strong>, while preserving the same gene panel, labels, and exact evaluation protocol.</p>
+<p>For interpretation, the real-data size sweep now suggests that <strong>6 to 14 genes</strong> is the main comparison band where exact references remain practical and the learned model stays close to classical search, while <strong>16 genes</strong> is best read as a stress-test edge case rather than the primary operating point.</p>
 </div>
 </div>
 </div>
@@ -9259,8 +9260,23 @@ Execution preflight
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 
-<span class="n">CACHE_PANEL_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proj_root</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">,</span> <span class="s2">"prostate_top10_variance_panel.csv.gz"</span><span class="p">)</span>
-<span class="n">CACHE_META_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proj_root</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">,</span> <span class="s2">"prostate_top10_variance_panel_meta.json"</span><span class="p">)</span>
+<span class="n">CACHE_DEFAULT_GENE_COUNT</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">CACHE_PANEL_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proj_root</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">,</span> <span class="s2">"prostate_top32_variance_panel.csv.gz"</span><span class="p">)</span>
+<span class="n">CACHE_META_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proj_root</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">,</span> <span class="s2">"prostate_top32_variance_panel_meta.json"</span><span class="p">)</span>
+<span class="n">LEGACY_CACHE_PANEL_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proj_root</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">,</span> <span class="s2">"prostate_top10_variance_panel.csv.gz"</span><span class="p">)</span>
+<span class="n">LEGACY_CACHE_META_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proj_root</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">,</span> <span class="s2">"prostate_top10_variance_panel_meta.json"</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve_cache_paths</span><span class="p">(</span><span class="n">preferred_panel_path</span><span class="o">=</span><span class="n">CACHE_PANEL_PATH</span><span class="p">,</span> <span class="n">preferred_meta_path</span><span class="o">=</span><span class="n">CACHE_META_PATH</span><span class="p">):</span>
+    <span class="n">candidate_pairs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">preferred_panel_path</span><span class="p">,</span> <span class="n">preferred_meta_path</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">preferred_panel_path</span><span class="p">,</span> <span class="n">preferred_meta_path</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="n">LEGACY_CACHE_PANEL_PATH</span><span class="p">,</span> <span class="n">LEGACY_CACHE_META_PATH</span><span class="p">):</span>
+        <span class="n">candidate_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">LEGACY_CACHE_PANEL_PATH</span><span class="p">,</span> <span class="n">LEGACY_CACHE_META_PATH</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">panel_path</span><span class="p">,</span> <span class="n">meta_path</span> <span class="ow">in</span> <span class="n">candidate_pairs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">panel_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">meta_path</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">panel_path</span><span class="p">,</span> <span class="n">meta_path</span>
+    <span class="k">return</span> <span class="n">preferred_panel_path</span><span class="p">,</span> <span class="n">preferred_meta_path</span>
+
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_package_genomics_bundle</span><span class="p">(</span>
     <span class="n">expression_frame</span><span class="p">,</span>
@@ -9276,6 +9292,8 @@ Execution preflight
     <span class="n">adaptation_seed</span><span class="p">,</span>
     <span class="n">cache_status</span><span class="p">,</span>
     <span class="n">source_note</span><span class="p">,</span>
+    <span class="n">active_cache_panel_path</span><span class="p">,</span>
+    <span class="n">active_cache_meta_path</span><span class="p">,</span>
     <span class="n">split_dataset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="n">representative_graph</span><span class="p">,</span> <span class="n">representative_corr</span><span class="p">,</span> <span class="n">representative_edge_table</span> <span class="o">=</span> <span class="n">build_gene_correlation_graph</span><span class="p">(</span>
@@ -9372,15 +9390,16 @@ Execution preflight
         <span class="s2">"full_feature_count"</span><span class="p">:</span> <span class="n">full_feature_count</span><span class="p">,</span>
         <span class="s2">"cache_status"</span><span class="p">:</span> <span class="n">cache_status</span><span class="p">,</span>
         <span class="s2">"cache_paths"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"panel"</span><span class="p">:</span> <span class="n">CACHE_PANEL_PATH</span><span class="p">,</span>
-            <span class="s2">"meta"</span><span class="p">:</span> <span class="n">CACHE_META_PATH</span><span class="p">,</span>
+            <span class="s2">"panel"</span><span class="p">:</span> <span class="n">active_cache_panel_path</span><span class="p">,</span>
+            <span class="s2">"meta"</span><span class="p">:</span> <span class="n">active_cache_meta_path</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">}</span>
+
 
 <span class="k">def</span><span class="w"> </span><span class="nf">build_genomics_benchmark</span><span class="p">(</span>
     <span class="n">dataset_name</span><span class="o">=</span><span class="s2">"prostate"</span><span class="p">,</span>
     <span class="n">version</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">top_gene_count</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">top_gene_count</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
     <span class="n">target_edge_count</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span>
     <span class="n">benchmark_size</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
     <span class="n">benchmark_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
@@ -9391,39 +9410,52 @@ Execution preflight
 <span class="w">    </span><span class="sd">"""Fetch the real dataset once, then reuse a local reduced-panel cache on later runs."""</span>
     <span class="n">use_local_cache</span> <span class="o">=</span> <span class="n">dataset_name</span> <span class="o">==</span> <span class="s2">"prostate"</span> <span class="ow">and</span> <span class="n">version</span> <span class="o">==</span> <span class="mi">1</span>
 
-    <span class="k">if</span> <span class="n">use_local_cache</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">CACHE_PANEL_PATH</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">CACHE_META_PATH</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">CACHE_META_PATH</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
-                <span class="n">cache_meta</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
-            <span class="n">cached_panel</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">CACHE_PANEL_PATH</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">"gzip"</span><span class="p">)</span>
-            <span class="n">labels</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
-                <span class="n">cached_panel</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"__target__"</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span>
-                <span class="n">name</span><span class="o">=</span><span class="n">cache_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"label_name"</span><span class="p">,</span> <span class="s2">"class"</span><span class="p">),</span>
-            <span class="p">)</span>
-            <span class="n">sample_ids</span> <span class="o">=</span> <span class="n">cached_panel</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"__sample_id__"</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-            <span class="n">expression_frame</span> <span class="o">=</span> <span class="n">cached_panel</span>
-            <span class="n">expression_frame</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">sample_ids</span>
-            <span class="n">gene_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cache_meta</span><span class="p">[</span><span class="s2">"gene_table"</span><span class="p">])</span>
-
-            <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">cache_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"top_gene_count"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">gene_table</span><span class="p">)))</span> <span class="o">==</span> <span class="n">top_gene_count</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">_package_genomics_bundle</span><span class="p">(</span>
-                    <span class="n">expression_frame</span><span class="o">=</span><span class="n">expression_frame</span><span class="p">,</span>
-                    <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
-                    <span class="n">gene_table</span><span class="o">=</span><span class="n">gene_table</span><span class="p">,</span>
-                    <span class="n">dataset_name_display</span><span class="o">=</span><span class="n">cache_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"dataset_name"</span><span class="p">,</span> <span class="s2">"Prostate"</span><span class="p">),</span>
-                    <span class="n">full_feature_count</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">cache_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"full_feature_count"</span><span class="p">,</span> <span class="n">expression_frame</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
-                    <span class="n">target_edge_count</span><span class="o">=</span><span class="n">target_edge_count</span><span class="p">,</span>
-                    <span class="n">benchmark_size</span><span class="o">=</span><span class="n">benchmark_size</span><span class="p">,</span>
-                    <span class="n">adaptation_size</span><span class="o">=</span><span class="n">adaptation_size</span><span class="p">,</span>
-                    <span class="n">subsample_size</span><span class="o">=</span><span class="n">subsample_size</span><span class="p">,</span>
-                    <span class="n">benchmark_seed</span><span class="o">=</span><span class="n">benchmark_seed</span><span class="p">,</span>
-                    <span class="n">adaptation_seed</span><span class="o">=</span><span class="n">adaptation_seed</span><span class="p">,</span>
-                    <span class="n">cache_status</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Loaded cached reduced transcriptomic panel from </span><span class="si">{</span><span class="n">CACHE_PANEL_PATH</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
-                    <span class="n">source_note</span><span class="o">=</span><span class="s2">"Local reduced-panel cache (offline-safe after first fetch)"</span><span class="p">,</span>
-                    <span class="n">split_dataset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">if</span> <span class="n">use_local_cache</span><span class="p">:</span>
+        <span class="n">cached_panel_path</span><span class="p">,</span> <span class="n">cached_meta_path</span> <span class="o">=</span> <span class="n">resolve_cache_paths</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cached_panel_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cached_meta_path</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cached_meta_path</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+                    <span class="n">cache_meta</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+                <span class="n">cached_panel</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">cached_panel_path</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">"gzip"</span><span class="p">)</span>
+                <span class="n">labels</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+                    <span class="n">cached_panel</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"__target__"</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">cache_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"label_name"</span><span class="p">,</span> <span class="s2">"class"</span><span class="p">),</span>
                 <span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Cache load failed, falling back to OpenML fetch: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="n">sample_ids</span> <span class="o">=</span> <span class="n">cached_panel</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"__sample_id__"</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+                <span class="n">cached_panel</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">sample_ids</span>
+                <span class="n">gene_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cache_meta</span><span class="p">[</span><span class="s2">"gene_table"</span><span class="p">])</span>
+                <span class="k">if</span> <span class="s2">"rank"</span> <span class="ow">in</span> <span class="n">gene_table</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                    <span class="n">gene_table</span> <span class="o">=</span> <span class="n">gene_table</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"rank"</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+                <span class="n">cached_gene_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cache_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"top_gene_count"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">gene_table</span><span class="p">)))</span>
+                <span class="k">if</span> <span class="n">cached_gene_count</span> <span class="o">&gt;=</span> <span class="n">top_gene_count</span><span class="p">:</span>
+                    <span class="n">gene_table</span> <span class="o">=</span> <span class="n">gene_table</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_gene_count</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">selected_genes</span> <span class="o">=</span> <span class="n">gene_table</span><span class="p">[</span><span class="s2">"gene"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                    <span class="n">expression_frame</span> <span class="o">=</span> <span class="n">cached_panel</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">selected_genes</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="n">labels</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">sample_ids</span>
+                    <span class="k">return</span> <span class="n">_package_genomics_bundle</span><span class="p">(</span>
+                        <span class="n">expression_frame</span><span class="o">=</span><span class="n">expression_frame</span><span class="p">,</span>
+                        <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+                        <span class="n">gene_table</span><span class="o">=</span><span class="n">gene_table</span><span class="p">,</span>
+                        <span class="n">dataset_name_display</span><span class="o">=</span><span class="n">cache_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"dataset_name"</span><span class="p">,</span> <span class="s2">"Prostate"</span><span class="p">),</span>
+                        <span class="n">full_feature_count</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">cache_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"full_feature_count"</span><span class="p">,</span> <span class="n">cached_panel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                        <span class="n">target_edge_count</span><span class="o">=</span><span class="n">target_edge_count</span><span class="p">,</span>
+                        <span class="n">benchmark_size</span><span class="o">=</span><span class="n">benchmark_size</span><span class="p">,</span>
+                        <span class="n">adaptation_size</span><span class="o">=</span><span class="n">adaptation_size</span><span class="p">,</span>
+                        <span class="n">subsample_size</span><span class="o">=</span><span class="n">subsample_size</span><span class="p">,</span>
+                        <span class="n">benchmark_seed</span><span class="o">=</span><span class="n">benchmark_seed</span><span class="p">,</span>
+                        <span class="n">adaptation_seed</span><span class="o">=</span><span class="n">adaptation_seed</span><span class="p">,</span>
+                        <span class="n">cache_status</span><span class="o">=</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">"Loaded cached reduced transcriptomic panel from </span><span class="si">{</span><span class="n">cached_panel_path</span><span class="si">}</span><span class="s2"> "</span>
+                            <span class="sa">f</span><span class="s2">"(using top </span><span class="si">{</span><span class="n">top_gene_count</span><span class="si">}</span><span class="s2"> genes from cached top </span><span class="si">{</span><span class="n">cached_gene_count</span><span class="si">}</span><span class="s2">)"</span>
+                        <span class="p">),</span>
+                        <span class="n">source_note</span><span class="o">=</span><span class="s2">"Local reduced-panel cache (offline-safe after first fetch)"</span><span class="p">,</span>
+                        <span class="n">active_cache_panel_path</span><span class="o">=</span><span class="n">cached_panel_path</span><span class="p">,</span>
+                        <span class="n">active_cache_meta_path</span><span class="o">=</span><span class="n">cached_meta_path</span><span class="p">,</span>
+                        <span class="n">split_dataset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Cache load failed, falling back to OpenML fetch: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">fetch_openml</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span> <span class="n">as_frame</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">expression_frame_full</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">"coerce"</span><span class="p">)</span>
@@ -9437,10 +9469,19 @@ Execution preflight
 
     <span class="n">cache_status</span> <span class="o">=</span> <span class="s2">"OpenML fetch used directly (no local cache written)."</span>
     <span class="n">source_note</span> <span class="o">=</span> <span class="s2">"Direct OpenML fetch"</span>
+    <span class="n">active_cache_panel_path</span> <span class="o">=</span> <span class="n">CACHE_PANEL_PATH</span>
+    <span class="n">active_cache_meta_path</span> <span class="o">=</span> <span class="n">CACHE_META_PATH</span>
     <span class="k">if</span> <span class="n">use_local_cache</span><span class="p">:</span>
+        <span class="n">cache_gene_count</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">top_gene_count</span><span class="p">,</span> <span class="n">CACHE_DEFAULT_GENE_COUNT</span><span class="p">)</span>
+        <span class="n">cache_gene_table</span> <span class="o">=</span> <span class="n">select_gene_panel</span><span class="p">(</span><span class="n">expression_frame_full</span><span class="p">,</span> <span class="n">cache_gene_count</span><span class="p">)</span>
+        <span class="n">cache_selected_genes</span> <span class="o">=</span> <span class="n">cache_gene_table</span><span class="p">[</span><span class="s2">"gene"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">cache_expression_frame</span> <span class="o">=</span> <span class="n">expression_frame_full</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">cache_selected_genes</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">gene_table</span> <span class="o">=</span> <span class="n">cache_gene_table</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_gene_count</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">expression_frame</span> <span class="o">=</span> <span class="n">cache_expression_frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">gene_table</span><span class="p">[</span><span class="s2">"gene"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">CACHE_PANEL_PATH</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">cache_frame</span> <span class="o">=</span> <span class="n">expression_frame</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">cache_frame</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">"__sample_id__"</span><span class="p">,</span> <span class="n">expression_frame</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
+        <span class="n">cache_frame</span> <span class="o">=</span> <span class="n">cache_expression_frame</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">cache_frame</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">"__sample_id__"</span><span class="p">,</span> <span class="n">cache_expression_frame</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
         <span class="n">cache_frame</span><span class="p">[</span><span class="s2">"__target__"</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
         <span class="n">cache_frame</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">CACHE_PANEL_PATH</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">"gzip"</span><span class="p">)</span>
 
@@ -9448,15 +9489,18 @@ Execution preflight
             <span class="s2">"dataset_name"</span><span class="p">:</span> <span class="n">dataset</span><span class="o">.</span><span class="n">details</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">),</span>
             <span class="s2">"dataset_version"</span><span class="p">:</span> <span class="n">version</span><span class="p">,</span>
             <span class="s2">"full_feature_count"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">full_feature_count</span><span class="p">),</span>
-            <span class="s2">"top_gene_count"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">top_gene_count</span><span class="p">),</span>
+            <span class="s2">"top_gene_count"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">cache_gene_count</span><span class="p">),</span>
             <span class="s2">"target_edge_count"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">target_edge_count</span><span class="p">),</span>
             <span class="s2">"label_name"</span><span class="p">:</span> <span class="n">labels</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="s2">"gene_table"</span><span class="p">:</span> <span class="n">gene_table</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">"records"</span><span class="p">),</span>
+            <span class="s2">"gene_table"</span><span class="p">:</span> <span class="n">cache_gene_table</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">"records"</span><span class="p">),</span>
         <span class="p">}</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">CACHE_META_PATH</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">cache_meta</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-        <span class="n">cache_status</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Fetched OpenML data and refreshed local reduced-panel cache at </span><span class="si">{</span><span class="n">CACHE_PANEL_PATH</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">cache_status</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"Fetched OpenML data and refreshed local reduced-panel cache at </span><span class="si">{</span><span class="n">CACHE_PANEL_PATH</span><span class="si">}</span><span class="s2"> "</span>
+            <span class="sa">f</span><span class="s2">"(cached top </span><span class="si">{</span><span class="n">cache_gene_count</span><span class="si">}</span><span class="s2"> genes; using top </span><span class="si">{</span><span class="n">top_gene_count</span><span class="si">}</span><span class="s2">)"</span>
+        <span class="p">)</span>
         <span class="n">source_note</span> <span class="o">=</span> <span class="s2">"Fresh OpenML fetch + reduced-panel cache refresh"</span>
 
     <span class="k">return</span> <span class="n">_package_genomics_bundle</span><span class="p">(</span>
@@ -9473,12 +9517,17 @@ Execution preflight
         <span class="n">adaptation_seed</span><span class="o">=</span><span class="n">adaptation_seed</span><span class="p">,</span>
         <span class="n">cache_status</span><span class="o">=</span><span class="n">cache_status</span><span class="p">,</span>
         <span class="n">source_note</span><span class="o">=</span><span class="n">source_note</span><span class="p">,</span>
+        <span class="n">active_cache_panel_path</span><span class="o">=</span><span class="n">active_cache_panel_path</span><span class="p">,</span>
+        <span class="n">active_cache_meta_path</span><span class="o">=</span><span class="n">active_cache_meta_path</span><span class="p">,</span>
         <span class="n">split_dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span>
     <span class="p">)</span>
 
+
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Local reduced-panel cache override ready."</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Panel cache path : </span><span class="si">{</span><span class="n">CACHE_PANEL_PATH</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Meta cache path  : </span><span class="si">{</span><span class="n">CACHE_META_PATH</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Preferred panel cache : </span><span class="si">{</span><span class="n">CACHE_PANEL_PATH</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Preferred meta cache  : </span><span class="si">{</span><span class="n">CACHE_META_PATH</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Legacy fallback panel : </span><span class="si">{</span><span class="n">LEGACY_CACHE_PANEL_PATH</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Legacy fallback meta  : </span><span class="si">{</span><span class="n">LEGACY_CACHE_META_PATH</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -9492,8 +9541,10 @@ Execution preflight
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Local reduced-panel cache override ready.
-  Panel cache path : /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/data/prostate_top10_variance_panel.csv.gz
-  Meta cache path  : /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/data/prostate_top10_variance_panel_meta.json
+  Preferred panel cache : /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/data/prostate_top32_variance_panel.csv.gz
+  Preferred meta cache  : /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/data/prostate_top32_variance_panel_meta.json
+  Legacy fallback panel : /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/data/prostate_top10_variance_panel.csv.gz
+  Legacy fallback meta  : /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/data/prostate_top10_variance_panel_meta.json
 </pre>
 </div>
 </div>
@@ -9514,7 +9565,7 @@ Execution preflight
 <span class="n">genomics_config</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"dataset_name"</span><span class="p">:</span> <span class="s2">"prostate"</span><span class="p">,</span>
     <span class="s2">"version"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s2">"top_gene_count"</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">"top_gene_count"</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
     <span class="s2">"target_edge_count"</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
     <span class="s2">"benchmark_size"</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
     <span class="s2">"benchmark_seed"</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
@@ -9577,30 +9628,23 @@ Execution preflight
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Cache load failed, falling back to OpenML fetch: "None of [Index(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',\n       ...\n       '92', '93', '94', '95', '96', '97', '98', '99', '100', '101'],\n      dtype='str', length=102)] are in the [index]"
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Genomics benchmark configuration
   Dataset name              : prostate
   Source matrix shape       : 102 samples x 12600 genes
-  Working execution panel   : 10 cached/selected genes used to build graphs
-  Data access mode          : Fetched OpenML data and refreshed local reduced-panel cache at /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/data/prostate_top10_variance_panel.csv.gz
-  Class balance             : {1: 52, 2: 50}
-  Selected genes            : 10
+  Working execution panel   : 16 cached/selected genes used to build graphs
+  Data access mode          : Loaded cached reduced transcriptomic panel from /Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/data/prostate_top32_variance_panel.csv.gz (using top 16 genes from cached top 32)
+  Class balance             : {'1': 52, '2': 50}
+  Selected genes            : 16
   Adaptation graphs         : 24  (seed range 200..223)
   Held-out benchmark graphs : 6  (seed range 42..47)
   Patients per graph        : 60
 
 Representative graph
   Graph type                : full-cohort gene co-expression graph
-  Nodes                     : 10
+  Nodes                     : 16
   Edges                     : 18
-  Exact MaxCut              : 13
-  Statevector size          : 2^10 = 1024 amplitudes
+  Exact MaxCut              : 16
+  Statevector size          : 2^16 = 65536 amplitudes
 
 Dataset summary
 </pre>
@@ -9650,12 +9694,12 @@ Dataset summary
 <tr>
 <th>3</th>
 <td>Selected genes for graph</td>
-<td>10</td>
+<td>16</td>
 </tr>
 <tr>
 <th>4</th>
 <td>Representative graph nodes</td>
-<td>10</td>
+<td>16</td>
 </tr>
 <tr>
 <th>5</th>
@@ -9680,7 +9724,7 @@ Dataset summary
 <tr>
 <th>9</th>
 <td>Execution source</td>
-<td>Fresh OpenML fetch + reduced-panel cache refresh</td>
+<td>Local reduced-panel cache (offline-safe after ...</td>
 </tr>
 </tbody>
 </table>
@@ -9781,6 +9825,42 @@ Dataset summary
 <td>40887_g_at</td>
 <td>6.372388e+05</td>
 </tr>
+<tr>
+<th>10</th>
+<td>11</td>
+<td>37746_r_at</td>
+<td>5.607983e+05</td>
+</tr>
+<tr>
+<th>11</th>
+<td>12</td>
+<td>1805_g_at</td>
+<td>4.744609e+05</td>
+</tr>
+<tr>
+<th>12</th>
+<td>13</td>
+<td>35905_s_at</td>
+<td>4.592202e+05</td>
+</tr>
+<tr>
+<th>13</th>
+<td>14</td>
+<td>34593_g_at</td>
+<td>4.446681e+05</td>
+</tr>
+<tr>
+<th>14</th>
+<td>15</td>
+<td>32755_at</td>
+<td>3.793822e+05</td>
+</tr>
+<tr>
+<th>15</th>
+<td>16</td>
+<td>36931_at</td>
+<td>3.754531e+05</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -9829,8 +9909,8 @@ Dataset summary
 <td>benchmark</td>
 <td>60</td>
 <td>18</td>
-<td>0.4</td>
-<td>14</td>
+<td>0.15</td>
+<td>15</td>
 </tr>
 <tr>
 <th>1</th>
@@ -9838,8 +9918,8 @@ Dataset summary
 <td>benchmark</td>
 <td>60</td>
 <td>18</td>
-<td>0.4</td>
-<td>14</td>
+<td>0.15</td>
+<td>16</td>
 </tr>
 <tr>
 <th>2</th>
@@ -9847,8 +9927,8 @@ Dataset summary
 <td>benchmark</td>
 <td>60</td>
 <td>18</td>
-<td>0.4</td>
-<td>13</td>
+<td>0.15</td>
+<td>16</td>
 </tr>
 <tr>
 <th>3</th>
@@ -9856,8 +9936,8 @@ Dataset summary
 <td>benchmark</td>
 <td>60</td>
 <td>18</td>
-<td>0.4</td>
-<td>13</td>
+<td>0.15</td>
+<td>16</td>
 </tr>
 <tr>
 <th>4</th>
@@ -9865,8 +9945,8 @@ Dataset summary
 <td>benchmark</td>
 <td>60</td>
 <td>18</td>
-<td>0.4</td>
-<td>14</td>
+<td>0.15</td>
+<td>16</td>
 </tr>
 <tr>
 <th>5</th>
@@ -9874,8 +9954,8 @@ Dataset summary
 <td>benchmark</td>
 <td>60</td>
 <td>18</td>
-<td>0.4</td>
-<td>13</td>
+<td>0.15</td>
+<td>15</td>
 </tr>
 </tbody>
 </table>
@@ -9925,8 +10005,8 @@ Dataset summary
 <td>adaptation</td>
 <td>60</td>
 <td>18</td>
-<td>0.4</td>
-<td>13</td>
+<td>0.15</td>
+<td>16</td>
 </tr>
 <tr>
 <th>1</th>
@@ -9934,8 +10014,8 @@ Dataset summary
 <td>adaptation</td>
 <td>60</td>
 <td>18</td>
-<td>0.4</td>
-<td>13</td>
+<td>0.15</td>
+<td>16</td>
 </tr>
 <tr>
 <th>2</th>
@@ -9943,8 +10023,8 @@ Dataset summary
 <td>adaptation</td>
 <td>60</td>
 <td>18</td>
-<td>0.4</td>
-<td>13</td>
+<td>0.15</td>
+<td>16</td>
 </tr>
 <tr>
 <th>3</th>
@@ -9952,8 +10032,8 @@ Dataset summary
 <td>adaptation</td>
 <td>60</td>
 <td>18</td>
-<td>0.4</td>
-<td>13</td>
+<td>0.15</td>
+<td>16</td>
 </tr>
 <tr>
 <th>4</th>
@@ -9961,8 +10041,8 @@ Dataset summary
 <td>adaptation</td>
 <td>60</td>
 <td>18</td>
-<td>0.4</td>
-<td>13</td>
+<td>0.15</td>
+<td>16</td>
 </tr>
 <tr>
 <th>5</th>
@@ -9970,8 +10050,8 @@ Dataset summary
 <td>adaptation</td>
 <td>60</td>
 <td>18</td>
-<td>0.4</td>
-<td>13</td>
+<td>0.15</td>
+<td>16</td>
 </tr>
 <tr>
 <th>6</th>
@@ -9979,8 +10059,8 @@ Dataset summary
 <td>adaptation</td>
 <td>60</td>
 <td>18</td>
-<td>0.4</td>
-<td>14</td>
+<td>0.15</td>
+<td>16</td>
 </tr>
 <tr>
 <th>7</th>
@@ -9988,8 +10068,8 @@ Dataset summary
 <td>adaptation</td>
 <td>60</td>
 <td>18</td>
-<td>0.4</td>
-<td>13</td>
+<td>0.15</td>
+<td>16</td>
 </tr>
 </tbody>
 </table>
