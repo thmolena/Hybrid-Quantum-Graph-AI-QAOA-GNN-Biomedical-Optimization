@@ -711,7 +711,7 @@
       <p class="cover-kicker">Research Summary • Comparative Findings</p>
       <h1>Learning QAOA Parameters with Graph Neural Networks for Scalable Quantum Optimization</h1>
       <p class="subtitle">
-        We study parameter optimization in the Quantum Approximate Optimization Algorithm, a central bottleneck in near-term quantum computing. This page summarizes the fixed-depth transcriptomic benchmark, the strongest held-out findings, and the supporting reproducibility materials.
+          The Quantum Approximate Optimization Algorithm remains one of the central variational paradigms for near-term quantum optimization because it provides a hardware-compatible ansatz for combinatorial objectives while retaining a clear Hamiltonian interpretation. Its practical performance, however, depends not only on circuit depth but also on the ability to identify high-quality variational parameters for each problem instance. For fixed-depth QAOA, parameter optimization is often the dominant classical bottleneck, especially when one repeatedly solves related weighted-graph instances drawn from a common structured family. In this work, we address that gap by learning QAOA parameters from graph structure, modeling fixed-depth parameter selection as a graph-to-angle map and using a graph neural network to predict depth-2 QAOA angles for weighted MaxCut instances derived from transcriptomic co-expression graphs.
       </p>
 
       <div class="cover-meta">
@@ -737,13 +737,13 @@
       <div class="section-header">
         <div class="section-label">Research Summary</div>
         <div class="section-intro body-copy">
-          <h2>Main result</h2>
+          <h2>Conclusion</h2>
           <p>
-            The main result is that repeated parameter search for fixed-depth QAOA on a structured family of weighted transcriptomic graphs can be amortized by a graph neural network that predicts high-quality variational angles directly from graph structure, while preserving near-direct-search objective value on held-out instances.
+            This work shows that structure-aware learning can predict instance-dependent parameters for fixed-depth QAOA on a structured family of weighted MaxCut graphs and that this mechanism can be analyzed quantitatively. In the transcriptomic setting studied here, the archived benchmark shows near-parity with direct classical search and a large runtime advantage, while the rerun studies show that this retained-quality claim is robust across moderate seed variation but limited by protocol sensitivity and family complexity.
           </p>
           <div class="lead-callout">
             <p>
-              In this setting, improved performance has two practical consequences: it sharply reduces online search cost and it maintains held-out objective quality at a level that remains tightly concentrated near the direct-search reference throughout the bounded evaluation regime studied here.
+              Taken together, the results identify structure-aware parameter prediction as a viable route to transferring fixed-depth quantum optimization across related weighted instances, but only within a bounded operating regime that the present research makes explicit. Extending this framework to broader weighted graph families, stronger graph-learning architectures, more stable training procedures, and hardware-side evaluation is the natural next step.
             </p>
           </div>
         </div>
