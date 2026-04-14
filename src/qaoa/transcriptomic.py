@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import json
 import math
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List, Sequence, Tuple
@@ -135,6 +136,7 @@ def classical_optimize_instance(
     cut_diagonal = instance["cut_diagonal"]
     rng = np.random.default_rng(seed)
     best = None
+    started_at = time.perf_counter()
 
     def objective(raw_angles: np.ndarray) -> float:
         gammas, betas = normalize_angles(raw_angles, depth)
@@ -168,6 +170,7 @@ def classical_optimize_instance(
         }
         if best is None or candidate["value"] > best["value"]:
             best = candidate
+    best["runtime_ms"] = 1000.0 * (time.perf_counter() - started_at)
     return best
 
 
@@ -461,6 +464,132 @@ def predict_instance_with_gnn(instance: Dict[str, object], model: SimpleGCN, dep
         "value": value,
         "state": state,
     }
+
+
+def target_edge_count_for_gene_count(top_gene_count: int, target_density: float = 0.4) -> int:
+    if top_gene_count < 2:
+        raise ValueError("top_gene_count must be at least 2")
+    max_edges = top_gene_count * (top_gene_count - 1) // 2
+    suggested_edges = int(round(target_density * max_edges))
+    return min(max(top_gene_count - 1, suggested_edges), max_edges)
+
+
+def evaluate_transcriptomic_benchmark(
+    benchmark_instances: Sequence[Dict[str, object]],
+    model: SimpleGCN,
+    adaptation_instances: Sequence[Dict[str, object]],
+    depth: int,
+) -> pd.DataFrame:
+    heuristic_angles = np.mean([instance["target_angles"] for instance in adaptation_instances], axis=0)
+    rows: List[Dict[str, object]] = []
+
+    for instance in benchmark_instances:
+        graph_id = int(instance["graph_id"])
+        best_cut = float(instance["best_cut"])
+
+        inference_started_at = time.perf_counter()
+        learned = predict_instance_with_gnn(instance, model, depth)
+        learned_runtime_ms = 1000.0 * (time.perf_counter() - inference_started_at)
+
+        heuristic_started_at = time.perf_counter()
+        heuristic_gammas, heuristic_betas = normalize_angles(heuristic_angles, depth)
+        heuristic_value, _ = qaoa_value_for_angles(instance["cut_diagonal"], heuristic_gammas, heuristic_betas)
+        heuristic_runtime_ms = 1000.0 * (time.perf_counter() - heuristic_started_at)
+
+        classical_reference = instance["classical_reference"]
+        rows.extend(
+            [
+                {
+                    "method": "Classical depth-2 search",
+                    "graph_id": graph_id,
+                    "num_nodes": int(instance["n"]),
+                    "num_edges": int(instance["edge_count"]),
+                    "expected_cut": float(classical_reference["value"]),
+                    "best_cut": best_cut,
+                    "approximation_ratio": float(classical_reference["value"] / best_cut),
+                    "runtime_ms": float(classical_reference.get("runtime_ms", np.nan)),
+                },
+                {
+                    "method": "Heuristic mean-angle initializer",
+                    "graph_id": graph_id,
+                    "num_nodes": int(instance["n"]),
+                    "num_edges": int(instance["edge_count"]),
+                    "expected_cut": float(heuristic_value),
+                    "best_cut": best_cut,
+                    "approximation_ratio": float(heuristic_value / best_cut),
+                    "runtime_ms": heuristic_runtime_ms,
+                },
+                {
+                    "method": "Graph-conditioned GNN (ours)",
+                    "graph_id": graph_id,
+                    "num_nodes": int(instance["n"]),
+                    "num_edges": int(instance["edge_count"]),
+                    "expected_cut": float(learned["value"]),
+                    "best_cut": best_cut,
+                    "approximation_ratio": float(learned["value"] / best_cut),
+                    "runtime_ms": learned_runtime_ms,
+                },
+            ]
+        )
+
+    return pd.DataFrame(rows)
+
+
+def summarize_transcriptomic_benchmark(frame: pd.DataFrame) -> pd.DataFrame:
+    summary = (
+        frame.groupby("method", as_index=False)
+        .agg(
+            num_nodes=("num_nodes", "median"),
+            num_edges=("num_edges", "median"),
+            mean_ratio=("approximation_ratio", "mean"),
+            std_ratio=("approximation_ratio", "std"),
+            median_runtime_ms=("runtime_ms", "median"),
+        )
+        .sort_values("method")
+        .reset_index(drop=True)
+    )
+    summary["std_ratio"] = summary["std_ratio"].fillna(0.0)
+
+    classical_mean_ratio = float(
+        summary.loc[summary["method"] == "Classical depth-2 search", "mean_ratio"].iloc[0]
+    )
+    summary["retention_vs_classical"] = summary["mean_ratio"] / classical_mean_ratio
+    return summary
+
+
+def run_transcriptomic_generalization_benchmark(
+    config: TranscriptomicBenchmarkConfig | None = None,
+    training_kwargs: Dict[str, object] | None = None,
+) -> Tuple[pd.DataFrame, pd.DataFrame, Dict[str, object]]:
+    config = config or TranscriptomicBenchmarkConfig()
+    bundle = build_transcriptomic_benchmark(config)
+    adaptation_instances = attach_classical_targets(bundle["adaptation_instances"], config)
+    benchmark_instances = attach_classical_targets(bundle["benchmark_instances"], config)
+
+    fit_kwargs = {
+        "depth": config.depth,
+        "seed": config.training_seed,
+    }
+    if training_kwargs:
+        fit_kwargs.update(training_kwargs)
+    training_result = train_adapted_qaoa_gnn(adaptation_instances, **fit_kwargs)
+
+    benchmark_frame = evaluate_transcriptomic_benchmark(
+        benchmark_instances,
+        training_result["model"],
+        adaptation_instances,
+        config.depth,
+    )
+    summary = summarize_transcriptomic_benchmark(benchmark_frame)
+    metadata = {
+        "config": config,
+        "training": {
+            "best_loss": training_result["best_loss"],
+            "best_epoch": training_result["best_epoch"],
+            "epochs_run": training_result["epochs_run"],
+        },
+    }
+    return benchmark_frame, summary, metadata
 
 
 def rx_unitary(beta: float) -> np.ndarray:

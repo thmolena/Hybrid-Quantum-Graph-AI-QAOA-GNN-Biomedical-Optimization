@@ -1,0 +1,92 @@
+{
+  "runs": [
+    {
+      "config": {
+        "top_gene_count": 4,
+        "target_edge_count": 3,
+        "benchmark_size": 4,
+        "benchmark_seed": 42,
+        "adaptation_size": 12,
+        "adaptation_seed": 200,
+        "subsample_size": 50,
+        "depth": 2,
+        "num_starts": 5,
+        "maxiter": 160,
+        "seed_offset": 1000,
+        "training_seed": 7
+      },
+      "training": {
+        "best_loss": 0.02072223999372606,
+        "best_epoch": 250,
+        "epochs_run": 250
+      },
+      "sweep_runtime_s": 4.263603292000001
+    },
+    {
+      "config": {
+        "top_gene_count": 6,
+        "target_edge_count": 6,
+        "benchmark_size": 4,
+        "benchmark_seed": 42,
+        "adaptation_size": 12,
+        "adaptation_seed": 200,
+        "subsample_size": 50,
+        "depth": 2,
+        "num_starts": 5,
+        "maxiter": 160,
+        "seed_offset": 1000,
+        "training_seed": 7
+      },
+      "training": {
+        "best_loss": 0.0010750034634838812,
+        "best_epoch": 238,
+        "epochs_run": 250
+      },
+      "sweep_runtime_s": 4.359238083
+    },
+    {
+      "config": {
+        "top_gene_count": 8,
+        "target_edge_count": 11,
+        "benchmark_size": 4,
+        "benchmark_seed": 42,
+        "adaptation_size": 12,
+        "adaptation_seed": 200,
+        "subsample_size": 50,
+        "depth": 2,
+        "num_starts": 5,
+        "maxiter": 160,
+        "seed_offset": 1000,
+        "training_seed": 7
+      },
+      "training": {
+        "best_loss": 0.01151528669288382,
+        "best_epoch": 249,
+        "epochs_run": 250
+      },
+      "sweep_runtime_s": 6.037146625000002
+    },
+    {
+      "config": {
+        "top_gene_count": 10,
+        "target_edge_count": 18,
+        "benchmark_size": 4,
+        "benchmark_seed": 42,
+        "adaptation_size": 12,
+        "adaptation_seed": 200,
+        "subsample_size": 50,
+        "depth": 2,
+        "num_starts": 5,
+        "maxiter": 160,
+        "seed_offset": 1000,
+        "training_seed": 7
+      },
+      "training": {
+        "best_loss": 0.003736579317774158,
+        "best_epoch": 8,
+        "epochs_run": 48
+      },
+      "sweep_runtime_s": 7.8290575419999975
+    }
+  ]
+}
