@@ -6,10 +6,13 @@ import pandas as pd
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 QAOA_BASELINES_TABLE = REPO_ROOT / "outputs" / "tables" / "qaoa_baselines.csv"
+HEADLINE_BENCHMARK_TABLE = REPO_ROOT / "outputs" / "tables" / "qaoa_headline_benchmark_summary.csv"
+HEADLINE_BENCHMARK_DETAILED_TABLE = REPO_ROOT / "outputs" / "tables" / "qaoa_headline_benchmark_detailed.csv"
 NOISE_TABLE = REPO_ROOT / "outputs" / "tables" / "qaoa_noise_summary.csv"
 SIZE_SWEEP_TABLE = REPO_ROOT / "outputs" / "tables" / "qaoa_size_sweep.csv"
 SEED_SWEEP_TABLE = REPO_ROOT / "outputs" / "tables" / "qaoa_seed_sweep.csv"
 ADAPTATION_SWEEP_TABLE = REPO_ROOT / "outputs" / "tables" / "qaoa_adaptation_sweep.csv"
+CROSS_FAMILY_TABLE = REPO_ROOT / "outputs" / "tables" / "qaoa_cross_family_transfer.csv"
 PAPER_FIGURES = REPO_ROOT / "research_paper" / "figures"
 
 
@@ -69,6 +72,150 @@ def generate_qaoa_pareto_figure() -> None:
 
     PAPER_FIGURES.mkdir(parents=True, exist_ok=True)
     fig.savefig(PAPER_FIGURES / "qaoa_baselines_pareto.png", dpi=300, bbox_inches="tight")
+    plt.close(fig)
+
+
+def generate_qaoa_headline_benchmark_figure() -> None:
+    data = pd.read_csv(HEADLINE_BENCHMARK_TABLE)
+    plot_data = data[data["method"] != "Classical depth-2 search"].copy()
+    colors = {
+        "Random initialization": "#9b2226",
+        "Heuristic initialization": "#6c757d",
+        "Descriptor k-NN regressor": "#588157",
+        "Prior-style graph-feature regressor": "#669bbc",
+        "GNN without graph edges": "#bc6c25",
+        "GNN without node features": "#dda15e",
+        "Graph-conditioned GNN (ours)": "#1b4965",
+    }
+
+    plt.rcParams.update(
+        {
+            "font.family": "serif",
+            "font.size": 11,
+            "axes.labelsize": 12,
+            "axes.titlesize": 12,
+            "xtick.labelsize": 10,
+            "ytick.labelsize": 10,
+        }
+    )
+
+    fig, ax = plt.subplots(figsize=(7.2, 4.3), constrained_layout=True)
+    for row in plot_data.itertuples(index=False):
+        ax.scatter(
+            row.median_total_ms,
+            row.mean_ratio,
+            s=150,
+            color=colors.get(row.method, "#1f1f1f"),
+            edgecolor="white",
+            linewidth=0.9,
+            zorder=3,
+        )
+        ax.annotate(
+            row.method.replace(" regressor", "").replace(" initialization", ""),
+            (row.median_total_ms, row.mean_ratio),
+            textcoords="offset points",
+            xytext=(6, 6),
+            ha="left",
+        )
+
+    classical = data[data["method"] == "Classical depth-2 search"].iloc[0]
+    ax.axhline(classical["mean_ratio"], color="#1b4965", linestyle="--", linewidth=1.6, alpha=0.6)
+    ax.set_xscale("log")
+    ax.set_xlabel("Median end-to-end runtime per held-out graph (ms, log scale)")
+    ax.set_ylabel("Held-out mean approximation ratio")
+    ax.set_ylim(0.60, float(classical["mean_ratio"]) + 0.03)
+    ax.grid(alpha=0.22, which="both")
+    ax.set_title("Extracted-script headline benchmark on transcriptomic graphs")
+
+    PAPER_FIGURES.mkdir(parents=True, exist_ok=True)
+    fig.savefig(PAPER_FIGURES / "qaoa_headline_benchmark.png", dpi=300, bbox_inches="tight")
+    plt.close(fig)
+
+
+def generate_qaoa_headline_ablation_figure() -> None:
+    data = pd.read_csv(HEADLINE_BENCHMARK_TABLE)
+    plot_data = data[data["method"] != "Classical depth-2 search"].copy()
+    colors = [
+        "#9b2226",
+        "#6c757d",
+        "#588157",
+        "#669bbc",
+        "#bc6c25",
+        "#dda15e",
+        "#1b4965",
+    ]
+
+    plt.rcParams.update(
+        {
+            "font.family": "serif",
+            "font.size": 11,
+            "axes.labelsize": 12,
+            "axes.titlesize": 12,
+            "xtick.labelsize": 9,
+            "ytick.labelsize": 10,
+        }
+    )
+
+    fig, (ax_ratio, ax_runtime) = plt.subplots(1, 2, figsize=(11.0, 4.3), constrained_layout=True)
+    ax_ratio.bar(plot_data["method"], plot_data["mean_ratio"], color=colors)
+    ax_ratio.errorbar(
+        plot_data["method"],
+        plot_data["mean_ratio"],
+        yerr=plot_data["std_ratio"],
+        fmt="none",
+        ecolor="black",
+        elinewidth=1.0,
+        capsize=3,
+    )
+    ax_ratio.set_ylabel("Held-out mean approximation ratio")
+    ax_ratio.set_title("Initializer ablations and stronger baselines")
+    ax_ratio.set_ylim(0.60, 0.91)
+    ax_ratio.grid(axis="y", alpha=0.22)
+    ax_ratio.tick_params(axis="x", rotation=28)
+
+    ax_runtime.bar(plot_data["method"], plot_data["speedup_vs_classical"], color=colors)
+    ax_runtime.set_yscale("log")
+    ax_runtime.set_ylabel("Speedup vs. classical search")
+    ax_runtime.set_title("Online speedup relative to direct search")
+    ax_runtime.grid(axis="y", which="both", alpha=0.22)
+    ax_runtime.tick_params(axis="x", rotation=28)
+
+    PAPER_FIGURES.mkdir(parents=True, exist_ok=True)
+    fig.savefig(PAPER_FIGURES / "qaoa_headline_ablation.png", dpi=300, bbox_inches="tight")
+    plt.close(fig)
+
+
+def generate_qaoa_headline_residual_regret_figure() -> None:
+    data = pd.read_csv(HEADLINE_BENCHMARK_DETAILED_TABLE)
+    classical = data[data["method"] == "Classical depth-2 search"][
+        ["graph_id", "approximation_ratio"]
+    ].rename(columns={"approximation_ratio": "classical_ratio"})
+    learned = data[data["method"] == "Graph-conditioned GNN (ours)"][["graph_id", "approximation_ratio"]]
+    merged = learned.merge(classical, on="graph_id", how="left")
+    merged["residual_regret"] = merged["classical_ratio"] - merged["approximation_ratio"]
+
+    plt.rcParams.update(
+        {
+            "font.family": "serif",
+            "font.size": 11,
+            "axes.labelsize": 12,
+            "axes.titlesize": 12,
+            "xtick.labelsize": 10,
+            "ytick.labelsize": 10,
+        }
+    )
+
+    fig, ax = plt.subplots(figsize=(6.6, 4.0), constrained_layout=True)
+    ax.axhline(0.0, color="black", linewidth=1.0, alpha=0.5)
+    ax.scatter(merged["graph_id"], merged["residual_regret"], s=75, color="#1b4965")
+    ax.plot(merged["graph_id"], merged["residual_regret"], color="#1b4965", alpha=0.6)
+    ax.set_xlabel("Held-out graph id")
+    ax.set_ylabel("Residual regret vs. direct search")
+    ax.set_title("Residual regret of the extracted-script GNN benchmark")
+    ax.grid(axis="y", alpha=0.22)
+
+    PAPER_FIGURES.mkdir(parents=True, exist_ok=True)
+    fig.savefig(PAPER_FIGURES / "qaoa_headline_residual_regret.png", dpi=300, bbox_inches="tight")
     plt.close(fig)
 
 
@@ -348,9 +495,72 @@ def generate_qaoa_adaptation_sweep_figure() -> None:
     plt.close(fig)
 
 
+def generate_qaoa_cross_family_transfer_figure() -> None:
+    data = pd.read_csv(CROSS_FAMILY_TABLE)
+    methods = [
+        "Classical depth-2 search",
+        "Source-family heuristic",
+        "Source-family descriptor regressor",
+        "Cross-family GNN",
+        "Target-family GNN (oracle)",
+    ]
+    palette = {
+        "Classical depth-2 search": "#1b4965",
+        "Source-family heuristic": "#6c757d",
+        "Source-family descriptor regressor": "#669bbc",
+        "Cross-family GNN": "#c1121f",
+        "Target-family GNN (oracle)": "#588157",
+    }
+    markers = {
+        "Classical depth-2 search": "o",
+        "Source-family heuristic": "^",
+        "Source-family descriptor regressor": "D",
+        "Cross-family GNN": "s",
+        "Target-family GNN (oracle)": "P",
+    }
+
+    plt.rcParams.update(
+        {
+            "font.family": "serif",
+            "font.size": 11,
+            "axes.labelsize": 12,
+            "axes.titlesize": 12,
+            "legend.fontsize": 10,
+            "xtick.labelsize": 10,
+            "ytick.labelsize": 10,
+        }
+    )
+
+    fig, ax = plt.subplots(figsize=(7.2, 4.2), constrained_layout=True)
+    for method in methods:
+        method_df = data[data["method"] == method].sort_values("target_top_gene_count")
+        ax.plot(
+            method_df["target_top_gene_count"],
+            method_df["mean_ratio"],
+            marker=markers[method],
+            linewidth=2.0,
+            markersize=6,
+            color=palette[method],
+            label=method,
+        )
+    ax.set_xlabel("Target-family top-gene count")
+    ax.set_ylabel("Held-out mean approximation ratio")
+    ax.set_title("Cross-family transfer from a 16-gene source family")
+    ax.grid(axis="y", alpha=0.22)
+    ax.legend(frameon=False, loc="lower left")
+
+    PAPER_FIGURES.mkdir(parents=True, exist_ok=True)
+    fig.savefig(PAPER_FIGURES / "qaoa_cross_family_transfer.png", dpi=300, bbox_inches="tight")
+    plt.close(fig)
+
+
 if __name__ == "__main__":
     generate_qaoa_pareto_figure()
+    generate_qaoa_headline_benchmark_figure()
+    generate_qaoa_headline_ablation_figure()
+    generate_qaoa_headline_residual_regret_figure()
     generate_qaoa_noise_figure()
     generate_qaoa_size_sweep_figure()
     generate_qaoa_seed_sweep_figure()
     generate_qaoa_adaptation_sweep_figure()
+    generate_qaoa_cross_family_transfer_figure()
