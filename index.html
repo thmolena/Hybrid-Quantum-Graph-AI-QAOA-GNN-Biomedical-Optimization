@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PRX-Style Research Summary | Hybrid Quantum Graph AI</title>
+  <title>Research Summary | Hybrid Quantum Graph AI</title>
   <meta name="description" content="Academic landing page for graph-conditioned fixed-depth QAOA on weighted transcriptomic graphs, with bounded claims, formal results, and reproducible evidence.">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="PRX-Style Research Summary | Hybrid Quantum Graph AI">
+  <meta property="og:title" content="Research Summary | Hybrid Quantum Graph AI">
   <meta property="og:description" content="Problem-first academic presentation of graph-conditioned QAOA parameter prediction and supporting biomedical optimization artifacts.">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="PRX-Style Research Summary | Hybrid Quantum Graph AI">
+  <meta name="twitter:title" content="Research Summary | Hybrid Quantum Graph AI">
   <meta name="twitter:description" content="Problem-first academic presentation of graph-conditioned QAOA parameter prediction and supporting biomedical optimization artifacts.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -580,7 +580,7 @@
       <div class="method-layout">
         <article class="panel">
           <p class="lead-note">
-            The core method is intentionally simple to state. The transcriptomic branch is the primary APS-relevant result. The CTG branch remains secondary and illustrates how the same graph-to-decision formulation extends to a cohort-level biomedical optimization problem.
+            The core method is intentionally simple to state. The transcriptomic branch is the primary technical result. The CTG branch remains secondary and illustrates how the same graph-to-decision formulation extends to a cohort-level biomedical optimization problem.
           </p>
           <div class="method-steps">
             <div class="step">
@@ -706,7 +706,7 @@
           <img src="website/notebooks_html/figures/qaoa_demo_benchmark_overview.png" alt="Held-out QAOA benchmark overview">
           <figcaption>
             <strong>Benchmark overview</strong>
-            The comparison is anchored to direct search rather than to random initialization, which is the relevant operational ceiling for amortized QAOA.
+            The comparison is anchored to direct search rather than to random initialization, which is the relevant operational ceiling for learned fixed-depth QAOA initialization.
           </figcaption>
         </figure>
         <figure>
@@ -744,7 +744,7 @@
       <div class="three-col">
         <article class="card why-card">
           <strong>Scalable optimization</strong>
-          <p>It demonstrates that fixed-depth QAOA parameter search can be amortized on a structured weighted graph family without giving up materially useful objective quality.</p>
+          <p>It demonstrates that fixed-depth QAOA parameter search can be replaced by graph-conditioned prediction on a structured weighted graph family without giving up materially useful objective quality.</p>
         </article>
         <article class="card why-card">
           <strong>Reduced computational cost</strong>
@@ -756,16 +756,16 @@
         </article>
       </div>
       <div class="quote-panel" style="margin-top: 18px;">
-        The right PRX-style framing is therefore: problem, theory-backed method, quantitative retention against the relevant baseline, and carefully bounded implications. The wrong framing is a product-demo narrative or an unqualified claim of scalable quantum advantage.
+        The appropriate framing is problem, theory-backed method, quantitative retention against the relevant baseline, and carefully bounded implications. The wrong framing is a product-demo narrative or an unqualified claim of scalable quantum advantage.
       </div>
     </section>
 
     <section class="section" aria-labelledby="limits-title">
       <div class="section-kicker">Limitations</div>
-      <h2 id="limits-title">What a serious reviewer will still question</h2>
+      <h2 id="limits-title">Open technical questions and limits</h2>
       <ul class="claim-list">
         <li>The graph family is small and exact-audit by design, so the work supports a controlled fixed-depth result rather than a large-scale asymptotic claim.</li>
-        <li>The theoretical results strengthen the manuscript materially, but a top-tier reviewer will still ask how far they generalize beyond the finite-family regime and beyond the affine-regressor comparison class.</li>
+        <li>The theoretical results strengthen the paper materially, but an obvious next question is how far they generalize beyond the finite-family regime and beyond the affine-regressor comparison class.</li>
         <li>The heuristic mean-angle baseline is already competitive, so the strongest interpretation is conditional: graph conditioning matters most when optimal angles vary systematically with graph structure.</li>
         <li>The CTG branch is useful for methodology breadth, but it should not be allowed to distract from the main QAOA claim in the page hierarchy.</li>
       </ul>
@@ -773,11 +773,11 @@
 
     <section class="section" id="artifacts" aria-labelledby="artifacts-title">
       <div class="section-kicker">Paper and Code</div>
-      <h2 id="artifacts-title">Primary materials for manuscript review and reproducibility</h2>
+      <h2 id="artifacts-title">Primary materials and reproducibility assets</h2>
       <div class="artifact-grid">
         <article class="artifact-card">
-          <h3>Manuscript PDF</h3>
-          <p><a href="research_paper/research_paper.pdf">Formatted paper for reviewer-style reading</a></p>
+          <h3>Paper PDF</h3>
+          <p><a href="research_paper/research_paper.pdf">Formatted research paper</a></p>
         </article>
         <article class="artifact-card">
           <h3>QAOA notebook</h3>
@@ -795,7 +795,7 @@
     </section>
 
     <footer class="footer">
-      This page is intentionally paper-first. It foregrounds the transcriptomic QAOA result, preserves bounded claims, and treats the biomedical branch as secondary supporting evidence rather than as a co-equal headline claim.
+      This page foregrounds the transcriptomic QAOA result, preserves bounded claims, and treats the biomedical branch as secondary supporting evidence rather than as a co-equal headline claim.
     </footer>
   </div>
 </body>

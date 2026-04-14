@@ -2,7 +2,6 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas as pd
-from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -135,76 +134,6 @@ def generate_qaoa_noise_figure() -> None:
     plt.close(fig)
 
 
-def generate_qaoa_pipeline_schematic() -> None:
-    plt.rcParams.update(
-        {
-            "font.family": "serif",
-            "font.size": 11,
-        }
-    )
-
-    fig, ax = plt.subplots(figsize=(10.2, 4.4))
-    ax.set_xlim(0, 1)
-    ax.set_ylim(0, 1)
-    ax.axis("off")
-
-    boxes = [
-        (0.03, 0.56, 0.2, 0.24, "Transcriptomic panel", "102 samples -> top-variance gene panel\npatient-resampled biological graphs"),
-        (0.28, 0.56, 0.2, 0.24, "Weighted graph family", "co-expression graph\nconnected sparse weighted MaxCut instances"),
-        (0.53, 0.56, 0.2, 0.24, "Adaptation stage", "multi-start classical search\nreference depth-2 QAOA angles"),
-        (0.78, 0.56, 0.19, 0.24, "Inference stage", "GNN predicts angles\none forward pass per graph"),
-    ]
-    box_face = "#f7f3eb"
-    box_edge = "#274c77"
-    accent = "#b85c38"
-
-    for x, y, width, height, title, body in boxes:
-        patch = FancyBboxPatch(
-            (x, y),
-            width,
-            height,
-            boxstyle="round,pad=0.012,rounding_size=0.02",
-            linewidth=1.3,
-            edgecolor=box_edge,
-            facecolor=box_face,
-        )
-        ax.add_patch(patch)
-        ax.text(x + 0.015, y + height - 0.055, title, fontsize=12, fontweight="bold", color=box_edge)
-        ax.text(x + 0.015, y + height - 0.11, body, va="top", color="#243447")
-
-    for x0, x1 in [(0.23, 0.28), (0.48, 0.53), (0.73, 0.78)]:
-        arrow = FancyArrowPatch((x0, 0.68), (x1, 0.68), arrowstyle="-|>", mutation_scale=16, linewidth=1.6, color=accent)
-        ax.add_patch(arrow)
-
-    lower = FancyBboxPatch(
-        (0.06, 0.14),
-        0.88,
-        0.24,
-        boxstyle="round,pad=0.016,rounding_size=0.02",
-        linewidth=1.1,
-        edgecolor="#6c757d",
-        facecolor="#fbfcfe",
-    )
-    ax.add_patch(lower)
-    ax.text(0.085, 0.31, "Downstream audit and scientific claim", fontsize=12, fontweight="bold", color="#1b4965")
-    ax.text(
-        0.085,
-        0.235,
-        "Exact MaxCut objective, held-out approximation ratio, latency, and local-depolarizing robustness are all computed after angle prediction.",
-        color="#243447",
-    )
-    ax.text(
-        0.085,
-        0.17,
-        "Claim: graph-conditioned amortization replaces repeated parameter search on a structured weighted biological graph family without claiming quantum advantage.",
-        color="#243447",
-    )
-
-    PAPER_FIGURES.mkdir(parents=True, exist_ok=True)
-    fig.savefig(PAPER_FIGURES / "qaoa_pipeline_schematic.png", dpi=300, bbox_inches="tight")
-    plt.close(fig)
-
-
 def generate_qaoa_size_sweep_figure() -> None:
     data = pd.read_csv(SIZE_SWEEP_TABLE)
     method_order = [
@@ -289,5 +218,4 @@ def generate_qaoa_size_sweep_figure() -> None:
 if __name__ == "__main__":
     generate_qaoa_pareto_figure()
     generate_qaoa_noise_figure()
-    generate_qaoa_pipeline_schematic()
     generate_qaoa_size_sweep_figure()

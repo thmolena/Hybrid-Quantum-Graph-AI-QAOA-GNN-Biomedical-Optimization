@@ -28,7 +28,7 @@ DEFAULT_META_PATH = REPO_ROOT / "outputs" / "tables" / "qaoa_size_sweep_meta.jso
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run a real transcriptomic QAOA size sweep.")
-    parser.add_argument("--gene-counts", nargs="+", type=int, default=[4, 6, 8, 10], help="Top-gene panel sizes to evaluate.")
+    parser.add_argument("--gene-counts", nargs="+", type=int, default=[4, 6, 8, 10, 12, 14, 16], help="Top-gene panel sizes to evaluate.")
     parser.add_argument("--target-density", type=float, default=0.4, help="Target graph density used to derive edge budgets.")
     parser.add_argument("--adaptation-size", type=int, default=12, help="Number of adaptation graphs per size.")
     parser.add_argument("--benchmark-size", type=int, default=4, help="Number of held-out benchmark graphs per size.")

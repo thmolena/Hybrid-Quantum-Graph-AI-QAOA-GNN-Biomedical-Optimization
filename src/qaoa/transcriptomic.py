@@ -20,8 +20,10 @@ from torch import optim
 from src.gnn import SimpleGCN
 
 
-DEFAULT_CACHE_PANEL = Path("data/prostate_top10_variance_panel.csv.gz")
-DEFAULT_CACHE_META = Path("data/prostate_top10_variance_panel_meta.json")
+DEFAULT_CACHE_PANEL = Path("data/prostate_top32_variance_panel.csv.gz")
+DEFAULT_CACHE_META = Path("data/prostate_top32_variance_panel_meta.json")
+LEGACY_CACHE_PANEL = Path("data/prostate_top10_variance_panel.csv.gz")
+LEGACY_CACHE_META = Path("data/prostate_top10_variance_panel_meta.json")
 
 
 @dataclass(frozen=True)
@@ -44,21 +46,35 @@ def _load_cached_panel(
     panel_path: Path = DEFAULT_CACHE_PANEL,
     meta_path: Path = DEFAULT_CACHE_META,
 ) -> Tuple[pd.DataFrame, pd.Series, pd.DataFrame, Dict[str, object]]:
-    if not panel_path.exists() or not meta_path.exists():
+    candidate_pairs = [(panel_path, meta_path)]
+    if (panel_path, meta_path) != (LEGACY_CACHE_PANEL, LEGACY_CACHE_META):
+        candidate_pairs.append((LEGACY_CACHE_PANEL, LEGACY_CACHE_META))
+
+    selected_panel_path = None
+    selected_meta_path = None
+    for current_panel_path, current_meta_path in candidate_pairs:
+        if current_panel_path.exists() and current_meta_path.exists():
+            selected_panel_path = current_panel_path
+            selected_meta_path = current_meta_path
+            break
+
+    if selected_panel_path is None or selected_meta_path is None:
         raise FileNotFoundError(
-            "Cached transcriptomic panel not found. Expected data/prostate_top10_variance_panel.csv.gz "
-            "and data/prostate_top10_variance_panel_meta.json."
+            "Cached transcriptomic panel not found. Expected either data/prostate_top32_variance_panel.csv.gz "
+            "and data/prostate_top32_variance_panel_meta.json, or the legacy top-10 cache pair."
         )
 
-    with meta_path.open("r", encoding="utf-8") as handle:
+    with selected_meta_path.open("r", encoding="utf-8") as handle:
         meta = json.load(handle)
 
-    panel = pd.read_csv(panel_path, compression="gzip")
+    panel = pd.read_csv(selected_panel_path, compression="gzip")
     sample_ids = panel.pop("__sample_id__").astype(str)
     labels = pd.Series(panel.pop("__target__").astype(str).to_numpy(), index=sample_ids, name=meta.get("label_name", "class"))
     expression_frame = panel.copy()
     expression_frame.index = sample_ids
     gene_table = pd.DataFrame(meta["gene_table"])
+    meta["cache_panel_path"] = str(selected_panel_path)
+    meta["cache_meta_path"] = str(selected_meta_path)
     return expression_frame, labels, gene_table, meta
 
 
