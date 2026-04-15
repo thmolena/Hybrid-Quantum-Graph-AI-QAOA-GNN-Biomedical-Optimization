@@ -994,6 +994,7 @@ def run_cross_family_transfer_experiment(
     source_config: TranscriptomicBenchmarkConfig | None = None,
     target_gene_counts: Sequence[int] = (10, 12, 14, 16),
     training_kwargs: Dict[str, object] | None = None,
+    include_target_oracle: bool = True,
 ) -> Tuple[pd.DataFrame, pd.DataFrame, Dict[str, object]]:
     source_config = source_config or headline_transcriptomic_benchmark_config()
     source_bundle = build_transcriptomic_benchmark(source_config)
@@ -1022,16 +1023,18 @@ def run_cross_family_transfer_experiment(
             training_seed=source_config.training_seed,
         )
         target_bundle = build_transcriptomic_benchmark(target_config)
-        target_adaptation = attach_classical_targets(target_bundle["adaptation_instances"], target_config)
         target_benchmark = attach_classical_targets(target_bundle["benchmark_instances"], target_config)
-        target_training = train_adapted_qaoa_gnn(target_adaptation, depth=target_config.depth, **fit_kwargs)
+        target_training = None
+        if include_target_oracle:
+            target_adaptation = attach_classical_targets(target_bundle["adaptation_instances"], target_config)
+            target_training = train_adapted_qaoa_gnn(target_adaptation, depth=target_config.depth, **fit_kwargs)
         target_frame = evaluate_transfer_methods(
             target_benchmark,
             target_config.depth,
             source_training["model"],
             source_heuristic_angles,
             source_prior_regressor,
-            target_model=target_training["model"],
+            target_model=None if target_training is None else target_training["model"],
         )
         target_frame.insert(0, "target_top_gene_count", int(target_gene_count))
         target_frame.insert(0, "source_top_gene_count", int(source_config.top_gene_count))
@@ -1040,9 +1043,9 @@ def run_cross_family_transfer_experiment(
             {
                 "target_top_gene_count": int(target_gene_count),
                 "target_edge_count": int(target_config.target_edge_count),
-                "target_training_best_loss": float(target_training["best_loss"]),
-                "target_training_best_epoch": int(target_training["best_epoch"]),
-                "target_training_epochs_run": int(target_training["epochs_run"]),
+                "target_training_best_loss": None if target_training is None else float(target_training["best_loss"]),
+                "target_training_best_epoch": None if target_training is None else int(target_training["best_epoch"]),
+                "target_training_epochs_run": None if target_training is None else int(target_training["epochs_run"]),
             }
         )
 

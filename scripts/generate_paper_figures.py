@@ -497,13 +497,14 @@ def generate_qaoa_adaptation_sweep_figure() -> None:
 
 def generate_qaoa_cross_family_transfer_figure() -> None:
     data = pd.read_csv(CROSS_FAMILY_TABLE)
-    methods = [
+    method_order = [
         "Classical depth-2 search",
         "Source-family heuristic",
         "Source-family descriptor regressor",
         "Cross-family GNN",
         "Target-family GNN (oracle)",
     ]
+    methods = [method for method in method_order if method in set(data["method"])]
     palette = {
         "Classical depth-2 search": "#1b4965",
         "Source-family heuristic": "#6c757d",
