@@ -18,6 +18,24 @@ MORPHOLOGY_BRIDGE_TABLE = REPO_ROOT / "outputs" / "tables" / "qaoa_morphology_co
 PAPER_FIGURES = REPO_ROOT / "research_paper" / "figures"
 PAPER_METHOD_KEY = "Graph-conditioned GNN (ours)"
 PAPER_METHOD_LABEL = "This paper method"
+METHOD_PALETTE = {
+    "Classical depth-2 search": "#3058d8",
+    "Classical depth-2 search angles": "#3058d8",
+    PAPER_METHOD_KEY: "#c03838",
+    "Heuristic mean-angle initializer": "#208078",
+}
+METHOD_MARKERS = {
+    "Classical depth-2 search": "o",
+    "Classical depth-2 search angles": "o",
+    PAPER_METHOD_KEY: "s",
+    "Heuristic mean-angle initializer": "^",
+}
+METHOD_LINESTYLES = {
+    "Classical depth-2 search": "-",
+    "Classical depth-2 search angles": "-",
+    PAPER_METHOD_KEY: "-",
+    "Heuristic mean-angle initializer": "--",
+}
 
 
 def display_method_label(method: str) -> str:
@@ -257,17 +275,6 @@ def generate_qaoa_noise_figure() -> None:
     )
 
     fig, ax = plt.subplots(figsize=(7.8, 4.4), constrained_layout=True)
-    palette = {
-        "Classical depth-2 search angles": "#1b4965",
-        PAPER_METHOD_KEY: "#c1121f",
-        "Heuristic mean-angle initializer": "#6c757d",
-    }
-    markers = {
-        "Classical depth-2 search angles": "o",
-        PAPER_METHOD_KEY: "s",
-        "Heuristic mean-angle initializer": "^",
-    }
-
     for method in [
         "Classical depth-2 search angles",
         PAPER_METHOD_KEY,
@@ -277,9 +284,10 @@ def generate_qaoa_noise_figure() -> None:
         ax.plot(
             method_df["noise_rate"],
             method_df["mean_ratio"],
-            marker=markers[method],
-            color=palette[method],
-            linewidth=2.2,
+            marker=METHOD_MARKERS[method],
+            color=METHOD_PALETTE[method],
+            linestyle=METHOD_LINESTYLES[method],
+            linewidth=2.4,
             markersize=6,
             label=display_method_label(method),
         )
@@ -287,8 +295,8 @@ def generate_qaoa_noise_figure() -> None:
             method_df["noise_rate"],
             method_df["mean_ratio"] - method_df["std_ratio"],
             method_df["mean_ratio"] + method_df["std_ratio"],
-            color=palette[method],
-            alpha=0.14,
+            color=METHOD_PALETTE[method],
+            alpha=0.10,
             linewidth=0,
         )
 
@@ -317,17 +325,6 @@ def generate_qaoa_size_sweep_figure() -> None:
         PAPER_METHOD_KEY,
         "Heuristic mean-angle initializer",
     ]
-    palette = {
-        "Classical depth-2 search": "#1b4965",
-        PAPER_METHOD_KEY: "#c1121f",
-        "Heuristic mean-angle initializer": "#6c757d",
-    }
-    markers = {
-        "Classical depth-2 search": "o",
-        PAPER_METHOD_KEY: "s",
-        "Heuristic mean-angle initializer": "^",
-    }
-
     plt.rcParams.update(
         {
             "font.family": "serif",
@@ -347,28 +344,30 @@ def generate_qaoa_size_sweep_figure() -> None:
         ax_ratio.plot(
             method_df["top_gene_count"],
             method_df["mean_ratio"],
-            marker=markers[method],
-            linewidth=2.1,
+            marker=METHOD_MARKERS[method],
+            linewidth=2.4,
             markersize=6,
-            color=palette[method],
+            color=METHOD_PALETTE[method],
+            linestyle=METHOD_LINESTYLES[method],
             label=display_method_label(method),
         )
         ax_ratio.fill_between(
             method_df["top_gene_count"],
             method_df["mean_ratio"] - method_df["std_ratio"],
             method_df["mean_ratio"] + method_df["std_ratio"],
-            color=palette[method],
-            alpha=0.12,
+            color=METHOD_PALETTE[method],
+            alpha=0.09,
             linewidth=0,
         )
 
         ax_runtime.plot(
             method_df["top_gene_count"],
             method_df["median_runtime_ms"],
-            marker=markers[method],
-            linewidth=2.1,
+            marker=METHOD_MARKERS[method],
+            linewidth=2.4,
             markersize=6,
-            color=palette[method],
+            color=METHOD_PALETTE[method],
+            linestyle=METHOD_LINESTYLES[method],
             label=display_method_label(method),
         )
 
@@ -456,17 +455,6 @@ def generate_qaoa_adaptation_sweep_figure() -> None:
         PAPER_METHOD_KEY,
         "Heuristic mean-angle initializer",
     ]
-    palette = {
-        "Classical depth-2 search": "#1b4965",
-        PAPER_METHOD_KEY: "#c1121f",
-        "Heuristic mean-angle initializer": "#6c757d",
-    }
-    markers = {
-        "Classical depth-2 search": "o",
-        PAPER_METHOD_KEY: "s",
-        "Heuristic mean-angle initializer": "^",
-    }
-
     plt.rcParams.update(
         {
             "font.family": "serif",
@@ -486,18 +474,19 @@ def generate_qaoa_adaptation_sweep_figure() -> None:
         ax_ratio.plot(
             method_df["adaptation_size"],
             method_df["mean_ratio"],
-            marker=markers[method],
-            linewidth=2.1,
+            marker=METHOD_MARKERS[method],
+            linewidth=2.4,
             markersize=6,
-            color=palette[method],
+            color=METHOD_PALETTE[method],
+            linestyle=METHOD_LINESTYLES[method],
             label=display_method_label(method),
         )
         ax_ratio.fill_between(
             method_df["adaptation_size"],
             method_df["mean_ratio"] - method_df["std_ratio"],
             method_df["mean_ratio"] + method_df["std_ratio"],
-            color=palette[method],
-            alpha=0.12,
+            color=METHOD_PALETTE[method],
+            alpha=0.09,
             linewidth=0,
         )
 
@@ -508,7 +497,7 @@ def generate_qaoa_adaptation_sweep_figure() -> None:
         marker="o",
         linewidth=2.1,
         markersize=6,
-        color="#7f5539",
+        color="#6a4c93",
     )
 
     ax_ratio.set_xlabel("Adaptation-family size")
