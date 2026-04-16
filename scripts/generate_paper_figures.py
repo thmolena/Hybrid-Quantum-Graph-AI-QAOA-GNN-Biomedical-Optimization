@@ -600,6 +600,15 @@ def generate_qaoa_morphology_transfer_figure() -> None:
     bridge_map = dict(zip(bridge["metric"], bridge["value"]))
 
     plot_data = summary[summary["method"] != "Classical depth-2 search"].copy()
+    display_labels = {
+        "Transcriptomic heuristic": "Transcriptomic heuristic",
+        "Transcriptomic descriptor regressor": "Transcriptomic descriptor",
+        "Transcriptomic GNN transfer": "Transferred transcriptomic GNN",
+        "Morphology heuristic": "Morphology heuristic",
+        "Morphology descriptor regressor": "Morphology descriptor",
+        "Morphology GNN (oracle)": "Morphology-family GNN",
+    }
+    plot_data["display_method"] = plot_data["method"].map(display_labels).fillna(plot_data["method"])
     colors = {
         "Transcriptomic heuristic": "#6c757d",
         "Transcriptomic descriptor regressor": "#669bbc",
@@ -622,12 +631,12 @@ def generate_qaoa_morphology_transfer_figure() -> None:
 
     fig, (ax_ratio, ax_bridge) = plt.subplots(1, 2, figsize=(11.4, 4.4), constrained_layout=True)
     ax_ratio.bar(
-        plot_data["method"],
+        plot_data["display_method"],
         plot_data["mean_ratio"],
         color=[colors.get(method, "#1f1f1f") for method in plot_data["method"]],
     )
     ax_ratio.errorbar(
-        plot_data["method"],
+        plot_data["display_method"],
         plot_data["mean_ratio"],
         yerr=plot_data["std_ratio"],
         fmt="none",
@@ -643,7 +652,7 @@ def generate_qaoa_morphology_transfer_figure() -> None:
         alpha=0.6,
     )
     ax_ratio.set_ylabel("Held-out mean approximation ratio")
-    ax_ratio.set_title("Cross-domain transfer to morphology graphs")
+    ax_ratio.set_title("Transfer to morphology graphs")
     ax_ratio.set_ylim(0.52, 0.89)
     ax_ratio.grid(axis="y", alpha=0.22)
     ax_ratio.tick_params(axis="x", rotation=24)
@@ -665,7 +674,7 @@ def generate_qaoa_morphology_transfer_figure() -> None:
     bridge_values = [bridge_map[label] for label in bridge_labels]
     ax_bridge.bar(pretty_labels, bridge_values, color=["#6c757d", "#588157", "#1b4965", "#c1121f", "#bc6c25"])
     ax_bridge.set_ylabel("Angle-space magnitude")
-    ax_bridge.set_title("Bridge diagnostic before objective evaluation")
+    ax_bridge.set_title("Angle-region diagnostic before objective evaluation")
     ax_bridge.grid(axis="y", alpha=0.22)
     ax_bridge.tick_params(axis="x", rotation=24)
 
