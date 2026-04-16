@@ -16,6 +16,12 @@ CROSS_FAMILY_TABLE = REPO_ROOT / "outputs" / "tables" / "qaoa_cross_family_trans
 MORPHOLOGY_TRANSFER_TABLE = REPO_ROOT / "outputs" / "tables" / "qaoa_morphology_transfer.csv"
 MORPHOLOGY_BRIDGE_TABLE = REPO_ROOT / "outputs" / "tables" / "qaoa_morphology_concentration_bridge.csv"
 PAPER_FIGURES = REPO_ROOT / "research_paper" / "figures"
+PAPER_METHOD_KEY = "Graph-conditioned GNN (ours)"
+PAPER_METHOD_LABEL = "This paper method"
+
+
+def display_method_label(method: str) -> str:
+    return PAPER_METHOD_LABEL if method == PAPER_METHOD_KEY else method
 
 
 def generate_qaoa_pareto_figure() -> None:
@@ -87,7 +93,7 @@ def generate_qaoa_headline_benchmark_figure() -> None:
         "Prior-style graph-feature regressor": "#669bbc",
         "GNN without graph edges": "#bc6c25",
         "GNN without node features": "#dda15e",
-        "Graph-conditioned GNN (ours)": "#1b4965",
+        PAPER_METHOD_KEY: "#1b4965",
     }
 
     plt.rcParams.update(
@@ -101,7 +107,17 @@ def generate_qaoa_headline_benchmark_figure() -> None:
         }
     )
 
-    fig, ax = plt.subplots(figsize=(7.2, 4.3), constrained_layout=True)
+    label_map = {
+        "Random initialization": "Random",
+        "Heuristic initialization": "Heuristic",
+        "Descriptor k-NN regressor": "k-NN regressor",
+        "Prior-style graph-feature regressor": "Affine regressor",
+        "GNN without graph edges": "GNN without edges",
+        "GNN without node features": "GNN without features",
+        PAPER_METHOD_KEY: PAPER_METHOD_LABEL,
+    }
+
+    fig, ax = plt.subplots(figsize=(8.8, 4.5), constrained_layout=True)
     for row in plot_data.itertuples(index=False):
         ax.scatter(
             row.median_total_ms,
@@ -111,13 +127,7 @@ def generate_qaoa_headline_benchmark_figure() -> None:
             edgecolor="white",
             linewidth=0.9,
             zorder=3,
-        )
-        ax.annotate(
-            row.method.replace(" regressor", "").replace(" initialization", ""),
-            (row.median_total_ms, row.mean_ratio),
-            textcoords="offset points",
-            xytext=(6, 6),
-            ha="left",
+            label=label_map.get(row.method, row.method),
         )
 
     classical = data[data["method"] == "Classical depth-2 search"].iloc[0]
@@ -128,6 +138,16 @@ def generate_qaoa_headline_benchmark_figure() -> None:
     ax.set_ylim(0.60, float(classical["mean_ratio"]) + 0.03)
     ax.grid(alpha=0.22, which="both")
     ax.set_title("Extracted-script headline benchmark on transcriptomic graphs")
+    handles, labels = ax.get_legend_handles_labels()
+    unique = dict(zip(labels, handles))
+    ax.legend(
+        unique.values(),
+        unique.keys(),
+        frameon=False,
+        loc="center left",
+        bbox_to_anchor=(1.02, 0.5),
+        borderaxespad=0.0,
+    )
 
     PAPER_FIGURES.mkdir(parents=True, exist_ok=True)
     fig.savefig(PAPER_FIGURES / "qaoa_headline_benchmark.png", dpi=300, bbox_inches="tight")
@@ -192,7 +212,7 @@ def generate_qaoa_headline_residual_regret_figure() -> None:
     classical = data[data["method"] == "Classical depth-2 search"][
         ["graph_id", "approximation_ratio"]
     ].rename(columns={"approximation_ratio": "classical_ratio"})
-    learned = data[data["method"] == "Graph-conditioned GNN (ours)"][["graph_id", "approximation_ratio"]]
+    learned = data[data["method"] == PAPER_METHOD_KEY][["graph_id", "approximation_ratio"]]
     merged = learned.merge(classical, on="graph_id", how="left")
     merged["residual_regret"] = merged["classical_ratio"] - merged["approximation_ratio"]
 
@@ -236,21 +256,21 @@ def generate_qaoa_noise_figure() -> None:
         }
     )
 
-    fig, ax = plt.subplots(figsize=(7.2, 4.2), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(7.8, 4.4), constrained_layout=True)
     palette = {
         "Classical depth-2 search angles": "#1b4965",
-        "Graph-conditioned GNN (ours)": "#c1121f",
+        PAPER_METHOD_KEY: "#c1121f",
         "Heuristic mean-angle initializer": "#6c757d",
     }
     markers = {
         "Classical depth-2 search angles": "o",
-        "Graph-conditioned GNN (ours)": "s",
+        PAPER_METHOD_KEY: "s",
         "Heuristic mean-angle initializer": "^",
     }
 
     for method in [
         "Classical depth-2 search angles",
-        "Graph-conditioned GNN (ours)",
+        PAPER_METHOD_KEY,
         "Heuristic mean-angle initializer",
     ]:
         method_df = data[data["method"] == method].sort_values("noise_rate")
@@ -261,7 +281,7 @@ def generate_qaoa_noise_figure() -> None:
             color=palette[method],
             linewidth=2.2,
             markersize=6,
-            label=method,
+            label=display_method_label(method),
         )
         ax.fill_between(
             method_df["noise_rate"],
@@ -277,7 +297,12 @@ def generate_qaoa_noise_figure() -> None:
     ax.set_xlim(-0.002, 0.052)
     ax.set_ylim(0.75, 0.89)
     ax.grid(axis="y", alpha=0.22)
-    ax.legend(frameon=False, loc="lower left")
+    ax.legend(
+        frameon=False,
+        loc="center left",
+        bbox_to_anchor=(1.02, 0.5),
+        borderaxespad=0.0,
+    )
     ax.set_title("Transcriptomic QAOA robustness under local depolarizing noise")
 
     PAPER_FIGURES.mkdir(parents=True, exist_ok=True)
@@ -289,17 +314,17 @@ def generate_qaoa_size_sweep_figure() -> None:
     data = pd.read_csv(SIZE_SWEEP_TABLE)
     method_order = [
         "Classical depth-2 search",
-        "Graph-conditioned GNN (ours)",
+        PAPER_METHOD_KEY,
         "Heuristic mean-angle initializer",
     ]
     palette = {
         "Classical depth-2 search": "#1b4965",
-        "Graph-conditioned GNN (ours)": "#c1121f",
+        PAPER_METHOD_KEY: "#c1121f",
         "Heuristic mean-angle initializer": "#6c757d",
     }
     markers = {
         "Classical depth-2 search": "o",
-        "Graph-conditioned GNN (ours)": "s",
+        PAPER_METHOD_KEY: "s",
         "Heuristic mean-angle initializer": "^",
     }
 
@@ -315,7 +340,8 @@ def generate_qaoa_size_sweep_figure() -> None:
         }
     )
 
-    fig, (ax_ratio, ax_runtime) = plt.subplots(1, 2, figsize=(10.6, 4.2), constrained_layout=True)
+    fig, (ax_ratio, ax_runtime) = plt.subplots(1, 2, figsize=(10.9, 4.6), constrained_layout=True)
+    fig.set_constrained_layout_pads(w_pad=0.04, h_pad=0.10, wspace=0.04, hspace=0.04)
     for method in method_order:
         method_df = data[data["method"] == method].sort_values("top_gene_count")
         ax_ratio.plot(
@@ -325,7 +351,7 @@ def generate_qaoa_size_sweep_figure() -> None:
             linewidth=2.1,
             markersize=6,
             color=palette[method],
-            label=method,
+            label=display_method_label(method),
         )
         ax_ratio.fill_between(
             method_df["top_gene_count"],
@@ -343,23 +369,23 @@ def generate_qaoa_size_sweep_figure() -> None:
             linewidth=2.1,
             markersize=6,
             color=palette[method],
-            label=method,
+            label=display_method_label(method),
         )
 
     ax_ratio.set_xlabel("Top-gene panel size")
     ax_ratio.set_ylabel("Held-out mean approximation ratio")
-    ax_ratio.set_title("Real transcriptomic size sweep")
+    ax_ratio.set_title("Real transcriptomic size sweep", pad=18)
     ax_ratio.grid(axis="y", alpha=0.22)
     ax_ratio.set_ylim(0.72, 0.96)
 
     ax_runtime.set_xlabel("Top-gene panel size")
     ax_runtime.set_ylabel("Median runtime per held-out graph (ms)")
-    ax_runtime.set_title("Online cost across graph size")
+    ax_runtime.set_title("Online cost across graph size", pad=18)
     ax_runtime.set_yscale("log")
     ax_runtime.grid(axis="y", which="both", alpha=0.22)
 
     handles, labels = ax_ratio.get_legend_handles_labels()
-    ax_runtime.legend(handles, labels, frameon=False, loc="upper left")
+    fig.legend(handles, labels, frameon=False, loc="upper center", bbox_to_anchor=(0.5, 1.10), ncol=3)
 
     PAPER_FIGURES.mkdir(parents=True, exist_ok=True)
     fig.savefig(PAPER_FIGURES / "qaoa_size_sweep.png", dpi=300, bbox_inches="tight")
@@ -368,7 +394,7 @@ def generate_qaoa_size_sweep_figure() -> None:
 
 def generate_qaoa_seed_sweep_figure() -> None:
     data = pd.read_csv(SEED_SWEEP_TABLE)
-    learned = data[data["method"] == "Graph-conditioned GNN (ours)"].sort_values("training_seed")
+    learned = data[data["method"] == PAPER_METHOD_KEY].sort_values("training_seed")
     heuristic = data[data["method"] == "Heuristic mean-angle initializer"].sort_values("training_seed")
 
     plt.rcParams.update(
@@ -382,14 +408,14 @@ def generate_qaoa_seed_sweep_figure() -> None:
         }
     )
 
-    fig, ax = plt.subplots(figsize=(6.8, 4.1), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(7.4, 4.2), constrained_layout=True)
     ax.plot(
         learned["training_seed"],
         learned["mean_ratio"],
         marker="o",
         linewidth=2.2,
         color="#c1121f",
-        label="Graph-conditioned GNN (ours)",
+        label=PAPER_METHOD_LABEL,
     )
     ax.fill_between(
         learned["training_seed"],
@@ -411,7 +437,12 @@ def generate_qaoa_seed_sweep_figure() -> None:
     ax.set_ylabel("Held-out mean approximation ratio")
     ax.set_title("Training-seed robustness on the transcriptomic benchmark")
     ax.grid(axis="y", alpha=0.22)
-    ax.legend(frameon=False, loc="lower right")
+    ax.legend(
+        frameon=False,
+        loc="center left",
+        bbox_to_anchor=(1.02, 0.5),
+        borderaxespad=0.0,
+    )
 
     PAPER_FIGURES.mkdir(parents=True, exist_ok=True)
     fig.savefig(PAPER_FIGURES / "qaoa_seed_sweep.png", dpi=300, bbox_inches="tight")
@@ -422,17 +453,17 @@ def generate_qaoa_adaptation_sweep_figure() -> None:
     data = pd.read_csv(ADAPTATION_SWEEP_TABLE)
     method_order = [
         "Classical depth-2 search",
-        "Graph-conditioned GNN (ours)",
+        PAPER_METHOD_KEY,
         "Heuristic mean-angle initializer",
     ]
     palette = {
         "Classical depth-2 search": "#1b4965",
-        "Graph-conditioned GNN (ours)": "#c1121f",
+        PAPER_METHOD_KEY: "#c1121f",
         "Heuristic mean-angle initializer": "#6c757d",
     }
     markers = {
         "Classical depth-2 search": "o",
-        "Graph-conditioned GNN (ours)": "s",
+        PAPER_METHOD_KEY: "s",
         "Heuristic mean-angle initializer": "^",
     }
 
@@ -448,7 +479,8 @@ def generate_qaoa_adaptation_sweep_figure() -> None:
         }
     )
 
-    fig, (ax_ratio, ax_loss) = plt.subplots(1, 2, figsize=(10.4, 4.2), constrained_layout=True)
+    fig, (ax_ratio, ax_loss) = plt.subplots(1, 2, figsize=(10.8, 4.6), constrained_layout=True)
+    fig.set_constrained_layout_pads(w_pad=0.04, h_pad=0.10, wspace=0.04, hspace=0.04)
     for method in method_order:
         method_df = data[data["method"] == method].sort_values("adaptation_size")
         ax_ratio.plot(
@@ -458,7 +490,7 @@ def generate_qaoa_adaptation_sweep_figure() -> None:
             linewidth=2.1,
             markersize=6,
             color=palette[method],
-            label=method,
+            label=display_method_label(method),
         )
         ax_ratio.fill_between(
             method_df["adaptation_size"],
@@ -469,7 +501,7 @@ def generate_qaoa_adaptation_sweep_figure() -> None:
             linewidth=0,
         )
 
-    learned = data[data["method"] == "Graph-conditioned GNN (ours)"].sort_values("adaptation_size")
+    learned = data[data["method"] == PAPER_METHOD_KEY].sort_values("adaptation_size")
     ax_loss.plot(
         learned["adaptation_size"],
         learned["training_best_loss"],
@@ -481,16 +513,16 @@ def generate_qaoa_adaptation_sweep_figure() -> None:
 
     ax_ratio.set_xlabel("Adaptation-family size")
     ax_ratio.set_ylabel("Held-out mean approximation ratio")
-    ax_ratio.set_title("Sensitivity to adaptation-family size")
+    ax_ratio.set_title("Sensitivity to adaptation-family size", pad=18)
     ax_ratio.grid(axis="y", alpha=0.22)
 
     ax_loss.set_xlabel("Adaptation-family size")
     ax_loss.set_ylabel("Best training loss")
-    ax_loss.set_title("Training fit across adaptation sizes")
+    ax_loss.set_title("Training fit across adaptation sizes", pad=18)
     ax_loss.grid(axis="y", alpha=0.22)
 
     handles, labels = ax_ratio.get_legend_handles_labels()
-    ax_loss.legend(handles, labels, frameon=False, loc="upper right")
+    fig.legend(handles, labels, frameon=False, loc="upper center", bbox_to_anchor=(0.5, 1.10), ncol=3)
 
     PAPER_FIGURES.mkdir(parents=True, exist_ok=True)
     fig.savefig(PAPER_FIGURES / "qaoa_adaptation_sweep.png", dpi=300, bbox_inches="tight")
@@ -534,7 +566,7 @@ def generate_qaoa_cross_family_transfer_figure() -> None:
         }
     )
 
-    fig, ax = plt.subplots(figsize=(7.2, 4.2), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(7.9, 4.4), constrained_layout=True)
     for method in methods:
         method_df = data[data["method"] == method].sort_values("target_top_gene_count")
         ax.plot(
@@ -550,7 +582,12 @@ def generate_qaoa_cross_family_transfer_figure() -> None:
     ax.set_ylabel("Held-out mean approximation ratio")
     ax.set_title("Cross-family transfer from a 16-gene source family")
     ax.grid(axis="y", alpha=0.22)
-    ax.legend(frameon=False, loc="lower left")
+    ax.legend(
+        frameon=False,
+        loc="center left",
+        bbox_to_anchor=(1.02, 0.5),
+        borderaxespad=0.0,
+    )
 
     PAPER_FIGURES.mkdir(parents=True, exist_ok=True)
     fig.savefig(PAPER_FIGURES / "qaoa_cross_family_transfer.png", dpi=300, bbox_inches="tight")
@@ -583,7 +620,7 @@ def generate_qaoa_morphology_transfer_figure() -> None:
         }
     )
 
-    fig, (ax_ratio, ax_bridge) = plt.subplots(1, 2, figsize=(11.2, 4.2), constrained_layout=True)
+    fig, (ax_ratio, ax_bridge) = plt.subplots(1, 2, figsize=(11.4, 4.4), constrained_layout=True)
     ax_ratio.bar(
         plot_data["method"],
         plot_data["mean_ratio"],
