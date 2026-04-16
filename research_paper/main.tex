@@ -430,13 +430,13 @@ The paper uses a single extracted benchmark pipeline for the primary transcripto
   \begin{minipage}[t]{0.50\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/qaoa_headline_benchmark.png}
-    \caption{Pareto view for the extracted 16-gene transcriptomic primary benchmark. The quality coordinates are intentionally compressed because this family occupies a tight concentration regime: once the angles lie in that region, several initializers remain near the direct-search objective. The visible trend is therefore the runtime separation, with one-shot prediction preserving the objective while eliminating repeated search.}
+    \caption{Trend-first view of the extracted 16-gene transcriptomic primary benchmark. The left panel replots the result as objective gap to classical search, making clear that the strongest within-family initializers all incur nearly zero loss. The right panel shows the complementary runtime trend: one-shot prediction removes repeated search by orders of magnitude.}
     \label{fig:qaoa-benchmark}
   \end{minipage}\hfill
   \begin{minipage}[t]{0.46\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/qaoa_headline_ablation.png}
-    \caption{Expanded baselines and inference-time ablations from the extracted primary benchmark. The visually flat comparison is itself the main conclusion: all strong within-family methods fall into nearly the same narrow quality band, which indicates that retained performance is governed primarily by family-level angle concentration rather than by a large gap between predictor classes.}
+    \caption{Expanded baselines and inference-time ablations from the extracted primary benchmark. Re-expressing the same results as gap-to-classical and ordered runtime makes the main point visible: within-family quality differences are small, but the direct-search cost remains dramatically larger.}
     \label{fig:qaoa-ablation}
   \end{minipage}
 \end{figure*}
@@ -493,7 +493,7 @@ The central result of this paper is that the relevant QAOA parameters are highly
 
 The extracted primary benchmark summarized in Table~\ref{tab:qaoa} establishes the central within-family result directly from repository scripts. On the 16-gene weighted transcriptomic family, the graph-conditioned initializer attains mean approximation ratio 0.8623, whereas direct multistart depth-2 search attains 0.8628. The absolute gap is therefore only 0.0005, corresponding to 99.94\% retention of the direct-search objective. At the same time, the median end-to-end evaluation time falls from 19687.1 ms for direct search to 12.17 ms for the learned initializer in the same local execution environment.
 
-This is also why the primary benchmark figures look visually compressed in objective value. The relevant message is not that the within-family traces produce a large slope in raw approximation ratio, but that nearly every nonrandom initializer that stays inside the same concentration region lands on essentially the same objective level while the runtime cost separates by orders of magnitude.
+This is also why the primary benchmark figures should be read through objective gap and runtime rather than raw ratio alone. The relevant message is not that the within-family traces produce a large slope in approximation ratio, but that nearly every nonrandom initializer that stays inside the same concentration region lands on essentially the same objective level while the online cost separates by orders of magnitude.
 
 The near-equality of the top-performing methods indicates that performance on this family is governed by parameter concentration. The within-family benchmark shows a compact angle region in which learned and simple initializers deliver nearly the same objective value. The small gap between learned and nonlearned predictors shows that family structure sets the main scale of variation in this regime.
 
@@ -513,21 +513,21 @@ The angle-excursion proposition also gives a pre-objective reading of this shift
 \begin{figure*}[t]
   \centering
   \includegraphics[width=0.92\textwidth]{figures/qaoa_morphology_transfer.png}
-  \caption{Independent cross-family transfer from the reduced 16-gene transcriptomic source family to the 12-feature morphology family. This is the paper's clearest mechanism figure. The left panel shows the performance collapse of the transferred transcriptomic GNN despite strong within-family performance on the morphology target. The right panel shows the cause directly: transferred predictions leave the target concentration region, so large target-angle error and objective loss are already implied before objective evaluation.}
+  \caption{Independent cross-family transfer from the reduced 16-gene transcriptomic source family to the 12-feature morphology family. This is the paper's clearest mechanism figure. The left panel now shows the monotonic trend directly: retention falls as target-angle error grows, and the transferred transcriptomic GNN occupies the high-error, low-retention regime. The right panel summarizes the same mechanism at the family level by showing that the transfer excursion and angle-error lower bound are both large before objective evaluation.}
   \label{fig:qaoa-morphology-transfer}
 \end{figure*}
 
 \subsection{Transcriptomic family-shift transfer remains weak}
 The reduced transcriptomic family-shift study remains informative because it shows the same family-shift pattern within the transcriptomic data source. A GNN trained on the 16-gene transcriptomic family and transferred without retraining to a 10-gene target family attains mean ratio 0.6410 against a classical ceiling of 0.8696, corresponding to 73.7\% retention. On the 14-gene target family, the transferred GNN attains mean ratio 0.6889 against a classical ceiling of 0.8724, corresponding to 78.9\% retention. Figure~\ref{fig:qaoa-transfer} shows the transferred GNN trailing both source-family baselines: the source-family heuristic mean-angle rule attains 0.8480 and 0.8153 on the 10- and 14-gene targets, respectively, and the transferred descriptor regressor also stays above the transferred GNN on both targets.
 
-Unlike the visually flat within-family benchmark, this figure exposes a clear directional pattern: once the family shifts, the transferred learned map drops below simpler source-family rules on both targets rather than merely fluctuating around them. The point is therefore not a fine-grained slope inside one plot, but a consistent ordering that signals concentration misalignment.
+Unlike the visually flat within-family benchmark, this figure exposes a clear directional pattern: retention decreases once the source-trained map is applied to shifted target families, and the transferred learned map drops below simpler source-family rules on both targets rather than merely fluctuating around them. The point is therefore not a fine-grained slope inside one plot, but a consistent degradation trend that signals concentration misalignment.
 
 This transcriptomic family-shift failure complements the morphology result. The 10- and 14-gene targets show that the learned map is already brittle across panel-size changes within one cohort. The morphology experiment then sharpens that limitation by showing a larger collapse on a second independent biomedical family and by isolating a predictive angle-space signature of that collapse~\cite{galda2021,ovadia2019}.
 
 \begin{figure*}[t]
   \centering
   \includegraphics[width=0.78\textwidth]{figures/qaoa_cross_family_transfer.png}
-  \caption{Reduced exact-audited transcriptomic family-shift transfer from a 16-gene source family to 10- and 14-gene target families. The figure should be read as an ordering plot rather than a small-slope benchmark: across both target sizes, the transferred GNN remains below classical search and below the simple source-family heuristic, revealing a robust degradation pattern under transcriptomic family shift.}
+  \caption{Reduced exact-audited transcriptomic family-shift transfer from a 16-gene source family to 10- and 14-gene target families. Plotting retention relative to classical search makes the trend visible: as the target family shifts away from the source family, the transferred GNN remains well below the source-family heuristic and well below the classical ceiling on both targets.}
   \label{fig:qaoa-transfer}
 \end{figure*}
 
