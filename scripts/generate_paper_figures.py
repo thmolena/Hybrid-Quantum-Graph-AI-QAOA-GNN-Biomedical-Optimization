@@ -13,6 +13,8 @@ SIZE_SWEEP_TABLE = REPO_ROOT / "outputs" / "tables" / "qaoa_size_sweep.csv"
 SEED_SWEEP_TABLE = REPO_ROOT / "outputs" / "tables" / "qaoa_seed_sweep.csv"
 ADAPTATION_SWEEP_TABLE = REPO_ROOT / "outputs" / "tables" / "qaoa_adaptation_sweep.csv"
 CROSS_FAMILY_TABLE = REPO_ROOT / "outputs" / "tables" / "qaoa_cross_family_transfer.csv"
+MORPHOLOGY_TRANSFER_TABLE = REPO_ROOT / "outputs" / "tables" / "qaoa_morphology_transfer.csv"
+MORPHOLOGY_BRIDGE_TABLE = REPO_ROOT / "outputs" / "tables" / "qaoa_morphology_concentration_bridge.csv"
 PAPER_FIGURES = REPO_ROOT / "research_paper" / "figures"
 
 
@@ -555,6 +557,86 @@ def generate_qaoa_cross_family_transfer_figure() -> None:
     plt.close(fig)
 
 
+def generate_qaoa_morphology_transfer_figure() -> None:
+    summary = pd.read_csv(MORPHOLOGY_TRANSFER_TABLE)
+    bridge = pd.read_csv(MORPHOLOGY_BRIDGE_TABLE)
+    bridge_map = dict(zip(bridge["metric"], bridge["value"]))
+
+    plot_data = summary[summary["method"] != "Classical depth-2 search"].copy()
+    colors = {
+        "Transcriptomic heuristic": "#6c757d",
+        "Transcriptomic descriptor regressor": "#669bbc",
+        "Transcriptomic GNN transfer": "#c1121f",
+        "Morphology heuristic": "#588157",
+        "Morphology descriptor regressor": "#7f5539",
+        "Morphology GNN (oracle)": "#1b4965",
+    }
+
+    plt.rcParams.update(
+        {
+            "font.family": "serif",
+            "font.size": 11,
+            "axes.labelsize": 12,
+            "axes.titlesize": 12,
+            "xtick.labelsize": 9,
+            "ytick.labelsize": 10,
+        }
+    )
+
+    fig, (ax_ratio, ax_bridge) = plt.subplots(1, 2, figsize=(11.2, 4.2), constrained_layout=True)
+    ax_ratio.bar(
+        plot_data["method"],
+        plot_data["mean_ratio"],
+        color=[colors.get(method, "#1f1f1f") for method in plot_data["method"]],
+    )
+    ax_ratio.errorbar(
+        plot_data["method"],
+        plot_data["mean_ratio"],
+        yerr=plot_data["std_ratio"],
+        fmt="none",
+        ecolor="black",
+        elinewidth=1.0,
+        capsize=3,
+    )
+    ax_ratio.axhline(
+        float(summary.loc[summary["method"] == "Classical depth-2 search", "mean_ratio"].iloc[0]),
+        color="#1b4965",
+        linestyle="--",
+        linewidth=1.6,
+        alpha=0.6,
+    )
+    ax_ratio.set_ylabel("Held-out mean approximation ratio")
+    ax_ratio.set_title("Cross-domain transfer to morphology graphs")
+    ax_ratio.set_ylim(0.52, 0.89)
+    ax_ratio.grid(axis="y", alpha=0.22)
+    ax_ratio.tick_params(axis="x", rotation=24)
+
+    bridge_labels = [
+        "source_max_radius",
+        "target_max_radius",
+        "centroid_distance",
+        "transfer_excursion_beyond_source_max_radius",
+        "transfer_angle_error_lower_bound",
+    ]
+    pretty_labels = [
+        "Source max radius",
+        "Target max radius",
+        "Centroid distance",
+        "Transfer excursion",
+        "Angle-error lower bound",
+    ]
+    bridge_values = [bridge_map[label] for label in bridge_labels]
+    ax_bridge.bar(pretty_labels, bridge_values, color=["#6c757d", "#588157", "#1b4965", "#c1121f", "#bc6c25"])
+    ax_bridge.set_ylabel("Angle-space magnitude")
+    ax_bridge.set_title("Bridge diagnostic before objective evaluation")
+    ax_bridge.grid(axis="y", alpha=0.22)
+    ax_bridge.tick_params(axis="x", rotation=24)
+
+    PAPER_FIGURES.mkdir(parents=True, exist_ok=True)
+    fig.savefig(PAPER_FIGURES / "qaoa_morphology_transfer.png", dpi=300, bbox_inches="tight")
+    plt.close(fig)
+
+
 if __name__ == "__main__":
     generate_qaoa_pareto_figure()
     generate_qaoa_headline_benchmark_figure()
@@ -565,3 +647,4 @@ if __name__ == "__main__":
     generate_qaoa_seed_sweep_figure()
     generate_qaoa_adaptation_sweep_figure()
     generate_qaoa_cross_family_transfer_figure()
+    generate_qaoa_morphology_transfer_figure()
