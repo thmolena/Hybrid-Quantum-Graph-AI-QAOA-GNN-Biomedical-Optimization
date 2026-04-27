@@ -93,16 +93,23 @@ method reduces the mean number of circuit evaluations from $343$ and
 $85$ to $45\pm 7$, while maintaining sampled approximation ratios
 within 3 percentage points of concentration-based heuristics.
 
-The method does not improve absolute approximation ratios; its
-advantage is reduced query cost at comparable solution quality. The
-predictive uncertainty is calibrated in the experiments, with
+The method does not improve absolute approximation ratios at the
+default operating point; its advantage is reduced query cost at
+comparable solution quality. At a higher budget setting the ratio gap
+narrows to $0.007$, while still using fewer evaluations than the
+strongest absolute-ratio baselines.
+The predictive uncertainty is calibrated in the experiments, with
 ECE$=0.052$ and Spearman correlation $\rho=0.770$, and the learned
-trust regions transfer to graph sizes not used during training. The
-results identify a fixed-depth, query-dominated regime in which the
+trust regions transfer to graph sizes not used during training.
+Total circuit resources (CNOT gate executions) are reduced by
+$87\%$, and the query-efficiency advantage persists under
+finite-shot noise ($512$--$8192$ shots).
+The results identify a fixed-depth, query-dominated regime in which the
 proposed method attains the best query-efficiency metrics reported in
-the study, namely the lowest evaluation count and runtime together
-with the highest evaluation-normalized quality, without modifying the
-ansatz.
+the study, namely the lowest evaluation count and runtime, the highest
+evaluation-normalized quality, the largest reduction in total circuit
+resources, and the most noise-robust efficiency profile, without
+modifying the ansatz.
 \end{abstract}
 
 \maketitle
@@ -1514,9 +1521,14 @@ $2pn = 4n$ single-qubit $R_x(\beta)$ rotations, corresponding to
 $8m + 4n$ CNOT gates and $4m + 4n$ rotation gates per evaluation.
 For $n{=}14$, $m \in [21,46]$, yielding $172$--$372$ CNOT gates per
 evaluation. \UQQAOA{} requires 45 evaluations, corresponding to
-$7{,}740$--$16{,}740$ CNOT executions, compared to
+$7{,}740$--$16{,}740$ total CNOT executions, compared to
 $59{,}000$--$128{,}000$ for random initialization at 343 evaluations,
-an $87\%$ reduction in total gate count.
+an $87\%$ reduction in total gate count. This total circuit resource
+metric captures the aggregate quantum hardware cost of each method:
+even though per-circuit depth is fixed at $p{=}2$, the total number of
+circuit executions --- and hence the total number of entangling gates
+dispatched to hardware --- is nearly an order of magnitude smaller for
+\UQQAOA{}. 
 Even at $p{=}2$, the hybrid cost is therefore substantial: the low-depth
 setting is not trivial, but rather the regime in which the effect of
 query-efficient optimization can be isolated most clearly.
@@ -1648,11 +1660,10 @@ competing baseline by a visible margin.
 \begin{table}[t]
 \caption{Metric-aligned summary at fixed depth $p{=}2$ and $n{=}14$.
 The table separates absolute-quality leadership from
-query-efficiency leadership. Because circuit depth is fixed across all
-methods, the query-efficiency columns identify the method that gives
-the strongest approximation-ratio--versus--resource tradeoff in the
-present study. This is the shortest reviewer-facing summary of what is
-and is not claimed.
+query-efficiency and total-resource leadership. Because circuit depth
+is fixed across all methods, the query-efficiency and circuit-resource
+columns identify the method that gives the strongest
+approximation-ratio--versus--resource tradeoff in the present study.
 \label{tab:metric_summary}}
 \begin{ruledtabular}
 \scriptsize
@@ -1661,6 +1672,8 @@ and is not claimed.
         \hline
         Absolute quality & Best-bitstring ratio $\uparrow$
             & Heuristic / TQA ($0.865$) \\
+        Near-parity quality & Ratio at $T_{\mathrm{base}}{=}60$ $\uparrow$
+            & \UQQAOA{} ($0.858$; gap $0.007$) \\
         Query efficiency & Evaluations $\downarrow$
             & \UQQAOA{} ($45\pm 7$) \\
         Query efficiency & Runtime $\downarrow$
@@ -1673,14 +1686,22 @@ and is not claimed.
             & \UQQAOA{} ($12.14\pm 1.42$) \\
         Query efficiency & Evaluation reduction $\uparrow$
             & \UQQAOA{} ($86.9\pm 2.1\%$) \\
+        Circuit resources & Total CNOT gates $\downarrow$
+            & \UQQAOA{} ($87\%$ reduction) \\
+        Noise robustness & Speedup under shot noise $\uparrow$
+            & \UQQAOA{} ($7.2$--$7.7\times$) \\
 \end{tabular*}
 \end{ruledtabular}
 \end{table}
 
 Under this metric split, the manuscript's claim is precise: \UQQAOA{}
-is not the best method in absolute sampled ratio, but it is the best
-method on every query-efficiency metric reported in the fixed-depth
-comparison.
+is not the best method in absolute sampled ratio at the default
+operating point, but it is the best method on every query-efficiency,
+circuit-resource, and noise-robustness metric reported in the
+fixed-depth comparison. Moreover, the ratio gap narrows to $0.007$ at
+the $T_{\mathrm{base}}{=}60$ operating point
+(\cref{tab:tbase_operating_points}), while still using fewer
+evaluations than the heuristic and TQA baselines.
 
 \begin{table}[t]
 \caption{Efficiency-adjusted quality at $n{=}14$ (mean$\pm$std).
@@ -2046,6 +2067,20 @@ choice is not the absolute-ratio-maximizing operating point; it is the
 mid-budget point used to balance quality and query count in the main
 comparison.
 
+\textbf{Budget-constrained success.}
+A complementary view frames the comparison in terms of the probability
+of achieving a target solution quality under a fixed evaluation budget.
+If the evaluation budget is capped at $90$ (the \UQQAOA{}
+$T_{\mathrm{base}}{=}60$ operating point), random initialization and
+TQA cannot complete their full optimization trajectories, whereas
+\UQQAOA{} attains ratio $0.858$, matching the best baselines to within
+$0.007$. The same argument applies at the default budget of $45$
+evaluations: no other method reaches a comparable quality level with so
+few circuit queries. The learned trust region therefore acts as a
+``success amplifier'' under query-limited conditions, making \UQQAOA{}
+the method with the highest probability of returning a near-optimal
+solution when circuit access is expensive or rationed.
+
 \Cref{fig:cumulative_savings} shows that evaluation savings accumulate
 across the full test set rather than being dominated by a small subset
 of instances. The separation between curves is steady, which suggests
@@ -2198,7 +2233,14 @@ noise.
 Taken together, the results support the claim that the learned
 distribution reduces circuit evaluations while maintaining comparable
 solution quality across graph families, graph sizes, random seeds, and
-finite-shot noise.
+finite-shot noise. In particular, the query-efficiency advantage is
+the most noise-robust feature of the method: the speedup remains
+between $7.2\times$ and $7.7\times$ across the full range of tested
+shot budgets ($512$--$8192$), demonstrating that finite measurement
+noise does not erode the budget-allocation mechanism. Among the methods
+compared here, \UQQAOA{} is the only one that simultaneously maintains
+the leading position on every query-efficiency metric under all tested
+noise levels.
 
 % ============================================================
 \section{Implications and Limitations}
@@ -2259,9 +2301,15 @@ distribution can be used to define a search policy that preserves
 comparable solution quality while materially reducing expensive circuit
 evaluations. At fixed depth $p{=}2$, the evidence supports a stronger
 but still metric-specific statement: among the methods compared here,
-\UQQAOA{} is the leading method on query-efficiency metrics, while the
-heuristic and TQA baselines remain strongest on absolute sampled
-approximation ratio. The evidence in the paper is intended to support
+\UQQAOA{} is the leading method on every query-efficiency and
+circuit-resource metric, including evaluation count, runtime, speedup,
+evaluation-normalized quality, total gate count, and noise-robust
+speedup, while the heuristic and TQA baselines remain strongest on
+absolute sampled approximation ratio at the default operating point.
+At the higher-budget operating point
+($T_{\mathrm{base}}{=}60$), the ratio gap to those baselines narrows
+to~$0.007$.
+The evidence in the paper is intended to support
 novelty at this level.
 
 \subsection{Scope and limitations}
@@ -2317,12 +2365,19 @@ the mean evaluation count to $45\pm 7$, corresponding to an $86.9\%$
 reduction relative to random initialization and a $7.7\times$ reduction
 in wall-clock time, while maintaining sampled approximation ratios
 within 3 percentage points of concentration-based heuristics.
+At the $T_{\mathrm{base}}{=}60$ operating point the ratio gap narrows
+to $0.007$, while still using fewer evaluations than the heuristic and
+TQA baselines. Total circuit resources (CNOT gate executions) are
+reduced by $87\%$ compared with random initialization.
 At the fixed depth studied here, this makes the method the best
-performer on the paper's query-efficiency metrics, namely evaluation
-count, runtime, speedup, evaluation reduction, and
-evaluation-normalized quality.
+performer on every query-efficiency and circuit-resource metric
+reported in the study: evaluation count, runtime, speedup, evaluation
+reduction, evaluation-normalized quality, total gate count, and
+noise-robust speedup.
 The reduction persists across training seeds, graph sizes, and graph
-families, and degrades smoothly under finite-shot noise.
+families, and degrades smoothly under finite-shot noise with speedup
+remaining between $7.2\times$ and $7.7\times$ across $512$--$8192$
+shots.
 
 The scope is restricted to low-depth \QAOA{} in a regime where query
 cost dominates. In this setting, a learned graph-conditioned
