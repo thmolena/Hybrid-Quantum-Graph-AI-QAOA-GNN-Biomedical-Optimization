@@ -252,6 +252,19 @@
 			"label": "Regenerate fig01",
 			"type": "shell",
 			"command": "cd submission/code && /Users/mohuyn/miniforge3/envs/qaoa/bin/python fig01_statevector_grid.py"
+		},
+		{
+			"label": "Compile submission paper (NMI)",
+			"type": "shell",
+			"command": "cd submission && /Users/mohuyn/miniforge3/envs/qaoa/bin/tectonic main.tex 2>&1 | tail -30",
+			"group": "build"
+		},
+		{
+			"label": "Compile submission NMI paper",
+			"type": "shell",
+			"command": "cd '/Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/submission' && /Users/mohuyn/miniforge3/envs/qaoa/bin/tectonic --reruns 3 main.tex",
+			"isBackground": false,
+			"group": "build"
 		}
 	]
 }

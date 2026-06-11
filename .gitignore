@@ -1,6 +1,8 @@
 env/
 .venv/
 __pycache__/
+*.pyc
+.pytest_cache/
 *.pt
 *.pth
 *.zip
@@ -8,8 +10,24 @@ __pycache__/
 .vs/
 .matplotlib-cache/
 .mpl-cache/
+.mplconfig/
 matplotlib-*/
 *.aux
 *.out
 *.log
 website/*.log
+
+# LaTeX build intermediates (keep main.pdf and main.bbl tracked)
+*.blg
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# C++ build artifacts
+*.o
+*.obj
+*.so
+*.a
+submission/code/cpp/build/
+submission/code/cpp/**/build/

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hybrid Quantum Graph AI Research Summary</title>
-  <meta name="description" content="Research summary for graph neural network prediction of fixed-depth QAOA parameters on weighted transcriptomic graphs, with held-out evidence and reproducible materials." />
+  <title>Hybrid Quantum&ndash;Graph AI &mdash; UQ-QAOA &amp; Graph-Conditioned Optimization</title>
+  <meta name="description" content="Graph-conditioned machine learning for query-efficient QAOA parameter search (UQ-QAOA) and for graph-structured biomedical inference: uncertainty-calibrated trust regions, precision-weighted posterior fusion, reproducible exact-statevector benchmarks, and an interactive demo." />
   <style>
     :root {
       --background: #ffffff;
@@ -752,67 +752,299 @@
         min-height: 200px;
       }
     }
+
+    /* --- Lead-study UQ-QAOA additions --- */
+    .lead-feature { border-top: 5px solid var(--accent); }
+    .pill-row {
+      display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 0;
+      font-family: var(--font-sans);
+    }
+    .pill {
+      padding: 6px 12px; border: 1px solid var(--border); background: var(--surface);
+      font-size: 0.78rem; letter-spacing: 0.04em; color: var(--accent); font-weight: 600;
+    }
+    .eq {
+      margin: 16px 0; padding: 12px 18px; border: 1px solid var(--border);
+      background: var(--surface); overflow-x: auto; overflow-y: hidden;
+    }
+    .eq p { margin: 0; color: var(--ink); }
+    .theorem-box {
+      margin: 20px 0; padding: 18px 20px; border: 1px solid var(--border-strong);
+      background: #fbfcfe;
+    }
+    .theorem-box .thm-label {
+      display: block; margin-bottom: 8px; font-family: var(--font-sans); font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.76rem; color: var(--accent);
+    }
+    .theorem-box p { color: var(--ink); }
+    table td.best, table th.best { background: var(--accent-soft); font-weight: 600; }
+    mjx-container { overflow-x: auto; overflow-y: hidden; max-width: 100%; }
+    mjx-container[display="true"] { margin: 0 !important; }
   </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
   <header class="report-bar">
     <div class="report-bar-inner">
-      <div>Hybrid Quantum Graph AI Research Summary</div>
+      <div>Hybrid Quantum&ndash;Graph AI</div>
       <nav aria-label="Primary">
-        <a href="#summary">Summary</a>
-        <a href="#findings">Findings</a>
-        <a href="#applications">Applications</a>
+        <a href="#lead">UQ-QAOA</a>
+        <a href="#method">Method</a>
+        <a href="#theory">Theory</a>
+        <a href="#results">Results</a>
+        <a href="#companion">Companion</a>
         <a href="#demo">Demo</a>
-        <a href="#figures">Figures</a>
-        <a href="#reports">Reports</a>
-        <a href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank" rel="noreferrer">GitHub Repo</a>
+        <a href="#notebooks">Paper &amp; Code</a>
+        <a href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank" rel="noreferrer">GitHub</a>
       </nav>
     </div>
   </header>
 
   <main class="page">
     <div class="page-stack">
-      <section class="cover block-shell">
+      <section class="cover block-shell lead-feature">
         <div class="block-inner">
           <div>
-            <p class="cover-kicker">Research Summary • Comparative Findings</p>
-            <h1>Learning QAOA Parameters with Graph Neural Networks for Scalable Quantum Optimization</h1>
+            <p class="cover-kicker">UQ-QAOA &bull; Prepared for Nature Machine Intelligence</p>
+            <h1>Uncertainty-Calibrated Trust Regions for Query-Efficient QAOA Parameter Search</h1>
             <p class="subtitle">
-              The Quantum Approximate Optimization Algorithm remains one of the central variational paradigms for near-term quantum optimization because it provides a hardware-compatible ansatz for combinatorial objectives while retaining a clear Hamiltonian interpretation. Its practical performance, however, depends not only on circuit depth but also on the ability to identify high-quality variational parameters for each problem instance. For fixed-depth QAOA, parameter optimization is often the dominant classical bottleneck, especially when one repeatedly solves related weighted-graph instances drawn from a common structured family. In this work, we address that gap by learning QAOA parameters from graph structure, modeling fixed-depth parameter selection as a graph-to-angle map and using a graph neural network to predict depth-2 QAOA angles for weighted MaxCut instances derived from transcriptomic co-expression graphs.
+              For low-depth implementations of the Quantum Approximate Optimization Algorithm (QAOA), the dominant practical cost is the number of objective-function <em>queries</em> required to identify useful variational parameters. <strong>UQ-QAOA</strong> converts graph-conditioned predictive uncertainty into an operational trust-region geometry: a Graph Isomorphism Network predicts a diagonal Gaussian over the QAOA angles, and four information sources&mdash;neural predictor, local $k$-nearest-neighbour prior, global population prior, and a trotterized quantum-annealing schedule&mdash;are fused by precision-weighted combination to obtain a posterior mean and anisotropic step sizes for sequential coordinate refinement. This page presents the method in full mathematical detail, the reproducible exact-statevector evidence that supports it, and a companion graph-learning program spanning quantum optimization and biomedical inference.
             </p>
+            <div class="pill-row" aria-label="Topic tags">
+              <span class="pill">Variational quantum algorithms</span>
+              <span class="pill">Graph neural networks</span>
+              <span class="pill">Uncertainty quantification</span>
+              <span class="pill">Trust-region optimization</span>
+              <span class="pill">Conformal prediction</span>
+            </div>
           </div>
 
           <div class="cover-meta grid-3" aria-label="Headline metrics">
             <article class="meta-block">
-              <div class="meta-label">Held-out approximation ratio</div>
-              <div class="meta-value">0.8682</div>
-              <p class="meta-note">Versus 0.8686 for direct multi-start search on the same held-out transcriptomic graph family.</p>
+              <div class="meta-label">Mean approximation ratio</div>
+              <div class="meta-value">0.865</div>
+              <p class="meta-note">Versus 0.853 for the strongest single-source baseline (TQA) on the controlled $n{=}14$, $p{=}3$, $Q{=}18$ matched-query benchmark.</p>
             </article>
             <article class="meta-block">
-              <div class="meta-label">Median online latency</div>
-              <div class="meta-value">0.3652 ms</div>
-              <p class="meta-note">Versus 936.1255 ms for repeated classical search in the executed fixed-depth evaluation regime.</p>
+              <div class="meta-label">Paired advantage vs. TQA</div>
+              <div class="meta-value">+0.012</div>
+              <p class="meta-note">95% bootstrap CI $[+0.003,\,+0.024]$ over 10,000 resamples; best-of-budget on 7 of 8 held-out instances.</p>
             </article>
             <article class="meta-block">
-              <div class="meta-label">Noisy held-out ratio at eta = 0.05</div>
-              <div class="meta-value">0.7850</div>
-              <p class="meta-note">Remaining close to 0.7902 from classical-search angles under the executed depolarizing-noise study.</p>
+              <div class="meta-label">Reference backend speedup</div>
+              <div class="meta-value">4.30&times;</div>
+              <p class="meta-note">C++20 evaluator at 8 threads for batched $n{=}14$ statevector evaluation; the mixer kernel dominates per-layer cost ($2.60\times$ the cost-phase kernel).</p>
             </article>
           </div>
         </div>
       </section>
 
-      <section id="summary" class="block-shell">
+      <section id="lead" class="block-shell">
         <div class="block-inner">
           <div class="section-header">
+            <div class="section-label">Problem Setting</div>
             <div class="section-intro body-copy">
-              <h2>Research Summary</h2>
+              <h2>QAOA, MaxCut, and the objective-query model</h2>
+              <p>
+                Let $G=(V,E)$ be an undirected graph with $n=|V|$ vertices. The MaxCut cost Hamiltonian, the depth-$p$ QAOA state with mixer $H_M=\sum_i X_i$, and the exact objective are
+              </p>
+            </div>
+          </div>
+
+          <div class="eq">
+            $$H_C(G)=\sum_{(i,j)\in E}\frac{1-Z_iZ_j}{2},\qquad
+            \lvert\psi_G(\theta)\rangle=\prod_{\ell=1}^{p} e^{-i\beta_\ell H_M}\,e^{-i\gamma_\ell H_C(G)}\,\lvert+\rangle^{\otimes n},\qquad
+            f_G(\theta)=\langle\psi_G(\theta)\rvert H_C(G)\lvert\psi_G(\theta)\rangle.$$
+          </div>
+
+          <p class="body-copy">
+            The parameter vector is $\theta=(\gamma_1,\dots,\gamma_p,\beta_1,\dots,\beta_p)\in\Theta_p=[0,2\pi)^p\times[0,\pi)^p$, and the approximation ratio is $r_G(\theta)=f_G(\theta)/C_G^\star$ with optimal cut value $C_G^\star$. Cost is measured in objective queries $Q=\#\{\theta\text{ evaluated}\}$, and performance is reported through the <em>best-so-far query curve</em>
+          </p>
+          <div class="eq">
+            $$Q\;\longmapsto\;\max_{1\le q\le Q} r_G(\theta_q),\qquad\text{with}\qquad
+            Q_G(\tau)=\min\{q: r_G^{\mathrm{best}}(q)\ge\tau\}.$$
+          </div>
+          <p class="body-copy">
+            In a measurement-limited regime, a method that reaches comparable quality with substantially fewer queries can be more useful than one that attains a marginally higher objective only after many more evaluations. UQ-QAOA is designed for precisely this regime.
+          </p>
+        </div>
+      </section>
+
+      <section id="method" class="block-shell">
+        <div class="block-inner">
+          <div class="section-header">
+            <div class="section-label">Method</div>
+            <div class="section-intro body-copy">
+              <h2>Graph-conditioned Gaussian prediction and four-source posterior fusion</h2>
+              <p>
+                A Graph Isomorphism Network (GIN) with learnable $\varepsilon$, layer-normalized two-layer MLPs, and spectral positional features performs message passing, then a Gaussian head emits a mean and a diagonal covariance over QAOA angles:
+              </p>
+            </div>
+          </div>
+
+          <div class="eq">
+            $$h_i^{(\ell+1)}=\mathrm{MLP}^{(\ell)}\!\Big((1+\varepsilon^{(\ell)})\,h_i^{(\ell)}+\!\!\sum_{j\in\mathcal N(i)}\!\tilde A_{ij}\,h_j^{(\ell)}\Big),\quad \tilde A=D^{-1}(A+I),\qquad
+            q_\phi(\theta\mid G)=\mathcal N\!\big(\mu_\phi(G),\,\Sigma_\phi(G)\big).$$
+          </div>
+          <p class="body-copy">
+            The covariance head is $\Sigma_\phi(G)=\mathrm{diag}\big(\sigma_{\min}^2+\mathrm{softplus}(a_\phi(G))\big)$, trained by Gaussian negative log-likelihood with weight decay. The NLL simultaneously rewards accurate prediction and penalizes covariance inflation:
+          </p>
+          <div class="eq">
+            $$\mathcal L_{\mathrm{nll}}(\phi)=\frac{1}{2N}\sum_{i=1}^{N}\sum_{k=1}^{2p}\left[\frac{\big(\theta^{\mathrm{ref}}_{i,k}-\mu_{\phi,k}(G_i)\big)^2}{\sigma_{\phi,k}^2(G_i)}+\log\sigma_{\phi,k}^2(G_i)\right]+\eta_{\mathrm{wd}}\lVert\phi\rVert_2^2.$$
+          </div>
+          <p class="body-copy">
+            Four independent sources&mdash;the GIN predictor, a local $k{=}5$ nearest-neighbour prior, a global population prior, and a trotterized quantum-annealing (TQA) prior&mdash;are fused by precision-weighted (inverse-variance) combination, where sources with smaller predicted variance exert stronger pull on the joint estimate:
+          </p>
+          <div class="eq">
+            $$\Sigma_{\mathrm{post}}^{-1}={\Sigma_{\mathrm{GIN}}'}^{-1}+\Sigma_{\mathrm{loc}}^{-1}+\Sigma_{\mathrm{glob}}^{-1}+\Sigma_{\mathrm{TQA}}^{-1},\qquad
+            \mu_{\mathrm{post}}=\Sigma_{\mathrm{post}}\sum_{s}\Sigma_s^{-1}\mu_s,$$
+          </div>
+          <p class="body-copy">
+            with $\Sigma_{\mathrm{GIN}}'=\max(\Sigma_{\mathrm{GIN}},\Sigma_{\mathrm{loc}})$ a calibration floor. The posterior covariance then defines the anisotropic <strong>trust region</strong> and the per-coordinate step sizes that govern refinement:
+          </p>
+          <div class="eq">
+            $$\mathcal T_{\phi,\rho}(G)=\Big\{\theta\in\Theta_p:(\theta-\mu_\phi)^{\!\top}(\Sigma_\phi+\lambda I)^{-1}(\theta-\mu_\phi)\le\rho^2\Big\},\qquad
+            \delta_j=\mathrm{clip}\!\big(0.5\sqrt{[\Sigma_{\mathrm{post}}]_{jj}},\,0.05,\,0.30\big).$$
+          </div>
+
+          <div class="grid-3">
+            <article class="card">
+              <div class="tag">Phase 0 / 2a</div>
+              <h3>TQA safety prefix</h3>
+              <p>A short trotterized-annealing prefix makes the policy dominance-preserving: at each early query count, UQ-QAOA has evaluated the same TQA candidate available to the strongest physics-informed baseline before spending budget on learned geometry.</p>
+            </article>
+            <article class="card">
+              <div class="tag">Phase 1 / 2b</div>
+              <h3>Posterior-anchor evaluation</h3>
+              <p>Nonduplicate deterministic anchors&mdash;TQA, posterior mean, GIN mean, local $k$-NN median, and global median&mdash;are evaluated, and the empirical best becomes the refinement incumbent.</p>
+            </article>
+            <article class="card">
+              <div class="tag">Phase 2c</div>
+              <h3>Greedy coordinate refinement</h3>
+              <p>For each dimension $j$ the search probes $\pm\delta_j$ from the incumbent, updating on strict improvement; a full pass without improvement halves the step sizes (trust-region contraction).</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="theory" class="block-shell">
+        <div class="block-inner">
+          <div class="section-header">
+            <div class="section-label">Guarantees</div>
+            <div class="section-intro body-copy">
+              <h2>When a learned trust region saves queries</h2>
+              <p>
+                The guarantees are deliberately <em>local and conditional</em>: they formalize when a calibrated, compact trust region reduces objective queries, not global QAOA optimality.
+              </p>
+            </div>
+          </div>
+
+          <div class="theorem-box">
+            <span class="thm-label">Theorem &mdash; Exact-query best-of-$K$ guarantee</span>
+            <p>
+              Suppose $K$ candidates are drawn independently from a proposal supported on $\mathcal T_{\phi,\rho}(G)$ that places mass at least $\alpha_G(\varepsilon)>0$ on the $\varepsilon$-optimal subset $\mathcal A_{G,\varepsilon}=\{\theta\in\mathcal T: f_G(\theta)\ge f_G^{\mathcal T}-\varepsilon\}$. Then
+            </p>
+            <div class="eq" style="background:#ffffff;">
+              $$\Pr\!\big[f_G(\widehat\theta_K)<f_G^{\mathcal T}-\varepsilon\big]\le\big(1-\alpha_G(\varepsilon)\big)^K,$$
+            </div>
+            <p>
+              so $K\ge\log(1/\delta)/\alpha_G(\varepsilon)$ suffices for $f_G(\widehat\theta_K)\ge f_G^{\mathcal T}-\varepsilon$ with probability at least $1-\delta$. For an ellipsoidal region with locally $L_G$-Lipschitz objective, $\alpha_G(\varepsilon)\gtrsim (\varepsilon/L_G)^d\big/\big(\rho^d\det(\Sigma_\phi+\lambda I)^{1/2}\big)$ &mdash; a tighter calibrated covariance and smaller radius reduce the number of candidates needed to hit the near-optimal set.
+            </p>
+          </div>
+
+          <div class="theorem-box">
+            <span class="thm-label">Proposition &mdash; Finite-sample conformal coverage</span>
+            <p>
+              For exchangeable validation scores $s(G)=(\theta^*-\mu_\phi)^{\!\top}(\Sigma_\phi+\lambda I)^{-1}(\theta^*-\mu_\phi)$ with $\hat q_{1-\alpha}$ the $\lceil(M+1)(1-\alpha)\rceil$-th order statistic over $M$ calibration instances, a new exchangeable test instance satisfies
+            </p>
+            <div class="eq" style="background:#ffffff;">
+              $$\mathbb P\!\big[\theta^*(G_{M+1})\in\mathcal T_{\hat q_{1-\alpha}}(G_{M+1})\big]\ge 1-\alpha.$$
+            </div>
+            <p>A finite-shot extension adds a sub-Gaussian union bound over $S$-shot estimates, separating parameter-query cost from shot cost.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="results" class="block-shell">
+        <div class="block-inner">
+          <div class="section-header">
+            <div class="section-label">Evidence</div>
+            <div class="section-intro">
+              <h2>Controlled exact-statevector benchmark</h2>
+              <p>
+                All methods receive the same $Q{=}18$ exact-statevector objective queries on the same eight held-out instances (two per family: Erd&#337;s&ndash;R&eacute;nyi, 3-regular, Barab&aacute;si&ndash;Albert, Watts&ndash;Strogatz) at $n{=}14$, $p{=}3$. The global seed is fixed at 260424803.
+              </p>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Method</th><th>Mean ratio &uarr;</th><th>95% bootstrap CI</th><th>&Delta; vs. TQA</th><th>$Q$</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Random</td><td>0.754</td><td>[0.719, 0.788]</td><td>&minus;0.100</td><td>18</td></tr>
+                <tr><td>Heuristic</td><td>0.608</td><td>[0.567, 0.649]</td><td>&minus;0.246</td><td>18</td></tr>
+                <tr><td>$k$-NN transfer</td><td>0.642</td><td>[0.604, 0.677]</td><td>&minus;0.211</td><td>18</td></tr>
+                <tr><td>GNN point estimate</td><td>0.643</td><td>[0.597, 0.688]</td><td>&minus;0.211</td><td>18</td></tr>
+                <tr><td>TQA (linear ramp)</td><td>0.853</td><td>[0.829, 0.878]</td><td>+0.000</td><td>18</td></tr>
+                <tr><td class="best">UQ-QAOA (ours)</td><td class="best">0.865</td><td class="best">[0.839, 0.892]</td><td class="best">+0.012</td><td class="best">18</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-note">
+            UQ-QAOA is best-or-tied-best at every intermediate query budget and wins on 7 of 8 instances. Differential evolution, GP-EI Bayesian optimization, CMA-ES, multi-seed random, and Nelder&ndash;Mead all reach $\le 0.754$ under $Q{=}18$.
+          </p>
+
+          <div class="table-wrap" style="margin-top:22px;">
+            <table>
+              <thead>
+                <tr><th>Ablation (remove / simplify one component)</th><th>Ratio</th><th>&Delta; vs. full</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="best">Full UQ-QAOA</td><td class="best">0.865</td><td class="best">&mdash;</td></tr>
+                <tr><td>No sequential refinement</td><td>0.863</td><td>&minus;0.002</td></tr>
+                <tr><td>No coordinate probes</td><td>0.772</td><td>&minus;0.094</td></tr>
+                <tr><td>Mean + isotropic $\sigma^2 I$</td><td>0.750</td><td>&minus;0.115</td></tr>
+                <tr><td>No global prior</td><td>0.711</td><td>&minus;0.155</td></tr>
+                <tr><td>GIN mean only</td><td>0.682</td><td>&minus;0.183</td></tr>
+                <tr><td>Mean + fixed box</td><td>0.657</td><td>&minus;0.209</td></tr>
+                <tr><td>No local ($k$-NN) prior</td><td>0.645</td><td>&minus;0.221</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-note">
+            The largest isolated loss comes from removing the local $k$-NN prior, confirming that the gain arises from the full distributional fusion rather than any single component.
+          </p>
+
+          <div class="demo-links">
+            <a class="button-link" href="submission/main.pdf">Read the UQ-QAOA paper (PDF)</a>
+            <a class="button-link" href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/tree/main/submission/code" target="_blank" rel="noreferrer">Reproducible code artifact</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="companion" class="block-shell">
+        <div class="block-inner">
+          <div class="section-header">
+            <div class="section-label">Companion Project &bull; Graph AI across domains</div>
+            <div class="section-intro body-copy">
+              <h2>Transcriptomic QAOA initialization and biomedical CTG screening</h2>
           <p>
-            This work shows that structure-aware learning can predict instance-dependent parameters for fixed-depth QAOA on a structured family of weighted MaxCut graphs and that this mechanism can be analyzed quantitatively. In the transcriptomic setting studied here, the archived benchmark shows near-parity with direct classical search and a large runtime advantage, while the rerun studies show that this retained-quality claim is robust across moderate seed variation but limited by protocol sensitivity and family complexity.
+            The same graph-conditioned interface&mdash;graph in, calibrated parameterization out&mdash;is exercised in two domains. A graph-conditioned GNN predicts depth-2 QAOA angles for weighted MaxCut on prostate transcriptomic co-expression graphs, reaching near-direct-search quality at a single fast forward pass; a residual clinical GCN on a cardiotocography patient-similarity graph performs node-level pathologic-risk prediction. The studies below report held-out evidence and its bounded operating regime.
           </p>
           <div class="lead-callout">
             <p>
-              Taken together, the results identify structure-aware parameter prediction as a viable route to transferring fixed-depth quantum optimization across related weighted instances, but only within a bounded operating regime that the present research makes explicit. Extending this framework to broader weighted graph families, stronger graph-learning architectures, more stable training procedures, and hardware-side evaluation is the natural next step.
+              Taken together, the companion results identify structure-aware parameter prediction as a viable route to transferring fixed-depth quantum optimization across related weighted instances, and show the same formulation transfers to a biomedical graph setting&mdash;within a bounded operating regime that the work makes explicit.
             </p>
           </div>
         </div>
@@ -930,7 +1162,7 @@
             <div class="section-intro">
               <h2>Supporting figures</h2>
               <p>
-                The figures below are presented at larger on-page size and can be opened at full resolution directly from the root page. Each panel is tied to the corresponding notebook or manuscript evidence.
+                Each figure is rendered at full on-page size and can be opened at native resolution. Every panel is tied to the corresponding notebook or manuscript evidence.
               </p>
             </div>
           </div>
@@ -966,7 +1198,7 @@
               <button class="button-link figure-zoom" type="button" data-figure-src="website/notebooks_html/figures/qaoa_demo_benchmark_overview.png" data-figure-title="Held-out benchmark overview">Open full resolution</button>
               <a class="button-link" href="website/notebooks_html/qaoa_demo.html">Open notebook context</a>
             </div>
-            <div class="figure-note">This benchmark panel is sized to keep comparison text and summary statistics readable on the landing page.</div>
+            <div class="figure-note">This benchmark panel is sized to keep the comparison text and summary statistics fully legible.</div>
           </figcaption>
         </figure>
           </div>
@@ -996,13 +1228,13 @@
           <figcaption class="figure-copy">
             <h3>Held-out CTG evaluation</h3>
             <p>
-              The biomedical branch is shown with its strongest evaluation figure rather than a topology overview so the landing page foregrounds quantitative evidence.
+              The biomedical branch is shown through its strongest quantitative evaluation figure rather than a topology overview, foregrounding measured evidence over schematic description.
             </p>
             <div class="figure-actions">
               <button class="button-link figure-zoom" type="button" data-figure-src="website/notebooks_html/figures/bio_demo_heldout_evaluation.png" data-figure-title="Held-out CTG evaluation">Open full resolution</button>
               <a class="button-link" href="website/notebooks_html/bio_demo.html">Open notebook context</a>
             </div>
-            <div class="figure-note">This replaces the smaller CTG graph overview so the root page shows the clearest evaluation panel available.</div>
+            <div class="figure-note">This panel presents the clearest available evaluation of the CTG branch in place of the smaller graph-topology overview.</div>
           </figcaption>
         </figure>
           </div>
@@ -1014,9 +1246,9 @@
           <div class="section-header">
             <div class="section-label">Interactive Demonstration</div>
             <div class="section-intro body-copy">
-              <h2>Live root-page QAOA demonstration</h2>
+              <h2>Live in-page QAOA demonstration</h2>
               <p>
-                The root page now includes the project demo directly. Generate a graph, predict QAOA angles, and inspect the returned parameters here without leaving the landing page. When the API is unavailable, the demo falls back to an in-browser exact depth-1 simulation and local refinement.
+                The demonstration is embedded directly in this page. Generate a graph, predict QAOA angles, and inspect the returned parameters without navigating away. When the API is unavailable, the demonstration falls back to an in-browser exact depth-1 simulation with local refinement.
               </p>
             </div>
           </div>
@@ -1027,7 +1259,7 @@
             <div class="tag">Interactive Controls</div>
             <h3>Generate a weighted graph and predict QAOA parameters</h3>
             <p class="demo-copy">
-              This is a compact live view of the repository demo. It is intended for quick inspection of the graph-conditioned parameterization workflow rather than full benchmark reproduction.
+              This is a compact live view of the repository demonstration, intended for rapid inspection of the graph-conditioned parameterization workflow rather than full benchmark reproduction.
             </p>
           </div>
 
@@ -1088,14 +1320,14 @@
         </div>
       </section>
 
-      <section id="reports" class="block-shell">
+      <section id="notebooks" class="block-shell">
         <div class="block-inner">
           <div class="section-header">
-            <div class="section-label">Executed Reports</div>
+            <div class="section-label">Paper, Code &amp; Notebooks</div>
             <div class="section-intro">
-              <h2>Primary results</h2>
+              <h2>Reproducible materials</h2>
               <p>
-                These materials contain the manuscript, rendered notebooks, and repository sources supporting the benchmark presented on this page.
+                The lead UQ-QAOA manuscript and its deterministic code artifact, together with the companion-project manuscript, rendered notebooks, and repository sources. Everything is reproducible from fixed seeds.
               </p>
             </div>
           </div>
@@ -1103,8 +1335,28 @@
           <div class="link-list">
         <div class="link-item">
           <div>
-            <strong>Research manuscript</strong>
-            <div class="table-note">Formatted paper with theorem-level analysis, benchmark framing, and the canonical write-up of the transcriptomic QAOA result.</div>
+            <strong>UQ-QAOA manuscript</strong>
+            <div class="table-note">Uncertainty-Calibrated Trust Regions for Query-Efficient QAOA Parameter Search &mdash; prepared for Nature Machine Intelligence, with theorem-level guarantees and the controlled exact-statevector benchmark.</div>
+          </div>
+          <div class="link-actions">
+            <a class="button-link" href="submission/main.pdf">PDF</a>
+          </div>
+        </div>
+
+        <div class="link-item">
+          <div>
+            <strong>UQ-QAOA code artifact</strong>
+            <div class="table-note">Modular Python package (<code>python/uq_qaoa/</code>), C++20 reference backend, figure/table/experiment scripts, configs, results, and one-command reproduction via <code>reproduce.sh</code> and <code>generate_all.py</code>.</div>
+          </div>
+          <div class="link-actions">
+            <a class="button-link" href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/tree/main/submission/code" target="_blank" rel="noreferrer">Browse code</a>
+          </div>
+        </div>
+
+        <div class="link-item">
+          <div>
+            <strong>Companion-project manuscript</strong>
+            <div class="table-note">Graph-conditioned GNN for transcriptomic QAOA initialization and the biomedical CTG branch.</div>
           </div>
           <div class="link-actions">
             <a class="button-link" href="website/notebooks_html/main.pdf">PDF</a>

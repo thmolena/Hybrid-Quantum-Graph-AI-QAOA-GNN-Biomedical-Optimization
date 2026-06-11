@@ -1,179 +1,181 @@
-# Graph Neural Networks for the Quantum Approximate Optimization Algorithm (QAOA)
-
-### GNN-Based Parameter Prediction, Learned Warm-Start Initialization, and Convergence Analysis — with Applications to Network-Based Biomedical Systems
+# Hybrid Quantum–Graph AI: Graph-Conditioned Learning for QAOA and Biomedical Optimization
 
 [![Project Website](https://img.shields.io/badge/Project_Website-Open-0f766e?style=for-the-badge)](https://thmolena.github.io/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/)
-[![Research Paper PDF](https://img.shields.io/badge/Paper-PDF-1d4ed8?style=for-the-badge)](website/notebooks_html/main.pdf)
+[![Flagship Paper](https://img.shields.io/badge/Flagship_Paper-UQ--QAOA-1d4ed8?style=for-the-badge)](submission/main.tex)
+[![Code Artifact](https://img.shields.io/badge/Reproducible_Code-submission%2Fcode-7c3aed?style=for-the-badge)](submission/code)
+[![License: MIT](https://img.shields.io/badge/License-MIT-111827?style=for-the-badge)](LICENSE)
 
-This repository develops **graph neural network (GNN) methods for graph-conditioned QAOA parameter prediction and graph-based biomedical inference**. The central technical idea is that both settings can be cast as learning on structured graphs: transcriptomic co-expression graphs for depth-2 QAOA MaxCut initialization, and cardiotocography patient-similarity graphs for node-level pathologic-risk prediction.
+This repository develops **graph-conditioned machine learning for variational quantum optimization and for graph-structured biomedical inference**. Its unifying thesis is that disparate-looking decision problems—selecting variational parameters for the Quantum Approximate Optimization Algorithm (QAOA) and predicting node-level clinical risk—can be cast in one formulation: *learn a map from a structured graph to a calibrated parameterization of a downstream objective.*
 
-The main result is a unified graph-conditioned learning framework with strong held-out performance in both domains. On transcriptomic MaxCut graphs, the QAOA model reaches near-search approximation quality with a single 0.256 ms forward pass. On cardiotocography, the residual clinical GCN substantially improves simpler graph baselines while remaining competitive with the strongest tabular models. The repository therefore contributes both a practical QAOA initializer and a transferable graph-learning formulation spanning quantum optimization and biomedical decision support.
+The repository is organized around two complementary research threads and the artifacts (paper, code, notebooks, website) that support them.
 
-The practical bottleneck in QAOA is classical parameter search. This repository studies whether graph-conditioned learning can replace repeated per-instance optimization while preserving held-out quality, and whether the same formulation remains useful in a biomedical graph setting. The project is organized around three concrete artifacts:
-
-- transcriptomic co-expression graphs used to predict depth-2 QAOA parameters for maximum cut (MaxCut)
-- cardiotocography similarity graphs used to predict node-level pathologic-risk scores
-- an integrated notebook and manuscript that place both tasks in the same graph-to-parameterization formulation
-
-## Main Contributions and Comparative Results
-
-This repository makes three claims on fixed held-out splits.
-
-1. A graph-conditioned GNN predicts depth-2 QAOA parameters for transcriptomic MaxCut graphs with near-search quality at orders-of-magnitude lower cost.
-2. A residual clinical GCN substantially improves over simpler graph baselines for CTG screening and remains competitive with the strongest tabular models.
-3. The same graph-conditioned learning framework transfers across quantum optimization and biomedical risk prediction.
-
-### Metric Conventions
-
-| Metric | Better direction | Interpretation |
+| Thread | Question | Flagship artifact |
 |---|---|---|
-| Approximation ratio | Higher | Fraction of the optimal MaxCut value recovered; in the delta column, negative means the competing method underperforms this work. |
-| Accuracy | Higher | Fraction of held-out exams classified correctly. |
-| Balanced accuracy | Higher | Mean recall across classes; essential here because only 35 of 426 test cases are pathologic. |
-| ROC AUC | Higher | Probability a pathologic case is ranked above a normal case. |
-| TP / 35 | Higher | Pathologic cases detected on the held-out set. |
-| FP | Lower | Normal cases incorrectly flagged as pathologic. |
-
-### QAOA Branch — Held-Out Approximation Ratio
-
-Same 6-graph transcriptomic evaluation set throughout.
-
-| Method | Mean approx. ratio | Delta vs. this work | Interpretation |
-|---|---|---|---|
-| Zero angles | 0.7224 | −0.1458 | No optimization; trivial lower bound. |
-| Prior-style learned baseline | 0.8208 | −0.0474 | Learned warm start without graph conditioning. |
-| Direct classical search (Nelder-Mead) | 0.8686 | +0.0004 | Near-identical quality, but 675.9 ms per instance. |
-| Random search (best of 256 evaluations) | 0.8954 | +0.0272 | Higher quality only after 256 circuit evaluations. |
-| Goemans-Williamson SDP | 0.8780 | +0.0098 | Classical polynomial-time reference with 0.878 guarantee. |
-| **★ This work: graph-conditioned GNN** | **0.8682** | — | **Single forward pass; 0.256 ms inference.** |
-
-The central QAOA result is the tradeoff, not the raw table entry: this model improves the prior learned baseline by +0.0474 absolute (+5.77% relative), retains 99.95% of direct-search quality, and reduces median inference time from 675.9 ms to 0.256 ms, a 2640x speedup.
-
-### CTG Biomedical Branch — Held-Out Metrics
-
-Same split throughout; test set size $n = 426$.
-
-| Method | Accuracy | Balanced acc. | ROC AUC | TP / 35 | FP |
-|---|---|---|---|---|---|
-| Logistic Regression | 94.1% | 0.916 | 0.984 | 31 | 21 |
-| Random Forest | 96.9% | 0.905 | 0.994 | 29 | 7 |
-| MLP | 98.4% | 0.926 | 0.971 | 30 | 2 |
-| LightGBM | 98.6% | 0.927 | 0.993 | 30 | 1 |
-| XGBoost | 98.8% | 0.955 | 0.992 | 32 | 2 |
-| Calibrated LightGBM | **99.1%** | **0.956** | 0.991 | 32 | 1 |
-| AdaptiveBioGCN | 96.7% ± 0.97% | — | — | — | — |
-| **★ ResidualClinicalGCN** | **98.8%** | **0.942** | **0.978** | **31** | **1** |
-
-The biomedical contribution is not a claim that graph learning surpasses the best tabular model on raw accuracy. The contribution is that the graph model improves the simpler graph baseline by +2.1 percentage points in accuracy and +0.057 in balanced accuracy, matches XGBoost on accuracy, matches the best false-positive count, and adds patient-similarity structure that tabular models do not represent.
-
-### What Is New Here
-
-1. **Graph conditioning materially improves learned QAOA initialization.** The gain over the prior learned baseline is large, while the gap to full classical search is negligible.
-2. **The same modeling interface works across both branches.** In one case the output is a QAOA angle vector; in the other it is a node-level clinical risk score.
-3. **The CTG graph model adds structural evidence, not just a score.** Predictions are made on a patient-similarity graph rather than from isolated tabular rows.
-4. **The claims are bounded.** This repository argues for a unified, transferable graph-learning framework with strong empirical performance, not for universal superiority over every classical baseline.
+| **Thread A — UQ-QAOA** *(flagship)* | Can graph-conditioned *predictive uncertainty* be turned into an operational trust-region geometry that allocates a fixed QAOA query budget more effectively than single-source warm starts or black-box optimizers? | [`submission/`](submission) — manuscript + fully reproducible code artifact |
+| **Thread B — Graph AI across domains** | Can a single graph-conditioned learning interface replace per-instance QAOA search *and* transfer to biomedical risk prediction on patient-similarity graphs? | root [`src/`](src), [`experiments/`](experiments), [`notebooks/`](notebooks) |
 
 ---
 
-## Visual Overview
+## Thread A (flagship): UQ-QAOA — Uncertainty-Calibrated Trust Regions for Query-Efficient QAOA
 
-<table>
-  <tr>
-    <td width="50%">
-      <img src="website/notebooks_html/figures/qaoa_demo_benchmark_overview.png" alt="Held-out QAOA benchmark overview" />
-      <p><strong>Held-out QAOA quality.</strong> Graph-conditioned GNN: <strong>0.8682</strong>. Direct classical search: <strong>0.8686</strong>.</p>
-    </td>
-    <td width="50%">
-      <img src="website/notebooks_html/figures/qaoa_demo_landscape_geometry.png" alt="QAOA landscape geometry analysis" />
-      <p><strong>QAOA landscape geometry.</strong> The visible high-value basin is concentrated, which helps explain why learned warm starts reduce search burden on held-out graphs.</p>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%">
-      <img src="website/notebooks_html/figures/bio_demo_heldout_evaluation.png" alt="Held-out CTG evaluation" />
-      <p><strong>Held-out CTG operating point.</strong> ResidualClinicalGCN reaches <strong>98.8%</strong> accuracy and <strong>0.942</strong> balanced accuracy.</p>
-    </td>
-    <td width="50%">
-      <img src="website/notebooks_html/figures/combined_transcriptomic_benchmark.png" alt="Integrated benchmark figure" />
-      <p><strong>Shared formulation.</strong> Both branches are cast in one graph-to-parameterization-to-objective pipeline.</p>
-    </td>
-  </tr>
-</table>
+> **Manuscript:** *Uncertainty-Calibrated Trust Regions for Query-Efficient QAOA Parameter Search* — [`submission/main.tex`](submission/main.tex).
+> **Code artifact (line-by-line reproducible):** [`submission/code/`](submission/code).
 
-## System View
+For low-depth QAOA, the dominant practical cost is the number of objective-function *queries* needed to identify useful variational parameters. UQ-QAOA repurposes a graph neural network's *predictive covariance*—not as a confidence score, but as the **metric that defines the local search geometry**.
 
-| Branch | Input graph | Learned parameterization | Downstream objective | Main evidence |
-| --- | --- | --- | --- | --- |
-| Quantum Approximate Optimization Algorithm (QAOA) | prostate transcriptomic co-expression graph | depth-2 angle vector $(\gamma_1, \gamma_2, \beta_1, \beta_2)$ | expected maximum cut (MaxCut) value | held-out approximation ratio, ablations, runtime |
-| Biomedical | cardiotocography (CTG) patient-similarity graph | node-level pathologic-risk scores | thresholded screening behavior | accuracy, balanced accuracy, calibration, robustness |
-| Integrated | shared graph-conditioned interface | task-specific decision variables | branch-specific downstream evaluation | comparative framing across both domains |
+### Problem setting
 
-## Analysis Notebooks
+For a graph $G=(V,E)$ the MaxCut cost Hamiltonian is
+
+$$
+H_C(G)=\sum_{(i,j)\in E}\tfrac{1-Z_iZ_j}{2},
+\qquad
+\lvert\psi_G(\theta)\rangle=\prod_{\ell=1}^{p}e^{-i\beta_\ell H_M}\,e^{-i\gamma_\ell H_C(G)}\,\lvert+\rangle^{\otimes n},
+$$
+
+with mixer $H_M=\sum_i X_i$ and objective $f_G(\theta)=\langle\psi_G(\theta)\lvert H_C(G)\rvert\psi_G(\theta)\rangle$. Cost is measured in objective queries $Q=\#\{\theta\text{ evaluated}\}$, and performance is reported as the best-so-far approximation ratio $Q\mapsto\max_{q\le Q} r_G(\theta_q)$, with $r_G=f_G/C_G^\star$.
+
+### Method
+
+A Graph Isomorphism Network (GIN) with spectral positional features predicts a diagonal Gaussian over the QAOA angles,
+
+$$
+q_\phi(\theta\mid G)=\mathcal N\!\big(\mu_\phi(G),\,\Sigma_\phi(G)\big),
+\qquad
+\Sigma_\phi(G)=\mathrm{diag}\big(\sigma_{\min}^2+\mathrm{softplus}(a_{\phi}(G))\big),
+$$
+
+trained by Gaussian negative log-likelihood with weight decay. Four information sources—the GIN predictor, a local $k{=}5$ nearest-neighbour prior, a global population prior, and a trotterized quantum-annealing (TQA) schedule—are fused by **precision-weighted (inverse-variance) combination**:
+
+$$
+\Sigma_{\mathrm{post}}^{-1}={\Sigma_{\mathrm{GIN}}'}^{-1}+\Sigma_{\mathrm{loc}}^{-1}+\Sigma_{\mathrm{glob}}^{-1}+\Sigma_{\mathrm{TQA}}^{-1},
+\qquad
+\mu_{\mathrm{post}}=\Sigma_{\mathrm{post}}\!\!\sum_{s}\Sigma_s^{-1}\mu_s .
+$$
+
+The posterior covariance induces an anisotropic trust region $\mathcal T_{\phi,\rho}(G)=\{\theta:(\theta-\mu_\phi)^\top(\Sigma_\phi+\lambda I)^{-1}(\theta-\mu_\phi)\le\rho^2\}$ and per-coordinate step sizes $\delta_j=\mathrm{clip}\big(0.5\sqrt{[\Sigma_{\mathrm{post}}]_{jj}},\,0.05,\,0.30\big)$. The search then runs in three budget-accounted phases: a **TQA safety prefix** (dominance-preserving vs. the strongest physics-informed baseline), deterministic posterior-anchor evaluation, and **sequential greedy coordinate refinement** with trust-region contraction (step halving on stagnation).
+
+### Limited but honest guarantees
+
+A best-of-$K$ guarantee makes the geometric intuition precise: if the proposal places mass $\alpha_G(\varepsilon)$ on the $\varepsilon$-optimal subset of the trust region, then $K\ge\log(1/\delta)/\alpha_G(\varepsilon)$ samples suffice for $f_G(\widehat\theta_K)\ge f_G^{\mathcal T}-\varepsilon$ with probability $1-\delta$; a finite-shot extension adds a sub-Gaussian union bound, and a conformal construction yields finite-sample coverage under exchangeability. The guarantees are explicitly *local and conditional*—they formalize when a calibrated, compact region saves queries, not global QAOA optimality.
+
+### Headline result (controlled exact-statevector benchmark, $n{=}14$, $p{=}3$, $Q{=}18$ matched queries)
+
+| Method | Mean approx. ratio ↑ | 95% bootstrap CI | $\Delta$ vs. TQA |
+|---|---|---|---|
+| Random | 0.754 | [0.719, 0.788] | −0.100 |
+| Heuristic | 0.608 | [0.567, 0.649] | −0.246 |
+| $k$-NN | 0.642 | [0.604, 0.677] | −0.211 |
+| GNN point | 0.643 | [0.597, 0.688] | −0.211 |
+| TQA | 0.853 | [0.829, 0.878] | +0.000 |
+| **UQ-QAOA (ours)** | **0.865** | **[0.839, 0.892]** | **+0.012** |
+
+UQ-QAOA wins on **7 of 8** held-out instances (paired advantage $+0.012$, 95% bootstrap CI $[+0.003,+0.024]$ over 10,000 resamples) and is best-or-tied-best at *every* intermediate query budget. Differential evolution, GP-EI Bayesian optimization, CMA-ES, multi-seed random, and Nelder–Mead all reach $\le 0.754$ under $Q{=}18$. The ablation isolates the largest single contribution to the local $k$-NN prior (removing it drops the ratio to 0.645).
+
+A C++20 reference backend documents the evaluator contract and reports a $4.30\times$ speedup at 8 threads for batched $n{=}14$ evaluation, identifying the mixer kernel as the dominant per-layer cost ($2.60\times$ the cost-phase kernel).
+
+### Reproduce Thread A end-to-end
+
+```bash
+cd submission/code
+conda env create -f environment.yml && conda activate uq-qaoa-artifact   # or: pip install -r requirements.txt
+bash reproduce.sh smoke        # fast end-to-end sanity pass
+python generate_all.py         # regenerate every figure and table (~2–5 min on the reference platform)
+```
+
+Everything is deterministic given the global seed `260424803`. The mapping from each manuscript figure/table to its generating script is listed in the manuscript's *Reproducibility* section and in [`submission/code`](submission/code).
+
+---
+
+## Thread B: Graph-conditioned learning across quantum optimization and biomedicine
+
+This thread shows the *same modeling interface*—graph in, calibrated parameterization out—operating in two domains.
+
+- **Transcriptomic QAOA initialization.** A graph-conditioned GNN predicts depth-2 QAOA angles $(\gamma_1,\gamma_2,\beta_1,\beta_2)$ for MaxCut on prostate transcriptomic co-expression graphs. It reaches a **0.8682** held-out mean approximation ratio versus **0.8686** for direct classical search (Nelder–Mead), while reducing median inference from 675.9 ms to **0.256 ms** (≈ 2640× faster) and improving the prior learned baseline (0.8208) by +0.0474 absolute.
+- **Cardiotocography (CTG) screening.** A residual clinical GCN on a patient-similarity graph attains **98.8%** accuracy, **0.942** balanced accuracy, and **0.978** ROC AUC on a held-out split ($n=426$, 35 pathologic), improving the simpler graph baseline by +2.1 pts accuracy and matching the strongest tabular models on false-positive count.
+
+The contribution is bounded by design: the claim is a unified, transferable graph-learning framework with strong held-out performance—not universal superiority over every classical baseline.
+
+| Metric | Better | Meaning |
+|---|---|---|
+| Approximation ratio | higher | fraction of optimal MaxCut value recovered |
+| Balanced accuracy | higher | mean recall across classes (critical under class imbalance) |
+| ROC AUC | higher | probability a pathologic case is ranked above a normal case |
+
+---
+
+## Interactive notebooks
 
 | Notebook | Role | Contents |
-| --- | --- | --- |
-| [notebooks/quantum_ai_bio_combined.ipynb](notebooks/quantum_ai_bio_combined.ipynb) | Integrated analysis | Shared graph-conditioned formulation spanning both branches |
-| [notebooks/qaoa_demo.ipynb](notebooks/qaoa_demo.ipynb) | QAOA analysis | Transcriptomic graphs, depth-2 statevector simulation, initializer comparison, and ablations |
-| [notebooks/bio_demo.ipynb](notebooks/bio_demo.ipynb) | Biomedical analysis | Split-first preprocessing, k-NN graph construction, and graph-versus-tabular evaluation |
+|---|---|---|
+| [`notebooks/quantum_ai_bio_combined.ipynb`](notebooks/quantum_ai_bio_combined.ipynb) | Integrated analysis | Shared graph-conditioned formulation spanning both branches |
+| [`notebooks/qaoa_demo.ipynb`](notebooks/qaoa_demo.ipynb) | QAOA analysis | Transcriptomic graphs, depth-2 statevector simulation, initializer comparison, ablations |
+| [`notebooks/bio_demo.ipynb`](notebooks/bio_demo.ipynb) | Biomedical analysis | Split-first preprocessing, $k$-NN graph construction, graph-vs-tabular evaluation |
 
-## Representative Results
+Static HTML renders are in [`website/notebooks_html/`](website/notebooks_html) and are surfaced on the project website.
 
-This section summarizes the takeaways already established above rather than repeating the full comparisons.
+---
 
-| Branch | Key result | Why it matters |
-| --- | --- | --- |
-| QAOA | Graph-conditioned GNN reaches 0.8682 held-out mean approximation ratio versus 0.8686 for direct classical search | Near-search quality with a single learned forward pass |
-| QAOA | Median inference time falls from 675.9 ms to 0.256 ms | 2640x lower per-instance cost |
-| QAOA | Prior learned baseline reaches 0.8208 | Graph conditioning adds a clear quality gain over earlier learned initialization |
-| CTG | ResidualClinicalGCN reaches 98.8% accuracy, 0.942 balanced accuracy, and 0.978 ROC AUC | Strong graph-model operating point on the held-out clinical split |
-| CTG | Calibrated LightGBM reaches 99.06% accuracy and 0.956 balanced accuracy | Best tabular reference remains slightly stronger on raw discrimination metrics |
-| Integrated | One graph-conditioned framework supports both QAOA angle prediction and clinical risk scoring | Establishes the repository's main methodological contribution |
+## Repository layout
 
-## Artifacts
+```text
+submission/        FLAGSHIP: UQ-QAOA manuscript (main.tex, refs.bib) + code/ artifact
+  code/            reproducible Python package (python/uq_qaoa/), C++20 backend (cpp/),
+                   figure/table/experiment scripts, configs, results, tests, reproduce.sh
+notebooks/         core analyses and demonstration notebooks (Thread B)
+experiments/       baseline scripts and extracted evaluations (Thread B)
+src/               models, simulators, utilities, and serving code (Thread B)
+data/              source biomedical and transcriptomic inputs
+outputs/           processed datasets, tables, and generated results
+website/           static-site assets, exported notebook HTML, and paper PDF
+index.html         project landing page (GitHub Pages entry point)
+```
 
-| Artifact | Path | Purpose |
-| --- | --- | --- |
-| Website entry point | [index.html](index.html) | Project landing page |
-| Paper PDF | [website/notebooks_html/main.pdf](website/notebooks_html/main.pdf) | Manuscript version of the project |
-| Notebook HTML exports | [website/notebooks_html](website/notebooks_html) | Static rendered analyses |
-| QAOA baselines | [experiments/qaoa/run_qaoa_baselines.py](experiments/qaoa/run_qaoa_baselines.py) | Reproduce QAOA comparison runs |
-| Biomedical baselines | [experiments/biomedical/run_bio_baselines.py](experiments/biomedical/run_bio_baselines.py) | Reproduce CTG comparison runs |
+---
 
-## Reproducibility
-
-Install dependencies:
+## Reproducibility (Thread B)
 
 ```bash
 pip install -r requirements.txt
-```
 
-Open the notebooks:
-
-```bash
+# Notebooks
 jupyter notebook notebooks/quantum_ai_bio_combined.ipynb
 jupyter notebook notebooks/qaoa_demo.ipynb
 jupyter notebook notebooks/bio_demo.ipynb
-```
 
-Run the extracted baseline scripts:
-
-```bash
+# Extracted baselines
 python experiments/qaoa/run_qaoa_baselines.py
 python experiments/biomedical/run_bio_baselines.py
 ```
 
-## Repository Layout
+### Local website + prediction demo
 
-```text
-notebooks/      core analyses and demonstration notebooks
-experiments/    baseline scripts and extracted evaluations
-src/            models, simulators, utilities, and serving code
-data/           source biomedical and transcriptomic inputs
-outputs/        processed datasets, tables, and generated results
-submission/     manuscript source (LaTeX)
-website/        static site, exported notebook HTML, and paper PDF
+The landing page [`index.html`](index.html) includes an optional live QAOA-angle prediction demo backed by a small Flask service.
+
+```bash
+# 1) Start the prediction API from the repo root
+FLASK_APP=src.server flask run --host=0.0.0.0 --port=5000
+# 2) Serve the website
+python -m http.server 8000
+# 3) Open http://localhost:8000/index.html
+```
+
+`website/demo.js` posts to `http://localhost:5000/predict` by default; set `window.API_BASE_URL` before loading it to target another endpoint.
+
+---
+
+## Citation
+
+```bibtex
+@misc{huynh_uqqaoa,
+  author = {Huynh, Molena},
+  title  = {Uncertainty-Calibrated Trust Regions for Query-Efficient QAOA Parameter Search},
+  year   = {2026},
+  note   = {Code and manuscript},
+  url    = {https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization}
+}
 ```
 
 ## License
 
-This project is released under the terms of the LICENSE file in this repository.
+Released under the [MIT License](LICENSE).

@@ -1,6 +1,6 @@
 % ============================================================
-% Quantum Science and Technology (IOP Publishing) manuscript.
-% Converted to standard article class for Overleaf compatibility.
+% Manuscript prepared for Nature Machine Intelligence.
+% Standard article class; Nature-style superscript numbered citations.
 % ============================================================
 \documentclass[12pt,a4paper]{article}
 \usepackage[margin=1in]{geometry}
@@ -21,12 +21,10 @@
 \usepackage{enumitem}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
-\usepackage[numbers,sort&compress]{natbib}
+\usepackage[numbers,super,sort&compress]{natbib}
 \providecommand{\Statex}{\item[]}
 
 % Commands originally from IOP class; redefined for article class.
-\newcommand{\QST}{Quantum Sci.\ Technol.}
-\newcommand{\submitto}[1]{}
 \newcommand{\ead}[1]{\par\noindent\texttt{#1}\par}
 \newcommand{\ack}[1]{\section*{Acknowledgments}#1}
 \newcommand{\orcidlink}[1]{\textsuperscript{\scriptsize\,\raisebox{-0.1ex}{ORCID:}~#1}}
@@ -63,17 +61,34 @@
 % Theorem environments.
 \newtheorem{theorem}{Theorem}
 \newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
 \newtheorem{remark}{Remark}
 \newtheorem{definition}{Definition}
 
+% Supplementary-information numbering helper.
+\newcommand{\beginsupplement}{%
+    \setcounter{section}{0}%
+    \renewcommand{\thesection}{S\arabic{section}}%
+    \renewcommand{\theHsection}{S\arabic{section}}%
+    \setcounter{table}{0}%
+    \renewcommand{\thetable}{S\arabic{table}}%
+    \renewcommand{\theHtable}{S\arabic{table}}%
+    \setcounter{figure}{0}%
+    \renewcommand{\thefigure}{S\arabic{figure}}%
+    \renewcommand{\theHfigure}{S\arabic{figure}}%
+    \setcounter{equation}{0}%
+    \renewcommand{\theequation}{S\arabic{equation}}%
+    \renewcommand{\theHequation}{S\arabic{equation}}%
+}
+
 % ============================================================
-\submitto{\QST}
 
 \begin{document}
 
 \title{Uncertainty-Calibrated Trust Regions for Query-Efficient QAOA Parameter Search}
 
-\author{Molena Huynh\orcidlink{0000-0002-1234-5678}}
+\author{Molena Huynh}
 \affil{North Carolina State University, Raleigh, NC 27695, USA}
 \ead{molena.huynh@jmp.com}
 
@@ -99,11 +114,6 @@ query budget.  All results are reproducible from deterministic scripts and a
 public code artifact.
 \end{abstract}
 
-\vspace{2pc}
-\noindent{\it Keywords\/}: Quantum Approximate Optimization Algorithm,
-graph neural networks, uncertainty quantification, trust-region methods,
-MaxCut, variational quantum algorithms
-
 % ============================================================
 \section{Introduction}
 \label{sec:introduction}
@@ -116,14 +126,15 @@ loop~\cite{farhi2014,preskill2018,crooks2018}.  For
 near-term implementations, the dominant computational cost is
 often the number of objective-function queries required to tune the variational
 parameters~\cite{zhou2020,wurtz2021,cerezo2021,mcclean2018,arrasmith2021}.
-Recent QST studies have treated QAOA performance evaluation, parameter
+A growing body of work treats QAOA performance evaluation, parameter
 transfer, hardware execution, circuit cutting, and algorithm selection as
 resource-accounting problems rather than only final-objective comparisons
 \cite{larkin2022qst,streif2020,moussa2020qst,zhu2023qst,bechtold2023qst}.
-Other accepted QST papers emphasize low-depth ansatz design, expectation-value
+Related studies emphasize low-depth ansatz design, expectation-value
 landscapes, parameter clustering, and sampling efficiency
 \cite{vijendran2024qst,ozaeta2022qst,zhang2025qst,drapeau2026qst}.  In that
-same spirit, this manuscript evaluates a bounded quantum-software question:
+same spirit, this manuscript poses a bounded, resource-aware question at the
+interface of machine learning and quantum optimization:
 given a fixed number of objective queries, can graph-conditioned uncertainty
 allocate those queries more effectively than single-source warm starts or
 generic black-box optimizers?  Recent studies have demonstrated QAOA
@@ -140,8 +151,9 @@ near-term settings, the query count---the number of distinct angle vectors
 evaluated by the quantum processor or simulator---is a first-class resource
 that constrains the practical utility of QAOA as quantum
 software~\cite{cerezo2021,mcclean2018}.  A method that transforms learned
-uncertainty into operational search geometry is therefore a quantum-software
-contribution: it provides a principled mechanism for trading off exploration
+uncertainty into operational search geometry is therefore a contribution at
+the machine-learning/quantum-optimization interface: it provides a principled
+mechanism for trading off exploration
 width against a finite evaluation budget.
 
 The key novelty is not ``a GNN predicts QAOA angles''---that capability
@@ -243,7 +255,8 @@ The contributions of this paper are as follows.
 Section~\ref{sec:background} defines the MaxCut/QAOA objective and the
 query-budget model.  Section~\ref{sec:related} places the work relative to
 QAOA transfer, learning-assisted initialization, Bayesian optimization,
-trust-region methods, uncertainty quantification, and accepted QST studies.
+trust-region methods, uncertainty quantification, and closely related
+learning-assisted QAOA work.
 Sections~\ref{sec:method}--\ref{sec:theory} describe the posterior-fusion
 policy and the limited guarantees used to interpret it.
 Sections~\ref{sec:setup}--\ref{sec:results} give the research design and
@@ -355,6 +368,48 @@ stability.  For diagonal covariance, each QAOA angle is searched in an
 interval scaled by its predicted uncertainty.  The local search problem is
 $\max_{\theta\in \mathcal{T}_{\phi,\rho}(G)} f_G(\theta)$.
 
+\subsection{Trotterized quantum annealing schedule}
+\label{sec:tqa_def}
+
+The trotterized quantum annealing (TQA) schedule provides a physics-informed
+parameter family that requires no test-instance evaluation.  It discretizes a
+linear adiabatic interpolation between the mixer and cost Hamiltonians into $p$
+Trotter steps of size $\Delta t = T/p$~\cite{sack2021,zhou2020}.  For total
+annealing time $T$ and step index $\ell\in\{1,\dots,p\}$, the schedule angles
+are
+\begin{equation}
+    \gamma_\ell^{\mathrm{TQA}} = \frac{\ell}{p}\,\Delta t,
+    \qquad
+    \beta_\ell^{\mathrm{TQA}} = \left(1-\frac{\ell}{p}\right)\Delta t,
+    \label{eq:tqa}
+\end{equation}
+so that the cost-phase weight ramps up linearly while the mixer weight ramps
+down.  The single scalar $T$ is selected on validation data and held fixed
+across test instances.  Because \eqref{eq:tqa} depends only on the depth $p$
+and not on the specific test graph, every method in the benchmark has equal
+access to the TQA candidate; this is the property that makes the TQA safety
+prefix of \UQQAOA{} a fair early-budget control (\cref{sec:method}).
+
+\subsection{Graph feature vector}
+\label{sec:features}
+
+The local $k$-nearest-neighbour prior and the heuristic baseline operate on a
+fixed-dimensional descriptor $f(G)\in\mathbb{R}^{8}$ summarizing graph
+structure.  Each component is invariant to vertex relabelling and is normalized
+to a comparable scale across graph sizes:
+\begin{equation}
+    f(G) = \big(n,\; m/\tbinom{n}{2},\; \bar{d}/(n{-}1),\;
+    \sigma_d,\; C,\; \lambda_2,\; \lambda_{\max},\; \kappa\big),
+    \label{eq:features}
+\end{equation}
+where $n=|V|$, $m=|E|$, $\bar{d}$ and $\sigma_d$ are the mean and standard
+deviation of the degree sequence, $C$ is the global clustering coefficient,
+$\lambda_2$ and $\lambda_{\max}$ are the algebraic connectivity and the largest
+eigenvalue of the normalized Laplacian, and $\kappa$ is the degree assortativity.
+Nearest neighbours in \cref{alg:gctr} are computed by Euclidean distance in
+this standardized feature space, with per-coordinate $z$-scoring estimated on
+the training library.
+
 % ============================================================
 \section{Relation to Prior Work}
 \label{sec:related}
@@ -444,9 +499,9 @@ value~\cite{cerezo2021,arrasmith2021,sim2021,mcclean2018,bonet2023,larkin2022qst
 perspective: performance is reported as a function of objective-query count
 under matched budgets.
 
-\paragraph{Accepted QST studies most closely related to this manuscript.}
-Several accepted QST papers provide the closest methodological context for the
-present submission.  Larkin et al. evaluate QAOA for MaxCut using
+\paragraph{Closely related work in learning-assisted and resource-aware QAOA.}
+Several studies provide the closest methodological context for the present
+work.  Larkin et al. evaluate QAOA for MaxCut using
 approximation-ratio and sampling-based metrics, emphasizing that practical
 performance depends on the cost of obtaining useful samples rather than on an
 idealized final objective alone~\cite{larkin2022qst}.  Streif and Leib show
@@ -455,12 +510,12 @@ outer-loop reduction through problem-structure information~\cite{streif2020}.
 Moussa, Calandra, and Dunjko frame near-term quantum optimization as an
 algorithm-selection problem in which machine learning identifies instances
 where QAOA is expected to be useful~\cite{moussa2020qst}.  Vijendran et al.
-and Ozaeta et al. provide accepted QST examples of bounded low-depth QAOA
+and Ozaeta et al. report bounded low-depth QAOA
 claims supported by explicit MaxCut/Ising benchmarks and landscape analysis
-\cite{vijendran2024qst,ozaeta2022qst}.  Bechtold et al. offer a useful model
-for QST-style research-question framing, resource accounting, limitations, and
+\cite{vijendran2024qst,ozaeta2022qst}.  Bechtold et al. provide a useful model
+for research-question framing, resource accounting, limitations, and
 data-availability reporting in QAOA experiments on NISQ devices
-\cite{bechtold2023qst}.  Our manuscript follows the same conservative pattern:
+\cite{bechtold2023qst}.  We follow the same conservative pattern:
 state the resource question, control the benchmark, expose the data/code path,
 and keep hardware and advantage claims outside the evidence.
 
@@ -785,6 +840,48 @@ These distinguish the value of graph-conditioned uncertainty from a
 learned warm start alone; the corresponding ablation results appear in
 \cref{tab:ablation}.
 
+\subsection{Computational complexity}
+\label{sec:complexity}
+
+The cost of \UQQAOA{} separates cleanly into an amortized offline component and
+a per-instance online component, only the latter of which consumes the QAOA
+query budget.
+
+\paragraph{Offline (amortized) cost.}
+Training the GIN predictor on $N$ graphs for $E$ epochs costs
+$\mathcal{O}\!\big(E\,N\,(|E_{\max}|\,h + n_{\max} h^2)\big)$ floating-point
+operations, where $h$ is the hidden width, $|E_{\max}|$ the largest edge set,
+and $n_{\max}$ the largest vertex set; message passing is linear in the number
+of edges per layer and the Gaussian head is linear in $h$.  Constructing the
+reference targets $\theta_i^{\mathrm{ref}}$ dominates wall-clock training time
+because each requires a high-budget offline optimization with exact-statevector
+evaluations costing $\mathcal{O}(2^{n})$ per query.  This cost is paid once and
+reused across all test instances.
+
+\paragraph{Online (per-instance) cost.}
+Given a trained predictor, the per-instance pipeline is dominated by the $Q$
+objective queries, each of which is an exact-statevector evaluation of cost
+$\mathcal{O}(p\,|E|\,2^{n})$ (one cost-phase and one mixer sweep per layer over
+a length-$2^{n}$ amplitude vector).  The non-query overhead is negligible by
+comparison:
+\begin{itemize}[nosep]
+    \item GIN forward pass: $\mathcal{O}(L(|E|h + n h^2))$ for $L$ layers;
+    \item $k$-NN prior: $\mathcal{O}(N\log N)$ for neighbour retrieval over the
+    library in feature space \eqref{eq:features};
+    \item posterior fusion: $\mathcal{O}(2p)$ because all
+    covariances are diagonal, so the precision-weighted combination is a
+    coordinate-wise scalar operation;
+    \item greedy coordinate refinement: $\mathcal{O}(Q)$ control overhead, with
+    each probe charged exactly one objective query.
+\end{itemize}
+Consequently the method adds only $\mathcal{O}(2p + N\log N + L(|E|h+nh^2))$
+classical overhead on top of the $Q$ quantum/simulator queries that any
+zeroth-order optimizer must pay; the overhead is independent of $2^{n}$ and is
+therefore dominated by a single objective query for all graph sizes in the
+benchmark.  This is the precise sense in which the learned geometry is
+``free'' relative to the query budget: it reshapes \emph{which} candidates are
+evaluated without increasing the per-query quantum cost.
+
 % ============================================================
 \section{Computational Framework}
 \label{sec:hpc_framework}
@@ -849,11 +946,13 @@ Global seed    & \texttt{260424803} \\
 \end{tabular}
 \end{table}
 
-The C++20 reference benchmark achieves $7.91\times$ speedup at 8 threads for
-batched $n{=}14$ evaluation and identifies the mixer kernel as the dominant CPU
-cost ($1.9\times$ the phase-kernel time per layer).  Full microbenchmark
+The C++20 reference benchmark achieves a $4.30\times$ speedup at 8 threads for
+batched $n{=}14$ evaluation (144 queries; \cref{tab:thread_scaling}) and
+identifies the mixer kernel as the dominant CPU cost: at $n{=}14$ the mixer
+kernel requires $0.4736$~ms per layer versus $0.1821$~ms for the cost-phase
+kernel, a $2.60\times$ ratio (\cref{tab:kernel_cost}).  Full microbenchmark
 methodology, kernel profiles, evaluator validation tests, and CSV logs are
-provided in the supplementary artifact.
+provided in the supplementary artifact and \cref{app:hpc}.
 
 % ============================================================
 \section{Guarantees for Learned Trust-Region Search}
@@ -888,10 +987,28 @@ $\Pr[f_G(\widehat{\theta}_K) < f_G^{\mathcal{T}}-\varepsilon]
 \end{theorem}
 
 \begin{proof}
-The failure event requires all $K$ samples to miss
-$\mathcal{A}_{G,\varepsilon}$.  By independence,
-$(1-\alpha_G(\varepsilon))^K \leq \exp(-K\alpha_G(\varepsilon)) \leq \delta$.
+Let $A_k$ denote the event that the $k$-th sample lands in the
+$\varepsilon$-optimal subset $\mathcal{A}_{G,\varepsilon}$.  By assumption~(A2),
+$\Pr[A_k]\ge\alpha_G(\varepsilon)$ for every $k$, so $\Pr[\neg A_k]\le
+1-\alpha_G(\varepsilon)$.  The best-of-$K$ estimate fails to be
+$\varepsilon$-optimal only if \emph{every} sample misses
+$\mathcal{A}_{G,\varepsilon}$, i.e.\ the event $\bigcap_{k=1}^{K}\neg A_k$.
+By the independence assumption~(A1),
+\begin{equation}
+    \Pr\!\big[f_G(\widehat{\theta}_K) < f_G^{\mathcal{T}}-\varepsilon\big]
+    = \prod_{k=1}^{K}\Pr[\neg A_k]
+    \le \big(1-\alpha_G(\varepsilon)\big)^{K}
+    \le \exp\!\big(-K\,\alpha_G(\varepsilon)\big),
+\end{equation}
+where the last step uses $1-x\le e^{-x}$.  Requiring the right-hand side to be
+at most $\delta$ and solving for $K$ gives
+$K\ge\log(1/\delta)/\alpha_G(\varepsilon)$, which establishes the claim.
 \end{proof}
+
+The bound is monotone in the near-optimal mass $\alpha_G(\varepsilon)$: a
+proposal that places more probability on $\mathcal{A}_{G,\varepsilon}$ requires
+strictly fewer samples for the same confidence.  This is exactly the role of the
+calibrated covariance, which determines how tightly the proposal concentrates.
 
 In plain language, a calibrated trust region helps only if it concentrates the
 proposal distribution near good parameters. The benefit is therefore geometric:
@@ -957,8 +1074,57 @@ $G_{M+1}$:
 \end{equation}
 \end{proposition}
 
-\textit{Proof.}  By exchangeability of scores, the rank of $s(G_{M+1})$ is
-uniform on $\{1,\ldots,M+1\}$.
+\textit{Proof.}  By exchangeability of the augmented score sequence
+$\{s(G_1),\dots,s(G_{M+1})\}$, the rank of $s(G_{M+1})$ is uniformly
+distributed on $\{1,\dots,M+1\}$.  Hence
+$\Pr[s(G_{M+1})\le\hat q_{1-\alpha}]
+\ge\lceil(M+1)(1-\alpha)\rceil/(M+1)\ge 1-\alpha$.
+The event $\{s(G_{M+1})\le\hat q_{1-\alpha}\}$ is identical to
+$\{\theta^*(G_{M+1})\in\mathcal{T}_{\hat q_{1-\alpha}}(G_{M+1})\}$ by the
+definition of the Mahalanobis nonconformity score, which proves the stated
+coverage. \hfill$\square$
+
+\subsection{Empirical bound verification}
+\label{sec:bound_verification}
+
+The guarantees above are stated abstractly; \cref{tab:bounds} instantiates
+each quantity on the controlled $n{=}14$, $p{=}3$ benchmark using the
+generated bound-verification artifact (\path{table02_bound_verification.py}).
+The local Lipschitz constant $L_G$ is estimated by finite differences of the
+objective around the trust-region centre; the volume ratio is the fraction of
+$\Theta_p$ occupied by the $\chi^2_{2p}(0.95)$ ellipsoid.  The reported
+expected-quality lower bound follows from \cref{thm:bestofk} combined with the
+measured $\alpha_G(\varepsilon)$; the noisy variant follows from
+\cref{thm:best-of-k-shot}.  These numbers are diagnostic checks that the
+constants entering the bounds are finite and of reasonable magnitude on the
+tested instances, not independent performance claims.
+
+\begin{table}[t]
+\caption{Empirical instantiation of the theoretical quantities on the
+controlled $n{=}14$, $p{=}3$ benchmark.  Lower bounds are expressed relative to
+the maximum cut value $C_{\max}$; the volume ratio is the fraction of the
+parameter domain $\Theta_p$ enclosed by the calibrated trust-region ellipsoid.
+\label{tab:bounds}}
+\centering
+\scriptsize
+\begin{tabular}{@{}p{0.60\columnwidth}r@{}}
+\toprule
+Quantity & Value \\
+\midrule
+Local Lipschitz constant $L_G$ (\cref{prop:conformal} neighbourhood) & $114.0$ \\
+Expected-quality lower bound (\cref{thm:bestofk}) & $\ge 0.865\,C_{\max}-41.89$ \\
+Best-of-$K$ optimality gap ($K{=}3$) & $\le 20.70$ \\
+Trust-region volume ratio vs.\ $\Theta_p$ & $4.72\times10^{-4}$ \\
+Expected noisy lower bound ($\varepsilon{=}0.01$, \cref{thm:best-of-k-shot}) & $\ge 0.855\,C_{\max}-44.68$ \\
+Generalization-gap surrogate & $\le 7.12$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The volume ratio $4.72\times10^{-4}$ quantifies the central mechanism: the
+calibrated trust region restricts search to roughly $0.05\%$ of the full
+parameter domain while \cref{thm:bestofk} certifies that near-optimal mass is
+retained, which is why a small query budget suffices.
 
 \subsection{Limitations of the guarantees}
 
@@ -978,7 +1144,7 @@ question: how many QAOA objective queries are required to obtain
 high-quality parameters when the optimizer uses graph-conditioned prior
 information?
 
-Following the research-design style used in recent QST QAOA studies, the
+Following best practice in resource-aware QAOA studies, the
 empirical questions are made explicit:
 \begin{description}[nosep,leftmargin=1.2cm]
     \item[RQ1:] Under a matched low query budget, does four-source
@@ -1119,12 +1285,14 @@ CPU reductions against the Python reference evaluator.
 All figures and tables referenced in this manuscript are generated by scripts
 in the \texttt{code/} directory.  The mapping is:
 \begin{itemize}[nosep]
-    \item \cref{tab:efficiency}: \texttt{code/trace\_evaluations.py} followed by the trace summary written to \texttt{code/tables/table01\_computational\_efficiency.csv}
-    \item \cref{tab:ablation}: \texttt{code/table03\_ablation.py}
-    \item \cref{fig:statevector_grid}: \texttt{code/fig01\_statevector\_grid.py}
-    \item \cref{fig:query_curve}: \texttt{code/scripts/make\_figures.py} using \texttt{code/tables/trace\_all\_evaluations.csv}
-    \item \cref{fig:ablation}: \texttt{code/fig03\_heldout\_quality.py}
-    \item \cref{fig:landscape_trust}: \texttt{code/fig04\_trust\_region\_concept.py}
+    \item \cref{tab:efficiency}: \path{trace_evaluations.py}, which writes
+    \path{tables/table01_computational_efficiency.csv}
+    \item \cref{tab:ablation}: \path{table03_ablation.py}
+    \item \cref{fig:statevector_grid}: \path{fig01_statevector_grid.py}
+    \item \cref{fig:query_curve}: \path{scripts/make_figures.py}, which reads
+    \path{tables/trace_all_evaluations.csv}
+    \item \cref{fig:ablation}: \path{fig03_heldout_quality.py}
+    \item \cref{fig:landscape_trust}: \path{fig04_trust_region_concept.py}
 \end{itemize}
 Running \texttt{python code/generate\_all.py} regenerates all outputs
 end-to-end in approximately 2--5~minutes on the reference platform
@@ -1303,30 +1471,98 @@ $p{=}3$ instance.
 \subsection{Experiment 5: Higher-depth tests}
 \label{sec:higher_depth}
 
-To test whether the query policy remains useful as parameter dimension
-increases, we evaluate depths $p{=}4$ through $p{=}7$ using dimension-scaled
-budgets $Q_{\min}(p) = 5 + 4p$.  These runs confirm that the
-configurable-depth implementation operates correctly; statistical claims at
-$p{>}3$ require larger benchmarks and are not made here.
+To test whether the query policy remains operational as the parameter
+dimension increases, we evaluate depths $p{=}6$ and $p{=}7$ using a
+dimension-scaled budget $Q_{\min}(p)=5+4p$ truncated to $Q{=}5$ for the
+single-instance smoke configuration.  \Cref{tab:higher_depth} reports the
+generated summaries.  These runs confirm that the configurable-depth
+implementation operates correctly and that the posterior-fusion and refinement
+machinery executes without modification at $2p\in\{12,14\}$.  At this minimal
+single-instance budget the methods are tightly clustered and no method
+dominates; statistical claims at $p{>}3$ require larger benchmarks and are
+explicitly \emph{not} made here.  The value of the experiment is to demonstrate
+correct higher-dimensional operation and to expose the budget regime in which
+the learned geometry has too few queries to separate from the physics-informed
+prefix.
+
+% Generated from code/results/summary_p6.csv and summary_p7.csv
+\begin{table}[t]
+\caption{Higher-depth single-instance smoke tests at $p{=}6$ and $p{=}7$,
+$Q{=}5$ matched queries (one held-out instance per depth).  Confidence
+intervals are degenerate at a single instance and are omitted; the table
+documents correct configurable-depth execution rather than a statistical
+comparison.
+\label{tab:higher_depth}}
+\centering
+\scriptsize
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Method & Ratio ($p{=}6$) & Ratio ($p{=}7$) \\
+\midrule
+Random search            & $0.6074$ & $0.6346$ \\
+TQA                      & $0.6022$ & $0.6117$ \\
+TQA + refinement         & $0.6296$ & $0.6238$ \\
+Posterior anchors only   & $0.6204$ & $0.6199$ \\
+UQ-QAOA (full)           & $0.6204$ & $0.6199$ \\
+\;\;-- no covariance     & $0.6204$ & $0.6199$ \\
+\;\;-- no refinement     & $0.6204$ & $0.6199$ \\
+\;\;-- no TQA prior      & $0.6296$ & $0.6257$ \\
+\;\;-- no $k$-NN prior   & $0.6296$ & $0.6257$ \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Experiment 6: Calibration and finite-shot diagnostics}
 \label{sec:calibration_finite}
 
 \paragraph{Trust-region calibration.}
 The artifact generates empirical trust-region coverage curves
-(\texttt{code/figures/trust\_region\_coverage.pdf}).  These plot the fraction of
-test instances whose best-found parameter falls within a given Mahalanobis
-radius of the posterior mean.  Expected calibration error and
-uncertainty-error correlation are also computed.  These diagnostics test
-whether the predicted covariance is operationally meaningful, not whether it
-achieves perfect Bayesian coverage.
+(\texttt{code/figures/trust\_region\_coverage.pdf}) and an expected
+calibration error (ECE) summary.  On the controlled two-instance held-out set
+at $p{=}3$, the measured ECE and uncertainty--error correlation are both
+$0.000$ at the reported precision, and the empirical coverage at the tested
+Mahalanobis radii $\rho\in\{1.5,3,6,12,24\}$ is degenerate because the
+reference parameters fall outside the very compact predicted ellipsoids on this
+small diagnostic set.  We report these numbers transparently: they indicate
+that calibration at the two-instance scale is uninformative and that meaningful
+coverage estimation requires the larger validation pools described in
+\cref{sec:limitations}.  The diagnostic tests whether the predicted covariance
+is operationally meaningful, not whether it achieves perfect Bayesian coverage.
 
 \paragraph{Finite-shot robustness.}
 The finite-shot component samples objective estimates from the statevector
 probability distribution for a fixed candidate and verifies deterministic
-replay under fixed seeds.  Because it does not yet evaluate full UQ-QAOA
-candidate selection under realistic device noise, finite-shot robustness
-remains future work.
+replay under fixed seeds.  \Cref{tab:finite_shots} shows the expected
+$1/\sqrt{S}$ concentration of the shot estimator toward the exact objective:
+as the shot count increases from $256$ to $8192$, the standard error of the TQA
+objective estimate contracts from $0.1108$ to $0.0201$ and the noisy estimate
+converges to the exact value $8.2921$.  Because the component does not yet
+evaluate full \UQQAOA{} candidate selection under realistic device noise,
+end-to-end finite-shot robustness of the selection policy remains future work;
+the present result validates the estimator and the deterministic shot-replay
+contract.
+
+% Generated from code/tables/table_finite_shots.tex
+\begin{table}[t]
+\caption{Finite-shot estimator behaviour at $p{=}3$ for the TQA candidate.
+The standard error contracts as $1/\sqrt{S}$ and the noisy estimate converges
+to the exact objective $8.2921$.  The misranking rate is undefined (NaN) at a
+single candidate and is reported for completeness.
+\label{tab:finite_shots}}
+\centering
+\scriptsize
+\begin{tabular}{@{}rrrr@{}}
+\toprule
+Shots $S$ & Noisy objective & Standard error & Exact objective \\
+\midrule
+$256$  & $8.4570$ & $0.1108$ & $8.2921$ \\
+$512$  & $8.3887$ & $0.0769$ & $8.2921$ \\
+$1024$ & $8.3330$ & $0.0565$ & $8.2921$ \\
+$4096$ & $8.2759$ & $0.0283$ & $8.2921$ \\
+$8192$ & $8.2863$ & $0.0201$ & $8.2921$ \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Summary of empirical evidence}
 
@@ -1447,9 +1683,10 @@ All evidence is from classical simulation.  The evaluator-contract design
 (\cref{tab:backend_contract}) is intended to facilitate hardware integration
 but has not been validated on quantum hardware.
 
-\subsection{Significance for quantum technology}
+\subsection{Significance for machine learning and quantum technology}
 
-Query-efficient QAOA parameter selection is a quantum-software problem:
+Query-efficient QAOA parameter selection is both a machine-learning and a
+quantum-software problem:
 measurement budgets and classical outer-loop overhead are direct barriers to
 deploying variational algorithms on near-term
 hardware~\cite{cerezo2021,mcclean2018}.  This work contributes a
@@ -1496,7 +1733,7 @@ remain future work.
 drafts and for discussions about reproducibility, optimization, and scientific
 software design.}
 
-\section*{Data availability statement}
+\section*{Data availability}
 
 All data supporting this study are generated deterministically by the
 accompanying code artifact, publicly available at
@@ -1506,8 +1743,479 @@ figure source data, and one-command reproduction via
 \texttt{bash code/reproduce.sh smoke}.
 A DOI-bearing archival release will be created before final publication.
 
+\section*{Code availability}
+
+The complete source code that generates every figure, table, and number in
+this manuscript is openly available in the same repository under
+\texttt{submission/code/}.  It comprises a modular Python package
+(\texttt{python/uq\_qaoa/}), a C++20 reference statevector backend
+(\texttt{cpp/}), per-experiment entry-point scripts, YAML configurations for
+depths $p{=}3$--$7$, a unit-test suite (\texttt{tests/}), and the
+end-to-end drivers \texttt{generate\_all.py} and \texttt{reproduce.sh}.
+The software is released under the licence stated in the repository and is
+versioned to the commit used to produce this manuscript.
+
+\section*{Author contributions}
+
+M.H.\ conceived the study, developed the methodology and theory, implemented
+the Python and C++ software, designed and executed all experiments, analysed
+the results, and wrote the manuscript.
+
+\section*{Competing interests}
+
+The author declares no competing interests.
+
 \section*{References}
 \bibliographystyle{unsrtnat}
 \bibliography{refs}
+
+% ============================================================
+\clearpage
+\beginsupplement
+\section*{Supplementary Information}
+\addcontentsline{toc}{section}{Supplementary Information}
+
+\noindent\textit{Uncertainty-Calibrated Trust Regions for Query-Efficient QAOA
+Parameter Search.}  This Supplementary Information collects the full notation,
+extended derivations and proofs, complete hyperparameter and training
+specifications, the high-performance-computing microbenchmark methodology and
+results, the Python/C++ cross-validation evidence, the reproducibility
+manifest, an extended discussion of related work, and a glossary.  Every number
+reported here is produced by the deterministic artifact described in
+\cref{sec:reproducibility}; no quantity is hand-entered.
+
+% ------------------------------------------------------------
+\section{Notation and symbols}
+\label{app:notation}
+
+\Cref{tab:notation} collects the symbols used throughout the manuscript.
+Vectors are column vectors; $\mathrm{diag}(\cdot)$ forms a diagonal matrix from
+a vector; $\|\cdot\|_2$ is the Euclidean norm; $\Pi_{\Theta_p}$ denotes modular
+projection onto the parameter domain $\Theta_p$.
+
+\begin{table}[t]
+\caption{Summary of notation.\label{tab:notation}}
+\centering
+\scriptsize
+\begin{tabular}{@{}ll@{}}
+\toprule
+Symbol & Meaning \\
+\midrule
+$G=(V,E)$ & undirected graph with vertex set $V$, edge set $E$ \\
+$n,\,m$ & number of vertices $|V|$ and edges $|E|$ \\
+$p$ & QAOA depth (number of layers) \\
+$\theta=(\gamma,\beta)$ & QAOA parameter vector in $\Theta_p=[0,2\pi)^p\times[0,\pi)^p$ \\
+$H_C(G),\,H_M$ & cost and mixer Hamiltonians \\
+$f_G(\theta)$ & exact QAOA objective $\bra{\psi_G(\theta)}H_C\ket{\psi_G(\theta)}$ \\
+$C_G^\star$ & optimal MaxCut value of $G$ \\
+$r_G(\theta)$ & approximation ratio $f_G(\theta)/C_G^\star$ \\
+$Q$ & objective-query budget (number of distinct $\theta$ evaluated) \\
+$S$ & shots per query in the finite-shot model \\
+$q_\phi(\theta\mid G)$ & predicted Gaussian $\mathcal{N}(\mu_\phi(G),\Sigma_\phi(G))$ \\
+$\mu_\phi(G),\,\Sigma_\phi(G)$ & predicted mean and diagonal covariance \\
+$\mathcal{T}_{\phi,\rho}(G)$ & trust region of radius $\rho$ \\
+$\Sigma_{\mathrm{post}},\mu_{\mathrm{post}}$ & fused posterior covariance and mean \\
+$\Sigma_s,\mu_s$ & source $s\in\{\mathrm{GIN},\mathrm{loc},\mathrm{glob},\mathrm{TQA}\}$ \\
+$\delta_j$ & coordinate refinement step size for dimension $j$ \\
+$f(G)\in\mathbb{R}^8$ & graph feature vector, \eqref{eq:features} \\
+$\theta^{\mathrm{TQA}}$ & trotterized quantum annealing schedule, \eqref{eq:tqa} \\
+$\theta^{\mathrm{ref}}_i$ & offline reference parameters for training graph $i$ \\
+$\alpha_G(\varepsilon)$ & near-optimal proposal mass in \cref{thm:bestofk} \\
+$L_G$ & local Lipschitz constant of $f_G$ \\
+$\lambda$ & trust-region ridge term for numerical stability \\
+$\eta_{\mathrm{wd}}$ & weight-decay coefficient \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ------------------------------------------------------------
+\section{Extended derivations and proofs}
+\label{app:proofs}
+
+\subsection{Precision-weighted posterior fusion}
+\label{app:fusion}
+
+We derive the four-source fusion rule used in \cref{alg:gctr}.  Treat each
+source $s$ as supplying an independent Gaussian pseudo-likelihood
+$\mathcal{N}(\theta;\mu_s,\Sigma_s)$ over the angle vector $\theta$.  The
+product of Gaussians is, up to normalization, proportional to
+\begin{equation}
+    \prod_s \exp\!\Big(-\tfrac12(\theta-\mu_s)^{\!\mathsf T}\Sigma_s^{-1}(\theta-\mu_s)\Big)
+    =\exp\!\Big(-\tfrac12\big(\theta^{\!\mathsf T}\Sigma_{\mathrm{post}}^{-1}\theta
+    -2\theta^{\!\mathsf T}\textstyle\sum_s\Sigma_s^{-1}\mu_s\big)+\text{const}\Big),
+\end{equation}
+where collecting the quadratic and linear terms gives the precision-weighted
+combination
+\begin{equation}
+    \Sigma_{\mathrm{post}}^{-1}=\sum_s\Sigma_s^{-1},
+    \qquad
+    \mu_{\mathrm{post}}=\Sigma_{\mathrm{post}}\sum_s\Sigma_s^{-1}\mu_s.
+    \label{eq:fusion_app}
+\end{equation}
+Because all covariances are diagonal, \eqref{eq:fusion_app} factorizes over the
+$2p$ coordinates: for coordinate $k$,
+$[\mu_{\mathrm{post}}]_k=\big(\sum_s [\Sigma_s]_{kk}^{-1}[\mu_s]_k\big)\big/
+\big(\sum_s[\Sigma_s]_{kk}^{-1}\big)$.  This shows explicitly that a source with
+small predicted variance on coordinate $k$ dominates the fused mean on that
+coordinate, which is the intended behaviour: confident sources pull harder.
+The calibration floor $\Sigma'_{\mathrm{GIN}}=\max(\Sigma_{\mathrm{GIN}},
+\Sigma_{\mathrm{loc}})$ prevents an overconfident neural head from collapsing
+the posterior onto an unreliable mean before any objective query is spent.
+
+\subsection{Lipschitz lower bound on near-optimal mass}
+\label{app:lipschitz}
+
+We justify the scaling relation
+$\alpha_G(\varepsilon)\gtrsim(\varepsilon/L_G)^d/(\rho^d\det(\Sigma_\phi+\lambda I)^{1/2})$
+of \cref{sec:theory}.  Suppose $f_G$ is locally $L_G$-Lipschitz near the
+trust-region optimum $\theta^{\mathcal T}$, so $f_G(\theta)\ge
+f_G^{\mathcal T}-L_G\|\theta-\theta^{\mathcal T}\|_2$.  Then any
+$\theta$ within Euclidean distance $\varepsilon/L_G$ of $\theta^{\mathcal T}$ is
+$\varepsilon$-optimal, i.e.\ the ball $B(\theta^{\mathcal T},\varepsilon/L_G)$ is
+contained in $\mathcal{A}_{G,\varepsilon}$.  For a proposal that is
+approximately uniform over the ellipsoidal trust region of volume
+$\propto\rho^d\det(\Sigma_\phi+\lambda I)^{1/2}$ (with $d=2p$), the mass it
+assigns to $\mathcal{A}_{G,\varepsilon}$ is at least the volume ratio
+\begin{equation}
+    \alpha_G(\varepsilon)\;\gtrsim\;
+    \frac{\mathrm{vol}\,B(\theta^{\mathcal T},\varepsilon/L_G)}
+         {\mathrm{vol}\,\mathcal{T}_{\phi,\rho}(G)}
+    \;\propto\;
+    \frac{(\varepsilon/L_G)^d}{\rho^d\det(\Sigma_\phi+\lambda I)^{1/2}},
+\end{equation}
+valid when $\varepsilon/L_G$ is small relative to the trust-region extent so
+that the ball lies inside the region.  Substituting into \cref{thm:bestofk}
+yields the query-count scaling: tighter calibrated covariance (smaller
+$\det(\Sigma_\phi+\lambda I)$) and smaller radius $\rho$ both reduce the number
+of candidates needed to reach the $\varepsilon$-optimal set.  The empirical
+$L_G\approx 114$ and volume ratio $4.72\times10^{-4}$ of \cref{tab:bounds}
+instantiate these constants on the benchmark.
+
+\subsection{Full finite-shot argument}
+\label{app:finiteshot}
+
+We expand the proof sketch of \cref{thm:best-of-k-shot}.  Let
+$\widehat f_{G,S}(\theta)=\tfrac1S\sum_{a=1}^S C_G(z_a)$ be the $S$-shot
+estimator with $z_a\sim|\braket{z_a}{\psi_G(\theta)}|^2$ and
+$C_G(z_a)\in[0,|E|]$.  By Hoeffding's inequality, for any fixed $\theta$,
+\begin{equation}
+    \Pr\!\big[\,|\widehat f_{G,S}(\theta)-f_G(\theta)|\ge t\,\big]
+    \le 2\exp\!\Big(-\tfrac{2S t^2}{|E|^2}\Big),
+\end{equation}
+so $\widehat f_{G,S}(\theta)-f_G(\theta)$ is sub-Gaussian with proxy variance
+$\sigma_G^2/S$ and $\sigma_G^2\le|E|^2/4$ (assumption~A3).  Setting
+$t=\varepsilon/2$ and taking a union bound over the $K$ evaluated candidates,
+the probability that any estimate deviates by more than $\varepsilon/2$ is at
+most $2K\exp(-S\varepsilon^2/(2|E|^2))$, which is $\le\delta/2$ whenever
+$S\ge 2|E|^2\log(4K/\delta)/\varepsilon^2$; using $\sigma_G^2\le|E|^2/4$ this is
+implied by the stated $S\ge 32\sigma_G^2\log(4K/\delta)/\varepsilon^2$.  By
+\cref{thm:bestofk} applied at tolerance $\varepsilon/2$ with
+$K\ge\log(2/\delta)/\alpha_G(\varepsilon/2)$, the best \emph{exact} candidate is
+within $\varepsilon/2$ of $f_G^{\mathcal T}$ with probability $\ge1-\delta/2$.
+On the complement of both failure events (total probability $\ge1-\delta$), the
+candidate selected by the noisy objective is within $\varepsilon/2+\varepsilon/2
+=\varepsilon$ of $f_G^{\mathcal T}$, establishing the claim.  This separates the
+parameter-query cost $K$ from the shot cost $S$: a method can place good
+candidates with few queries yet still need many shots to rank them reliably,
+exactly the regime quantified by \cref{tab:finite_shots}.
+
+% ------------------------------------------------------------
+\section{Complete hyperparameters and training protocol}
+\label{app:hyperparams}
+
+\Cref{tab:hyperparams} lists every hyperparameter required to reproduce the
+GIN predictor and the search policy.  All values are fixed before test-time
+evaluation and selected on the validation split only.
+
+\begin{table}[t]
+\caption{Complete hyperparameter specification.\label{tab:hyperparams}}
+\centering
+\scriptsize
+\begin{tabular}{@{}lll@{}}
+\toprule
+Group & Hyperparameter & Value \\
+\midrule
+GIN & message-passing layers $L$ & $4$ \\
+    & hidden width $h$ & $64$ \\
+    & MLP depth per layer & $2$ (layer-normalized) \\
+    & learnable $\varepsilon^{(\ell)}$ & initialized to $0$ \\
+    & graph pooling & mean $\oplus$ max concatenation \\
+    & covariance floor $\sigma_{\min}^2$ & $10^{-4}$ \\
+\midrule
+Training & optimizer & Adam~\cite{kingma2015} \\
+         & learning rate & $3\times10^{-4}$ \\
+         & schedule & cosine annealing \\
+         & max epochs & $1500$ \\
+         & early-stopping patience & $300$ \\
+         & gradient clip ($\ell_2$) & $1.0$ \\
+         & weight decay $\eta_{\mathrm{wd}}$ & $10^{-4}$ \\
+         & loss & Gaussian NLL \\
+\midrule
+Search & depth $p$ (main) & $3$ \\
+       & matched query budget $Q$ & $18$ \\
+       & local prior neighbours $k$ & $5$ \\
+       & step-size map & $\mathrm{clip}(0.5\sqrt{[\Sigma_{\mathrm{post}}]_{jj}},0.05,0.30)$ \\
+       & trust-region ridge $\lambda$ & $10^{-3}$ \\
+       & TQA total time $T$ & validation-selected \\
+\midrule
+Data & training graphs & $240$ ($60$/family) \\
+     & families & ER, 3-regular, BA, WS \\
+     & sizes $n$ & $\{8,10,12,14\}$ \\
+     & test instances (main) & $8$ ($2$/family) \\
+     & global seed & \texttt{260424803} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ------------------------------------------------------------
+\section{High-performance backend: methodology and full results}
+\label{app:hpc}
+
+\paragraph{Methodology.}
+The C++20 reference backend implements the same exact-statevector evaluator as
+the Python reference, with a narrow kernel boundary (\cref{tab:backend_contract}).
+Microbenchmarks are compiled with \texttt{-O3 -std=c++20 -march=native
+-pthread} on the platform of \cref{tab:platform} and report wall-clock time
+averaged over repeated batched evaluations after a warm-up pass.  Thread
+scaling is measured on a fixed batch of $144$ queries at $n{=}14$; per-query
+latency scaling is measured by sweeping $n$ at single-thread settings.
+
+\paragraph{Single-query cost scales as $\mathcal{O}(2^{n})$.}
+\Cref{tab:single_query} reports single-thread mean per-query time as a function
+of $n$.  Each increment of two qubits multiplies the cost by roughly four,
+consistent with the $2^{n}$ amplitude-vector length and confirming the
+complexity analysis of \cref{sec:complexity}.
+
+\begin{table}[t]
+\caption{Single-thread mean per-query evaluation time of the C++ reference
+backend as a function of graph size $n$ at $p{=}2$, $Q{=}18$.  Each $+2$ qubits
+multiplies cost by $\approx4$, matching $\mathcal{O}(2^{n})$.
+\label{tab:single_query}}
+\centering
+\scriptsize
+\begin{tabular}{@{}rrr@{}}
+\toprule
+$n$ & Mean per-query (ms) & Statevector (bytes) \\
+\midrule
+$8$  & $0.0103$  & $4{,}096$ \\
+$10$ & $0.0446$  & $16{,}384$ \\
+$12$ & $0.1996$  & $65{,}536$ \\
+$14$ & $0.8371$  & $262{,}144$ \\
+$16$ & $3.6947$  & $1{,}048{,}576$ \\
+$18$ & $15.9691$ & $4{,}194{,}304$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Thread scaling.}
+\Cref{tab:thread_scaling} reports speedup from batched parallel evaluation of
+$144$ queries at $n{=}14$.  The backend reaches $4.30\times$ at $8$ threads;
+the sublinear scaling beyond $4$ threads reflects memory-bandwidth pressure
+from the statevector sweeps rather than scheduling overhead.
+
+\begin{table}[t]
+\caption{Thread scaling of batched evaluation ($144$ queries, $n{=}14$).
+\label{tab:thread_scaling}}
+\centering
+\scriptsize
+\begin{tabular}{@{}rrr@{}}
+\toprule
+Threads & Total time (ms) & Speedup \\
+\midrule
+$1$ & $126.15$ & $1.00\times$ \\
+$2$ & $71.10$  & $1.77\times$ \\
+$4$ & $38.82$  & $3.25\times$ \\
+$8$ & $29.33$  & $4.30\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Per-kernel cost.}
+\Cref{tab:kernel_cost} decomposes the per-layer cost at $n{=}14$.  The mixer
+kernel (strided $2\times2$ rotations over all qubits) is $2.60\times$ more
+expensive than the bandwidth-bound cost-phase kernel, identifying it as the
+primary target for future SIMD/accelerator optimization.
+
+\begin{table}[t]
+\caption{Per-layer kernel cost at $n{=}14$.\label{tab:kernel_cost}}
+\centering
+\scriptsize
+\begin{tabular}{@{}lll@{}}
+\toprule
+Kernel & ms / layer & Characterization \\
+\midrule
+Cost phase & $0.1821$ & element-wise $e^{-i\gamma C(z)}\psi$, bandwidth-bound \\
+Mixer      & $0.4736$ & strided $2\times2$ rotations over $14$ qubits \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Per-query latency invariance under threading.}
+A single query's latency is essentially constant ($\approx25.8$~ms at $n{=}14$)
+across $1$, $2$, $4$, and $8$ threads, confirming that parallelism is harvested
+\emph{across} the candidate batch rather than within a single statevector
+evaluation. This is the intended design: the optimizer emits a deterministic
+candidate stream and the backend parallelizes over independent graph--angle
+pairs without altering per-query numerics.
+
+\paragraph{Per-family Python backend timing.}
+\Cref{tab:family_timing} reports the Python reference-backend timing broken
+down by graph family at $n{=}14$, $Q{=}18$.  Per-query time is stable across
+families ($\approx1.40$--$1.50$~ms), confirming that evaluation cost depends on
+the amplitude-vector length ($2^{n}$) and depth, not on graph topology; the
+small residual differences track edge count in the cost-phase kernel.
+
+\begin{table}[t]
+\caption{Python reference-backend timing by graph family at $n{=}14$, $Q{=}18$
+(single thread).  Per-query time is topology-independent; per-instance time
+includes feature extraction, candidate generation, and all $18$ evaluations.
+\label{tab:family_timing}}
+\centering
+\scriptsize
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Family & Mean per-query (ms) & Per-instance (ms) \\
+\midrule
+Erd\H{o}s--R\'enyi      & $1.499$ & $28.69$ \\
+3-regular               & $1.401$ & $26.71$ \\
+Barab\'asi--Albert      & $1.426$ & $27.13$ \\
+Watts--Strogatz         & $1.429$ & $26.94$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ------------------------------------------------------------
+\section{Python/C++ cross-validation}
+\label{app:validation}
+
+A faster backend is scientifically admissible only if it reproduces the
+reference numerics bit-for-bit under the reproducibility contract.
+\Cref{tab:validation} reports the maximum absolute objective discrepancy
+between the Python and C++ evaluators and the thread-invariance error (the
+discrepancy between $1$-thread and multi-thread C++ runs) across all tested
+$(n,p)$ configurations.  All discrepancies are at the level of double-precision
+round-off ($\sim10^{-13}$) and the thread-invariance error is exactly zero,
+confirming deterministic reductions.
+
+\begin{table}[t]
+\caption{Python/C++ cross-validation: maximum absolute objective error and
+thread-invariance error.  All configurations pass at double-precision
+tolerance.\label{tab:validation}}
+\centering
+\scriptsize
+\begin{tabular}{@{}rrrrc@{}}
+\toprule
+$n$ & $p$ & Max abs.\ error & Thread-invariance error & Pass \\
+\midrule
+$8$  & $3$ & $4.33\times10^{-13}$ & $0$ & \checkmark \\
+$8$  & $6$ & $3.47\times10^{-13}$ & $0$ & \checkmark \\
+$8$  & $7$ & $2.52\times10^{-13}$ & $0$ & \checkmark \\
+$10$ & $3$ & $4.80\times10^{-14}$ & $0$ & \checkmark \\
+$10$ & $6$ & $7.82\times10^{-14}$ & $0$ & \checkmark \\
+$10$ & $7$ & $3.57\times10^{-13}$ & $0$ & \checkmark \\
+$12$ & $3$ & $4.76\times10^{-13}$ & $0$ & \checkmark \\
+$12$ & $6$ & $2.17\times10^{-13}$ & $0$ & \checkmark \\
+$12$ & $7$ & $2.81\times10^{-13}$ & $0$ & \checkmark \\
+$14$ & $3$ & $5.29\times10^{-13}$ & $0$ & \checkmark \\
+$14$ & $6$ & $3.13\times10^{-13}$ & $0$ & \checkmark \\
+$14$ & $7$ & $3.55\times10^{-14}$ & $0$ & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ------------------------------------------------------------
+\section{Reproducibility manifest}
+\label{app:manifest}
+
+\Cref{tab:manifest} maps each reported quantity to the script that generates
+it.  Running \texttt{python code/generate\_all.py} regenerates all outputs
+end-to-end; \texttt{bash code/reproduce.sh smoke} runs a fast subset for
+continuous-integration checks.  Every script is seeded by the global seed
+\texttt{260424803} and writes its outputs to \texttt{code/tables/} or
+\texttt{code/figures/}.
+
+\begin{table}[t]
+\caption{Artifact manifest: manuscript element $\to$ generating script.
+\label{tab:manifest}}
+\centering
+\scriptsize
+\begin{tabular}{@{}ll@{}}
+\toprule
+Manuscript element & Generating script \\
+\midrule
+\cref{tab:efficiency} (main benchmark) & \path{trace_evaluations.py} \\
+\cref{tab:ablation} (ablation) & \path{table03_ablation.py} \\
+\cref{tab:bounds} (bound verification) & \path{table02_bound_verification.py} \\
+\cref{tab:higher_depth} ($p{=}6,7$) & \path{scripts} / \path{results/summary_p*.csv} \\
+\cref{tab:finite_shots} (finite shots) & finite-shot driver \\
+\cref{tab:single_query},~\ref{tab:thread_scaling},~\ref{tab:kernel_cost} & \path{bench_cpu.py}, \path{bench_cpu.cpp} \\
+\cref{tab:validation} (Py/C++ check) & \path{results/python_cpp_validation.csv} \\
+\cref{fig:statevector_grid} & \path{fig01_statevector_grid.py} \\
+\cref{fig:query_curve} & \path{scripts/make_figures.py} \\
+\cref{fig:ablation} & \path{fig03_heldout_quality.py} \\
+\cref{fig:landscape_trust} & \path{fig04_trust_region_concept.py} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ------------------------------------------------------------
+\section{Extended discussion of related work}
+\label{app:related_extended}
+
+This appendix expands \cref{sec:related} along the axes most relevant to a
+machine-learning audience.
+
+\paragraph{Amortized versus per-instance optimization.}
+Bayesian optimization and evolutionary strategies are \emph{per-instance}: they
+build a surrogate or population from scratch for every new graph and spend the
+budget refining it.  \UQQAOA{} is \emph{amortized}: the cost of learning the
+trust-region geometry is paid once during offline training and reused across
+all test instances, so the entire test-time budget is spent on direct objective
+evaluation.  The two are complementary---the learned trust region can seed a
+subsequent per-instance optimizer when additional budget is available.
+
+\paragraph{Uncertainty as geometry versus uncertainty as a score.}
+Most uncertainty-quantification work in deep learning treats predictive
+variance as a confidence score for downstream filtering or active learning.
+The contribution here is to treat the predicted diagonal covariance as an
+\emph{operational metric}: it sets anisotropic step sizes, defines the
+admissible search ellipsoid, and (in the adaptive-budget mode) allocates the
+number of queries.  This converts a distributional object into concrete
+search-policy decisions.
+
+\paragraph{Position relative to learning-assisted QAOA.}
+Prior learning-assisted QAOA methods predict a point or warm start and then
+hand control to a generic optimizer.  The distinguishing feature here is the
+explicit geometric pathway from learned uncertainty to query allocation,
+combined with a physics-informed safety prefix that guarantees the policy never
+underperforms the strongest single-source prior at early budgets by
+construction.
+
+% ------------------------------------------------------------
+\section{Glossary}
+\label{app:glossary}
+
+\begin{description}[leftmargin=2.4cm,style=nextline,nosep]
+\item[QAOA] Quantum Approximate Optimization Algorithm: a depth-$p$ variational
+quantum circuit optimized by a classical outer loop.
+\item[MaxCut] the combinatorial problem of partitioning vertices to maximize
+the number (or weight) of cut edges; the benchmark objective.
+\item[GIN] Graph Isomorphism Network: a maximally expressive first-order
+message-passing graph neural network.
+\item[TQA] Trotterized Quantum Annealing: a depth-only linear-ramp schedule
+used as a physics-informed prior and early-budget safety prefix.
+\item[Trust region] a calibrated ellipsoid in parameter space, defined by the
+predicted covariance, to which local search is restricted.
+\item[Precision-weighted fusion] inverse-variance combination of independent
+Gaussian sources into a single posterior mean and covariance.
+\item[Query budget $Q$] the number of distinct parameter vectors evaluated on
+the (simulated) quantum objective; the primary resource accounted for.
+\item[Approximation ratio] objective value divided by the optimal cut value
+$C_G^\star$; the primary quality metric.
+\item[ECE] Expected Calibration Error: a scalar summary of probabilistic
+miscalibration.
+\item[NLL] Negative Log-Likelihood: the Gaussian training loss for the
+predictor.
+\end{description}
 
 \end{document}
