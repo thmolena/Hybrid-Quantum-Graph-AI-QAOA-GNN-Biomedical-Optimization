@@ -33,7 +33,7 @@ H_C(G)=\sum_{(i,j)\in E}\tfrac{1-Z_iZ_j}{2},
 \lvert\psi_G(\theta)\rangle=\prod_{\ell=1}^{p}e^{-i\beta_\ell H_M}\,e^{-i\gamma_\ell H_C(G)}\,\lvert+\rangle^{\otimes n},
 $$
 
-with mixer $H_M=\sum_i X_i$ and objective $f_G(\theta)=\langle\psi_G(\theta)\lvert H_C(G)\rvert\psi_G(\theta)\rangle$. Cost is measured in objective queries $Q=\#\{\theta\text{ evaluated}\}$, and performance is reported as the best-so-far approximation ratio $Q\mapsto\max_{q\le Q} r_G(\theta_q)$, with $r_G=f_G/C_G^\star$.
+with mixer $H_M=\sum_i X_i$ and objective $f_G(\theta)=\langle\psi_G(\theta)\lvert H_C(G)\rvert\psi_G(\theta)\rangle$. Cost is measured in objective queries $Q=\lvert\{\theta\text{ evaluated}\}\rvert$, and performance is reported as the best-so-far approximation ratio $Q\mapsto\max_{q\le Q} r_G(\theta_q)$, with $r_G=f_G/C_G^\star$.
 
 ### Method
 
