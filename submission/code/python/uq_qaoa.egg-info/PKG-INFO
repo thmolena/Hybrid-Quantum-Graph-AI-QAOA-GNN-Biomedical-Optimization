@@ -1,0 +1,19 @@
+Metadata-Version: 2.4
+Name: uq-qaoa
+Version: 1.0.0
+Summary: Uncertainty-calibrated trust regions for QAOA: configurable-depth UQ-QAOA reference package and reproduction artifact.
+Author: M. Huynh
+License: MIT
+Requires-Python: >=3.10
+Description-Content-Type: text/plain
+Requires-Dist: numpy>=1.24
+Requires-Dist: scipy>=1.10
+Requires-Dist: pandas>=2.0
+Requires-Dist: pyyaml>=6.0
+Requires-Dist: networkx>=3.0
+Requires-Dist: matplotlib>=3.7
+Requires-Dist: scikit-learn>=1.2
+Provides-Extra: test
+Requires-Dist: pytest>=7.0; extra == "test"
+
+Configurable-depth UQ-QAOA reference package supporting the manuscript 'Uncertainty-calibrated trust regions for QAOA'. Provides the statevector backend, QAOA angle utilities, and experiment configuration used to reproduce the reported results.

@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "uq-qaoa"
+version = "1.0.0"
+description = "Uncertainty-calibrated trust regions for QAOA: configurable-depth UQ-QAOA reference package and reproduction artifact."
+readme = {text = "Configurable-depth UQ-QAOA reference package supporting the manuscript 'Uncertainty-calibrated trust regions for QAOA'. Provides the statevector backend, QAOA angle utilities, and experiment configuration used to reproduce the reported results.", content-type = "text/plain"}
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "M. Huynh"}]
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "pandas>=2.0",
+    "pyyaml>=6.0",
+    "networkx>=3.0",
+    "matplotlib>=3.7",
+    "scikit-learn>=1.2",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7.0"]
+
+[tool.setuptools]
+package-dir = {"" = "python"}
+
+[tool.setuptools.packages.find]
+where = ["python"]
+include = ["uq_qaoa*"]
