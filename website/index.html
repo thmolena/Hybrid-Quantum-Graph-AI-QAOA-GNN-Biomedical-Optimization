@@ -305,7 +305,7 @@
           finite-shot and noisy objectives.</li>
         <li><b>Auditable computational artifact.</b> Deterministic Python scripts regenerate every reported number,
           and a C++20 reference interface records the evaluator contract, compiler settings, and kernel structure,
-          cleanly separating candidate generation from evaluator kernels so future accelerated backends can drop in.</li>
+          cleanly separating candidate generation from evaluator kernels so future accelerated backends can be substituted.</li>
       </ol>
     </section>
 
@@ -482,7 +482,7 @@
             </div>
           </div>
         </div>
-        <noscript><p class="noscript">This illustration requires JavaScript. The governing formulae and headline results are stated in full in the sections above and in the manuscript PDF.</p></noscript>
+        <noscript><p class="noscript">This illustration requires JavaScript. The governing formulae and main results are stated in full in the sections above and in the manuscript PDF.</p></noscript>
         <div class="demo-note">
           What the demo computes. The fused per-coordinate variance is exact, from
           \(\sigma_{\mathrm{post}}^{-2}=\sum_s\sigma_s^{-2}\), and the step size applies the paper&rsquo;s clip
@@ -499,7 +499,7 @@
     <!-- EMPIRICAL -->
     <section class="sec" id="empirical">
       <div class="kicker">Empirical Validation</div>
-      <h2>Headline results, with effect sizes and intervals</h2>
+      <h2>Main results, with effect sizes and intervals</h2>
 
       <div class="grid-2">
         <div class="panel">
@@ -578,7 +578,7 @@
           </p>
         </div>
         <div class="panel">
-          <h3>Stated limitations (kept visible)</h3>
+          <h3>Stated limitations (reported in full)</h3>
           <ul class="muted small" style="margin:0;padding-left:1.1rem;">
             <li>All evidence is exact-statevector, CPU-only, on unweighted MaxCut at small \(n\le18\); no hardware or quantum-advantage claims are made.</li>
             <li>The four sources are not strictly independent (k-NN and GIN share training data), so the fusion is an engineering approximation rather than an exact posterior; its value is justified empirically by the ablation.</li>
@@ -595,7 +595,7 @@
       <h2>A pip-installable artifact that reproduces every number</h2>
       <p class="muted">
         Nothing in the paper is hand-entered: every figure, table, and number is emitted by deterministic scripts under
-        <code class="inline">submission/code/</code>. The artifact ships a modular Python package
+        <code class="inline">submission/code/</code>. The artifact provides a modular Python package
         (<code class="inline">python/uq_qaoa/</code>) with a <code class="inline">pyproject.toml</code>, a C++20
         reference statevector backend (<code class="inline">cpp/</code>), per-experiment entry points, YAML
         configurations for depths \(p{=}3\)&ndash;7, a unit-test suite, and the end-to-end drivers
@@ -612,7 +612,7 @@ python code/generate_all.py     <span class="cm"># regenerate every figure and t
         Determinism is not incidental but contractual: the backend fixes candidate ordering by seed and method,
         removes duplicate anchors before any budget is spent, wraps out-of-domain angles modularly, decrements the
         budget exactly once per unique evaluation, and pins a single floating-point reduction policy. Reference
-        platform: Apple M2 Pro (10-core), 16 GB; Python 3.11.7, NumPy 1.26.4, SciPy 1.12.0. The repository ships the
+        platform: Apple M2 Pro (10-core), 16 GB; Python 3.11.7, NumPy 1.26.4, SciPy 1.12.0. The repository includes the
         graph seeds, train/test splits, raw query traces, and figure source data; a DOI-bearing archival release will
         be created before final publication.
       </p>

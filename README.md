@@ -59,7 +59,7 @@ The posterior covariance induces an anisotropic trust region $\mathcal T_{\phi,\
 
 A best-of-$K$ guarantee makes the geometric intuition precise: when the proposal places mass $\alpha_G(\varepsilon)$ on the $\varepsilon$-optimal subset of the trust region, $K\ge\log(1/\delta)/\alpha_G(\varepsilon)$ samples suffice for $f_G(\widehat\theta_K)\ge f_G^{\mathcal T}-\varepsilon$ with probability $1-\delta$; a finite-shot extension adds a sub-Gaussian union bound, and a conformal construction yields finite-sample coverage under exchangeability. The guarantees are local and conditional by design: they formalize the regime in which a calibrated, compact region saves queries, and they remain distinct from global QAOA optimality.
 
-### Headline result (controlled exact-statevector benchmark, $n{=}14$, $p{=}3$, $Q{=}18$ matched queries)
+### Main result (controlled exact-statevector benchmark, $n{=}14$, $p{=}3$, $Q{=}18$ matched queries)
 
 Mean approximation ratio (higher is better), with 95% bootstrap confidence interval and paired difference relative to TQA, transcribed from [`submission/code/tables/table01_computational_efficiency.csv`](submission/code/tables/table01_computational_efficiency.csv):
 

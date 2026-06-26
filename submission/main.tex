@@ -18,7 +18,7 @@
 \titleformat{\section}{\sffamily\large\bfseries\color{nmiaccent}}{\thesection}{0.6em}{}
 \titleformat{\subsection}{\sffamily\normalsize\bfseries}{\thesubsection}{0.6em}{}
 \titleformat{\subsubsection}{\sffamily\normalsize\bfseries\itshape}{\thesubsubsection}{0.6em}{}
-\pagestyle{fancy}\fancyhf{}\fancyhead[L]{\footnotesize\itshape Uncertainty-calibrated trust regions for QAOA}\fancyhead[R]{\footnotesize\thepage}\renewcommand{\headrulewidth}{0.4pt}
+\pagestyle{fancy}\fancyhf{}\fancyhead[L]{\footnotesize\itshape Matched-anchor evaluation of learning-assisted QAOA}\fancyhead[R]{\footnotesize\thepage}\renewcommand{\headrulewidth}{0.4pt}
 \usepackage{url}
 \makeatletter
 \g@addto@macro\UrlBreaks{\UrlOrds}
@@ -94,7 +94,8 @@
 
 \begin{document}
 
-\title{\bfseries\LARGE Uncertainty-Calibrated Trust Regions for Query-Efficient QAOA Parameter Search}
+\title{\bfseries\LARGE Does Learned Uncertainty Improve Query-Efficient QAOA?\\[2pt]
+A Matched-Anchor Evaluation and a Negative Result}
 
 \author[ ]{Molena Huynh}
 \affil[ ]{North Carolina State University \quad\textperiodcentered\quad Correspondence: \texttt{molena.huynh@jmp.com}}
@@ -104,29 +105,42 @@
 
 \begin{abstract}
 For low-depth implementations of the Quantum Approximate Optimization
-Algorithm (QAOA), the number of objective-function queries required to
-identify useful variational parameters is a dominant practical cost.  We
-present UQ-QAOA, a framework that converts graph-conditioned predictive
-uncertainty into an operational trust-region geometry for query-efficient
-parameter search.  A Graph Isomorphism Network predicts a diagonal Gaussian
-over QAOA angles; four information sources---neural predictor, local
-$k$-nearest-neighbour prior, global population prior, and a trotterized
-quantum annealing schedule---are fused via precision-weighted combination to
-obtain a posterior mean and anisotropic step sizes for sequential coordinate
-refinement.  On an exact-statevector MaxCut benchmark (four graph families,
-$n{=}14$, $p{=}3$, $Q{=}18$ matched queries), UQ-QAOA achieves a mean
-approximation ratio of $0.865$ versus $0.853$ for the strongest single-source
-baseline as configured (paired difference $+0.012$, bootstrap 95\,\% CI
-$[+0.003,+0.024]$); a six-times larger held-out replication ($48$ instances)
-reproduces this $+0.012$ figure with a threefold tighter interval
-$[+0.008,+0.016]$.  We stress that this gap is configuration-dependent rather
-than a state-of-the-art claim: a controlled reassessment shows that once the
-TQA baseline is granted the same greedy coordinate-refinement budget used by
-UQ-QAOA, the ordering reverses and refined TQA matches or exceeds UQ-QAOA on
-the tested instances (see \cref{sec:reassessment}).  We therefore frame
-UQ-QAOA as an honest method study of uncertainty-as-search-geometry rather than
-a performance win.  All results are reproducible from deterministic scripts and
-a public code artifact.
+Algorithm (QAOA), the number of objective-function queries used to tune the
+variational parameters is a dominant practical cost.  A natural and appealing
+hypothesis is that the \emph{predictive uncertainty} of a graph neural
+network---repurposed as an anisotropic trust-region geometry---can allocate a
+fixed query budget more effectively than physics-informed schedules.  We test
+this hypothesis rigorously and find that it does not hold.  We study UQ-QAOA, a
+framework in which a Graph Isomorphism Network predicts a diagonal Gaussian
+over QAOA angles and four sources (neural predictor, local $k$-nearest-neighbour
+prior, global population prior, and a trotterized quantum annealing (TQA)
+schedule) are fused via precision-weighted combination into a posterior mean and
+uncertainty-scaled step sizes for sequential coordinate refinement.  Our central
+methodological tool is a \emph{matched-anchor} protocol: every method receives an
+identical anchor budget and identical greedy coordinate refinement under a
+matched query budget, so the contribution of the learned uncertainty geometry is
+isolated from the contribution of the anchors it is built on.  On an
+exact-statevector MaxCut benchmark ($p{=}3$), across $120$ in-distribution
+instances and $106$ instances \emph{verified} to be genuinely
+out-of-distribution (nearest-training feature distance above the $95$th
+percentile of held-out in-distribution distances), the uncertainty geometry
+provides no benefit and is in fact slightly harmful (in-distribution paired
+$\Delta=-0.004$, sign-test $p<10^{-3}$; genuine-OOD $\Delta=-0.006$,
+Holm-corrected $p<0.01$), and the full pipeline never significantly exceeds a TQA
+ramp followed by the same cheap refinement.  The learned posterior \emph{center}
+is substantially worse than the plain TQA ramp on most families (paired
+$\Delta\approx-0.10$ to $-0.12$, $p<10^{-24}$).  A budget sweep further shows that
+the apparent ``win'' reported by a naive protocol is an artifact of an unmatched
+best-of-$k$ anchor advantage whose sign flips with the query budget; the
+matched-anchor protocol removes it.  The single genuine learning signal we find
+is narrow and instructive: on two-dimensional grid lattices the network center
+beats TQA on $30/30$ instances ($\Delta=+0.019$, $p<10^{-8}$), because the linear
+ramp is suboptimal there---yet the proposed method's own multi-source fusion and
+uncertainty-scaled steps erase this gain.  We conclude that, for low-depth
+MaxCut QAOA, a physics schedule with budget-matched local refinement is a strong
+and hard-to-beat baseline, and that learned uncertainty-as-geometry is not, on
+the present evidence, an improvement.  All results are reproducible from
+deterministic scripts.
 \end{abstract}
 
 % ============================================================
@@ -171,14 +185,17 @@ the machine-learning/quantum-optimization interface: it provides a principled
 mechanism for trading off exploration
 width against a finite evaluation budget.
 
-The key novelty is not ``a GNN predicts QAOA angles''---that capability
+The hypothesis we test is not ``a GNN predicts QAOA angles''---that capability
 exists~\cite{jain2022,liang2024}---but rather that the \emph{graph-conditioned
-predictive uncertainty} is repurposed as an \emph{operational trust-region
-geometry} for query-efficient parameter search.  Concretely, the predicted
-diagonal covariance determines (i)~the anisotropic step sizes of greedy
-coordinate refinement, (ii)~the admissible search ellipsoid, and (iii)~
-instance-adaptive budget allocation, thereby connecting learned structure to
-query-policy decisions through an explicit geometric mechanism.
+predictive uncertainty} can be repurposed as an \emph{operational trust-region
+geometry} that improves query-efficient parameter search.  Concretely, the
+predicted diagonal covariance is used to set (i)~the anisotropic step sizes of
+greedy coordinate refinement, (ii)~the admissible search ellipsoid, and
+(iii)~instance-adaptive budget allocation.  The mechanism is well-defined and
+the intuition is appealing; the question this paper answers is the empirical
+one of whether it actually helps under a fair comparison.  It does not---the
+contribution is the protocol that establishes this and the negative result
+itself, summarized in the contributions below and detailed in \cref{sec:ood}.
 
 This work introduces UQ-QAOA, a graph-conditioned trust-region framework for
 query-efficient QAOA.  Given a graph instance $G$, a graph neural network
@@ -220,50 +237,58 @@ exploration.  The graph-conditioned component uses a Graph Isomorphism Network
 (GIN)~\cite{xu2019,weisfeiler1968} augmented with spectral positional
 information~\cite{dwivedi2023,lim2023,kreuzer2021}.
 
-The contributions of this paper are as follows.
+This paper poses, and answers in the negative, the question of whether learned
+graph-conditioned uncertainty---repurposed as trust-region geometry---improves
+query-efficient QAOA over a fair physics-informed baseline.  Its contributions
+are as follows.
 \begin{enumerate}
-    \item \textbf{Uncertainty as search geometry.}
-    We use graph-conditioned covariance not as a confidence score alone, but as
-    the metric that defines anisotropic trust-region scales and the step sizes
-    of coordinate refinement in QAOA angle space.  This converts a learned
-    distributional object into three operational decisions: where to center,
-    how wide to search per coordinate, and how to distribute a fixed query
-    budget.
+    \item \textbf{A matched-anchor evaluation protocol.}
+    We argue that comparisons of learning-assisted QAOA initializers are easily
+    confounded by an unmatched best-of-$k$ \emph{anchor} advantage: a method that
+    is allowed to evaluate more deterministic starting points before refining can
+    appear to win for reasons unrelated to the learned object under study.  Our
+    protocol gives every method an identical anchor budget and identical greedy
+    coordinate refinement under a matched query budget, so the contribution of
+    the learned uncertainty geometry is isolated from the contribution of the
+    anchors (\cref{sec:method,sec:ood}).  A budget sweep shows the unmatched
+    protocol can manufacture an apparent win whose sign flips with the query
+    budget $Q$.
 
-    \item \textbf{Posterior fusion of learned and physics-informed priors.}
-    The search policy combines a GIN predictor, local $k$-NN information, a
-    global population prior, and a TQA prior into a single posterior mean and
-    diagonal covariance via precision-weighted (inverse-variance) combination.
-    The fusion formula is explicit and non-iterative.
+    \item \textbf{A rigorous negative result.}
+    Under the matched-anchor protocol, the predicted covariance used as search
+    geometry provides \emph{no} benefit and is slightly harmful, both
+    in-distribution ($N{=}120$, paired $\Delta=-0.004$, sign-test $p<10^{-3}$)
+    and on instances verified to be genuinely out-of-distribution ($N{=}106$,
+    $\Delta=-0.006$, Holm-corrected $p<0.01$); and the full four-source pipeline
+    never significantly exceeds a TQA ramp with budget-matched refinement
+    (\cref{sec:ood}).
 
-    \item \textbf{Controlled matched- and dimension-scaled-budget evidence.}
-    The main benchmark uses depth $p{=}3$ with matched query curves, while
-    $p{=}4$--$7$ experiments use dimension-scaled budgets $Q_p=5+4p$ and
-    additional query-curve points for validation.  All evaluation is
-    exact-statevector on unweighted MaxCut instances; claims are bounded to
-    this CPU-only evidence.
+    \item \textbf{Genuine out-of-distribution verification.}
+    Rather than assume that visually ``different'' graph families are
+    out-of-distribution, we verify distribution shift operationally by nearest
+    training-feature distance, and restrict OOD claims to instances beyond the
+    $95$th percentile of held-out in-distribution distances.  We find that most
+    intuitively-OOD families (grid, triangular, hexagonal, power-law) in fact lie
+    \emph{inside} the training feature manifold; the negative result holds on the
+    genuinely-OOD subset (star, barbell, dense, half of random-geometric).
 
-    \item \textbf{Fair local-search baselines and ablations.}
-    We include TQA with the identical greedy coordinate-refinement protocol,
-    along with ablations that remove covariance, shuffle covariance, remove
-    individual priors, or disable refinement.  We also include standard
-    black-box optimizers (DE, CMA-ES, GP-EI, Nelder--Mead) under the same
-    budget.
+    \item \textbf{A mechanistic explanation, and one narrow positive signal.}
+    The learned posterior \emph{center} is substantially worse than the plain TQA
+    ramp on most families ($\Delta\approx-0.10$ to $-0.12$, $p<10^{-24}$).  The
+    one exception is two-dimensional grid lattices, where the network center beats
+    TQA on $30/30$ instances ($\Delta=+0.019$, $p<10^{-8}$) because the linear
+    ramp is suboptimal on planar bipartite-like structure---but the proposed
+    method's multi-source fusion and uncertainty-scaled refinement \emph{erase}
+    this gain, a finding that points to what a better method would do rather than
+    to a win for the present design.
 
-    \item \textbf{Calibration and finite-shot diagnostics.}
-    Because uncertainty is the central object, we report trust-region coverage,
-    calibration diagnostics, and finite-shot/noisy-objective sensitivity where
-    available.
-
-    \item \textbf{Auditable computational artifact.}
-    The scientific results are generated by deterministic Python scripts
-    (\texttt{code/generate\_all.py}), while
-    a C++20 reference interface and benchmark record the evaluator contract,
-    compiler settings, thread-level scaling behavior, and kernel structure
-    required for future optimized threaded or accelerator-backed implementations.
-    The code separates candidate generation from evaluator kernels to support
-    future hardware or accelerated backends without changing the algorithmic
-    comparison.
+    \item \textbf{Rigorous paired statistics and an auditable artifact.}
+    All comparisons use paired sign tests, Cohen's $d_z$, family-stratified
+    bootstrap confidence intervals, and Holm correction across a pre-registered
+    family of tests.  Every number is reproducible from deterministic Python
+    scripts (the matched-anchor experiment is \texttt{code/exp\_ood\_matched\_anchor.py};
+    tables are emitted by \texttt{code/make\_ood\_tables.py}) using the same exact
+    statevector evaluator and trained predictor as the rest of the paper.
 \end{enumerate}
 
 \paragraph*{Manuscript organization.}
@@ -274,9 +299,13 @@ trust-region methods, uncertainty quantification, and closely related
 learning-assisted QAOA work.
 Sections~\ref{sec:method}--\ref{sec:theory} describe the posterior-fusion
 policy and the limited guarantees used to interpret it.
-Sections~\ref{sec:setup}--\ref{sec:results} give the research design and
-bounded exact-statevector evidence.  Sections~\ref{sec:discussion} and
-\ref{sec:conclusion} summarize limitations, reproducibility, and future work.
+Section~\ref{sec:setup} gives the research design.
+Section~\ref{sec:results} reports the empirical evidence: the unmatched-protocol
+benchmark and why it misleads (\cref{sec:efficiency}), and then the central
+matched-anchor evaluation and its negative result across verified distribution
+shift (\cref{sec:ood}).  Sections~\ref{sec:discussion} and
+\ref{sec:conclusion} give the budget-dependent anatomy of the apparent win,
+limitations, reproducibility, and future work.
 
 % ============================================================
 \section{Problem Setting and Preliminaries}
@@ -1408,47 +1437,47 @@ results across runs with the same seed.
 \label{sec:results}
 % ============================================================
 
-We present six experiments addressing distinct aspects of the method.
+We present the experiments in two parts.  Experiment~1 reports the headline
+number produced by the \emph{unmatched} protocol used in much of the
+learning-assisted QAOA literature, and shows why it is misleading.
+\Cref{sec:ood} then reports the central, matched-anchor evaluation and its
+negative result.  The remaining experiments are diagnostics.
 
-\subsection{Experiment 1: Controlled exact-statevector mechanism benchmark}
+\subsection{Experiment 1: The unmatched-protocol benchmark, and why it
+misleads}
 \label{sec:efficiency}
 
-\Cref{tab:efficiency} reports the controlled comparison at $n{=}14$, $p{=}3$.
-At this depth, simple concentration-based transfer is less reliable in this
-benchmark: the Heuristic baseline drops to $0.608$.  The physics-based TQA
-ramp achieves $0.853$.  Because the revised UQ-QAOA policy evaluates the same
-TQA safety prefix before spending queries on learned geometry, its query curve
-is tied with the strongest physics-informed prefix at early budgets and then
-improves after uncertainty-guided refinement begins.  \UQQAOA{}
-achieves $\mathbf{0.865}$---the highest mean best-of-budget ratio among the
-included trace-level methods on this controlled test set---by combining the
-TQA safety prefix, four-source posterior inference, and sequential greedy
-coordinate refinement.
+\Cref{tab:efficiency} reports the comparison at $n{=}14$, $p{=}3$ under the
+\emph{unmatched} protocol in which only UQ-QAOA receives a greedy
+coordinate-refinement phase and a five-anchor starting set, while the baselines
+are evaluated as static candidate batches.  Under this protocol UQ-QAOA appears
+to win: it reaches a mean ratio of $\mathbf{0.865}$ versus $0.853$ for the TQA
+ramp (paired $+0.012$, bootstrap CI $[+0.003,+0.024]$, $7/8$ instances), and
+exceeds every static baseline---the Heuristic median ($0.608$), $k$-NN
+($0.642$), the GNN point estimate ($0.643$), and standard black-box optimizers
+(DE, GP-EI, CMA-ES, Nelder--Mead, all ${\leq}0.754$ at $Q{=}18$).
 
-On the eight controlled test instances, UQ-QAOA exceeds TQA on 7 of 8
-instances (win rate $87.5\%$).  The paired mean advantage is $+0.012$, with a
-95\% bootstrap CI of $[+0.003, +0.024]$ ($10{,}000$ resamples).  The
-GNN-point estimate ($0.643$) illustrates that raw point predictions from the
-lightweight GIN underperform TQA, motivating the precision-weighted combination
-with physics and local priors.
+This apparent advantage does not survive scrutiny, and we report it precisely so
+that it can be dismantled.  Two confounds inflate it.  First, the refinement
+phase, not the learned geometry, accounts for most of the gap: when the TQA
+incumbent is granted the same refinement, the ordering reverses
+(\cref{sec:reassessment}).  Second, and more subtly, UQ-QAOA alone is allowed to
+evaluate a best-of-five anchor set before refining; this unmatched
+best-of-$k$ advantage can by itself produce an apparent win whose sign depends
+on the query budget $Q$ (\cref{sec:ood}).  The honest comparison, which
+equalizes both the refinement and the anchor budget across methods, is the
+subject of \cref{sec:ood}; under it the learned uncertainty geometry provides no
+benefit.  We therefore read \cref{tab:efficiency} not as a result but as a
+cautionary baseline.
 
-We additionally include differential evolution (DE), Bayesian optimization
-(GP-EI), CMA-ES, multi-seed random, and Nelder--Mead baselines.  All
-achieve ${\leq}0.754$ under $Q{=}18$, confirming that strong black-box
-optimizers without graph conditioning do not match the transfer-based
-methods in the low-budget regime.  Nelder--Mead ($0.674$) cannot complete a
-simplex contraction cycle in $\mathbb{R}^6$ under only 18 evaluations.
-In this controlled test set, UQ-QAOA exceeds every included baseline.
-The early-query tie with TQA is by construction (dominance-preserving safety
-prefix); the later separation arises from covariance-calibrated multi-source
-posterior fusion and sequential refinement.
-
-% Generated from code/tables/trace_all_evaluations.csv after the TQA safety-prefix update.
+% Generated from code/tables/trace_all_evaluations.csv (unmatched protocol).
 \begin{table}[t]
-\caption{Controlled exact-statevector benchmark at $n{=}14$, $p{=}3$
-(four graph families, two instances per family, $Q{=}18$ matched queries).
-UQ-QAOA uses a TQA safety prefix followed by posterior anchors and
-covariance-scaled sequential refinement.
+\caption{\emph{Unmatched-protocol} benchmark at $n{=}14$, $p{=}3$
+(four graph families, two instances per family, nominal $Q{=}18$).  Only
+UQ-QAOA receives greedy refinement and a five-anchor start; the baselines are
+static batches.  The apparent $+0.012$ advantage is an artifact of this
+asymmetry and reverses under the matched-anchor protocol of \cref{sec:ood};
+the table is retained only as a cautionary baseline.
 \label{tab:efficiency}}
 \scriptsize
 \begin{tabular}{@{}lcccc@{}}
@@ -1480,6 +1509,132 @@ covariance-scaled sequential refinement.
     generalization beyond the tested family/size regime.
     \label{fig:statevector_grid}}
 \end{figure*}
+
+% ============================================================
+\subsection{The matched-anchor evaluation: the central negative result}
+\label{sec:ood}
+% ============================================================
+
+This subsection contains the paper's main result.  We re-evaluate the method
+under a protocol that removes the two confounds of \cref{sec:efficiency}:
+every method receives an \emph{identical} anchor budget and \emph{identical}
+greedy coordinate refinement under a matched query budget.  Concretely we
+compare, on the same exact-statevector evaluator and the same trained
+predictor:
+\begin{itemize}[nosep]
+\item \texttt{tqa\_refine}: the TQA ramp anchor, refined with a fixed step;
+\item \texttt{anchors\_fixed}: the \emph{same} five posterior anchors that
+UQ-QAOA uses ($\mu_{\mathrm{post}}$, $\theta_{\mathrm{TQA}}$,
+$\mu_{\mathrm{GIN}}$, $\mu_{\mathrm{loc}}$, $\mu_{\mathrm{glob}}$), but refined
+with a fixed step;
+\item \texttt{uq\_qaoa}: the full method---the same five anchors, but with the
+uncertainty-scaled steps $\delta_j$ of \cref{alg:gctr};
+\item \texttt{post\_fixed}: the learned center $\mu_{\mathrm{post}}$ alone,
+refined with a fixed step.
+\end{itemize}
+Because \texttt{anchors\_fixed} and \texttt{uq\_qaoa} differ \emph{only} in the
+step geometry, the paired difference $\Delta(\texttt{uq\_qaoa}-
+\texttt{anchors\_fixed})$ isolates the contribution of the
+uncertainty-as-geometry mechanism with zero anchor-budget asymmetry.  All
+deltas are paired by instance; we report the paired mean, win rate, Cohen's
+$d_z$, an exact paired sign test, family-stratified bootstrap intervals, and
+Holm correction across the pre-registered comparisons.
+
+\paragraph{Genuine out-of-distribution verification.}
+The predictor is trained on the four families $\{$ER, REG, BA, WS$\}$ at sizes
+$n\in\{8,\dots,14\}$.  For each test instance we compute the nearest
+training-graph distance in the standardized $8$-dimensional feature space
+(\cref{eq:features}) and call the instance genuinely out-of-distribution (OOD)
+if this distance exceeds the $95$th percentile of held-out in-distribution
+distances ($\tau=1.66$; in-distribution median $0.62$).  This check is
+sobering: of the families one would intuitively call OOD, grid, triangular,
+hexagonal, and power-law lattices lie \emph{entirely inside} the training
+feature box ($0\%$ genuinely OOD), and only star, barbell, dense, and roughly
+half of random-geometric instances are genuinely OOD.  We therefore form the
+genuine-OOD pool from the verified-OOD instances of the non-trivial families and
+report it separately from the in-distribution pool.
+
+\paragraph{Result.}
+\Cref{tab:ood} reports the three isolated comparisons in each regime at $Q{=}18$
+(the $Q{=}30$ sweep, \cref{sec:reassessment}, agrees).  The findings are
+consistent and, for the method's central hypothesis, negative.
+\begin{enumerate}[nosep]
+\item \textbf{The uncertainty geometry does not help, and slightly hurts.}
+$\Delta(\texttt{uq\_qaoa}-\texttt{anchors\_fixed})$ is significantly negative
+in-distribution ($-0.004$, $33\%$ win rate, sign $p<10^{-3}$) and on
+genuine-OOD instances ($-0.006$, Holm $p<0.01$), and is statistically null on
+the geometric pool.  Matching the anchors removes any apparent gain.
+\item \textbf{The full pipeline does not beat a physics ramp.}
+$\Delta(\texttt{uq\_qaoa}-\texttt{tqa\_refine})$ is significantly negative
+in-distribution and is a coin flip on the genuine-OOD pool ($+0.011$ mean but
+$+0.000$ median, $51\%$ win rate, sign $p=0.92$): the small positive mean is
+driven by a few instances, not a systematic effect, and is exactly the
+heterogeneous-pooling artifact that the matched-anchor and stratified analyses
+are designed to expose.
+\item \textbf{The learned center is markedly worse than TQA.}
+$\Delta(\texttt{post\_fixed}-\texttt{tqa\_refine})\approx-0.10$ to $-0.12$
+($p<10^{-24}$): the four-source posterior mean is a poor QAOA initializer on
+almost every family.
+\end{enumerate}
+
+\paragraph{The one genuine learning signal, and why the method wastes it.}
+Per family (\cref{tab:ood_family}), there is exactly one place where learning
+demonstrably helps: on two-dimensional grid lattices the learned center beats
+the TQA ramp on \emph{all} $30/30$ instances ($\Delta=+0.019$, $d_z=+1.26$,
+$p<10^{-8}$), because the linear annealing ramp is a poor fit to planar,
+bipartite-like structure.  This is a real, reproducible effect.  Yet the full
+UQ-QAOA method nets only $+0.001$ over TQA on the same family: its multi-source
+fusion dilutes the good GIN center with the (here inferior) TQA, $k$-NN, and
+global anchors, and its uncertainty-scaled steps add nothing
+($\Delta(\texttt{uq\_qaoa}-\texttt{anchors\_fixed})=-0.003$ on grids).  The
+mechanism that the paper proposes therefore \emph{discards} the only signal that
+would have justified learning.  We read this as a constructive negative result:
+it identifies precisely what a useful method would do (deploy the learned center
+selectively where the physics schedule is known to be suboptimal) and what the
+present design does wrong (uniform fusion and covariance-scaled search).
+
+\begin{table}[t]
+\caption{\textbf{Matched-anchor evaluation (central result), $p{=}3$, $Q{=}18$.}
+Paired deltas of approximation ratio (positive favours the learned method).
+\texttt{uq\_qaoa}$-$\texttt{anchors\_fixed} isolates the uncertainty geometry
+with an identical anchor budget; \texttt{uq\_qaoa}$-$\texttt{tqa\_refine}
+compares the full pipeline to a physics ramp with matched refinement; the third
+row is the learned center alone.  ``Genuine OOD'' instances are verified by
+feature distance ($>$ $95$th in-distribution percentile).  $d_z$ is Cohen's
+paired effect size; $p$ is an exact paired sign test.  Generated by
+\texttt{code/make\_ood\_tables.py} from \texttt{code/exp\_ood\_matched\_anchor.py}.
+\label{tab:ood}}
+\scriptsize
+\input{code/tables/table_ood_matched_anchor.tex}
+\end{table}
+
+\begin{table}[t]
+\caption{\textbf{Per-family breakdown ($p{=}3$, $Q{=}18$, $30$ instances each).}
+``frac.\ OOD'' is the fraction of instances verified genuinely out-of-distribution;
+``opt-cut'' is the median optimal-cut fraction (a value of $1.00$ marks a
+perfect-cut/bipartite family).  The learned center beats TQA only on the GRID
+family; the apparent full-method gains on STAR are an anchor-selection effect
+($k$-NN happens to be strong there) and vanish under
+\texttt{uq\_qaoa}$-$\texttt{anchors\_fixed}.
+\label{tab:ood_family}}
+\scriptsize
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Family & kind & frac.\,OOD & opt-cut & $\Delta_{\mathrm{ctr-tqa}}$ & win\% \\
+\midrule
+GRID       & geometric  & $0.00$ & $1.00$ & $+0.019$ & $100$ \\
+TRIANGULAR & geometric  & $0.00$ & $0.74$ & $-0.067$ & $33$ \\
+HEX        & geometric  & $0.00$ & $1.00$ & $-0.150$ & $33$ \\
+RGG        & geometric  & $0.53$ & $0.73$ & $-0.143$ & $0$ \\
+STAR       & structural & $1.00$ & $1.00$ & $-0.122$ & $0$ \\
+BARBELL    & structural & $1.00$ & $0.58$ & $-0.084$ & $0$ \\
+DENSE      & structural & $1.00$ & $0.61$ & $-0.082$ & $0$ \\
+POWERLAW   & structural & $0.00$ & $0.76$ & $-0.072$ & $3$ \\
+BIPARTITE  & trivial    & $0.13$ & $1.00$ & $-0.034$ & $43$ \\
+WHEEL      & trivial    & $0.33$ & $0.73$ & $-0.150$ & $0$ \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Experiment 2: Query-curve evaluation}
 \label{sec:query_curves}
@@ -1738,34 +1893,42 @@ tighter interval.
 \subsection{Summary of empirical evidence}
 
 \begin{enumerate}
-    \item \textbf{Fixed-budget query allocation:} \UQQAOA{} achieves the
-    highest mean best-of-budget ratio in the controlled trace-level comparison
-    ($0.865$, CI $[0.839,0.892]$) vs.\ TQA ($0.853$) under matched
-    $Q{=}18$ (\cref{tab:efficiency}).
+    \item \textbf{Central result (matched anchors).} Under a protocol that
+    equalizes the anchor budget and the refinement across methods, the learned
+    uncertainty geometry provides no benefit and is slightly harmful---paired
+    $\Delta=-0.004$ in-distribution (sign $p<10^{-3}$) and $-0.006$ on
+    verified-OOD instances (Holm $p<0.01$)---and the full pipeline never
+    significantly beats a TQA ramp with matched refinement (\cref{tab:ood}).
+    This is robust across $Q\in\{18,30\}$.
 
-    \item \textbf{Higher-powered replication:} On a $6\times$ larger held-out set
-    of $48$ instances, the advantage holds at $+0.012$ with a threefold tighter
-    bootstrap CI $[+0.008,+0.016]$ and a $39/48$ win rate
-    (\cref{tab:expanded,fig:expanded}).
+    \item \textbf{The learned center is the weak component.} The four-source
+    posterior mean is markedly worse than the plain TQA ramp on almost every
+    family ($\Delta\approx-0.10$ to $-0.12$, $p<10^{-24}$;
+    \cref{tab:ood,tab:ood_family}).  Consistently, the ablation
+    (\cref{tab:ablation}) attributes most of the unmatched-protocol method's
+    quality to the nonparametric $k$-NN anchor rather than to the GIN or the
+    covariance.
 
-    \item \textbf{Query curves:} The proposed curve is best-or-tied-best at
-    every tested query budget and strictly highest after the learned
-    trust-region refinement begins (\cref{fig:query_curve}).
+    \item \textbf{The unmatched-protocol ``win'' is an artifact.} The $+0.012$
+    figure of \cref{tab:efficiency} and its $48$-instance replication
+    (\cref{tab:expanded,fig:expanded}) arise from giving UQ-QAOA refinement and a
+    five-anchor start that the baselines do not receive; a budget sweep shows the
+    sign of such an unmatched comparison flips with $Q$ (\cref{sec:reassessment}).
 
-    \item \textbf{Cross-size check:} In the generated cross-size diagnostic,
-    \UQQAOA{} is competitive across the tested sizes
-    $n\in\{8,10,12,14\}$ (\cref{fig:statevector_grid}).
+    \item \textbf{One genuine but wasted signal.} On 2D grid lattices the learned
+    center beats TQA on $30/30$ instances ($+0.019$, $p<10^{-8}$), but the
+    method's own fusion and uncertainty-scaled steps erase the gain
+    (\cref{tab:ood_family}).
 
-    \item \textbf{Ablation:} Removing covariance, individual priors, or
-    refinement degrades performance; the largest isolated loss comes from
-    the $k$-NN prior (\cref{tab:ablation}).
+    \item \textbf{Genuine-OOD scope.} Most intuitively-OOD families lie inside
+    the training feature manifold; the negative result holds on the
+    feature-distance-verified OOD subset (\cref{sec:ood}).
 
-    \item \textbf{Held-out confirmation:} On a separately tagged graph set,
-    \UQQAOA{} again achieves the highest mean ratio among the included methods
-    (\cref{fig:ablation}).
-
-    \item \textbf{Mechanism:} The trust region concentrates evaluations in
-    the productive landscape region (\cref{fig:landscape_trust}).
+    \item \textbf{Diagnostics.} Query curves (\cref{fig:query_curve}),
+    cross-size behaviour (\cref{fig:statevector_grid}), and the trust-region
+    visualization (\cref{fig:landscape_trust}) characterise the
+    \emph{unmatched-protocol} method and are retained as mechanism diagnostics,
+    not as evidence of an advantage.
 \end{enumerate}
 
 % ============================================================
@@ -1773,29 +1936,35 @@ tighter interval.
 \label{sec:discussion}
 % ============================================================
 
-\subsection{Reassessment: the advantage is configuration-dependent}
+\subsection{Reassessment: the budget-dependent anatomy of an apparent win}
 \label{sec:reassessment}
 
-The benchmarks above grant UQ-QAOA a greedy coordinate-refinement phase
-(Algorithm~\ref{alg:gctr2}, Phase~2c) that the headline TQA curve does not
-receive: the reported TQA baseline evaluates the linear-ramp schedule and its
-anchors but is not given an equal coordinate-refinement budget around its
-incumbent. This is an unequal-protocol comparison, and the $+0.012$ figure
-reported in \cref{tab:efficiency,tab:expanded} should be read accordingly.
-When the same coordinate-refinement procedure is applied to the TQA incumbent
-under a matched budget, the ordering reverses: in the controlled
-single-instance ablation generated by our own pipeline
-(\path{table_ablation_p3.csv}, row \texttt{tqa\_refine}), refined TQA reaches a
-higher approximation ratio than the full UQ-QAOA policy on the tested instance.
-In other words, much of the apparent gain reflects the refinement phase rather
-than the learned covariance geometry per se, and a fair comparison that equalizes
-refinement does not show a UQ-QAOA win. We therefore do not claim a
-state-of-the-art result; UQ-QAOA is presented as a method study of how
-graph-conditioned predictive uncertainty can be turned into operational search
-geometry, and the negative finding---that an equally refined physics-informed
-baseline is competitive or better---is itself an honest, reproducible outcome.
-A full equal-refinement sweep across all families and depths is the natural
-next experiment and is not claimed here.
+The unmatched benchmark of \cref{sec:efficiency} grants UQ-QAOA a greedy
+coordinate-refinement phase (Algorithm~\ref{alg:gctr2}, Phase~2c) and a
+five-anchor start that the static baselines do not receive.  Two distinct
+confounds follow.  First, \emph{refinement}, not learned geometry, supplies most
+of the apparent gain: granting the TQA incumbent the same refinement already
+reverses the ordering, as the matched comparison \texttt{tqa\_refine} in
+\cref{tab:ood} makes systematic.  Second, the \emph{best-of-$k$ anchor}
+asymmetry is itself a confound whose sign depends on the budget: a method allowed
+to evaluate five anchors before refining starts coordinate descent from the best
+of five points, while a single-anchor baseline starts from one.  In a budget
+sweep we observe that this asymmetry alone can turn a negative delta positive as
+$Q$ grows---for the saturated WHEEL family the unmatched
+$\Delta(\texttt{uq\_qaoa}-\max(\texttt{tqa},\texttt{knn}))$ moves from negative
+at $Q\in\{10,18\}$ to $+0.008$ at $Q{=}40$---confirming that an apparent ``win''
+can be manufactured purely by the protocol.
+
+The matched-anchor protocol of \cref{sec:ood} removes both confounds, and the
+$Q{=}30$ replication agrees with the $Q{=}18$ result reported in \cref{tab:ood}:
+in-distribution, $\Delta(\texttt{uq\_qaoa}-\texttt{anchors\_fixed})=-0.005$
+(sign $p<10^{-3}$); on the genuine-OOD pool the same delta is statistically
+null and $\Delta(\texttt{uq\_qaoa}-\texttt{tqa\_refine})$ is a coin flip
+($p=0.5$).  We therefore make no state-of-the-art claim.  The honest, robust,
+reproducible outcome is that an equally-anchored, equally-refined
+physics-informed baseline is competitive with or better than the learned method,
+and that the uncertainty-as-geometry mechanism the paper set out to validate
+does not, on this evidence, help.
 
 \subsection{Origin of evaluation savings}
 
@@ -1908,31 +2077,38 @@ comparing predicted and empirical parameter distributions.
 \label{sec:conclusion}
 % ============================================================
 
-We have presented UQ-QAOA, a framework that converts graph-conditioned
-predictive uncertainty into an operational trust-region geometry for
-query-efficient QAOA parameter search.  A precision-weighted posterior fuses
-four information sources and determines the anisotropic step sizes for
-sequential coordinate refinement.
+We set out to test an appealing hypothesis: that the graph-conditioned
+predictive uncertainty of a GNN, repurposed as a trust-region geometry, can make
+QAOA parameter search more query-efficient.  We studied UQ-QAOA, a
+precision-weighted four-source posterior whose covariance sets the anisotropic
+step sizes of sequential coordinate refinement, and we evaluated it under a
+matched-anchor protocol that isolates the learned geometry from the anchors it
+is built on.  The hypothesis does not hold.
 
-On a controlled exact-statevector MaxCut benchmark ($n{=}14$, $p{=}3$,
-$Q{=}18$), UQ-QAOA achieves $0.865$ mean approximation ratio versus $0.853$
-for the TQA baseline as configured (paired difference $+0.012$, bootstrap
-95\,\% CI $[+0.003, +0.024]$, win rate $7/8$), reproduced on a six-times larger
-held-out replication ($48$ instances, $[+0.008, +0.016]$, $39/48$). We
-emphasize that this difference is configuration-dependent and not a
-state-of-the-art claim: as shown in \cref{sec:reassessment}, granting the TQA
-baseline the same greedy coordinate-refinement budget reverses the ordering, so
-the contribution is a method study of uncertainty-as-search-geometry together
-with the honest negative finding that an equally refined physics-informed
-baseline is competitive or better. The ablation characterizes which components
-drive the policy's behavior under the configuration tested.
+On an exact-statevector MaxCut benchmark ($p{=}3$), across $120$
+in-distribution and $106$ feature-verified out-of-distribution instances and two
+query budgets, the uncertainty-as-geometry mechanism provides no benefit and is
+slightly harmful ($\Delta=-0.004$ to $-0.006$, sign $p<10^{-3}$, Holm-confirmed),
+and the full pipeline never significantly exceeds a trotterized quantum
+annealing ramp followed by the same cheap refinement.  The learned center is in
+fact a markedly worse initializer than the physics ramp on almost every family
+($\Delta\approx-0.10$ to $-0.12$).  The headline ``win'' of the unmatched
+protocol used widely in this literature is an artifact of a refinement and
+best-of-$k$ anchor asymmetry whose sign flips with the budget.  The lone genuine
+signal---a clean $30/30$ advantage for the learned center on grid lattices,
+where the linear ramp is suboptimal---is discarded by the method's own fusion and
+covariance-scaled search.
 
-The accompanying code artifact regenerates all reported results
-deterministically.  A C++20 reference interface defines the kernel boundaries
-and reproducibility contract for future optimized backends.  Higher-depth
-$p{=}4$--$7$ smoke tests confirm correct configurable-depth operation;
-quantum hardware execution and finite-shot robustness under device noise
-remain future work.
+We therefore report three things of lasting value rather than a performance
+claim: a matched-anchor protocol that prevents such artifacts in learning-assisted
+QAOA comparisons; a rigorous, reproducible negative result for
+uncertainty-as-geometry across verified distribution shift; and a constructive
+diagnosis---a useful method should deploy a learned center \emph{selectively},
+where the physics schedule is known to be suboptimal, rather than fuse it
+uniformly and search by predicted covariance.  The accompanying code regenerates
+every number deterministically from the same exact-statevector evaluator and
+trained predictor.  Weighted instances, higher depth, selective (rather than
+fused) learned initialization, and quantum-hardware execution remain open.
 
 \section*{Data availability}
 
