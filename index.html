@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Operator-Spectral Truncated Priors for Query-Efficient QAOA (OST-QAOA)</title>
-  <meta name="description" content="OST-QAOA: a noncommutative operator-spectral truncated prior for query-efficient QAOA parameter selection. Each graph is mapped to a truncated, noncommuting operator on QAOA angle space whose eigenbasis supplies collective cross-layer search directions; a truncation parameter controls a representation-versus-query-budget tradeoff via the prior's effective dimension. On an exact-statevector MaxCut benchmark (p=3, Q=24) OST-QAOA improves over a budget-matched TQA coordinate-refinement baseline by +0.110 (16/16 paired instances, sign-test p<1e-4) and reaches comparable quality in 2.2x fewer objective queries. Released as the installable package uq-qaoa that regenerates every figure and table from one deterministic seed." />
+  <meta name="description" content="OST-QAOA: a noncommutative operator-spectral truncated prior for query-efficient QAOA parameter selection. Each graph is mapped to a truncated, noncommuting operator on QAOA angle space whose eigenbasis supplies collective cross-layer search directions; a truncation parameter controls a representation-versus-query-budget tradeoff via the prior's effective dimension. On an exact-statevector MaxCut benchmark (p=3, Q=24) OST-QAOA improves over a budget-matched TQA coordinate-refinement baseline by +0.112 (16/16 paired instances, sign-test p<1e-4) and reaches comparable quality in ~2.4x fewer objective queries. Released as the installable package uq-qaoa that regenerates every figure and table from one deterministic seed." />
   <style>
     :root {
       --background: #ffffff;
@@ -804,7 +804,8 @@
         <a href="#significance">Significance</a>
         <a href="#demo">Demo</a>
         <a href="#notebooks">Paper &amp; Code</a>
-        <a href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="#references">References</a>
+        <a href="https://github.com/thmolena/Operator-Spectral-Truncated-Priors-for-QAOA" target="_blank" rel="noreferrer">GitHub</a>
       </nav>
     </div>
   </header>
@@ -834,13 +835,13 @@
           <div class="cover-meta grid-3" aria-label="Main metrics">
             <article class="meta-block">
               <div class="meta-label">OST-QAOA vs. budget-matched TQA</div>
-              <div class="meta-value">+0.110</div>
-              <p class="meta-note">Mean approximation-ratio advantage over a budget-matched TQA coordinate-refinement baseline ($0.818$ vs.\ $0.708$), with a paired bootstrap 95\% interval $[+0.080,+0.141]$ and $16/16$ paired held-out instances (sign-test $p<10^{-4}$) at $p{=}3$, $Q{=}24$.</p>
+              <div class="meta-value">+0.112</div>
+              <p class="meta-note">Mean approximation-ratio advantage over a budget-matched TQA coordinate-refinement baseline ($0.820$ vs.\ $0.708$), with a paired bootstrap 95\% interval $[+0.083,+0.142]$ and $16/16$ paired held-out instances (sign-test $p<10^{-4}$) at $p{=}3$, $Q{=}24$.</p>
             </article>
             <article class="meta-block">
               <div class="meta-label">Queries to comparable quality</div>
-              <div class="meta-value">2.2&times; fewer</div>
-              <p class="meta-note">OST-QAOA reaches $98\%$ of the best observed ratio in a mean of $11.6$ objective queries against $25.0$ for the baseline ($\bar Q_{0.98}$) &mdash; the operationally relevant quantity in the query-budget tradeoff bound.</p>
+              <div class="meta-value">2.4&times; fewer</div>
+              <p class="meta-note">OST-QAOA reaches $98\%$ of the best observed ratio in $10.1$ objective queries on the primary seed ($10.5$ across ten seeds) against $\approx 25$ for the baseline ($\bar Q_{0.98}$) &mdash; the operationally relevant quantity in the query-budget tradeoff bound.</p>
             </article>
             <article class="meta-block">
               <div class="meta-label">Spectral-truncation tradeoff</div>
@@ -855,7 +856,7 @@
         <div class="block-inner">
           <div style="padding:18px 20px;border:1px solid rgba(127,140,170,.32);border-left:4px solid #1d4ed8;border-radius:8px;background:rgba(127,140,170,.06);">
             <strong style="display:block;font-size:.74rem;letter-spacing:.13em;text-transform:uppercase;color:#1d4ed8;margin-bottom:7px;">AI for quantum, at HPC scale</strong>
-            <p style="margin:0;font-size:1.02rem;line-height:1.6;">OST-QAOA is an operator-valued <em>learned</em> prior: the search directions are read off a spectrally truncated operator built from each graph rather than hand-tuned per instance, reaching comparable solution quality in <strong>~2.2&times; fewer</strong> objective queries. Those objectives are exact statevector expectations &mdash; the workload GPU statevector backends (NVIDIA cuQuantum / cuStateVec) are built to accelerate &mdash; and every figure and number on this page regenerates from a single deterministic seed.</p>
+            <p style="margin:0;font-size:1.02rem;line-height:1.6;">OST-QAOA is an operator-valued <em>learned</em> prior: the search directions are read off a spectrally truncated operator built from each graph rather than hand-tuned per instance, reaching comparable solution quality in <strong>~2.4&times; fewer</strong> objective queries. Those objectives are exact statevector expectations &mdash; the workload GPU statevector backends (NVIDIA cuQuantum / cuStateVec) are built to accelerate &mdash; and every figure and number on this page regenerates from a single deterministic seed.</p>
           </div>
         </div>
       </section>
@@ -917,6 +918,9 @@
           </div>
           <p class="body-copy">
             The posterior mean $\mu_G$ is a Gaussian-weighted blend of the reference angles of the $k$ nearest training graphs in operator-signature space with the fixed TQA schedule. The query policy then diagonalizes $\Sigma_G=V\Lambda V^{\!\top}$ and probes its <strong>collective eigendirections</strong> $\pm s\sqrt{\lambda_j}\,v_j$ &mdash; cross-layer angle deformations, not the raw coordinates &mdash; in descending variance order until the objective-query budget is spent.
+          </p>
+          <p class="body-copy">
+            The construction is motivated by, but deliberately distinct from, the spectral-truncation&ndash;kernel framework for noncommutative $C^{*}$-algebraic kernel machines, where truncation of a positive-definite kernel controls noncommutativity and trades representation power against model complexity. Here the truncated noncommuting operator is not a supervised regression kernel: it is a graph-conditioned prior over QAOA angles, and the truncation parameter $n$ &mdash; analogous in spirit to spectral truncation in $C^{*}$-algebraic kernels &mdash; instead controls the number of QAOA angle directions the search covariance can emphasize. The generators are <em>designed</em> not to commute, so that $\mathcal C_G=[\mathcal A_G,\mathcal B_G]\neq 0$ in general, encoding local and global structure that no single symmetric generator captures; the off-diagonal operator geometry is then used operationally, with the policy probing the collective eigendirections of $\Sigma_G$ rather than the raw angle coordinates.
           </p>
 
           <div class="grid-3">
@@ -994,14 +998,14 @@
                 <tr><td>Random</td><td>0.743</td><td>+0.035 [+0.001, +0.070]</td><td>11/16</td><td>24.1</td></tr>
                 <tr><td>TQA (single ramp)</td><td>0.614</td><td>&minus;0.093 [&minus;0.156, &minus;0.040]</td><td>0/16</td><td>25.0</td></tr>
                 <tr><td>TQA + coordinate</td><td>0.708</td><td>0.000</td><td>&mdash;</td><td>25.0</td></tr>
-                <tr><td>$k$-NN + coordinate</td><td>0.740</td><td>+0.032 [+0.012, +0.056]</td><td>13/16</td><td>23.6</td></tr>
-                <tr><td>OST diagonal</td><td>0.806</td><td>+0.099 [+0.067, +0.130]</td><td>15/16</td><td>14.4</td></tr>
-                <tr><td class="best">OST-QAOA (ours)</td><td class="best">0.818</td><td class="best">+0.110 [+0.080, +0.141]</td><td class="best">16/16</td><td class="best">11.6</td></tr>
+                <tr><td>$k$-NN + coordinate</td><td>0.751</td><td>+0.043 [+0.019, +0.068]</td><td>13/16</td><td>23.6</td></tr>
+                <tr><td>OST diagonal</td><td>0.810</td><td>+0.102 [+0.073, +0.131]</td><td>16/16</td><td>13.1</td></tr>
+                <tr><td class="best">OST-QAOA (ours)</td><td class="best">0.820</td><td class="best">+0.112 [+0.083, +0.142]</td><td class="best">16/16</td><td class="best">10.1</td></tr>
               </tbody>
             </table>
           </div>
           <p class="table-note">
-            OST-QAOA is the strongest method under the matched query budget, winning on <strong>$16/16$</strong> paired held-out graphs (sign-test $p<10^{-4}$) with a mean advantage of $+0.110$ over budget-matched TQA coordinate refinement. It is also markedly more query-efficient: it reaches $98\%$ of the best observed ratio in a mean of <strong>$11.6$</strong> objective queries against $25.0$ for the baseline ($\bar Q_{0.98}$) &mdash; a $\approx 2.2\times$ reduction, the operationally relevant quantity in the query-budget bound.
+            OST-QAOA is the strongest method under the matched query budget, winning on <strong>$16/16$</strong> paired held-out graphs (sign-test $p<10^{-4}$) with a mean advantage of $+0.112$ over budget-matched TQA coordinate refinement. It is also markedly more query-efficient: it reaches $98\%$ of the best observed ratio in a mean of <strong>$10.1$</strong> objective queries against $25.0$ for the baseline ($\bar Q_{0.98}$) &mdash; a $\approx 2.4\times$ reduction that holds across ten seeds ($+0.107\pm0.011$).
           </p>
 
           <div class="table-wrap" style="margin-top:22px;">
@@ -1010,22 +1014,22 @@
                 <tr><th>Spectral-truncation sweep (rank $n$)</th><th>Noncomm. (on)</th><th>Comm. (off)</th><th>$d_{\mathrm{eff}}$</th></tr>
               </thead>
               <tbody>
-                <tr><td>$n=1$ (aggressive truncation)</td><td>0.811</td><td>0.814</td><td>2.50</td></tr>
-                <tr><td>$n=2$</td><td>0.814</td><td>0.819</td><td>2.93</td></tr>
-                <tr><td>$n=3$</td><td>0.812</td><td>0.813</td><td>3.24</td></tr>
-                <tr><td class="best">$n^{\star}=4$ (operating point)</td><td class="best">0.818</td><td>0.817</td><td>3.46</td></tr>
-                <tr><td>$n=5$</td><td>0.808</td><td>0.812</td><td>3.65</td></tr>
-                <tr><td>$n=6=2p$ (no truncation)</td><td>0.808</td><td>0.812</td><td>3.65</td></tr>
+                <tr><td>$n=1$ (aggressive truncation)</td><td>0.814</td><td>0.812</td><td>2.50</td></tr>
+                <tr><td>$n=2$</td><td>0.812</td><td>0.818</td><td>2.96</td></tr>
+                <tr><td>$n=3$</td><td>0.815</td><td>0.812</td><td>3.24</td></tr>
+                <tr><td class="best">$n^{\star}=4$ (operating point)</td><td class="best">0.820</td><td>0.817</td><td>3.46</td></tr>
+                <tr><td>$n=5$</td><td>0.810</td><td>0.810</td><td>3.64</td></tr>
+                <tr><td>$n=6=2p$ (no truncation)</td><td>0.810</td><td>0.812</td><td>3.64</td></tr>
               </tbody>
             </table>
           </div>
           <p class="table-note">
-            The truncation sweep exhibits the interior optimum predicted by the query-budget bound: aggressive truncation ($n{=}1$) underfits the angle geometry and no truncation ($n{=}2p$) over-diffuses the covariance, while the effective dimension $d_{\mathrm{eff}}(n)$ rises monotonically with the rank. In the design ablation, restricting the search to diagonal (commutative) directions falls to $0.806$ ($-0.012$), localizing the advantage to the off-diagonal, noncommuting operator geometry; the explicit squared-commutator energy term is near-neutral at the operating point, which we report rather than overclaim.
+            The truncation sweep exhibits the interior optimum predicted by the query-budget bound: aggressive truncation ($n{=}1$) underfits the angle geometry and no truncation ($n{=}2p$) over-diffuses the covariance, while the effective dimension $d_{\mathrm{eff}}(n)$ rises monotonically with the rank. In the design ablation, restricting the search to diagonal (commutative) directions falls to $0.810$ ($-0.010$), localizing the advantage to the off-diagonal, noncommuting operator geometry; the explicit squared-commutator energy term is near-neutral at the operating point, which we report rather than overclaim.
           </p>
 
           <div class="demo-links">
             <a class="button-link" href="submission/main.pdf">Read the OST-QAOA paper (PDF)</a>
-            <a class="button-link" href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/tree/main/submission/code" target="_blank" rel="noreferrer">Reproducible code artifact</a>
+            <a class="button-link" href="https://github.com/thmolena/Operator-Spectral-Truncated-Priors-for-QAOA/tree/main/submission/code" target="_blank" rel="noreferrer">Reproducible code artifact</a>
           </div>
         </div>
       </section>
@@ -1037,7 +1041,7 @@
             <div class="section-intro body-copy">
               <h2>Why query efficiency is the operationally relevant axis</h2>
               <p>
-                In low-depth QAOA the dominant practical cost is not the circuit but the <em>outer loop</em>: the number of objective-function evaluations &mdash; each a full quantum-circuit execution, or a costly classical statevector simulation &mdash; spent tuning the variational angles on every new instance. A warm start that only supplies a good <em>point</em> still leaves the optimizer to discover, from scratch, <em>which directions</em> in angle space are worth probing. OST-QAOA supplies both: an operator-derived posterior mean and, through the spectrally truncated rank-$n$ covariance, the collective cross-layer search directions themselves. The measured consequence is a $\approx 2.2\times$ reduction in objective queries to comparable quality &mdash; the quantity that, on hardware, translates directly into shots and wall-clock on the device.
+                In low-depth QAOA the dominant practical cost is not the circuit but the <em>outer loop</em>: the number of objective-function evaluations &mdash; each a full quantum-circuit execution, or a costly classical statevector simulation &mdash; spent tuning the variational angles on every new instance. A warm start that only supplies a good <em>point</em> still leaves the optimizer to discover, from scratch, <em>which directions</em> in angle space are worth probing. OST-QAOA supplies both: an operator-derived posterior mean and, through the spectrally truncated rank-$n$ covariance, the collective cross-layer search directions themselves. The measured consequence is a $\approx 2.4\times$ reduction in objective queries to comparable quality &mdash; the quantity that, on hardware, translates directly into shots and wall-clock on the device.
               </p>
             </div>
           </div>
@@ -1045,12 +1049,12 @@
             <article class="card">
               <div class="tag">What the result is</div>
               <h3>A budget-matched, paired, leakage-controlled win</h3>
-              <p>Every method receives the identical $Q{=}24$ exact-statevector query budget on $16$ family-held-out instances. OST-QAOA wins all $16$ paired comparisons against budget-matched TQA coordinate refinement (sign-test $p<10^{-4}$), at a $+0.110$ mean approximation-ratio advantage.</p>
+              <p>Every method receives the identical $Q{=}24$ exact-statevector query budget on $16$ family-held-out instances. OST-QAOA wins all $16$ paired comparisons against budget-matched TQA coordinate refinement (sign-test $p<10^{-4}$), at a $+0.112$ mean approximation-ratio advantage.</p>
             </article>
             <article class="card">
               <div class="tag">Where the gain comes from</div>
               <h3>Off-diagonal operator geometry, not just a point</h3>
-              <p>Ablating the search to diagonal (commutative) directions removes a measurable part of the advantage ($0.818\to0.806$), localizing the gain to the noncommuting, off-diagonal structure of the angle operator &mdash; exactly the object the spectral truncation preserves.</p>
+              <p>Ablating the search to diagonal (commutative) directions removes a measurable part of the advantage ($0.820\to0.810$), localizing the gain to the noncommuting, off-diagonal structure of the angle operator &mdash; exactly the object the spectral truncation preserves.</p>
             </article>
             <article class="card">
               <div class="tag">Honest scope</div>
@@ -1090,7 +1094,7 @@
               </button>
               <figcaption class="figure-copy">
                 <h3>Controlled benchmark at matched budget</h3>
-                <p>Mean approximation ratio across the six methods at the identical $Q{=}24$ query budget on $16$ family-held-out instances. OST-QAOA attains the highest ratio ($0.818$); the diagonal/commutative ablation isolates the contribution of the off-diagonal operator geometry.</p>
+                <p>Mean approximation ratio across the six methods at the identical $Q{=}24$ query budget on $16$ family-held-out instances. OST-QAOA attains the highest ratio ($0.820$); the diagonal/commutative ablation isolates the contribution of the off-diagonal operator geometry.</p>
                 <div class="figure-actions"><button class="button-link figure-zoom" type="button" data-figure-src="figures/fig02_benchmark.png" data-figure-title="Controlled exact-statevector benchmark">Open full resolution</button><a class="button-link" href="submission/main.pdf">See in paper</a></div>
               </figcaption>
             </figure>
@@ -1113,7 +1117,7 @@
               </button>
               <figcaption class="figure-copy">
                 <h3>Query-efficiency frontier</h3>
-                <p>Best-so-far approximation ratio versus the number of objective queries. OST-QAOA reaches $98\%$ of the best observed ratio in a mean of $11.6$ queries against $25.0$ for the budget-matched baseline &mdash; the $\approx2.2\times$ reduction that defines the result.</p>
+                <p>Best-so-far approximation ratio versus the number of objective queries. OST-QAOA reaches $98\%$ of the best observed ratio in a mean of $10.1$ queries against $25.0$ for the budget-matched baseline &mdash; the $\approx2.4\times$ reduction that defines the result.</p>
                 <div class="figure-actions"><button class="button-link figure-zoom" type="button" data-figure-src="figures/fig04_query_curves.png" data-figure-title="Query-efficiency curves">Open full resolution</button><a class="button-link" href="submission/main.pdf">See in paper</a></div>
               </figcaption>
             </figure>
@@ -1196,7 +1200,7 @@
         </article>
           </div>
 
-          <div class="code-block">Headline result (exact statevector, p=3, Q=24): OST-QAOA mean ratio 0.818 vs 0.708 budget-matched TQA+coordinate (delta +0.110, 16/16 paired wins); reaches 98% of the best observed ratio in 11.6 objective queries vs 25.0 (~2.2x fewer).</div>
+          <div class="code-block">Headline result (exact statevector, p=3, Q=24): OST-QAOA mean ratio 0.820 vs 0.708 budget-matched TQA+coordinate (delta +0.112, 16/16 paired wins); reaches 98% of the best observed ratio in 10.1 objective queries vs 25.0 (~2.4x fewer; +0.107+/-0.011 across ten seeds).</div>
         </div>
       </section>
 
@@ -1232,7 +1236,7 @@ uqqaoa-reproduce --output-dir . --depth 3 --budget 24 --rank 4 --commutator-weig
             <div class="table-note">Installable Python package (<code>python/uq_qaoa/</code>) exposing a CLI (<code>uqqaoa-reproduce</code>) and Python API; <code>pip install .</code> regenerates every figure, table, CSV, and query trace deterministically from the global seed.</div>
           </div>
           <div class="link-actions">
-            <a class="button-link" href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/tree/main/submission/code" target="_blank" rel="noreferrer">Browse code</a>
+            <a class="button-link" href="https://github.com/thmolena/Operator-Spectral-Truncated-Priors-for-QAOA/tree/main/submission/code" target="_blank" rel="noreferrer">Browse code</a>
           </div>
         </div>
 
@@ -1245,10 +1249,40 @@ uqqaoa-reproduce --output-dir . --depth 3 --budget 24 --rank 4 --commutator-weig
             <div class="table-note">Source code, outputs, figure-generation scripts, and manuscript assets for the complete project.</div>
           </div>
           <div class="link-actions">
-            <a class="button-link" href="https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization" target="_blank" rel="noreferrer">Repository</a>
+            <a class="button-link" href="https://github.com/thmolena/Operator-Spectral-Truncated-Priors-for-QAOA" target="_blank" rel="noreferrer">Repository</a>
           </div>
         </div>
           </div>
+        </div>
+      </section>
+
+      <section id="references" class="block-shell">
+        <div class="block-inner">
+          <div class="section-header">
+            <div class="section-label">References</div>
+            <div class="section-intro body-copy">
+              <h2>Related work and bibliography</h2>
+              <p>
+                OST-QAOA sits at the intersection of two lines of prior art. The first is QAOA parameter transfer and concentration: objective values concentrate for fixed parameters on typical instances <a href="#ref-brandao2018">[5]</a>, <a href="#ref-zhou2020">[3]</a>, optimal parameters concentrate with system size <a href="#ref-akshay2021">[6]</a>, and angles trained on one graph transfer to others <a href="#ref-galda2021">[7]</a>, <a href="#ref-shaydulin2023transfer">[8]</a>, with Trotterized&ndash;annealing (TQA) schedules supplying strong instance-independent warm starts <a href="#ref-sack2021">[4]</a>. These results motivate transferring structure between graphs but do not specify a budgeted <em>search geometry</em> &mdash; the directions, and their relative scales, along which a few queries should be spent once a warm start is in hand. The second line is the spectral-truncation&ndash;kernel framework of Hashimoto <em>et al.</em> <a href="#ref-hashimoto2024spectral">[9]</a>, in which truncation of positive-definite $C^{*}$-algebraic kernels controls noncommutativity and trades representation power against model complexity. OST-QAOA adopts that design idea &mdash; finite-rank noncommutativity as a tractable way to encode interaction &mdash; but transports it from supervised vector-valued regression into a graph-conditioned prior over QAOA angles paired with a deterministic objective-query policy, asking what it buys in the operational currency that limits near-term QAOA <a href="#ref-farhi2014">[1]</a>, <a href="#ref-preskill2018">[2]</a>: the number of objective queries.
+              </p>
+            </div>
+          </div>
+
+          <ol style="margin:0;padding-left:1.6rem;font-size:0.9rem;line-height:1.6;color:var(--muted);">
+            <li id="ref-farhi2014" style="margin-bottom:8px;">E. Farhi, J. Goldstone, and S. Gutmann, &ldquo;A Quantum Approximate Optimization Algorithm,&rdquo; <em>arXiv</em> 2014. <a href="https://arxiv.org/abs/1411.4028" target="_blank" rel="noreferrer">arXiv:1411.4028</a></li>
+            <li id="ref-preskill2018" style="margin-bottom:8px;">J. Preskill, &ldquo;Quantum Computing in the NISQ Era and Beyond,&rdquo; <em>Quantum</em> <strong>2</strong>, 79 (2018). <a href="https://doi.org/10.22331/q-2018-08-06-79" target="_blank" rel="noreferrer">doi:10.22331/q-2018-08-06-79</a></li>
+            <li id="ref-zhou2020" style="margin-bottom:8px;">L. Zhou, S.-T. Wang, S. Choi, H. Pichler, and M. D. Lukin, &ldquo;Quantum Approximate Optimization Algorithm: Performance, Mechanism, and Implementation on Near-Term Devices,&rdquo; <em>Phys. Rev. X</em> <strong>10</strong>, 021067 (2020). <a href="https://doi.org/10.1103/PhysRevX.10.021067" target="_blank" rel="noreferrer">doi:10.1103/PhysRevX.10.021067</a></li>
+            <li id="ref-sack2021" style="margin-bottom:8px;">S. H. Sack and M. Serbyn, &ldquo;Quantum Annealing Initialization of the Quantum Approximate Optimization Algorithm,&rdquo; <em>Quantum</em> <strong>5</strong>, 491 (2021). <a href="https://doi.org/10.22331/q-2021-07-01-491" target="_blank" rel="noreferrer">doi:10.22331/q-2021-07-01-491</a></li>
+            <li id="ref-brandao2018" style="margin-bottom:8px;">F. G. S. L. Brand&atilde;o, M. Broughton, E. Farhi, S. Gutmann, and H. Neven, &ldquo;For Fixed Control Parameters the Quantum Approximate Optimization Algorithm's Objective Function Value Concentrates for Typical Instances,&rdquo; <em>arXiv</em> 2018. <a href="https://arxiv.org/abs/1812.04170" target="_blank" rel="noreferrer">arXiv:1812.04170</a></li>
+            <li id="ref-akshay2021" style="margin-bottom:8px;">V. Akshay, D. Rabinovich, E. Campos, and J. Biamonte, &ldquo;Parameter Concentrations in Quantum Approximate Optimization,&rdquo; <em>Phys. Rev. A</em> <strong>104</strong>, L010401 (2021). <a href="https://doi.org/10.1103/PhysRevA.104.L010401" target="_blank" rel="noreferrer">doi:10.1103/PhysRevA.104.L010401</a></li>
+            <li id="ref-galda2021" style="margin-bottom:8px;">A. Galda, X. Liu, D. Lykov, Y. Alexeev, and I. Safro, &ldquo;Transferability of Optimal QAOA Parameters between Random Graphs,&rdquo; in <em>2021 IEEE International Conference on Quantum Computing and Engineering (QCE)</em>, 171&ndash;180 (IEEE, 2021). <a href="https://arxiv.org/abs/2106.07531" target="_blank" rel="noreferrer">arXiv:2106.07531</a></li>
+            <li id="ref-shaydulin2023transfer" style="margin-bottom:8px;">R. Shaydulin, P. C. Lotshaw, J. Larson, J. Ostrowski, and T. S. Humble, &ldquo;Parameter Transfer for Quantum Approximate Optimization of Weighted MaxCut,&rdquo; <em>ACM Trans. Quantum Comput.</em> <strong>4</strong>(3), 1&ndash;15 (2023). <a href="https://doi.org/10.1145/3584706" target="_blank" rel="noreferrer">doi:10.1145/3584706</a></li>
+            <li id="ref-hashimoto2024spectral" style="margin-bottom:8px;">Y. Hashimoto, A. Hafid, M. Ikeda, and H. Kadri, &ldquo;Spectral Truncation Kernels: Noncommutativity in $C^{*}$-Algebraic Kernel Machines,&rdquo; <em>arXiv</em> 2024 (revised 2026). <a href="https://arxiv.org/abs/2405.17823" target="_blank" rel="noreferrer">arXiv:2405.17823</a></li>
+            <li id="ref-crooks2018" style="margin-bottom:8px;">G. E. Crooks, &ldquo;Performance of the Quantum Approximate Optimization Algorithm on the Maximum Cut Problem,&rdquo; <em>arXiv</em> 2018. <a href="https://arxiv.org/abs/1811.08419" target="_blank" rel="noreferrer">arXiv:1811.08419</a></li>
+            <li id="ref-cerezo2021" style="margin-bottom:8px;">M. Cerezo, A. Arrasmith, R. Babbush, S. C. Benjamin, S. Endo, K. Fujii, J. R. McClean, K. Mitarai, X. Yuan, L. Cincio, and P. J. Coles, &ldquo;Variational Quantum Algorithms,&rdquo; <em>Nat. Rev. Phys.</em> <strong>3</strong>, 625&ndash;644 (2021). <a href="https://doi.org/10.1038/s42254-021-00348-9" target="_blank" rel="noreferrer">doi:10.1038/s42254-021-00348-9</a></li>
+            <li id="ref-wurtz2021" style="margin-bottom:8px;">J. Wurtz and P. J. Love, &ldquo;MaxCut Quantum Approximate Optimization Algorithm Performance Guarantees for $p$-Regular Graphs,&rdquo; <em>Phys. Rev. A</em> <strong>103</strong>, 042612 (2021). <a href="https://doi.org/10.1103/PhysRevA.103.042612" target="_blank" rel="noreferrer">doi:10.1103/PhysRevA.103.042612</a></li>
+            <li id="ref-shaydulin2024" style="margin-bottom:8px;">R. Shaydulin, C. Li, S. Chakrabarti, M. DeCross, D. Herman, N. Kumar, J. Larson, D. Lykov, P. Minssen, Y. Sun, Y. Alexeev, J. M. Dreiling, J. P. Gaebler, T. M. Gatterman, J. A. Gerber, K. Gilmore, D. Gresh, N. Hewitt, C. V. Horst, S. Hu, J. Johansen, M. Matheny, T. Mengle, M. Mills, S. A. Moses, B. Neyenhuis, P. Siegfried, R. Yalovetzky, and M. Pistoia, &ldquo;Evidence of Scaling Advantage for the Quantum Approximate Optimization Algorithm on a Classically Intractable Problem,&rdquo; <em>Sci. Adv.</em> <strong>10</strong>, eadm6761 (2024). <a href="https://doi.org/10.1126/sciadv.adm6761" target="_blank" rel="noreferrer">doi:10.1126/sciadv.adm6761</a></li>
+          </ol>
         </div>
       </section>
 

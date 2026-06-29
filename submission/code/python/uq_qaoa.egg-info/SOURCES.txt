@@ -1,5 +1,4 @@
 LICENSE
-README.md
 pyproject.toml
 python/uq_qaoa/__init__.py
 python/uq_qaoa/baselines.py

@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "uq-qaoa"
 version = "1.2.0"
 description = "Noncommutative operator-spectral truncated priors (OST-QAOA) for query-efficient QAOA parameter search: installable package and deterministic manuscript artifact."
-readme = "README.md"
+readme = {text = "OST-QAOA: noncommutative operator-spectral truncated priors for query-efficient QAOA parameter search. Installable reference implementation that deterministically regenerates every figure, table, and number in the manuscript from a single seed. Full documentation in the project repository README.", content-type = "text/markdown"}
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [{name = "Molena Huynh", email = "molena.huynh@jmp.com"}]
@@ -14,7 +14,7 @@ maintainers = [{name = "Molena Huynh", email = "molena.huynh@jmp.com"}]
 keywords = [
     "QAOA",
     "quantum-optimization",
-    "graph-neural-networks",
+    "variational-quantum-algorithms",
     "operator-valued-kernels",
     "spectral-truncation",
     "uncertainty-quantification",
@@ -47,8 +47,8 @@ dependencies = [
 test = ["pytest>=7.0,<9"]
 
 [project.urls]
-Homepage = "https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization"
-Repository = "https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization"
+Homepage = "https://github.com/thmolena/Operator-Spectral-Truncated-Priors-for-QAOA"
+Repository = "https://github.com/thmolena/Operator-Spectral-Truncated-Priors-for-QAOA"
 
 [project.scripts]
 uqqaoa-reproduce = "uq_qaoa.reproduce:main"

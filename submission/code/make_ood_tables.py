@@ -9,7 +9,7 @@ sys.path.insert(0, str(SCRATCH))
 from exp_ood_v3 import paired_stats, METHODS  # reuse exact stat defs
 
 REPO = pathlib.Path("/Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/"
-                    "Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization")
+                    "Operator-Spectral-Truncated-Priors-for-QAOA")
 TAB = REPO / "submission" / "code" / "tables"
 
 def load(b):

@@ -30,7 +30,7 @@ import numpy as np
 
 CORE_DIR = pathlib.Path(
     "/Users/mohuyn/Library/CloudStorage/OneDrive-SAS/Documents/GitHub/"
-    "Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/submission/code")
+    "Operator-Spectral-Truncated-Priors-for-QAOA/submission/code")
 sys.path.insert(0, str(CORE_DIR))
 import uq_qaoa_core as core
 from uq_qaoa_core import (DEPTH, graph_features, qaoa_cost_values, qaoa_ratio,

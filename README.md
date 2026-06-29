@@ -1,13 +1,13 @@
 # Operator-Spectral Truncated Priors for Query-Efficient QAOA (OST-QAOA)
 
-[![Project Website](https://img.shields.io/badge/Project_Website-Open-0f766e?style=for-the-badge)](https://thmolena.github.io/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization/)
+[![Project Website](https://img.shields.io/badge/Project_Website-Open-0f766e?style=for-the-badge)](https://thmolena.github.io/Operator-Spectral-Truncated-Priors-for-QAOA/)
 [![Paper](https://img.shields.io/badge/Paper-OST--QAOA%20(PDF)-1d4ed8?style=for-the-badge)](submission/main.pdf)
 [![Code Artifact](https://img.shields.io/badge/Reproducible_Code-submission%2Fcode-7c3aed?style=for-the-badge)](submission/code)
 [![License: MIT](https://img.shields.io/badge/License-MIT-111827?style=for-the-badge)](LICENSE)
 
 This repository develops **OST-QAOA**, a *noncommutative operator-spectral truncated prior* for query-efficient parameter selection in the Quantum Approximate Optimization Algorithm (QAOA). It transports the spectral-truncation–kernel construction of noncommutative $C^{*}$-algebraic kernel machines into variational quantum optimization, and is released as the installable package [`uq-qaoa`](submission/code) that regenerates every figure, table, and number in the [manuscript](submission/main.pdf) from a single deterministic seed.
 
-> **AI for quantum, at HPC scale.** OST-QAOA *learns its search directions in operator space* from a library of training graphs — algorithm design by learning, not per-instance hand-tuning — and spends the saved budget where it is scarcest: objective queries to the quantum device (a **2.2× query reduction** to comparable quality). The objective is an exact statevector expectation, precisely the workload that GPU statevector backends (NVIDIA cuQuantum / cuStateVec) are built to accelerate, so the method scales along the axis modern quantum simulation actually runs on. The reference package is deterministic and `pip`-installable, regenerating every number from one seed.
+> **AI for quantum, at HPC scale.** OST-QAOA *learns its search directions in operator space* from a library of training graphs — algorithm design by learning, not per-instance hand-tuning — and spends the saved budget where it is scarcest: objective queries to the quantum device (a **2.4× query reduction** to comparable quality). The objective is an exact statevector expectation, precisely the workload that GPU statevector backends (NVIDIA cuQuantum / cuStateVec) are built to accelerate, so the method scales along the axis modern quantum simulation actually runs on. The reference package is deterministic and `pip`-installable, regenerating every number from one seed.
 
 ---
 
@@ -51,11 +51,11 @@ Mean approximation ratio with 95% interval and paired difference versus a budget
 | Random | 0.743 ± 0.028 | +0.035 [+0.001, +0.070] | 11/16 | 24.1 |
 | TQA | 0.614 ± 0.030 | −0.093 [−0.156, −0.040] | 0/16 | 25.0 |
 | TQA + coordinate | 0.708 ± 0.038 | 0.000 | — | 25.0 |
-| $k$-NN + coordinate | 0.740 ± 0.042 | +0.032 [+0.012, +0.056] | 13/16 | 23.6 |
-| OST diagonal | 0.806 ± 0.020 | +0.099 [+0.067, +0.130] | 15/16 | 14.4 |
-| **OST-QAOA (ours)** | **0.818 ± 0.018** | **+0.110 [+0.080, +0.141]** | **16/16** | **11.6** |
+| $k$-NN + coordinate | 0.751 ± 0.040 | +0.043 [+0.019, +0.068] | 13/16 | 23.6 |
+| OST diagonal | 0.810 ± 0.021 | +0.102 [+0.073, +0.131] | 16/16 | 13.1 |
+| **OST-QAOA (ours)** | **0.820 ± 0.019** | **+0.112 [+0.083, +0.142]** | **16/16** | **10.1** |
 
-OST-QAOA is the strongest method under the matched query budget, winning on **16/16** paired held-out graphs (sign-test $p<10^{-4}$) and reaching 98% of the best observed ratio in **11.6** queries against **25.0** for the baseline — a **2.2× query reduction** ($\bar Q_{0.98}$). A truncation sweep over $n\in\{1,\dots,2p\}$ exhibits the predicted interior optimum at $n^\star{=}4$ (under-truncation at $n{=}1$ and no truncation at $n{=}2p$ both degrade), with effective dimension rising monotonically from 2.50 to 3.65 ([`tables/table05_truncation.csv`](submission/code/tables/table05_truncation.csv)). Restricting the search to diagonal (commutative) directions removes a measurable part of the advantage (0.806, −0.012), localizing the gain to the off-diagonal operator geometry ([`tables/table02_ablation.csv`](submission/code/tables/table02_ablation.csv)). The reported margin is configuration-dependent and the audit-sized exact-statevector benchmark is not a hardware-scale deployment claim; it is a controlled, fully reproducible method study.
+OST-QAOA is the strongest method under the matched query budget, winning on **16/16** paired held-out graphs (sign-test $p<10^{-4}$) and reaching 98% of the best observed ratio in **10.1** queries against **25.0** for the baseline — a **2.4× query reduction** ($\bar Q_{0.98}$). A truncation sweep over $n\in\{1,\dots,2p\}$ exhibits the predicted interior optimum at $n^\star{=}4$ (under-truncation at $n{=}1$ and no truncation at $n{=}2p$ both degrade), with effective dimension rising monotonically from 2.50 to 3.64 ([`tables/table05_truncation.csv`](submission/code/tables/table05_truncation.csv)). Restricting the search to diagonal (commutative) directions removes a measurable part of the advantage (0.810, −0.010), localizing the gain to the off-diagonal operator geometry ([`tables/table02_ablation.csv`](submission/code/tables/table02_ablation.csv)). The reported margin is configuration-dependent and the audit-sized exact-statevector benchmark is not a hardware-scale deployment claim; across ten seeds the OST-QAOA advantage is a robust +0.107 ± 0.011 (range [+0.087, +0.126]); it is a controlled, fully reproducible method study.
 
 ---
 
@@ -69,6 +69,9 @@ pip install .                                   # installs the uqqaoa-reproduce 
 uqqaoa-reproduce --output-dir . --depth 3 --budget 24 --rank 4 --commutator-weight 4.0
 
 uqqaoa-reproduce --smoke                         # fast end-to-end sanity pass
+
+# Ten-seed robustness study -> tables/table06_multiseed.tex (the \input'd multiseed table; ~4 min):
+python multiseed_robustness.py
 ```
 
 Every output is a deterministic function of the global seed `260424803`. The same functionality is available through the Python API:
@@ -82,7 +85,7 @@ graph   = generate_graph("random_regular", 10, 1234)
 result  = ost_qaoa_search(graph, library, budget=24)   # result.theta_hat, result.y_hat, result.trace
 ```
 
-The mapping from each manuscript display item to its generating function is listed in the manuscript's artifact manifest and in [`submission/code/README.md`](submission/code/README.md).
+The mapping from each manuscript display item to its generating function is listed in the manuscript's artifact manifest — table `table03_manifest`, regenerated into [`submission/code/tables/`](submission/code/tables) and `\input` directly by [`submission/main.pdf`](submission/main.pdf).
 
 ---
 
@@ -111,7 +114,7 @@ website/ index.html project landing page (GitHub Pages entry point)
   year         = {2026},
   howpublished = {Code and manuscript},
   note         = {North Carolina State University; molena.huynh@jmp.com},
-  url          = {https://github.com/thmolena/Hybrid-Quantum-Graph-AI-QAOA-GNN-Biomedical-Optimization}
+  url          = {https://github.com/thmolena/Operator-Spectral-Truncated-Priors-for-QAOA}
 }
 ```
 
